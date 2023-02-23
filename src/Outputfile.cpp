@@ -2,6 +2,7 @@
 
 using namespace netCDF;
 using std::vector;
+using std::string;
 
 void Output::printInit(vvmArray & myArray) {
 	double z;
@@ -13,7 +14,7 @@ void Output::printInit(vvmArray & myArray) {
 		<< myArray.pib[k] << std::endl;
 	}
 	std::fstream initout;
-	std::string initName = "../outputs/init.txt";
+	string initName = "../outputs/init.txt";
 	initout.open(initName, std::ios::out);
 	for (int k = 0; k <= nz-1; k++) {
 		z = (double) (k - 0.5) * dz ;
@@ -27,7 +28,7 @@ void Output::printInit(vvmArray & myArray) {
 
 void Output::output_zeta(int n, vvmArray & myArray) {
 	std::fstream foutzeta;
-	std::string zetaName = "../outputs/zeta/zeta_" + std::to_string(n) + ".txt";
+	string zetaName = "../outputs/zeta/zeta_" + std::to_string(n) + ".txt";
 	foutzeta.open(zetaName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -38,7 +39,7 @@ void Output::output_zeta(int n, vvmArray & myArray) {
 
 void Output::output_th(int n, vvmArray & myArray) {
 	std::fstream foutth;
-	std::string thName = "../outputs/th/th_" + std::to_string(n) + ".txt";
+	string thName = "../outputs/th/th_" + std::to_string(n) + ".txt";
 	foutth.open(thName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -49,7 +50,7 @@ void Output::output_th(int n, vvmArray & myArray) {
 
 void Output::output_u(int n, vvmArray & myArray) {
 	std::fstream foutu;
-	std::string uName = "../outputs/u/u_" + std::to_string(n) + ".txt";
+	string uName = "../outputs/u/u_" + std::to_string(n) + ".txt";
 	foutu.open(uName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -60,7 +61,7 @@ void Output::output_u(int n, vvmArray & myArray) {
 
 void Output::output_w(int n, vvmArray & myArray) {
 	std::fstream foutw;
-	std::string wName = "../outputs/w/w_" + std::to_string(n) + ".txt";
+	string wName = "../outputs/w/w_" + std::to_string(n) + ".txt";
 	foutw.open(wName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -71,7 +72,7 @@ void Output::output_w(int n, vvmArray & myArray) {
 
 void Output::output_qv(int n, vvmArray & myArray) {
 	std::fstream foutqv;
-	std::string qvName = "../outputs/qv/qv_" + std::to_string(n) + ".txt";
+	string qvName = "../outputs/qv/qv_" + std::to_string(n) + ".txt";
 	foutqv.open(qvName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -82,7 +83,7 @@ void Output::output_qv(int n, vvmArray & myArray) {
 
 void Output::output_qc(int n, vvmArray & myArray) {
 	std::fstream foutqc;
-	std::string qcName = "../outputs/qc/qc_" + std::to_string(n) + ".txt";
+	string qcName = "../outputs/qc/qc_" + std::to_string(n) + ".txt";
 	foutqc.open(qcName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -93,7 +94,7 @@ void Output::output_qc(int n, vvmArray & myArray) {
 
 void Output::output_qr(int n, vvmArray & myArray) {
 	std::fstream foutqr;
-	std::string qrName = "../outputs/qr/qr_" + std::to_string(n) + ".txt";
+	string qrName = "../outputs/qr/qr_" + std::to_string(n) + ".txt";
 	foutqr.open(qrName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -103,7 +104,7 @@ void Output::output_qr(int n, vvmArray & myArray) {
 }
 
 void Output::output_nc(int n, vvmArray &myArray) {
-    std::string ncName = "../outputs/nc/" + std::to_string(n) + ".nc";
+    string ncName = "../outputs/nc/" + std::to_string(n) + ".nc";
 
     NcFile dataFile(ncName, NcFile::replace);
     // Create netCDF dimensions
@@ -131,4 +132,45 @@ void Output::output_nc(int n, vvmArray &myArray) {
 	qcData.putVar(myArray.qc);
 	qrData.putVar(myArray.qr);
 	qvData.putVar(myArray.qr);
+}
+
+void Output::create_directory(string directory_name) {
+    string str = "mkdir -p " + directory_name;
+    const char *command = str.c_str();
+    const int dir_err = system(command);
+    if (-1 == dir_err) {
+        std::cout << "Error on creating directory!\n" << std::endl;
+        return;
+    }
+    return;
+}
+
+void Output::create_all_directory() {
+    // data directory
+    #ifdef TXTOUTPUT
+        create_directory(OUTPUTPATH + (string) "u");
+        create_directory(OUTPUTPATH + (string) "w");
+        create_directory(OUTPUTPATH + (string) "zeta");
+        create_directory(OUTPUTPATH + (string) "th");
+        create_directory(OUTPUTPATH + (string) "qc");
+        create_directory(OUTPUTPATH + (string) "qr");
+        create_directory(OUTPUTPATH + (string) "qv");
+    #endif
+    #ifdef NCOUTPUT
+        create_directory(OUTPUTPATH + (string) "nc");
+    #endif
+
+    // plot directory
+    create_directory("../graphs/u");
+    create_directory("../graphs/w");
+    create_directory("../graphs/zeta");
+    create_directory("../graphs/th");
+    create_directory("../graphs/qc");
+    create_directory("../graphs/qr");
+    create_directory("../graphs/qv");
+    create_directory("../graphs/qc+qr+th+u+w");
+    create_directory("../graphs/qv+qc");
+    create_directory("../graphs/qc+qr");
+    create_directory("../graphs/qr+th+u+w");
+    create_directory("../graphs/qc+qr+th+u+w");
 }

@@ -23,6 +23,9 @@ public:
     static void output_qc(int, vvmArray &);
     static void output_qr(int, vvmArray &);
     static void output_nc(int, vvmArray &);
+    static void create_all_directory();
+private:
+    static void create_directory(std::string);
 };
 
 #ifdef OUTPUTGRAPHMODE

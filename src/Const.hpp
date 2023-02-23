@@ -25,9 +25,11 @@
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-
+#define OUTPUTPATH "../outputs/"
 #define OUTPUTFILEMODE
 #define OUTPUTNC
+#define TXTOUTPUT
+#define NCOUTPUT
 // #define OUTPUTGRAPHMODE
 
 // #define DRY
