@@ -446,7 +446,7 @@ void Iteration::heatflux(vvmArray & myArray, int i, int k, int ishflux) {
 
 void Iteration::LeapFrog(vvmArray & myArray) {
 	int n = 0;
-	double timenow = 0.;
+	// double timenow = 0.;
 	double temp = TIMEEND / dt;
 	int nmax = (int) temp;
 	while (n < nmax) {
@@ -471,7 +471,7 @@ void Iteration::LeapFrog(vvmArray & myArray) {
 			#endif
 		}
 		n++;
-		timenow = n * dt;
+		// timenow = n * dt;
 
 		// calculate
 		pzeta_pt(myArray);
