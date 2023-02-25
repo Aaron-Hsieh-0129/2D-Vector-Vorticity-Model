@@ -104,26 +104,25 @@ void Output::output_qr(int n, vvmArray & myArray) {
 }
 
 void Output::output_nc(int n, vvmArray &myArray) {
-    string ncName = "../outputs/nc/" + std::to_string(n) + ".nc";
+	string ncName = "../outputs/nc/" + std::to_string(n) + ".nc";
 
-    NcFile dataFile(ncName, NcFile::replace);
-    // Create netCDF dimensions
-    NcDim p = dataFile.addDim("p", 6);
-    NcDim xDim = dataFile.addDim("x", nx);
-    NcDim zDim = dataFile.addDim("z", nz);
+	NcFile dataFile(ncName, NcFile::replace);
 
-    vector<NcDim> xzDim;
-    xzDim.push_back(xDim);
-    xzDim.push_back(zDim);
+	// Create netCDF dimensions
+	NcDim xDim = dataFile.addDim("x", nx);
+	NcDim zDim = dataFile.addDim("z", nz);
+	vector<NcDim> xzDim, zNcDim;
+	xzDim.push_back(xDim);
+	xzDim.push_back(zDim);
+	zNcDim.push_back(zDim);
 
-
-    NcVar thData = dataFile.addVar("th", ncDouble, xzDim);
-    NcVar zetaData = dataFile.addVar("zeta", ncDouble, xzDim);
-    NcVar uData = dataFile.addVar("u", ncDouble, xzDim);
-    NcVar wData = dataFile.addVar("w", ncDouble, xzDim);
-    NcVar qcData = dataFile.addVar("qc", ncDouble, xzDim);
-    NcVar qrData = dataFile.addVar("qr", ncDouble, xzDim);
-    NcVar qvData = dataFile.addVar("qv", ncDouble, xzDim);
+	NcVar thData = dataFile.addVar("th", ncDouble, xzDim);
+	NcVar zetaData = dataFile.addVar("zeta", ncDouble, xzDim);
+	NcVar uData = dataFile.addVar("u", ncDouble, xzDim);
+	NcVar wData = dataFile.addVar("w", ncDouble, xzDim);
+	NcVar qcData = dataFile.addVar("qc", ncDouble, xzDim);
+	NcVar qrData = dataFile.addVar("qr", ncDouble, xzDim);
+	NcVar qvData = dataFile.addVar("qv", ncDouble, xzDim);
 
 	thData.putVar(myArray.th);
 	zetaData.putVar(myArray.zeta);
@@ -132,6 +131,18 @@ void Output::output_nc(int n, vvmArray &myArray) {
 	qcData.putVar(myArray.qc);
 	qrData.putVar(myArray.qr);
 	qvData.putVar(myArray.qr);
+
+	if (n == 0) {
+		NcVar tbData = dataFile.addVar("tb", ncDouble, zNcDim);
+		NcVar rhoData = dataFile.addVar("rho", ncDouble, zNcDim);
+		NcVar qvbData = dataFile.addVar("qvb", ncDouble, zNcDim);
+		NcVar qvsbData = dataFile.addVar("qvsb", ncDouble, zNcDim);
+
+		tbData.putVar(myArray.tb);
+		rhoData.putVar(myArray.rhou);
+		qvbData.putVar(myArray.qvb);
+		qvsbData.putVar(myArray.qvsb);
+	}
 }
 
 void Output::create_directory(string directory_name) {
