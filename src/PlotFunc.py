@@ -41,7 +41,6 @@ def qc_qr_th_u_w(t):
     qc = data['qc'].to_numpy().swapaxes(0, 1)[:, left_range:right_range] * 1000
     qr = data['qr'].to_numpy().swapaxes(0, 1)[:, left_range:right_range]
 
-    # TODO
     if t == 0:
         rho = data['rho'].to_numpy()[1:-1]
         tb = data['tb'].to_numpy()[1:-1]
@@ -86,7 +85,7 @@ def qc_qr_th_u_w(t):
         # plot th
         ax[3].set_title(f"t = {t * DT} s", fontsize=14)
         ax[3].set_xlabel("x [km]")
-        ax[3].set_xticks(np.linspace(0, right_range-left_range-1, 7), ["60", "65", "70", "75", "80", "85", "90"])
+        ax[3].set_xticks(np.linspace(0, right_range-left_range-1, 11), np.linspace(DX*left_range/1000, DX*right_range/1000, 11))
         CF = ax[3].contourf(th, levels=np.linspace(left_th, right_th, split_th), extend='both', cmap=cmap)
         cbar = plt.colorbar(CF, pad=0.05)
         cbar.set_ticks(np.linspace(left_th, right_th, split_th))
@@ -119,7 +118,8 @@ def qc_qr_th_u_w(t):
         plt.title(f"t = {t * DT} s", fontsize=14)
         plt.xlabel("x [km]")
         plt.ylabel("z [km]")
-        plt.xticks(np.linspace(0, right_range-left_range-1, 7), ["60", "65", "70", "75", "80", "85", "90"])
+        plt.xticks(np.linspace(0, right_range-left_range-1, 11), np.linspace(DX*left_range/1000, DX*right_range/1000, 11))
+
         plt.yticks([0, 10, 20, 30, 40, 50, 59], ["0", "2.5", "5", "7.5", "10", "12.5", "15"])
         CF = plt.contourf(th, levels=np.linspace(left_th, right_th, split_th), extend='both', cmap=cmap)
         cbar = plt.colorbar(pad=0.05)
@@ -160,7 +160,7 @@ def zeta(t):
 
     plt.xlabel("x [km]")
     plt.ylabel("z [km]")
-    plt.xticks(np.linspace(0, right_range-left_range-1, 7), ["60", "65", "70", "75", "80", "85", "90"])
+    plt.xticks(np.linspace(0, right_range-left_range-1, 11), np.linspace(DX*left_range/1000, DX*right_range/1000, 11))
     plt.yticks([0, 10, 20, 30, 40, 50, 59], ["0", "2.5", "5", "7.5", "10", "12.5", "15"])
     
     plt.contourf(zeta, levels=np.linspace(left_zeta, right_zeta, split_zeta), extend='both', cmap=cmap)
