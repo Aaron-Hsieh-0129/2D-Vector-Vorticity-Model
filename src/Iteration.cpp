@@ -223,7 +223,8 @@ void Iteration::cal_u(vvmArray& myArray) {
 		// u_top
 		for (int i = 1; i <= nx-2; i++) {
 			#if defined(SHEAR)
-				myArray.u[i][nz-2] = myArray.uxi[i] + ubar + 10.;
+				// You should modify the number 20 which means the fixed u at the top layer
+				myArray.u[i][nz-2] = myArray.uxi[i] + ubar + 20.;
 			#else
 				myArray.u[i][nz-2] = myArray.uxi[i] + ubar;
 			#endif
