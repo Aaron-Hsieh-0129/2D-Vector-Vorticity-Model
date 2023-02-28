@@ -478,9 +478,11 @@ void Iteration::LeapFrog(vvmArray & myArray) {
 		pth_pt(myArray);
 		cal_w(myArray);
 		cal_u(myArray);
-		pqv_pt(myArray);
-		pqc_pt(myArray);
-		pqr_pt(myArray);
+		#if defined(WATER)
+			pqv_pt(myArray);
+			pqc_pt(myArray);
+			pqr_pt(myArray);
+		#endif
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {
