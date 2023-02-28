@@ -475,10 +475,14 @@ void Iteration::LeapFrog(vvmArray & myArray) {
 		// timenow = n * dt;
 
 		// calculate
-		pzeta_pt(myArray);
-		pth_pt(myArray);
-		cal_w(myArray);
-		cal_u(myArray);
+		#if defined(ADVECTIONU) || defined(ADVECTIONW)
+			pth_pt(myArray);
+		#else
+			pth_pt(myArray);
+			pzeta_pt(myArray);
+			cal_w(myArray);
+			cal_u(myArray);
+		#endif
 		#if defined(WATER)
 			pqv_pt(myArray);
 			pqc_pt(myArray);

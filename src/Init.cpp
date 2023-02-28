@@ -109,10 +109,31 @@ void Init::Init2d(vvmArray & myArray) {
 		double umax = 10.;
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-				myArray.u[i][k] = umax / (nz-2-1) * k - umax / (nz-2-1);
+				if ((k-0.5) * dz <= 5000) {
+					myArray.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
+				}
+				else {
+					myArray.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
+				}
 			}
 		}
 		myArray.BoundaryProcess(myArray.u);
+
+	#elif defined(ADVECTIONU)
+		for (int i = 1; i <= nx-2; i++) {
+			for (int k = 1; k <= nz-2; k++) {
+                myArray.u[i][k] = 100.;
+            }
+        }
+		myArray.BoundaryProcess(myArray.u);
+
+    #elif defined(ADVECTIONW)
+        for (int i = 1; i <= nx-2; i++) {
+			for (int k = 1; k <= nz-2; k++) {
+                myArray.w[i][k] = 100.;
+            }
+		}
+		myArray.BoundaryProcess(myArray.w);
 	#endif
 
 	// init zeta

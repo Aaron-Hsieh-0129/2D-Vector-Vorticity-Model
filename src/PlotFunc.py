@@ -5,7 +5,7 @@ import xarray as xr
 
 
 ######## Should Be Tuned ########### 
-left_range, right_range = 250, 350+1
+left_range, right_range, split_range = 250, 350+1, 10
 
 left_th, right_th, split_th = -16, 16, 11
 
@@ -85,7 +85,7 @@ def qc_qr_th_u_w(t):
         # plot th
         ax[3].set_title(f"t = {t * DT} s", fontsize=14)
         ax[3].set_xlabel("x [km]")
-        ax[3].set_xticks(np.linspace(0, right_range-left_range-1, 11), np.linspace(DX*left_range/1000, DX*right_range/1000, 11))
+        ax[3].set_xticks(np.linspace(0, right_range-left_range-1, split_range), np.linspace(DX*left_range/1000, DX*right_range/1000, split_range))
         CF = ax[3].contourf(th, levels=np.linspace(left_th, right_th, split_th), extend='both', cmap=cmap)
         cbar = plt.colorbar(CF, pad=0.05)
         cbar.set_ticks(np.linspace(left_th, right_th, split_th))
@@ -118,7 +118,7 @@ def qc_qr_th_u_w(t):
         plt.title(f"t = {t * DT} s", fontsize=14)
         plt.xlabel("x [km]")
         plt.ylabel("z [km]")
-        plt.xticks(np.linspace(0, right_range-left_range-1, 11), np.linspace(DX*left_range/1000, DX*right_range/1000, 11))
+        plt.xticks(np.linspace(0, right_range-left_range-1, split_range), np.linspace(DX*left_range/1000, DX*right_range/1000, split_range))
 
         plt.yticks([0, 10, 20, 30, 40, 50, 59], ["0", "2.5", "5", "7.5", "10", "12.5", "15"])
         CF = plt.contourf(th, levels=np.linspace(left_th, right_th, split_th), extend='both', cmap=cmap)
