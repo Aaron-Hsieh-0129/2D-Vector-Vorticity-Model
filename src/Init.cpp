@@ -44,7 +44,7 @@ void Init::Init1d(vvmArray &model) {
 
 		// init tb_zeta, rhou
 		for (int k = 1; k <= nz-2; k++) {
-			model.tb_zeta[k] = 0.5 * (model.tvb[k-1] + model.tvb[k]);
+			model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
 			#ifdef RHO1
 				model.rhou[k] = 1.;
 			#else
@@ -201,8 +201,10 @@ void Init::LoadFile(vvmArray &model) {
 		model.pb[i] = PBAR;
 		model.rhou[i] = RHO;
 		model.rhow[i] = RHOZ;
-		model.Q1LS[i] = Q1LS;
-		model.Q2LS[i] = Q2LS;
+		#if defined(TROPICALFORCING)
+			model.Q1LS[i] = Q1LS;
+			model.Q2LS[i] = Q2LS;
+		#endif
 
 		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);
 		model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.tb[i] * model.pib[i] - 273.)) / (model.tb[i] * model.pib[i] - 36.));
@@ -225,5 +227,12 @@ void Init::LoadFile(vvmArray &model) {
 	model.tvb[nz-1] = model.tvb[nz-2];
 	model.qvsb[0] = model.qvsb[1];
 	model.qvsb[nz-1] = model.qvsb[nz-2];
+
+	for (int k = 1; k < nz-1; k++) {
+		model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
+	}
+	model.tb_zeta[0] = model.tb_zeta[1];
+	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
+
 	return;
 }

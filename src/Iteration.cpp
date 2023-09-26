@@ -66,7 +66,7 @@ void Iteration::pth_pt(vvmArray &model) {
             wptb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.tb[k+1] + model.tb[k]) - 0.5*(model.tb[k] + model.tb[k-1])) * rdz;
 
             #if defined(TROPICALFORCING)
-                forcing = model.Q1LS[i][k];
+                forcing = model.Q1LS[k];
             #else
                 forcing = 0.;
             #endif
@@ -264,7 +264,7 @@ void Iteration::pqv_pt(vvmArray &model) {
 			wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
 
             #if defined(TROPICALFORCING)
-                forcing = model.Q2LS[i][k];
+                forcing = model.Q2LS[k];
             #else
                 forcing = 0.;
             #endif
