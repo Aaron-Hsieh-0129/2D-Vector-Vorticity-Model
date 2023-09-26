@@ -37,8 +37,8 @@
 // #define NoBouyance
 #define DIFFUSION
 #define TIMEFILTER
-// #define WATER
-// #define TROPICALFORCING
+#define WATER
+#define TROPICALFORCING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
