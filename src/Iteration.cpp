@@ -1,124 +1,130 @@
 #include "Iteration.hpp"
 
-void Iteration::pzeta_pt(vvmArray& myArray) {
-	double puzeta_px = 0., pwzeta_pz = 0., g_tb_pth_px = 0.;
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
-			puzeta_px = (0.25*(myArray.u[i+1][k] + myArray.u[i+1][k-1] + myArray.u[i][k] + myArray.u[i][k-1]) * 0.5*(myArray.zeta[i+1][k] + myArray.zeta[i][k]) - 
-						 0.25*(myArray.u[i][k] + myArray.u[i][k-1] + myArray.u[i-1][k] + myArray.u[i-1][k-1]) * 0.5*(myArray.zeta[i][k] + myArray.zeta[i-1][k])) * rdx;
-			pwzeta_pz = (0.25*(myArray.w[i][k+1] + myArray.w[i-1][k+1] + myArray.w[i][k] + myArray.w[i-1][k]) * 0.5*(myArray.zeta[i][k+1] + myArray.zeta[i][k]) - 
-						 0.25*(myArray.w[i][k] + myArray.w[i-1][k] + myArray.w[i][k-1] + myArray.w[i-1][k-1]) * 0.5*(myArray.zeta[i][k] + myArray.zeta[i][k-1])) * rdz;
+void Iteration::pzeta_pt(vvmArray &model) {
+    double puzeta_px = 0., pwzeta_pz = 0., g_tb_pth_px = 0.;
+    for (int i = 1; i <= nx-2; i++) {
+        for (int k = 1; k <= nz-2; k++) {
+            puzeta_px = (0.25*(model.u[i+1][k] + model.u[i+1][k-1] + model.u[i][k] + model.u[i][k-1]) * 0.5*(model.zeta[i+1][k] + model.zeta[i][k]) - 
+                         0.25*(model.u[i][k] + model.u[i][k-1] + model.u[i-1][k] + model.u[i-1][k-1]) * 0.5*(model.zeta[i][k] + model.zeta[i-1][k])) * rdx;
+            pwzeta_pz = (0.25*(model.w[i][k+1] + model.w[i-1][k+1] + model.w[i][k] + model.w[i-1][k]) * 0.5*(model.zeta[i][k+1] + model.zeta[i][k]) - 
+                         0.25*(model.w[i][k] + model.w[i-1][k] + model.w[i][k-1] + model.w[i-1][k-1]) * 0.5*(model.zeta[i][k] + model.zeta[i][k-1])) * rdz;
 
-			// Advection test
-			#if defined(ADVECTIONU)
-				g_tb_pth_px = 0.;
-			#elif defined(ADVECTIONW)
-				g_tb_pth_px = 0.;
-			#elif defined(NoBouyance)
-				g_tb_pth_px = 0.;
-			#else
-				g_tb_pth_px = gravity / myArray.tb_zeta[k] * (0.5*(myArray.th[i][k] + myArray.th[i][k-1]) - 0.5*(myArray.th[i-1][k] + myArray.th[i-1][k-1])) * rdx;
-			#endif
+            // Advection test
+            #if defined(ADVECTIONU)
+                g_tb_pth_px = 0.;
+            #elif defined(ADVECTIONW)
+                g_tb_pth_px = 0.;
+            #elif defined(NoBouyance)
+                g_tb_pth_px = 0.;
+            #else
+                g_tb_pth_px = gravity / model.tb_zeta[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+            #endif
 
-			// Add water 
-			#if defined(WATER)
-				double g_pqv_px = gravity * (0.5*(myArray.qv[i][k] + myArray.qv[i][k-1]) - 0.5*(myArray.qv[i-1][k] + myArray.qv[i-1][k-1])) * rdx;
-				double gpqc_px = gravity * (0.5*(myArray.qc[i][k] + myArray.qc[i][k-1]) - 0.5*(myArray.qc[i-1][k] + myArray.qc[i-1][k-1])) * rdx;
-				double gpqr_px = gravity * (0.5*(myArray.qr[i][k] + myArray.qr[i][k-1]) - 0.5*(myArray.qr[i-1][k] + myArray.qr[i-1][k-1])) * rdx;
-				myArray.zetap[i][k] = myArray.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
-			#else
-				myArray.zetap[i][k] = myArray.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz);
-			#endif
+            // Add water 
+            #if defined(WATER)
+                double g_pqv_px = gravity * (0.5*(model.qv[i][k] + model.qv[i][k-1]) - 0.5*(model.qv[i-1][k] + model.qv[i-1][k-1])) * rdx;
+                double gpqc_px = gravity * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * rdx;
+                double gpqr_px = gravity * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * rdx;
+                model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
+            #else
+                model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz);
+            #endif
 
-			// Add diffusion
-			#ifdef DIFFUSION
-				myArray.zetap[i][k] += d2t * Kx * rdx2 * (myArray.zetam[i+1][k] - 2. * myArray.zetam[i][k] + myArray.zetam[i-1][k]) + 
-									 d2t * Kz * rdz2 * (myArray.zetam[i][k+1] - 2. * myArray.zetam[i][k] + myArray.zetam[i][k-1]);
-			#endif
-		}
-	}
-	#if defined(ADVECTIONU)
-		myArray.BoundaryProcessDouble(myArray.zetap);
-	#elif defined(ADVECTIONW)
-		myArray.BoundaryProcessDouble(myArray.zetap);
-	#else
-		myArray.BoundaryProcessZETA(myArray.zetap);
-	#endif
+            // Add diffusion
+            #ifdef DIFFUSION
+                model.zetap[i][k] += d2t * Kx * rdx2 * (model.zetam[i+1][k] - 2. * model.zetam[i][k] + model.zetam[i-1][k]) + 
+                                     d2t * Kz * rdz2 * (model.zetam[i][k+1] - 2. * model.zetam[i][k] + model.zetam[i][k-1]);
+            #endif
+        }
+    }
+    #if defined(ADVECTIONU)
+        model.BoundaryProcessDouble(model.zetap);
+    #elif defined(ADVECTIONW)
+        model.BoundaryProcessDouble(model.zetap);
+    #else
+        model.BoundaryProcessZETA(model.zetap);
+    #endif
 
-	// Time filter
-	#ifdef TIMEFILTER
-		for (int i = 0; i <= nx-1; i++) {
-			for (int k = 0; k <= nz-1; k++) {
-				myArray.zeta[i][k] += TIMETS * (myArray.zetap[i][k] - 2 * myArray.zeta[i][k] + myArray.zetam[i][k]);
-			}
-		}
-	#endif
-	return;
+    // Time filter
+    #ifdef TIMEFILTER
+        for (int i = 0; i <= nx-1; i++) {
+            for (int k = 0; k <= nz-1; k++) {
+                model.zeta[i][k] += TIMETS * (model.zetap[i][k] - 2 * model.zeta[i][k] + model.zetam[i][k]);
+            }
+        }
+    #endif
+    return;
 }
 
-void Iteration::pth_pt(vvmArray& myArray) {
-	double puth_px = 0., prhowth_pz_rho = 0., wptb_pz = 0.;
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
-			puth_px = (myArray.u[i+1][k] * 0.5*(myArray.th[i+1][k] + myArray.th[i][k]) - myArray.u[i][k] * 0.5*(myArray.th[i][k] + myArray.th[i-1][k])) * rdx;
-			prhowth_pz_rho = (myArray.rhow[k+1] * myArray.w[i][k+1] * 0.5*(myArray.th[i][k+1] + myArray.th[i][k]) - 
-							  myArray.rhow[k] * myArray.w[i][k] * 0.5*(myArray.th[i][k] + myArray.th[i][k-1])) * rdz / myArray.rhou[k];
-			wptb_pz = 0.5*(myArray.w[i][k+1] + myArray.w[i][k]) * (0.5*(myArray.tb[k+1] + myArray.tb[k]) - 0.5*(myArray.tb[k] + myArray.tb[k-1])) * rdz;
+void Iteration::pth_pt(vvmArray &model) {
+    double puth_px = 0., prhowth_pz_rho = 0., wptb_pz = 0., forcing = 0.;
+    for (int i = 1; i <= nx-2; i++) {
+        for (int k = 1; k <= nz-2; k++) {
+            puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
+            prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
+                              model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
+            wptb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.tb[k+1] + model.tb[k]) - 0.5*(model.tb[k] + model.tb[k-1])) * rdz;
 
-			myArray.thp[i][k] = myArray.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz);
+            #if defined(TROPICALFORCING)
+                forcing = model.Q1LS[i][k];
+            #else
+                forcing = 0.;
+            #endif
 
-			#ifdef DIFFUSION
-				myArray.thp[i][k] += d2t * Kx * rdx2 * (myArray.thm[i+1][k] - 2. * myArray.thm[i][k] + myArray.thm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (myArray.thm[i][k+1] - 2. * myArray.thm[i][k] + myArray.thm[i][k-1]);
-			#endif
-		}
-	}
-	#if defined(ADVECTIONU)
-		myArray.BoundaryProcessDouble(myArray.thp);
-	#elif defined(ADVECTIONW)
-		myArray.BoundaryProcessDouble(myArray.thp);
-	#else
-		myArray.BoundaryProcess(myArray.thp);
-	#endif
+            model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
 
-	#if defined(HEATFLUX)
-		for (int i = 1; i <= nx-2; i++) {
-			if (i <= nx / 2 - 1) heatflux(myArray, i, 1, 1);
-		}
-	#endif
+            #ifdef DIFFUSION
+                model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
+                                   d2t * Kz * rdz2 * (model.thm[i][k+1] - 2. * model.thm[i][k] + model.thm[i][k-1]);
+            #endif
+        }
+    }
+    #if defined(ADVECTIONU)
+        model.BoundaryProcessDouble(model.thp);
+    #elif defined(ADVECTIONW)
+        model.BoundaryProcessDouble(model.thp);
+    #else
+        model.BoundaryProcess(model.thp);
+    #endif
+
+    #if defined(HEATFLUX)
+        for (int i = 1; i <= nx-2; i++) {
+            if (i <= nx / 2 - 1) heatflux(model, i, 1, 1);
+        }
+    #endif
 
 	// Time filter
-	#ifdef TIMEFILTER
-		for (int i = 0; i <= nx-1; i++) {
-			for (int k = 0; k <= nz-1; k++) {
-				myArray.th[i][k] += TIMETS * (myArray.thp[i][k] - 2 * myArray.th[i][k] + myArray.thm[i][k]);
-			}
-		}
-	#endif
-	return;
+    #ifdef TIMEFILTER
+        for (int i = 0; i <= nx-1; i++) {
+            for (int k = 0; k <= nz-1; k++) {
+                model.th[i][k] += TIMETS * (model.thp[i][k] - 2 * model.th[i][k] + model.thm[i][k]);
+            }
+        }
+    #endif
+    return;
 }
 
-void Iteration::cal_w(vvmArray& myArray) {
-	#if defined(ADVECTIONU)
-		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { myArray.u[i][k] = 10.;}}
-	#elif defined(ADVECTIONW)
-		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { myArray.u[i][k] = 0.;}}
-	#else
-		// eigen
-		// A: i = 1~NX-2, k = 2~NZ-2
-		int NX = nx, NZ = nz;
-		int k = 1;
-		Eigen::VectorXd x((NX-2)*(NZ-3)), b((NX-2)*(NZ-3));
-		Eigen::SparseMatrix<double> A((NX-2)*(NZ-3), (NX-2)*(NZ-3));
-		std::vector<T> coeff;
-		for (int idx = 1; idx < (NX-2)*(NZ-3); idx++) {
-			// Height
-			if (idx % (NX-2) == 1) k++;
+void Iteration::cal_w(vvmArray &model) {
+    #if defined(ADVECTIONU)
+        for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.u[i][k] = 10.;}}
+    #elif defined(ADVECTIONW)
+        for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.u[i][k] = 0.;}}
+    #else
+        // eigen
+        // A: i = 1~NX-2, k = 2~NZ-2
+        int NX = nx, NZ = nz;
+        int k = 1;
+        Eigen::VectorXd x((NX-2)*(NZ-3)), b((NX-2)*(NZ-3));
+        Eigen::SparseMatrix<double> A((NX-2)*(NZ-3), (NX-2)*(NZ-3));
+        std::vector<T> coeff;
+        for (int idx = 1; idx < (NX-2)*(NZ-3); idx++) {
+            // Height
+            if (idx % (NX-2) == 1) k++;
 
 			// D
-			coeff.push_back(T(idx-1, idx-1, 4. -  (- 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k+1]
-												   - 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k] 
-												   + 2*(myArray.rhow[k+1] - 2*myArray.rhow[k] + myArray.rhow[k-1]) / (myArray.rhou[k+1] + myArray.rhou[k]))));
+            coeff.push_back(T(idx-1, idx-1, 4. -  (- 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]
+                                                   - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k] 
+                                                   + 2*(model.rhow[k+1] - 2*model.rhow[k] + model.rhow[k-1]) / (model.rhou[k+1] + model.rhou[k]))));
 
 			// left/right: -1
 			if ((idx-1) % (NX-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
@@ -130,9 +136,9 @@ void Iteration::cal_w(vvmArray& myArray) {
 				coeff.push_back(T(idx-1+(NX-3), idx-1, -1.));
 			}
 		}
-		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1, 4. - (- 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k+1]
-															      - 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k] 
-															      + 2*(myArray.rhow[k+1] - 2*myArray.rhow[k] + myArray.rhow[k-1]) / (myArray.rhou[k+1] + myArray.rhou[k]))));
+		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1, 4. - (- 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]
+															      - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k] 
+															      + 2*(model.rhow[k+1] - 2*model.rhow[k] + model.rhow[k-1]) / (model.rhou[k+1] + model.rhou[k]))));
 		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1-1, -1.)); // left
 
 		k = 1;
@@ -141,10 +147,10 @@ void Iteration::cal_w(vvmArray& myArray) {
 			if (idx % (NX-2) == 1) k++;
 
 			// E
-			coeff.push_back(T(idx-1, idx+(NX-2)-1, -1. - 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k+1]));
+			coeff.push_back(T(idx-1, idx+(NX-2)-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]));
 			
 			// F
-			coeff.push_back(T(idx+(NX-2)-1, idx-1, -1. - 0.5*(myArray.rhou[k+1] - myArray.rhou[k]) / myArray.rhou[k]));
+			coeff.push_back(T(idx+(NX-2)-1, idx-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k]));
 		}
 		A.setFromTriplets(coeff.begin(), coeff.end());
 
@@ -152,7 +158,7 @@ void Iteration::cal_w(vvmArray& myArray) {
 		int count = 0;
 		for (int k = 2; k <= NZ-2; k++) {
 			for (int i = 1; i <= NX-2; i++) {
-				b(count) = -(myArray.zetap[i+1][k] - myArray.zetap[i][k]) * dx;
+				b(count) = -(model.zetap[i+1][k] - model.zetap[i][k]) * dx;
 				count++;
 			}
 		}
@@ -164,20 +170,20 @@ void Iteration::cal_w(vvmArray& myArray) {
 		int cnt = 0;
 		for (int k = 2; k <= nz-2; k++) {
 			for (int i = 1; i <= nx-2; i++) {
-				myArray.w[i][k] = x[cnt];
+				model.w[i][k] = x[cnt];
 				cnt++;
 			}
 		}
-		myArray.BoundaryProcessZETA(myArray.w);
+		model.BoundaryProcessZETA(model.w);
 	#endif
 	return;
 }
 
-void Iteration::cal_u(vvmArray& myArray) {
+void Iteration::cal_u(vvmArray &model) {
 	#if defined(ADVECTIONU)
-		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { myArray.w[i][k] = 0.;}}
+		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.w[i][k] = 0.;}}
 	#elif defined(ADVECTIONW)
-		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { myArray.w[i][k] = 10.;}}
+		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.w[i][k] = 10.;}}
 	#else
 		const double ubar = 0.;
 		// G
@@ -200,7 +206,7 @@ void Iteration::cal_u(vvmArray& myArray) {
 
 		// h
 		for (int i = 1; i <= NX-2; i++) {
-			h(i-1) = (-myArray.rhow[nz-2] * myArray.w[i][nz-2]) / myArray.rhou[nz-2] * dx;
+			h(i-1) = (-model.rhow[nz-2] * model.w[i][nz-2]) / model.rhou[nz-2] * dx;
 		}
 
 		// solve
@@ -208,81 +214,102 @@ void Iteration::cal_u(vvmArray& myArray) {
 		y = solve_xi.compute(G).solve(h);
 		// xi
 		for (int i = 1; i <= nx-2; i++) {
-			myArray.xi[i] = y[i-1];
+			model.xi[i] = y[i-1];
 		}
-		myArray.xi[0] = myArray.xi[nx-2];
-		myArray.xi[nx-1] = myArray.xi[1];
+		model.xi[0] = model.xi[nx-2];
+		model.xi[nx-1] = model.xi[1];
 
 		// uxi
 		for (int i = 1; i <= nx-2; i++) {
-			myArray.uxi[i] = (myArray.xi[i] - myArray.xi[i-1]) * rdx;
+			model.uxi[i] = (model.xi[i] - model.xi[i-1]) * rdx;
 		}
-		myArray.uxi[0] = myArray.uxi[nx-2];
-		myArray.uxi[nx-1] = myArray.uxi[1];
+		model.uxi[0] = model.uxi[nx-2];
+		model.uxi[nx-1] = model.uxi[1];
 
 		// u_top
 		for (int i = 1; i <= nx-2; i++) {
 			#if defined(SHEAR)
 				// You should modify the number 20 which means the fixed u at the top layer
-				myArray.u[i][nz-2] = myArray.uxi[i] + ubar + 20.;
+				model.u[i][nz-2] = model.uxi[i] + ubar + 20.;
 			#else
-				myArray.u[i][nz-2] = myArray.uxi[i] + ubar;
+				model.u[i][nz-2] = model.uxi[i] + ubar;
 			#endif
 		}
-		myArray.u[0][nz-2] = myArray.u[nx-2][nz-2];
-		myArray.u[nx-1][nz-2] = myArray.u[1][nz-2];
+		model.u[0][nz-2] = model.u[nx-2][nz-2];
+		model.u[nx-1][nz-2] = model.u[1][nz-2];
 
 		// u
 		double uper = 0., now = 0.;
 		for (int i = 1; i <= nx-2; i++) {
 			double area = 0.;
 			for (int k = nz-3; k >= 1; k--) {
-				uper = (0.5*(myArray.w[i][k+2] + myArray.w[i][k+1]) - 0.5*(myArray.w[i-1][k+2] + myArray.w[i-1][k+1])) * rdx - 0.5*(myArray.zetap[i][k+2] + myArray.zetap[i][k+1]);
-				now = (0.5*(myArray.w[i][k+1] + myArray.w[i][k]) - 0.5*(myArray.w[i-1][k+1] + myArray.w[i-1][k])) * rdx - 0.5*(myArray.zetap[i][k+1] + myArray.zetap[i][k]);
+				uper = (0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * rdx - 0.5*(model.zetap[i][k+2] + model.zetap[i][k+1]);
+				now = (0.5*(model.w[i][k+1] + model.w[i][k]) - 0.5*(model.w[i-1][k+1] + model.w[i-1][k])) * rdx - 0.5*(model.zetap[i][k+1] + model.zetap[i][k]);
 				area += (uper + now) * 0.5 * (-dz);
-				myArray.u[i][k] = area + myArray.u[i][nz-2];
+				model.u[i][k] = area + model.u[i][nz-2];
 			}
 		}
-		myArray.BoundaryProcess(myArray.u);
+		model.BoundaryProcess(model.u);
 	#endif
 	return;
 }
 
-void Iteration::pqv_pt(vvmArray & myArray) {
-	double puqv_px = 0., prhowqv_pz_rho = 0., wpqvb_pz = 0.;
+void Iteration::pqv_pt(vvmArray &model) {
+	double puqv_px = 0., prhowqv_pz_rho = 0., wpqvb_pz = 0., forcing = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puqv_px = (myArray.u[i+1][k] * 0.5*(myArray.qv[i+1][k] + myArray.qv[i][k]) - myArray.u[i][k] * 0.5*(myArray.qv[i][k] + myArray.qv[i-1][k])) * rdx;
-			prhowqv_pz_rho = (myArray.rhow[k+1] * myArray.w[i][k+1] * 0.5*(myArray.qv[i][k+1] + myArray.qv[i][k]) - 
-							  myArray.rhow[k] * myArray.w[i][k] * 0.5*(myArray.qv[i][k] + myArray.qv[i][k-1])) * rdz / myArray.rhou[k];
-			wpqvb_pz = 0.5*(myArray.w[i][k+1] + myArray.w[i][k]) * (0.5*(myArray.qvb[k+1] + myArray.qvb[k]) - 0.5*(myArray.qvb[k] + myArray.qvb[k-1])) * rdz;
-			myArray.qvp[i][k] = myArray.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz);
+			puqv_px = (model.u[i+1][k] * 0.5*(model.qv[i+1][k] + model.qv[i][k]) - model.u[i][k] * 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
+			prhowqv_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qv[i][k+1] + model.qv[i][k]) - 
+							  model.rhow[k] * model.w[i][k] * 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz / model.rhou[k];
+			wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
+
+            #if defined(TROPICALFORCING)
+                forcing = model.Q2LS[i][k];
+            #else
+                forcing = 0.;
+            #endif
+
+			model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz + forcing);
 
 			// diffusion
 			#ifdef DIFFUSION
-				myArray.qvp[i][k] += d2t * Kx * rdx2 * (myArray.qvm[i+1][k] - 2. * myArray.qvm[i][k] + myArray.qvm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (myArray.qvm[i][k+1] - 2. * myArray.qvm[i][k] + myArray.qvm[i][k-1]);
+				model.qvp[i][k] += d2t * Kx * rdx2 * (model.qvm[i+1][k] - 2. * model.qvm[i][k] + model.qvm[i-1][k]) + 
+								   d2t * Kz * rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
 			#endif
-
-			// negative qv process: (source)
-			if (myArray.qvp[i][k] + myArray.qvb[k] < 0.) myArray.qvp[i][k] = -myArray.qvb[k];
 		}
 	}
-	myArray.BoundaryProcess(myArray.qvp);
+
+    // negative qv process: (source)
+    double negative = 0, positive = 0;
+    for (int i = 1; i < nx-1; i++) {
+        for (int k = 1; k < nz-1; k++) {
+            if (model.qvp[i][k] + model.qvb[k] < 0.) negative += model.qvp[i][k] + model.qvb[k];
+            else positive += model.qvp[i][k] + model.qvb[k];
+        }
+    }
+    double ratio = (positive + negative) / positive;
+    for (int i = 1; i < nx-1; i++) {
+        for (int k = 1; k < nz-1; k++) {
+            if (model.qvp[i][k] + model.qvb[k] < 0.) model.qvp[i][k] = -model.qvb[k];
+            else model.qvp[i][k] = (model.qvp[i][k] + model.qvb[k]) * ratio - model.qvb[k];
+        }
+    }
+
+	model.BoundaryProcess(model.qvp);
 
 	// saturation process: if cloudless.
 	#ifdef CLOUDLESS
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-				double pc = 380. / (pow(myArray.pib[k], C_p / Rd) * P0);   // coefficient
-				double pth = myArray.thp[i][k] + myArray.tb[k];
-				double qvs = pc * exp(17.27 * (myArray.pib[k] * pth - 273.) / (myArray.pib[k] * pth - 36.));
-				if (myArray.qvp[i][k] + myArray.qvb[k] > qvs) {
-					myArray.qvp[i][k] = qvs - myArray.qvb[k];
+				double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);   // coefficient
+				double pth = model.thp[i][k] + model.tb[k];
+				double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
+				if (model.qvp[i][k] + model.qvb[k] > qvs) {
+					model.qvp[i][k] = qvs - model.qvb[k];
 				}
 			}
 		}
-		myArray.BoundaryProcess(myArray.qvp);
+		model.BoundaryProcess(model.qvp);
 	#endif
 
 
@@ -290,7 +317,7 @@ void Iteration::pqv_pt(vvmArray & myArray) {
 	#ifdef TIMEFILTER
 		for (int i = 0; i <= nx-1; i++) {
 			for (int k = 0; k <= nz-1; k++) {
-				myArray.qv[i][k] += TIMETS * (myArray.qvp[i][k] - 2 * myArray.qv[i][k] + myArray.qvm[i][k]);
+				model.qv[i][k] += TIMETS * (model.qvp[i][k] - 2 * model.qv[i][k] + model.qvm[i][k]);
 			}
 		}
 	#endif
@@ -298,154 +325,154 @@ void Iteration::pqv_pt(vvmArray & myArray) {
 	return;
 }
 
-void Iteration::pqc_pt(vvmArray & myArray) {
+void Iteration::pqc_pt(vvmArray &model) {
 	double puqc_px = 0., prhowqc_pz_rho = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puqc_px = (myArray.u[i+1][k] * 0.5*(myArray.qc[i+1][k] + myArray.qc[i][k]) - myArray.u[i][k] * 0.5*(myArray.qc[i][k] + myArray.qc[i-1][k])) * rdx;
-			prhowqc_pz_rho = (myArray.rhow[k+1] * myArray.w[i][k+1] * 0.5*(myArray.qc[i][k+1] + myArray.qc[i][k]) - 
-							  myArray.rhow[k] * myArray.w[i][k] * 0.5*(myArray.qc[i][k] + myArray.qc[i][k-1])) * rdz / myArray.rhou[k];
+			puqc_px = (model.u[i+1][k] * 0.5*(model.qc[i+1][k] + model.qc[i][k]) - model.u[i][k] * 0.5*(model.qc[i][k] + model.qc[i-1][k])) * rdx;
+			prhowqc_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qc[i][k+1] + model.qc[i][k]) - 
+							  model.rhow[k] * model.w[i][k] * 0.5*(model.qc[i][k] + model.qc[i][k-1])) * rdz / model.rhou[k];
 
-			myArray.qcp[i][k] = myArray.qcm[i][k] + d2t * (-puqc_px - prhowqc_pz_rho);
+			model.qcp[i][k] = model.qcm[i][k] + d2t * (-puqc_px - prhowqc_pz_rho);
 			// negative qc process
-			if (myArray.qcp[i][k] < 0.) myArray.qcp[i][k] = 0.;
+			if (model.qcp[i][k] < 0.) model.qcp[i][k] = 0.;
 
 			// saturation process: sink and source (qv <--> qc)
-			condensation(myArray, i, k);
+			condensation(model, i, k);
 
 			#ifdef DIFFUSION
-				myArray.qcp[i][k] += d2t * Kx * rdx2 * (myArray.qcm[i+1][k] - 2. * myArray.qcm[i][k] + myArray.qcm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (myArray.qcm[i][k+1] - 2. * myArray.qcm[i][k] + myArray.qcm[i][k-1]);
+				model.qcp[i][k] += d2t * Kx * rdx2 * (model.qcm[i+1][k] - 2. * model.qcm[i][k] + model.qcm[i-1][k]) + 
+									 d2t * Kz * rdz2 * (model.qcm[i][k+1] - 2. * model.qcm[i][k] + model.qcm[i][k-1]);
 			#endif
 		}
 	}
-	myArray.BoundaryProcess(myArray.qcp);
+	model.BoundaryProcess(model.qcp);
 
 	// Time filter
 	#ifdef TIMEFILTER
 		for (int i = 0; i <= nx-1; i++) {
 			for (int k = 0; k <= nz-1; k++) {
-				myArray.qc[i][k] += TIMETS * (myArray.qcp[i][k] - 2 * myArray.qc[i][k] + myArray.qcm[i][k]);
+				model.qc[i][k] += TIMETS * (model.qcp[i][k] - 2 * model.qc[i][k] + model.qcm[i][k]);
 			}
 		}
 	#endif
 	return;
 }
 
-void Iteration::pqr_pt(vvmArray & myArray) {
+void Iteration::pqr_pt(vvmArray &model) {
 	double puqr_px = 0., prhowVTqr_pz_rho = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puqr_px = (myArray.u[i+1][k] * 0.5*(myArray.qr[i+1][k] + myArray.qr[i][k]) - myArray.u[i][k] * 0.5*(myArray.qr[i][k] + myArray.qr[i-1][k])) * rdx;
+			puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 			// TODO: VT
 			double VT = 6.;
-			prhowVTqr_pz_rho = (myArray.rhow[k+1] * (myArray.w[i][k+1] - VT) * 0.5*(myArray.qr[i][k+1] + myArray.qr[i][k]) - 
-							    myArray.rhow[k] * (myArray.w[i][k] - VT) * 0.5*(myArray.qr[i][k] + myArray.qr[i][k-1])) * rdz / myArray.rhou[k];
-			myArray.qrp[i][k] = myArray.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
+			prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
+							    model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
+			model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
 			// negative qr process
-			if (myArray.qrp[i][k] < 0.) myArray.qrp[i][k] = 0.;
+			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
 			
 			#ifdef DIFFUSION
-				myArray.qrp[i][k] += d2t * Kx * rdx2 * (myArray.qrm[i+1][k] - 2. * myArray.qrm[i][k] + myArray.qrm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (myArray.qrm[i][k+1] - 2. * myArray.qrm[i][k] + myArray.qrm[i][k-1]);
+				model.qrp[i][k] += d2t * Kx * rdx2 * (model.qrm[i+1][k] - 2. * model.qrm[i][k] + model.qrm[i-1][k]) + 
+									 d2t * Kz * rdz2 * (model.qrm[i][k+1] - 2. * model.qrm[i][k] + model.qrm[i][k-1]);
 			#endif
 
-			autoconversion(myArray, i, k);
-			accretion(myArray, i, k);
-			evaporation(myArray, i, k);
+			autoconversion(model, i, k);
+			accretion(model, i, k);
+			evaporation(model, i, k);
 		}
 	}
-	myArray.BoundaryProcess(myArray.qrp);
+	model.BoundaryProcess(model.qrp);
 
 	// Time filter
 	#ifdef TIMEFILTER
 		for (int i = 0; i <= nx-1; i++) {
 			for (int k = 0; k <= nz-1; k++) {
-				myArray.qr[i][k] += TIMETS * (myArray.qrp[i][k] - 2 * myArray.qr[i][k] + myArray.qrm[i][k]);
+				model.qr[i][k] += TIMETS * (model.qrp[i][k] - 2 * model.qr[i][k] + model.qrm[i][k]);
 			}
 		}
 	#endif
 	return;
 }
 
-void Iteration::condensation(vvmArray & myArray, int i, int k) {
-	double pc = 380. / (pow(myArray.pib[k], C_p / Rd) * P0); 	// coefficient
-	double pth = myArray.thp[i][k] + myArray.tb[k];
-	double qvs = pc * exp(17.27 * (myArray.pib[k] * pth - 273.) / (myArray.pib[k] * pth - 36.));
-	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * myArray.pib[k] - 36., 2));
+void Iteration::condensation(vvmArray &model, int i, int k) {
+	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0); 	// coefficient
+	double pth = model.thp[i][k] + model.tb[k];
+	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
+	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
 
-	double C = (myArray.qvp[i][k] + myArray.qvb[k] - qvs) / (1 + phi); 
+	double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
 
 	// C should less than qc
-	if (fabs(C) > myArray.qcp[i][k] && C < 0) C = -myArray.qcp[i][k];
+	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
 	
-	myArray.qvp[i][k] = myArray.qvp[i][k] - C;
-	myArray.qcp[i][k] = myArray.qcp[i][k] + C;
-	myArray.thp[i][k] = myArray.thp[i][k] + Lv / (C_p * myArray.pib[k]) * C;
+	model.qvp[i][k] = model.qvp[i][k] - C;
+	model.qcp[i][k] = model.qcp[i][k] + C;
+	model.thp[i][k] = model.thp[i][k] + Lv / (C_p * model.pib[k]) * C;
 }
 
 // autoconversion of qc to qr
-void Iteration::autoconversion(vvmArray & myArray, int i, int k) {
+void Iteration::autoconversion(vvmArray & model, int i, int k) {
 	double autort = 0.001, autotr = 0.001; // autocon rate [1/sec], autocon threshold [kg/kg]
-	double qcplus = std::max(0., myArray.qcp[i][k]);
+	double qcplus = std::max(0., model.qcp[i][k]);
 	double ar = autort * (qcplus - autotr);
 	ar = std::max(0., ar);
 	double arcrdt = std::min(ar * d2t, qcplus);
-	myArray.qcp[i][k] = myArray.qcp[i][k] - arcrdt;
-	myArray.qrp[i][k] = myArray.qrp[i][k] + arcrdt;
+	model.qcp[i][k] = model.qcp[i][k] - arcrdt;
+	model.qrp[i][k] = model.qrp[i][k] + arcrdt;
 	return;
 }
 
 // accretion of qc by qr
-void Iteration::accretion(vvmArray & myArray, int i, int k) {
+void Iteration::accretion(vvmArray &model, int i, int k) {
 	double accrrt = 2.2; // accretion rate [1/sec]
-	double qcplus = std::max(0., myArray.qcp[i][k]);
-	double qrplus = std::max(0., myArray.qrp[i][k]);
+	double qcplus = std::max(0., model.qcp[i][k]);
+	double qrplus = std::max(0., model.qrp[i][k]);
 
-	double cr = myArray.rhou[k] * accrrt * qcplus * pow(qrplus, 0.875);
+	double cr = model.rhou[k] * accrrt * qcplus * pow(qrplus, 0.875);
 	double arcrdt = std::min(cr * d2t, qcplus);
 
-	myArray.qcp[i][k] = myArray.qcp[i][k] - arcrdt;
-	myArray.qrp[i][k] = myArray.qrp[i][k] + arcrdt;
+	model.qcp[i][k] = model.qcp[i][k] - arcrdt;
+	model.qrp[i][k] = model.qrp[i][k] + arcrdt;
 	return;
 }
 
 // evaporation of rain water
-void Iteration::evaporation(vvmArray & myArray, int i, int k) {
-	double qrplus = std::max(0., myArray.qrp[i][k]);
-	double qvplus = std::max(0., myArray.qvp[i][k] + myArray.qvb[k]);
+void Iteration::evaporation(vvmArray &model, int i, int k) {
+	double qrplus = std::max(0., model.qrp[i][k]);
+	double qvplus = std::max(0., model.qvp[i][k] + model.qvb[k]);
 
-	double pc = 380. / (pow(myArray.pib[k], C_p / Rd) * P0);	 // coefficient
-	double pth = myArray.thp[i][k] + myArray.tb[k];
-	double qvs = pc * exp(17.27 * (myArray.pib[k] * pth - 273.) / (myArray.pib[k] * pth - 36.));	// Tetens equation
+	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
+	double pth = model.thp[i][k] + model.tb[k];
+	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));	// Tetens equation
 
-	double coef = 1.6 + 30.39 * pow((myArray.rhou[k] * qrplus), 0.2046);	// ventilation coef.
+	double coef = 1.6 + 30.39 * pow((model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
 	double deficit = std::max((1. - qvplus / qvs), 0.);							// saturation dificit (RH < 100%)
 
-	double er = coef * deficit * (pow(myArray.rhou[k] * qrplus, 0.525)) / 
-				((2.03e4 + 9.584e6 / (myArray.pb[k] * qvs)) * myArray.rhou[k]);
+	double er = coef * deficit * (pow(model.rhou[k] * qrplus, 0.525)) / 
+				((2.03e4 + 9.584e6 / (model.pb[k] * qvs)) * model.rhou[k]);
 	double erdt = std::min(qrplus, std::max(0., er * d2t));
 
-	myArray.qrp[i][k] = myArray.qrp[i][k] - erdt;
-	myArray.qvp[i][k] = myArray.qvp[i][k] + erdt;
-	myArray.thp[i][k] = myArray.thp[i][k] - Lv * erdt / (C_p * myArray.pib[k]);
+	model.qrp[i][k] = model.qrp[i][k] - erdt;
+	model.qvp[i][k] = model.qvp[i][k] + erdt;
+	model.thp[i][k] = model.thp[i][k] - Lv * erdt / (C_p * model.pib[k]);
 	return;
 }
 
-void Iteration::heatflux(vvmArray & myArray, int i, int k, int ishflux) {
+void Iteration::heatflux(vvmArray & model, int i, int k, int ishflux) {
 	if (ishflux == 1 && k == 1) {
 		double cdh = 7e-3;
 		double tground = 303.;
-		double tdif = std::max(tground - (myArray.thm[i][k] + myArray.tb[k]), 0.);
-		double avgu = 0.5 * abs(myArray.u[i+1][k] + myArray.u[i][k]);
+		double tdif = std::max(tground - (model.thm[i][k] + model.tb[k]), 0.);
+		double avgu = 0.5 * abs(model.u[i+1][k] + model.u[i][k]);
 		avgu = std::max(avgu, 2.);
 		double wnetc = 2. * sqrt(tdif);      // "convective velocity" adjustment
 		double vel = sqrt(pow(avgu, 2) + pow(wnetc, 2));
-		myArray.thp[i][k] = myArray.thp[i][k] + d2t * cdh * vel * myArray.addflx[i] * tdif * rdz;
+		model.thp[i][k] = model.thp[i][k] + d2t * cdh * vel * model.addflx[i] * tdif * rdz;
 	}
 }
 
-void Iteration::LeapFrog(vvmArray & myArray) {
+void Iteration::LeapFrog(vvmArray &model) {
 	int n = 0;
 	// double timenow = 0.;
 	double temp = TIMEEND / dt;
@@ -455,20 +482,20 @@ void Iteration::LeapFrog(vvmArray & myArray) {
 		// output
 		Output::create_all_directory();
 		if (n % OUTPUTSTEP == 0) {
-			#if defined(OUTPUTFILEMODE)
-				Output::output_zeta(n, myArray);
-				Output::output_th(n, myArray);
-				Output::output_u(n, myArray);
-				Output::output_w(n, myArray);
-				Output::output_qv(n, myArray);
-				Output::output_qc(n, myArray);
-				Output::output_qr(n, myArray);
+			#if defined(TXTOUTPUT)
+				Output::output_zeta(n, model);
+				Output::output_th(n, model);
+				Output::output_u(n, model);
+				Output::output_w(n, model);
+				Output::output_qv(n, model);
+				Output::output_qc(n, model);
+				Output::output_qr(n, model);
 			#endif
 			#if defined(OUTPUTGRAPHMODE)
-				Plot::plot_zeta(n, myArray);
+				Plot::plot_zeta(n, model);
 			#endif
-			#if defined(OUTPUTNC)
-				Output::output_nc(n, myArray);
+			#if defined(NCOUTPUT)
+				Output::output_nc(n, model);
 			#endif
 		}
 		n++;
@@ -476,36 +503,36 @@ void Iteration::LeapFrog(vvmArray & myArray) {
 
 		// calculate
 		#if defined(ADVECTIONU) || defined(ADVECTIONW)
-			pth_pt(myArray);
+			pth_pt(model);
 		#else
-			pth_pt(myArray);
-			pzeta_pt(myArray);
-			cal_w(myArray);
-			cal_u(myArray);
+			pth_pt(model);
+			pzeta_pt(model);
+			cal_w(model);
+			cal_u(model);
 		#endif
 		#if defined(WATER)
-			pqv_pt(myArray);
-			pqc_pt(myArray);
-			pqr_pt(myArray);
+			pqv_pt(model);
+			pqc_pt(model);
+			pqr_pt(model);
 		#endif
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {
 			for (int k = 0; k <= nz-1; k++) {
-				myArray.zetam[i][k] = myArray.zeta[i][k];
-				myArray.zeta[i][k] = myArray.zetap[i][k];
+				model.zetam[i][k] = model.zeta[i][k];
+				model.zeta[i][k] = model.zetap[i][k];
 
-				myArray.thm[i][k] = myArray.th[i][k];
-				myArray.th[i][k] = myArray.thp[i][k];
+				model.thm[i][k] = model.th[i][k];
+				model.th[i][k] = model.thp[i][k];
 
-				myArray.qvm[i][k] = myArray.qv[i][k];
-				myArray.qv[i][k] = myArray.qvp[i][k];
+				model.qvm[i][k] = model.qv[i][k];
+				model.qv[i][k] = model.qvp[i][k];
 
-				myArray.qcm[i][k] = myArray.qc[i][k];
-				myArray.qc[i][k] = myArray.qcp[i][k];
+				model.qcm[i][k] = model.qc[i][k];
+				model.qc[i][k] = model.qcp[i][k];
 
-				myArray.qrm[i][k] = myArray.qr[i][k];
-				myArray.qr[i][k] = myArray.qrp[i][k];
+				model.qrm[i][k] = model.qr[i][k];
+				model.qr[i][k] = model.qrp[i][k];
 			}
 		}
 

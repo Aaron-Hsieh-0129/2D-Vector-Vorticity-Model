@@ -6,10 +6,10 @@
 #define PSURF (96500.)
 #define P0 (100000.)
 
-#define dx (250)
-#define dz (250)
-#define XRANGE (150000)
-#define ZRANGE (15000)
+#define dx (200)
+#define dz (200)
+#define XRANGE (120000+2*dx)
+#define ZRANGE (15000+2*dz)
 #define nx (XRANGE / dx)
 #define nz (ZRANGE / dz)
 #define dt (0.1)
@@ -18,18 +18,16 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (2001.)
-#define OUTPUTSTEP (250)
+#define TIMEEND (1501.)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTPATH "../outputs/"
-#define OUTPUTFILEMODE
-#define OUTPUTNC
-#define TXTOUTPUT
+#define OUTPUTPATH "/data/Aaron/2DVVM/tropical_forcing/"
+#define OUTPUTSTEP (1)
 #define NCOUTPUT
+// #define TXTOUTPUT
 // #define OUTPUTGRAPHMODE
 
 // #define DRY
@@ -40,6 +38,9 @@
 #define DIFFUSION
 #define TIMEFILTER
 #define WATER
+#define TROPICALFORCING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
+
+#define LOADFILE

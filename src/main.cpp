@@ -3,13 +3,13 @@
 	#include "matplotlib-cpp-master/matplotlibcpp.h"
 #endif 
 
-vvmArray myArray;
+vvmArray model;
 
 int main(void) {
-	Init::Init1d(myArray);
-	Init::Init2d(myArray);
+	Init::Init1d(model);
+	Init::Init2d(model);
 	Output::create_all_directory();
-	Output::printInit(myArray);
-	Iteration::LeapFrog(myArray);
+	Output::printInit(model);
+	Iteration::LeapFrog(model);
 	return 0;
 }

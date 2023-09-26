@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "Const.hpp"
+#include "Define.hpp"
 
 class vvmArray {
 	public:

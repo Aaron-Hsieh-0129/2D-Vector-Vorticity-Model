@@ -1,108 +1,112 @@
 #include "Init.hpp"
 
-void Init::Init1d(vvmArray & myArray) {
-	// init tb
-	myArray.tb[1] = 300.;
-	for (int k = 2; k <= nz-2; k++) {
-		#ifdef DRY
-			myArray.tb[k] = 300.;
-		#else
-			myArray.tb[k] = GetTB(k);
-		#endif
-	}
-	myArray.tb[0] = myArray.tb[1];
-	myArray.tb[nz-1] = myArray.tb[nz-2];
-
-	// init qvb, tvb
-	for (int k = 1; k <= nz-2; k++) {
-		#if defined(WATER)
-			myArray.qvb[k] = GetQVB(k);
-		#else
-			myArray.qvb[k] = 0.;
-		#endif
-		myArray.tvb[k] = myArray.tb[k] * (1. + 0.61 * myArray.qvb[k]);
-	}
-	myArray.qvb[0] = myArray.qvb[1];
-	myArray.qvb[nz-1] = myArray.qvb[nz-2];
-	myArray.tvb[0] = myArray.tvb[1];
-	myArray.tvb[nz-1] = myArray.tvb[nz-2];
-
-	// init pib
-	double pisfc = pow((PSURF / P0), Rd / C_p);
-	for (int k = 1; k <= nz-2; k++) {
-		if (k == 1) myArray.pib[k] = pisfc - gravity * 0.5 * dz / (C_p * myArray.tvb[k]);
-		else {
-			double tvbavg = 0.5*(myArray.tvb[k] + myArray.tvb[k-1]);
-			myArray.pib[k] = myArray.pib[k-1] - gravity * dz / (C_p * tvbavg);
+void Init::Init1d(vvmArray &model) {
+	#if defined(LOADFILE)
+		LoadFile(model);
+	#else
+		// init tb
+		model.tb[1] = 300.;
+		for (int k = 2; k <= nz-2; k++) {
+			#ifdef DRY
+				model.tb[k] = 300.;
+			#else
+				model.tb[k] = GetTB(k);
+			#endif
 		}
-	}
-	myArray.pib[0] = myArray.pib[1];
-	myArray.pib[nz-1] = myArray.pib[nz-2];
+		model.tb[0] = model.tb[1];
+		model.tb[nz-1] = model.tb[nz-2];
 
-	// init tb_zeta, rhou
-	for (int k = 1; k <= nz-2; k++) {
-		myArray.tb_zeta[k] = 0.5 * (myArray.tvb[k-1] + myArray.tvb[k]);
-		#ifdef RHO1
-			myArray.rhou[k] = 1.;
-		#else
-			myArray.rhou[k] = P0 * pow(myArray.pib[k], Cv/Rd) / (Rd * myArray.tvb[k]);
-		#endif
-	}
-	myArray.rhou[0] = myArray.rhou[1];
-	myArray.rhou[nz-1] = myArray.rhou[nz-2];
-
-	// init tb_zeta, rhow
-	for (int k = 1; k <= nz-1; k++) {
-		myArray.tb_zeta[k] = 0.5 * (myArray.tb[k] + myArray.tb[k-1]);
-		myArray.rhow[k] = 0.5 * (myArray.rhou[k] + myArray.rhou[k-1]);
-	}
-	myArray.tb_zeta[0] = myArray.tb_zeta[1];
-	myArray.rhow[0] = myArray.rhow[1];
-
-	// init pb, qvsb
-	for (int k = 1; k <= nz-2; k++) {
-		myArray.pb[k] = P0 * pow(myArray.pib[k], C_p / Rd);
-		double Tbar = myArray.tb[k] * myArray.pib[k];
-		myArray.qvsb[k] = (380. / myArray.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
-	}
-	myArray.pb[0] = myArray.pb[1];
-	myArray.pb[nz-1] = myArray.pb[nz-2];
-	myArray.qvsb[0] = myArray.qvsb[1];
-	myArray.qvsb[nz-1] = myArray.qvsb[nz-2];
-
-	// heat flux init
-	#if defined(HEATFLUX)
-		mt19937 mt(20210831);
-		uniform_real_distribution<> distr(-1, 1);
-		for (int i = 1; i <= nx-2; i++) {
-			myArray.addflx[i] += distr(mt);
+		// init qvb, tvb
+		for (int k = 1; k <= nz-2; k++) {
+			#if defined(WATER)
+				model.qvb[k] = GetQVB(k);
+			#else
+				model.qvb[k] = 0.;
+			#endif
+			model.tvb[k] = model.tb[k] * (1. + 0.61 * model.qvb[k]);
 		}
+		model.qvb[0] = model.qvb[1];
+		model.qvb[nz-1] = model.qvb[nz-2];
+		model.tvb[0] = model.tvb[1];
+		model.tvb[nz-1] = model.tvb[nz-2];
+
+		// init pib
+		double pisfc = pow((PSURF / P0), Rd / C_p);
+		for (int k = 1; k <= nz-2; k++) {
+			if (k == 1) model.pib[k] = pisfc - gravity * 0.5 * dz / (C_p * model.tvb[k]);
+			else {
+				double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
+				model.pib[k] = model.pib[k-1] - gravity * dz / (C_p * tvbavg);
+			}
+		}
+		model.pib[0] = model.pib[1];
+		model.pib[nz-1] = model.pib[nz-2];
+
+		// init tb_zeta, rhou
+		for (int k = 1; k <= nz-2; k++) {
+			model.tb_zeta[k] = 0.5 * (model.tvb[k-1] + model.tvb[k]);
+			#ifdef RHO1
+				model.rhou[k] = 1.;
+			#else
+				model.rhou[k] = P0 * pow(model.pib[k], Cv/Rd) / (Rd * model.tvb[k]);
+			#endif
+		}
+		model.rhou[0] = model.rhou[1];
+		model.rhou[nz-1] = model.rhou[nz-2];
+
+		// init tb_zeta, rhow
+		for (int k = 1; k <= nz-1; k++) {
+			model.tb_zeta[k] = 0.5 * (model.tb[k] + model.tb[k-1]);
+			model.rhow[k] = 0.5 * (model.rhou[k] + model.rhou[k-1]);
+		}
+		model.tb_zeta[0] = model.tb_zeta[1];
+		model.rhow[0] = model.rhow[1];
+
+		// init pb, qvsb
+		for (int k = 1; k <= nz-2; k++) {
+			model.pb[k] = P0 * pow(model.pib[k], C_p / Rd);
+			double Tbar = model.tb[k] * model.pib[k];
+			model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
+		}
+		model.pb[0] = model.pb[1];
+		model.pb[nz-1] = model.pb[nz-2];
+		model.qvsb[0] = model.qvsb[1];
+		model.qvsb[nz-1] = model.qvsb[nz-2];
+
+		// heat flux init
+		#if defined(HEATFLUX)
+			mt19937 mt(20210831);
+			uniform_real_distribution<> distr(-1, 1);
+			for (int i = 1; i <= nx-2; i++) {
+				model.addflx[i] += distr(mt);
+			}
+		#endif
 	#endif
 	return;
 }
 
-void Init::Init2d(vvmArray & myArray) {
+void Init::Init2d(vvmArray &model) {
 	// init th
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			myArray.th[i][k] = GetTH(i, k);
-			myArray.thm[i][k] = myArray.th[i][k];
+			model.th[i][k] = GetTH(i, k);
+			model.thm[i][k] = model.th[i][k];
 		}
 	}
-	myArray.BoundaryProcess(myArray.th);
-	myArray.BoundaryProcess(myArray.thm);
+	model.BoundaryProcess(model.th);
+	model.BoundaryProcess(model.thm);
 
 	// init qv: where th != 0, qv = qvs
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			// if (myArray.th[i][k] != 0) myArray.qv[i][k] = myArray.qvsb[k] - myArray.qvb[k];
-			// else myArray.qv[i][k] = 0.;
-			myArray.qv[i][k] = 0.;
-			myArray.qvm[i][k] = myArray.qv[i][k];
+			// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
+			// else model.qv[i][k] = 0.;
+			model.qv[i][k] = 0.;
+			model.qvm[i][k] = model.qv[i][k];
 		}
 	}
-	myArray.BoundaryProcess(myArray.qv);
-	myArray.BoundaryProcess(myArray.qvm);
+	model.BoundaryProcess(model.qv);
+	model.BoundaryProcess(model.qvm);
 
 	// init u
 	#if defined(SHEAR)
@@ -110,44 +114,44 @@ void Init::Init2d(vvmArray & myArray) {
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
 				if ((k-0.5) * dz <= 5000) {
-					myArray.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
+					model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
 				}
 				else {
-					myArray.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
+					model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
 				}
 			}
 		}
-		myArray.BoundaryProcess(myArray.u);
+		model.BoundaryProcess(model.u);
 
 	#elif defined(ADVECTIONU)
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-                myArray.u[i][k] = 100.;
+                model.u[i][k] = 100.;
             }
         }
-		myArray.BoundaryProcess(myArray.u);
+		model.BoundaryProcess(model.u);
 
     #elif defined(ADVECTIONW)
         for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-                myArray.w[i][k] = 100.;
+                model.w[i][k] = 100.;
             }
 		}
-		myArray.BoundaryProcess(myArray.w);
+		model.BoundaryProcess(model.w);
 	#endif
 
 	// init zeta
 	double pu_pz = 0., pw_px = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			pw_px = (myArray.w[i][k] - myArray.w[i-1][k]) * rdx;
-			pu_pz = (myArray.u[i][k] - myArray.u[i][k-1]) * rdz;
-			myArray.zeta[i][k] = pw_px - pu_pz;
-			myArray.zetam[i][k] = myArray.zeta[i][k];
+			pw_px = (model.w[i][k] - model.w[i-1][k]) * rdx;
+			pu_pz = (model.u[i][k] - model.u[i][k-1]) * rdz;
+			model.zeta[i][k] = pw_px - pu_pz;
+			model.zetam[i][k] = model.zeta[i][k];
 		}
 	}
-	myArray.BoundaryProcessZETA(myArray.zeta);
-	myArray.BoundaryProcessZETA(myArray.zetam);
+	model.BoundaryProcessZETA(model.zeta);
+	model.BoundaryProcessZETA(model.zetam);
 }
 
 
@@ -178,4 +182,48 @@ double Init::GetQVB(int k) {
 	if (z_t <= 4000) return 0.0161 - 0.000003375 * z_t;
 	else if (4000 < z_t && z_t <= 8000) return 0.0026 - 0.00000065 * (z_t - 4000);
 	else return 0.;
+}
+
+void Init::LoadFile(vvmArray &model) {
+	std::ifstream inputFile;
+
+	inputFile.open("../input/init.txt");
+	std::string line;
+	std::getline(inputFile, line);
+	std::getline(inputFile, line); // Skip the zero level
+	double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
+
+	int i = 1;
+	while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
+		model.tb[i] = THBAR;
+		model.qvb[i] = QVBAR;
+		model.pib[i] = PIBAR;
+		model.pb[i] = PBAR;
+		model.rhou[i] = RHO;
+		model.rhow[i] = RHOZ;
+		model.Q1LS[i] = Q1LS;
+		model.Q2LS[i] = Q2LS;
+
+		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);
+		model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.tb[i] * model.pib[i] - 273.)) / (model.tb[i] * model.pib[i] - 36.));
+		i++;
+	}
+
+	model.tb[0] = model.tb[1];
+	model.tb[nz-1] = model.tb[nz-2];
+	model.qvb[0] = model.qvb[1];
+	model.qvb[nz-1] = model.qvb[nz-2];
+	model.pib[0] = model.pib[1];
+	model.pib[nz-1] = model.pib[nz-2];
+	model.pb[0] = model.pb[1];
+	model.pb[nz-1] = model.pb[nz-2];
+	model.rhou[0] = model.rhou[1];
+	model.rhou[nz-1] = model.rhou[nz-2];
+	model.rhow[0] = model.rhow[1];
+	model.rhow[nz-1] = model.rhow[nz-2];
+	model.tvb[0] = model.tvb[1];
+	model.tvb[nz-1] = model.tvb[nz-2];
+	model.qvsb[0] = model.qvsb[1];
+	model.qvsb[nz-1] = model.qvsb[nz-2];
+	return;
 }
