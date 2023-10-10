@@ -255,6 +255,7 @@ void Iteration::cal_u(vvmArray &model) {
 }
 
 void Iteration::pqv_pt(vvmArray &model) {
+	int checkNegative = 0;
 	double puqv_px = 0., prhowqv_pz_rho = 0., wpqvb_pz = 0., forcing = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
@@ -276,24 +277,29 @@ void Iteration::pqv_pt(vvmArray &model) {
 				model.qvp[i][k] += d2t * Kx * rdx2 * (model.qvm[i+1][k] - 2. * model.qvm[i][k] + model.qvm[i-1][k]) + 
 								   d2t * Kz * rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
 			#endif
+
+			if (model.qvp[i][k] + model.qvb[k] < 0.) checkNegative = 1;
 		}
 	}
 
     // negative qv process: (source)
-    double negative = 0, positive = 0;
-    for (int i = 1; i < nx-1; i++) {
-        for (int k = 1; k < nz-1; k++) {
-            if (model.qvp[i][k] + model.qvb[k] < 0.) negative += model.qvp[i][k] + model.qvb[k];
-            else positive += model.qvp[i][k] + model.qvb[k];
-        }
-    }
-    double ratio = (positive + negative) / positive;
-    for (int i = 1; i < nx-1; i++) {
-        for (int k = 1; k < nz-1; k++) {
-            if (model.qvp[i][k] + model.qvb[k] < 0.) model.qvp[i][k] = -model.qvb[k];
-            else model.qvp[i][k] = (model.qvp[i][k] + model.qvb[k]) * ratio - model.qvb[k];
-        }
-    }
+	if (checkNegative == 1) {
+		double negative = 0, positive = 0;
+		for (int i = 1; i < nx-1; i++) {
+			for (int k = 1; k < nz-1; k++) {
+				if (model.qvp[i][k] + model.qvb[k] < 0.) negative += model.qvp[i][k] + model.qvb[k];
+				else positive += model.qvp[i][k] + model.qvb[k];
+			}
+		}
+		double ratio = (positive + negative) / positive;
+		for (int i = 1; i < nx-1; i++) {
+			for (int k = 1; k < nz-1; k++) {
+				if (model.qvp[i][k] + model.qvb[k] < 0.) model.qvp[i][k] = -model.qvb[k];
+				else model.qvp[i][k] = (model.qvp[i][k] + model.qvb[k]) * ratio - model.qvb[k];
+			}
+		}
+		std::cout << "positive: " << positive << ", negative: " << negative << std::endl;
+	}
 
 	model.BoundaryProcess(model.qvp);
 
@@ -339,7 +345,7 @@ void Iteration::pqc_pt(vvmArray &model) {
 
 			// saturation process: sink and source (qv <--> qc)
 			condensation(model, i, k);
-
+			
 			#ifdef DIFFUSION
 				model.qcp[i][k] += d2t * Kx * rdx2 * (model.qcm[i+1][k] - 2. * model.qcm[i][k] + model.qcm[i-1][k]) + 
 									 d2t * Kz * rdz2 * (model.qcm[i][k+1] - 2. * model.qcm[i][k] + model.qcm[i][k-1]);

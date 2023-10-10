@@ -4,5 +4,5 @@ build
 graphs
 outputs
 doc
-log.txt
+*.txt
 input

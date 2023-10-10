@@ -86,59 +86,112 @@ void Init::Init1d(vvmArray &model) {
 }
 
 void Init::Init2d(vvmArray &model) {
-	// init th
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
-			model.th[i][k] = GetTH(i, k);
-			model.thm[i][k] = model.th[i][k];
-		}
-	}
-	model.BoundaryProcess(model.th);
-	model.BoundaryProcess(model.thm);
+    #if defined(LOADFILE)
+		std::mt19937 gen(100); // Mersenne Twister engine for random numbers
+		std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
 
-	// init qv: where th != 0, qv = qvs
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
-			// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
-			// else model.qv[i][k] = 0.;
-			model.qv[i][k] = 0.;
-			model.qvm[i][k] = model.qv[i][k];
-		}
-	}
-	model.BoundaryProcess(model.qv);
-	model.BoundaryProcess(model.qvm);
+		// Parameters for the 2D Gaussian noise array
+		double mean = 0.0; // Mean of the Gaussian distribution
+		double standard_deviation = 2.0; // Standard deviation of the Gaussian distribution
+		double min_range = -3.0; // Minimum value of the generated noise
+		double max_range = 3.0; // Maximum value of the generated noise
 
-	// init u
-	#if defined(SHEAR)
-		double umax = 10.;
-		for (int i = 1; i <= nx-2; i++) {
-			for (int k = 1; k <= nz-2; k++) {
-				if ((k-0.5) * dz <= 5000) {
-					model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
-				}
-				else {
-					model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
-				}
+		// Generate random 2D Gaussian noise array within the specified range
+		double gaussian_noise_2d_array[nx][nz];
+		for (int i = 0; i < nx; ++i) {
+			for (int j = 0; j < nz; ++j) {
+				double random_noise = 0.0;
+				do {
+					random_noise = mean + standard_deviation * distribution(gen);
+				} while (random_noise < min_range || random_noise > max_range);
+
+				gaussian_noise_2d_array[i][j] = random_noise;
 			}
 		}
-		model.BoundaryProcess(model.u);
 
-	#elif defined(ADVECTIONU)
-		for (int i = 1; i <= nx-2; i++) {
-			for (int k = 1; k <= nz-2; k++) {
-                model.u[i][k] = 100.;
+
+        for (int i = 1; i <= nx-2; i++) {
+            for (int k = 1; k <= nz-2; k++) {
+				model.th[i][k] = gaussian_noise_2d_array[i][k];
+                model.thm[i][k] = model.th[i][k];
+
+                model.qv[i][k] = 0.;
+                model.qvm[i][k] = model.qv[i][k];
+
+                #if defined(SHEAR)
+                    if ((k-0.5) * dz <= 5000) {
+                        model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
+                    }
+                    else {
+                        model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
+                    }
+                #else
+                    model.u[i][k] = 0.;
+                    model.w[i][k] = 0.;
+                #endif
             }
         }
-		model.BoundaryProcess(model.u);
+        model.BoundaryProcess(model.th);
+        model.BoundaryProcess(model.thm);
+        model.BoundaryProcess(model.qv);
+        model.BoundaryProcess(model.qvm);
+        model.BoundaryProcess(model.u);
 
-    #elif defined(ADVECTIONW)
+    #else
+        // init th
         for (int i = 1; i <= nx-2; i++) {
-			for (int k = 1; k <= nz-2; k++) {
-                model.w[i][k] = 100.;
+            for (int k = 1; k <= nz-2; k++) {
+                model.th[i][k] = GetTH(i, k);
+                model.thm[i][k] = model.th[i][k];
             }
-		}
-		model.BoundaryProcess(model.w);
-	#endif
+        }
+        model.BoundaryProcess(model.th);
+        model.BoundaryProcess(model.thm);
+
+        // init qv: where th != 0, qv = qvs
+        for (int i = 1; i <= nx-2; i++) {
+            for (int k = 1; k <= nz-2; k++) {
+                // if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
+                // else model.qv[i][k] = 0.;
+                model.qv[i][k] = 0.;
+                model.qvm[i][k] = model.qv[i][k];
+            }
+        }
+        model.BoundaryProcess(model.qv);
+        model.BoundaryProcess(model.qvm);
+
+        // init u
+        #if defined(SHEAR)
+            double umax = 10.;
+            for (int i = 1; i <= nx-2; i++) {
+                for (int k = 1; k <= nz-2; k++) {
+                    if ((k-0.5) * dz <= 5000) {
+                        model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
+                    }
+                    else {
+                        model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
+                    }
+                }
+            }
+            model.BoundaryProcess(model.u);
+
+        #elif defined(ADVECTIONU)
+            for (int i = 1; i <= nx-2; i++) {
+                for (int k = 1; k <= nz-2; k++) {
+                    model.u[i][k] = 100.;
+                }
+            }
+            model.BoundaryProcess(model.u);
+
+        #elif defined(ADVECTIONW)
+            for (int i = 1; i <= nx-2; i++) {
+                for (int k = 1; k <= nz-2; k++) {
+                    model.w[i][k] = 100.;
+                }
+            }
+            model.BoundaryProcess(model.w);
+        #endif
+    #endif
 
 	// init zeta
 	double pu_pz = 0., pw_px = 0.;
@@ -199,11 +252,11 @@ void Init::LoadFile(vvmArray &model) {
 		model.qvb[i] = QVBAR;
 		model.pib[i] = PIBAR;
 		model.pb[i] = PBAR;
-		model.rhou[i] = RHO;
-		model.rhow[i] = RHOZ;
+		model.rhou[i] = RHOZ;
+		model.rhow[i] = RHO;
 		#if defined(TROPICALFORCING)
 			model.Q1LS[i] = Q1LS;
-			model.Q2LS[i] = Q2LS;
+			model.Q2LS[i] = Q2LS * 100.;
 		#endif
 
 		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);

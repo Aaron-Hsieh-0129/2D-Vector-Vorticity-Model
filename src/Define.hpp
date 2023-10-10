@@ -18,14 +18,14 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (1501.)
+#define TIMEEND (2001.)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/tropical_forcing/"
-#define OUTPUTSTEP (1)
+#define OUTPUTPATH "/data/Aaron/2DVVM/tropical_forcing_3_100/"
+#define OUTPUTSTEP (100)
 #define NCOUTPUT
 // #define TXTOUTPUT
 // #define OUTPUTGRAPHMODE

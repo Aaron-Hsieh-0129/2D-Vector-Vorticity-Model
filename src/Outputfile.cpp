@@ -130,7 +130,7 @@ void Output::output_nc(int n, vvmArray &model) {
 	wData.putVar(model.w);
 	qcData.putVar(model.qc);
 	qrData.putVar(model.qr);
-	qvData.putVar(model.qr);
+	qvData.putVar(model.qv);
 
 	if (n == 0) {
 		NcVar tbData = dataFile.addVar("tb", ncDouble, zNcDim);
