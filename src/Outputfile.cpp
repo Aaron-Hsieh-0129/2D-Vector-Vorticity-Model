@@ -158,7 +158,7 @@ void Output::create_directory(string directory_name) {
 
 void Output::create_all_directory() {
     // data directory
-    #ifdef TXTOUTPUT
+    #ifdef OUTPUTTXT
         create_directory(OUTPUTPATH + (string) "u");
         create_directory(OUTPUTPATH + (string) "w");
         create_directory(OUTPUTPATH + (string) "zeta");
@@ -167,7 +167,7 @@ void Output::create_all_directory() {
         create_directory(OUTPUTPATH + (string) "qr");
         create_directory(OUTPUTPATH + (string) "qv");
     #endif
-    #ifdef NCOUTPUT
+    #ifdef OUTPUTNC
         create_directory(OUTPUTPATH + (string) "nc");
     #endif
 

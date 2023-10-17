@@ -86,7 +86,7 @@ void Init::Init1d(vvmArray &model) {
 }
 
 void Init::Init2d(vvmArray &model) {
-    #if defined(LOADFILE)
+	#if defined(LOADFILE)
 		std::mt19937 gen(100); // Mersenne Twister engine for random numbers
 		std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
 
@@ -138,60 +138,42 @@ void Init::Init2d(vvmArray &model) {
         model.BoundaryProcess(model.u);
 
     #else
-        // init th
-        for (int i = 1; i <= nx-2; i++) {
-            for (int k = 1; k <= nz-2; k++) {
-                model.th[i][k] = GetTH(i, k);
-                model.thm[i][k] = model.th[i][k];
-            }
-        }
-        model.BoundaryProcess(model.th);
-        model.BoundaryProcess(model.thm);
+		// init th
+		for (int i = 1; i <= nx-2; i++) {
+			for (int k = 1; k <= nz-2; k++) {
+				model.th[i][k] = GetTH(i, k);
+				model.thm[i][k] = model.th[i][k];
+			}
+		}
+		model.BoundaryProcess(model.th);
+		model.BoundaryProcess(model.thm);
 
-        // init qv: where th != 0, qv = qvs
-        for (int i = 1; i <= nx-2; i++) {
-            for (int k = 1; k <= nz-2; k++) {
-                // if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
-                // else model.qv[i][k] = 0.;
-                model.qv[i][k] = 0.;
-                model.qvm[i][k] = model.qv[i][k];
-            }
-        }
-        model.BoundaryProcess(model.qv);
-        model.BoundaryProcess(model.qvm);
+		// init qv: where th != 0, qv = qvs
+		for (int i = 1; i <= nx-2; i++) {
+			for (int k = 1; k <= nz-2; k++) {
+				// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
+				// else model.qv[i][k] = 0.;
+				model.qv[i][k] = 0.;
+				model.qvm[i][k] = model.qv[i][k];
+			}
+		}
+		model.BoundaryProcess(model.qv);
+		model.BoundaryProcess(model.qvm);
 
-        // init u
-        #if defined(SHEAR)
-            double umax = 10.;
-            for (int i = 1; i <= nx-2; i++) {
-                for (int k = 1; k <= nz-2; k++) {
-                    if ((k-0.5) * dz <= 5000) {
-                        model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
-                    }
-                    else {
-                        model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
-                    }
-                }
-            }
-            model.BoundaryProcess(model.u);
-
-        #elif defined(ADVECTIONU)
-            for (int i = 1; i <= nx-2; i++) {
-                for (int k = 1; k <= nz-2; k++) {
-                    model.u[i][k] = 100.;
-                }
-            }
-            model.BoundaryProcess(model.u);
-
-        #elif defined(ADVECTIONW)
-            for (int i = 1; i <= nx-2; i++) {
-                for (int k = 1; k <= nz-2; k++) {
-                    model.w[i][k] = 100.;
-                }
-            }
-            model.BoundaryProcess(model.w);
-        #endif
-    #endif
+		// init u
+		#if defined(SHEAR)
+			// From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
+			double umin = -10, umax = 10.;
+			int bubble_center_idx = 2500/dz + 1;
+			for (int i = 1; i <= nx-2; i++) {
+				for (int k = 1; k <= nz-2; k++) {
+					if (k <= bubble_center_idx) model.u[i][k] = umin - umin / (bubble_center_idx-1) * (k-1);
+					else model.u[i][k] = umax / (nz-2 - (bubble_center_idx-1)) * (k-bubble_center_idx+1);
+				}
+			}
+			model.BoundaryProcess(model.u);
+		#endif
+	#endif
 
 	// init zeta
 	double pu_pz = 0., pw_px = 0.;
@@ -216,7 +198,7 @@ double Init::GetTB(int k) {
 }
 
 double Init::GetTHRAD(int i, int k) {
-	double XC = 74875., XR = 4000.;
+	double XC = XRANGE / 2., XR = 4000.;
 	double ZC = 2500., ZR = 2000.;
 	double x = (i-0.5) * dx, z = (k-0.5) * dz;
 	double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
@@ -256,7 +238,7 @@ void Init::LoadFile(vvmArray &model) {
 		model.rhow[i] = RHO;
 		#if defined(TROPICALFORCING)
 			model.Q1LS[i] = Q1LS;
-			model.Q2LS[i] = Q2LS * 100.;
+			model.Q2LS[i] = Q2LS;
 		#endif
 
 		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);

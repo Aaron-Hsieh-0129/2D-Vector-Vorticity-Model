@@ -18,16 +18,16 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (2001.)
+#define TIMEEND (3001.)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/tropical_forcing_3_100/"
 #define OUTPUTSTEP (100)
-#define NCOUTPUT
-// #define TXTOUTPUT
+#define OUTPUTPATH "/data/Aaron/2DVVM/shear_from_oldversion/"
+// #define OUTPUTTXT
+#define OUTPUTNC
 // #define OUTPUTGRAPHMODE
 
 // #define DRY
@@ -38,9 +38,9 @@
 #define DIFFUSION
 #define TIMEFILTER
 #define WATER
-#define TROPICALFORCING
-// #define SHEAR
+// #define TROPICALFORCING
+#define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-#define LOADFILE
+// #define LOADFILE
