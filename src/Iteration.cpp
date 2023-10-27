@@ -71,7 +71,12 @@ void Iteration::pth_pt(vvmArray &model) {
                 forcing = 0.;
             #endif
 
-            model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+            if (model.status_for_adding_forcing == true) {
+                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
+            }
+            else {
+                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+            }
 
 			#ifdef DIFFUSION
 				model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
@@ -459,7 +464,6 @@ void Iteration::heatflux(vvmArray & model, int i, int k, int ishflux) {
 
 void Iteration::LeapFrog(vvmArray &model) {
 	int n = 0;
-	// double timenow = 0.;
 	double temp = TIMEEND / dt;
 	int nmax = (int) temp;
 	while (n < nmax) {
@@ -484,7 +488,11 @@ void Iteration::LeapFrog(vvmArray &model) {
 			#endif
 		}
 		n++;
-		// timenow = n * dt;
+		
+        #if defined(TROPICALFORCING)
+            if (n * dt <= ADDFORCINGTIME) model.status_for_adding_forcing = true;
+            else model.status_for_adding_forcing = false;
+        #endif
 
 		// calculate
 		pzeta_pt(model);

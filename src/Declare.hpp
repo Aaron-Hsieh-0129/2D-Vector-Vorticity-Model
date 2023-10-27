@@ -10,6 +10,8 @@ class vvmArray {
 			double tb[nz], tb_zeta[nz], rhou[nz], rhow[nz], pib[nz], qvb[nz], qvsb[nz], tvb[nz], pb[nz];
 			#if defined(TROPICALFORCING)
 				double Q1LS[nz], Q2LS[nz];
+                double init_th_forcing[nx][nz];
+                bool status_for_adding_forcing = false;
 			#endif
 			double zetap[nx][nz], zeta[nx][nz], zetam[nx][nz];
 			double thp[nx][nz], th[nx][nz], thm[nx][nz];

@@ -12,20 +12,20 @@
 #define ZRANGE (15000+2*dz)
 #define nx (XRANGE / dx)
 #define nz (ZRANGE / dz)
-#define dt (0.1)
+#define dt (1.)
 #define rdx (1. / (double) dx)
 #define rdz (1. / (double) dz)
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (3001.)
+#define TIMEEND (86400. * 3. + 1)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTSTEP (100)
-#define OUTPUTPATH "/data/Aaron/2DVVM/shear_from_oldversion/"
+#define OUTPUTSTEP (10)
+#define OUTPUTPATH "/data/Aaron/2DVVM/6Q16Q2_perturb_1km_20min_1K_3day/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -38,9 +38,10 @@
 #define DIFFUSION
 #define TIMEFILTER
 #define WATER
-// #define TROPICALFORCING
-#define SHEAR
+#define TROPICALFORCING
+// #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-// #define LOADFILE
+#define LOADFILE
+#define ADDFORCINGTIME (1200.)

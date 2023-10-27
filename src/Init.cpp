@@ -92,14 +92,14 @@ void Init::Init2d(vvmArray &model) {
 
 		// Parameters for the 2D Gaussian noise array
 		double mean = 0.0; // Mean of the Gaussian distribution
-		double standard_deviation = 2.0; // Standard deviation of the Gaussian distribution
-		double min_range = -3.0; // Minimum value of the generated noise
-		double max_range = 3.0; // Maximum value of the generated noise
+		double standard_deviation = 1.0; // Standard deviation of the Gaussian distribution
+		double min_range = -1.0; // Minimum value of the generated noise
+		double max_range = 1.0; // Maximum value of the generated noise
 
 		// Generate random 2D Gaussian noise array within the specified range
-		double gaussian_noise_2d_array[nx][nz];
+				double gaussian_noise_2d_array[nx][nz/15];
 		for (int i = 0; i < nx; ++i) {
-			for (int j = 0; j < nz; ++j) {
+			for (int j = 0; j < nz/15; ++j) {
 				double random_noise = 0.0;
 				do {
 					random_noise = mean + standard_deviation * distribution(gen);
@@ -112,7 +112,15 @@ void Init::Init2d(vvmArray &model) {
 
         for (int i = 1; i <= nx-2; i++) {
             for (int k = 1; k <= nz-2; k++) {
-				model.th[i][k] = gaussian_noise_2d_array[i][k];
+				if (k <= nz/15) {
+                    model.init_th_forcing[i][k] = gaussian_noise_2d_array[i][k];
+                    model.th[i][k] = gaussian_noise_2d_array[i][k];
+                }   
+				else {
+                    model.init_th_forcing[i][k] = 0.;
+                    model.th[i][k] = 0.;
+                } 
+				
                 model.thm[i][k] = model.th[i][k];
 
                 model.qv[i][k] = 0.;
@@ -237,8 +245,8 @@ void Init::LoadFile(vvmArray &model) {
 		model.rhou[i] = RHOZ;
 		model.rhow[i] = RHO;
 		#if defined(TROPICALFORCING)
-			model.Q1LS[i] = Q1LS;
-			model.Q2LS[i] = Q2LS;
+			model.Q1LS[i] = Q1LS * 6.;
+			model.Q2LS[i] = Q2LS * 6.;
 		#endif
 
 		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);
