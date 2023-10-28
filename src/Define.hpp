@@ -18,14 +18,14 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (86400. * 3. + 1)
+#define TIMEEND (1000.)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/6Q16Q2_perturb_1km_20min_1K_3day/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/qr_modify/test_water/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -38,10 +38,10 @@
 #define DIFFUSION
 #define TIMEFILTER
 #define WATER
-#define TROPICALFORCING
+// #define TROPICALFORCING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-#define LOADFILE
-#define ADDFORCINGTIME (1200.)
+// #define LOADFILE
+// #define ADDFORCINGTIME (1200.)

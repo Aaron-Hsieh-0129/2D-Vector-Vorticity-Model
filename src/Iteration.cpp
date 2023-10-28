@@ -67,16 +67,18 @@ void Iteration::pth_pt(vvmArray &model) {
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
+				if (model.status_for_adding_forcing == true) {
+                	model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
+				}
+				else {
+					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+				}
             #else
                 forcing = 0.;
+                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
             #endif
 
-            if (model.status_for_adding_forcing == true) {
-                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
-            }
-            else {
-                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
-            }
+            
 
 			#ifdef DIFFUSION
 				model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
@@ -352,24 +354,37 @@ void Iteration::pqc_pt(vvmArray &model) {
 void Iteration::pqr_pt(vvmArray &model) {
 	double puqr_px = 0., prhowVTqr_pz_rho = 0.;
 	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
+		for (int k = nz-2; k >= 1; k--) {
+			if (k == 2) model.qr[i][1] = model.qr[i][2];
+			if (k == 1) {
+				model.qr[i][1] = 0.;
+				model.qr[i][0] = 0.;
+			}
+
 			puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 			// TODO: VT
 			double VT = 6.;
 			prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
 							    model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
-			model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
+			
+			if (k == 1) model.qrp[i][k] = d2t * (-prhowVTqr_pz_rho);
+			else model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
+
 			// negative qr process
 			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
 			
 			#ifdef DIFFUSION
 				model.qrp[i][k] += d2t * Kx * rdx2 * (model.qrm[i+1][k] - 2. * model.qrm[i][k] + model.qrm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (model.qrm[i][k+1] - 2. * model.qrm[i][k] + model.qrm[i][k-1]);
+								   d2t * Kz * rdz2 * (model.qrm[i][k+1] - 2. * model.qrm[i][k] + model.qrm[i][k-1]);
 			#endif
 
-			autoconversion(model, i, k);
-			accretion(model, i, k);
-			evaporation(model, i, k);
+			if (k >= 2) {
+				autoconversion(model, i, k);
+				accretion(model, i, k);
+				evaporation(model, i, k);
+			}
+
+			model.qrAcc[i] += model.qrp[i][1];
 		}
 	}
 	model.BoundaryProcess(model.qrp);

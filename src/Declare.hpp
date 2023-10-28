@@ -22,6 +22,7 @@ class vvmArray {
 			double w[nx][nz];
 			double xi[nx], uxi[nx];
 			double addflx[nx];
+			double qrAcc[nx];
 
 			static void BoundaryProcess(double tmp[][nz]);
 			static void BoundaryProcessZETA(double tmp[][nz]);

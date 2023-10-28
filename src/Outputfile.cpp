@@ -123,6 +123,7 @@ void Output::output_nc(int n, vvmArray &model) {
 	NcVar qcData = dataFile.addVar("qc", ncDouble, xzDim);
 	NcVar qrData = dataFile.addVar("qr", ncDouble, xzDim);
 	NcVar qvData = dataFile.addVar("qv", ncDouble, xzDim);
+	NcVar qrAccData = dataFile.addVar("qrAcc", ncDouble, xDim);
 
 	thData.putVar(model.th);
 	zetaData.putVar(model.zeta);
@@ -131,6 +132,7 @@ void Output::output_nc(int n, vvmArray &model) {
 	qcData.putVar(model.qc);
 	qrData.putVar(model.qr);
 	qvData.putVar(model.qv);
+	qrAccData.putVar(model.qrAcc);	
 
 	if (n == 0) {
 		NcVar tbData = dataFile.addVar("tb", ncDouble, zNcDim);
