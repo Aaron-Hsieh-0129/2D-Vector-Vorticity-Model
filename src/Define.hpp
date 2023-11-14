@@ -18,14 +18,14 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (1000.)
+#define TIMEEND (86400. * 3. + 1)
 #define Kx (1000.)
 #define Kz (1000.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/qr_modify/test_water/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/test_water/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -45,3 +45,4 @@
 
 // #define LOADFILE
 // #define ADDFORCINGTIME (1200.)
+// #define LINEARIZEDQV

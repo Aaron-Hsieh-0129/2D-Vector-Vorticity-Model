@@ -86,7 +86,7 @@ void Init::Init1d(vvmArray &model) {
 }
 
 void Init::Init2d(vvmArray &model) {
-	#if defined(LOADFILE)
+	#if defined(TROPICALFORCING)
 		std::mt19937 gen(100); // Mersenne Twister engine for random numbers
 		std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
 
@@ -97,7 +97,7 @@ void Init::Init2d(vvmArray &model) {
 		double max_range = 1.0; // Maximum value of the generated noise
 
 		// Generate random 2D Gaussian noise array within the specified range
-				double gaussian_noise_2d_array[nx][nz/15];
+		double gaussian_noise_2d_array[nx][nz/15];
 		for (int i = 0; i < nx; ++i) {
 			for (int j = 0; j < nz/15; ++j) {
 				double random_noise = 0.0;
@@ -123,7 +123,7 @@ void Init::Init2d(vvmArray &model) {
 				
                 model.thm[i][k] = model.th[i][k];
 
-                model.qv[i][k] = 0.;
+                model.qv[i][k] = model.qvb[k];
                 model.qvm[i][k] = model.qv[i][k];
 
                 #if defined(SHEAR)
@@ -161,7 +161,11 @@ void Init::Init2d(vvmArray &model) {
 			for (int k = 1; k <= nz-2; k++) {
 				// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
 				// else model.qv[i][k] = 0.;
-				model.qv[i][k] = 0.;
+				#if defined(LINEARIZEDQV)
+					model.qv[i][k] = 0.;
+				#else
+					model.qv[i][k] = model.qvb[k];
+				#endif
 				model.qvm[i][k] = model.qv[i][k];
 			}
 		}

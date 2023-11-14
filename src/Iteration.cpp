@@ -67,18 +67,20 @@ void Iteration::pth_pt(vvmArray &model) {
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
+            #else
+                forcing = 0.;
+            #endif
+			
+			#if defined(TROPICALFORCING)
 				if (model.status_for_adding_forcing == true) {
-                	model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
+					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
 				}
 				else {
 					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
 				}
-            #else
-                forcing = 0.;
-                model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
-            #endif
-
-            
+			#else
+				model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+			#endif
 
 			#ifdef DIFFUSION
 				model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
@@ -262,29 +264,37 @@ void Iteration::cal_u(vvmArray &model) {
 }
 
 void Iteration::pqv_pt(vvmArray &model) {
-	double puqv_px = 0., prhowqv_pz_rho = 0., wpqvb_pz = 0., forcing = 0.;
+	double puqv_px = 0., prhowqv_pz_rho = 0., forcing = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puqv_px = (model.u[i+1][k] * 0.5*(model.qv[i+1][k] + model.qv[i][k]) - model.u[i][k] * 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
 			prhowqv_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qv[i][k+1] + model.qv[i][k]) - 
 							  model.rhow[k] * model.w[i][k] * 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz / model.rhou[k];
-			wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
+			// wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
 			#if defined(TROPICALFORCING)
                 forcing = model.Q2LS[k];
             #else
                 forcing = 0.;
             #endif
 
-			model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz + forcing);
+            #if defined(LINEARIZEDQV)
+                model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz + forcing);
+            #else
+                model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho + forcing);
+            #endif
 
 			// diffusion
 			#ifdef DIFFUSION
 				model.qvp[i][k] += d2t * Kx * rdx2 * (model.qvm[i+1][k] - 2. * model.qvm[i][k] + model.qvm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
+								   d2t * Kz * rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
 			#endif
 
 			// negative qv process: (source)
-			if (model.qvp[i][k] + model.qvb[k] < 0.) model.qvp[i][k] = -model.qvb[k];
+			#if defined(LINEARIZEDQV)
+				if (model.qvp[i][k] + model.qvb[k] < 0.) model.qvp[i][k] = -model.qvb[k];
+			#else
+				if (model.qvp[i][k] < 0.) model.qvp[i][k] = 0.;
+			#endif
 		}
 	}
 	model.BoundaryProcess(model.qvp);
@@ -406,7 +416,8 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
 	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
 
-	double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
+	// double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
+	double C = (model.qvp[i][k] - qvs) / (1 + phi); 
 
 	// C should less than qc
 	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
@@ -445,7 +456,7 @@ void Iteration::accretion(vvmArray &model, int i, int k) {
 // evaporation of rain water
 void Iteration::evaporation(vvmArray &model, int i, int k) {
 	double qrplus = std::max(0., model.qrp[i][k]);
-	double qvplus = std::max(0., model.qvp[i][k] + model.qvb[k]);
+	double qvplus = std::max(0., model.qvp[i][k]);
 
 	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
 	double pth = model.thp[i][k] + model.tb[k];
@@ -514,9 +525,11 @@ void Iteration::LeapFrog(vvmArray &model) {
 		pth_pt(model);
 		cal_w(model);
 		cal_u(model);
-		pqv_pt(model);
-		pqc_pt(model);
-		pqr_pt(model);
+		#if defined(WATER)
+			pqv_pt(model);
+			pqc_pt(model);
+			pqr_pt(model);
+		#endif
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {
@@ -527,14 +540,16 @@ void Iteration::LeapFrog(vvmArray &model) {
 				model.thm[i][k] = model.th[i][k];
 				model.th[i][k] = model.thp[i][k];
 
-				model.qvm[i][k] = model.qv[i][k];
-				model.qv[i][k] = model.qvp[i][k];
+				#if defined(WATER)
+					model.qvm[i][k] = model.qv[i][k];
+					model.qv[i][k] = model.qvp[i][k];
 
-				model.qcm[i][k] = model.qc[i][k];
-				model.qc[i][k] = model.qcp[i][k];
+					model.qcm[i][k] = model.qc[i][k];
+					model.qc[i][k] = model.qcp[i][k];
 
-				model.qrm[i][k] = model.qr[i][k];
-				model.qr[i][k] = model.qrp[i][k];
+					model.qrm[i][k] = model.qr[i][k];
+					model.qr[i][k] = model.qrp[i][k];
+				#endif
 			}
 		}
 
