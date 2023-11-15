@@ -265,12 +265,15 @@ void Iteration::cal_u(vvmArray &model) {
 
 void Iteration::pqv_pt(vvmArray &model) {
 	double puqv_px = 0., prhowqv_pz_rho = 0., forcing = 0.;
+	#if defined(LINEARIZEDQV)
+		double wpqvb_pz = 0.;
+	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puqv_px = (model.u[i+1][k] * 0.5*(model.qv[i+1][k] + model.qv[i][k]) - model.u[i][k] * 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
 			prhowqv_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qv[i][k+1] + model.qv[i][k]) - 
 							  model.rhow[k] * model.w[i][k] * 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz / model.rhou[k];
-			// wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
+			
 			#if defined(TROPICALFORCING)
                 forcing = model.Q2LS[k];
             #else
@@ -278,6 +281,7 @@ void Iteration::pqv_pt(vvmArray &model) {
             #endif
 
             #if defined(LINEARIZEDQV)
+				wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
                 model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz + forcing);
             #else
                 model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho + forcing);
@@ -416,8 +420,11 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
 	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
 
-	// double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
-	double C = (model.qvp[i][k] - qvs) / (1 + phi); 
+	#if defined(LINEARIZEDQV)
+		double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
+	#else
+		double C = (model.qvp[i][k] - qvs) / (1 + phi); 
+	#endif
 
 	// C should less than qc
 	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
@@ -463,7 +470,7 @@ void Iteration::evaporation(vvmArray &model, int i, int k) {
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));	// Tetens equation
 
 	double coef = 1.6 + 30.39 * pow((model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
-	double deficit = std::max((1. - qvplus / qvs), 0.);							// saturation dificit (RH < 100%)
+	double deficit = std::max((1. - qvplus / qvs), 0.);					// saturation dificit (RH < 100%)
 
 	double er = coef * deficit * (pow(model.rhou[k] * qrplus, 0.525)) / 
 				((2.03e4 + 9.584e6 / (model.pb[k] * qvs)) * model.rhou[k]);

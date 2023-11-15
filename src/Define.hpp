@@ -25,7 +25,7 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/test_water/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/test/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -38,11 +38,11 @@
 #define DIFFUSION
 #define TIMEFILTER
 #define WATER
-// #define TROPICALFORCING
+#define TROPICALFORCING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-// #define LOADFILE
-// #define ADDFORCINGTIME (1200.)
-// #define LINEARIZEDQV
+#define LOADFILE
+#define ADDFORCINGTIME (1200.)
+#define LINEARIZEDQV

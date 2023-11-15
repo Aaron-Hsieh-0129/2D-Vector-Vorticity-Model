@@ -123,7 +123,11 @@ void Init::Init2d(vvmArray &model) {
 				
                 model.thm[i][k] = model.th[i][k];
 
-                model.qv[i][k] = model.qvb[k];
+				#if defined(LINEARIZEDQV)
+					model.qv[i][k] = 0.;
+				#else
+                	model.qv[i][k] = model.qvb[k];
+				#endif
                 model.qvm[i][k] = model.qv[i][k];
 
                 #if defined(SHEAR)
@@ -144,6 +148,7 @@ void Init::Init2d(vvmArray &model) {
         model.BoundaryProcess(model.qv);
         model.BoundaryProcess(model.qvm);
         model.BoundaryProcess(model.u);
+        model.BoundaryProcess(model.w);
 
     #else
 		// init th
