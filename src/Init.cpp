@@ -87,40 +87,17 @@ void Init::Init1d(vvmArray &model) {
 
 void Init::Init2d(vvmArray &model) {
 	#if defined(TROPICALFORCING)
-		std::mt19937 gen(100); // Mersenne Twister engine for random numbers
-		std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
-
-		// Parameters for the 2D Gaussian noise array
-		double mean = 0.0; // Mean of the Gaussian distribution
-		double standard_deviation = 1.0; // Standard deviation of the Gaussian distribution
-		double min_range = -1.0; // Minimum value of the generated noise
-		double max_range = 1.0; // Maximum value of the generated noise
-
 		// Generate random 2D Gaussian noise array within the specified range
-		double gaussian_noise_2d_array[nx][nz/15];
-		for (int i = 0; i < nx; ++i) {
-			for (int j = 0; j < nz/15; ++j) {
-				double random_noise = 0.0;
-				do {
-					random_noise = mean + standard_deviation * distribution(gen);
-				} while (random_noise < min_range || random_noise > max_range);
-
-				gaussian_noise_2d_array[i][j] = random_noise;
-			}
-		}
-
+		RandomPerturbation(model, 0);
 
         for (int i = 1; i <= nx-2; i++) {
             for (int k = 1; k <= nz-2; k++) {
 				if (k <= nz/15) {
-                    model.init_th_forcing[i][k] = gaussian_noise_2d_array[i][k];
-                    model.th[i][k] = gaussian_noise_2d_array[i][k];
+                    model.th[i][k] = model.init_th_forcing[i][k];
                 }   
 				else {
-                    model.init_th_forcing[i][k] = 0.;
                     model.th[i][k] = 0.;
                 } 
-				
                 model.thm[i][k] = model.th[i][k];
 
 				#if defined(LINEARIZEDQV)
@@ -287,4 +264,32 @@ void Init::LoadFile(vvmArray &model) {
 	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
 
 	return;
+}
+
+void Init::RandomPerturbation(vvmArray &model, int t) {
+    std::mt19937 gen(t); // Mersenne Twister engine for random numbers
+    std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
+
+    // Parameters for the 2D Gaussian noise array
+    double mean = 0.; // Mean of the Gaussian distribution
+    double standard_deviation = 1.; // Standard deviation of the Gaussian distribution
+    double min_range = -1.; // Minimum value of the generated noise
+    double max_range = 1.; // Maximum value of the generated noise
+
+    for (int i = 1; i < nx-1; i++) {
+        for (int k = 1; k < nz-1; k++) {
+            if (k <= nz / 15) {
+                double random_noise = 0.;
+                do {
+                    random_noise = mean + standard_deviation * distribution(gen);
+                } while (random_noise < min_range || random_noise > max_range);
+
+                model.init_th_forcing[i][k] = random_noise;
+            }
+            else {
+                model.init_th_forcing[i][k] = 0.;
+            }
+        }
+    }
+    model.BoundaryProcess(model.init_th_forcing);
 }

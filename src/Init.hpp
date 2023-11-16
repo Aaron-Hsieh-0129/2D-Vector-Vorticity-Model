@@ -8,6 +8,7 @@ class Init {
 			static void Init1d(vvmArray &);
 			static void Init2d(vvmArray &);
 			static void LoadFile(vvmArray &);
+			static void RandomPerturbation(vvmArray &, int);
 			
 	private:
 			static double GetTB(int);

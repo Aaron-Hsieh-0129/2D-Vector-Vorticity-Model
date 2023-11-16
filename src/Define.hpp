@@ -25,7 +25,7 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/test/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/6Q16Q2/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -45,4 +45,4 @@
 
 #define LOADFILE
 #define ADDFORCINGTIME (1200.)
-#define LINEARIZEDQV
+// #define LINEARIZEDQV

@@ -420,6 +420,8 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
 	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
 
+	if (model.qvp[i][k] - qvs <= 0) return;
+
 	#if defined(LINEARIZEDQV)
 		double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
 	#else
@@ -427,7 +429,7 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 	#endif
 
 	// C should less than qc
-	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
+	// if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
 	
 	model.qvp[i][k] = model.qvp[i][k] - C;
 	model.qcp[i][k] = model.qcp[i][k] + C;
@@ -525,6 +527,11 @@ void Iteration::LeapFrog(vvmArray &model) {
         #if defined(TROPICALFORCING)
             if (n * dt <= ADDFORCINGTIME) model.status_for_adding_forcing = true;
             else model.status_for_adding_forcing = false;
+
+            // Generate new random th perturbation for tropical forcing case
+            if (model.status_for_adding_forcing == true) {
+                Init::RandomPerturbation(model, n);
+            }
         #endif
 
 		// calculate
