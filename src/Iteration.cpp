@@ -429,7 +429,7 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 	#endif
 
 	// C should less than qc
-	// if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
+	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
 	
 	model.qvp[i][k] = model.qvp[i][k] - C;
 	model.qcp[i][k] = model.qcp[i][k] + C;
