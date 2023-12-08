@@ -92,12 +92,7 @@ void Init::Init2d(vvmArray &model) {
 
         for (int i = 1; i <= nx-2; i++) {
             for (int k = 1; k <= nz-2; k++) {
-				if (k <= nz/15) {
-                    model.th[i][k] = model.init_th_forcing[i][k];
-                }   
-				else {
-                    model.th[i][k] = 0.;
-                } 
+                model.th[i][k] = model.init_th_forcing[i][k];
                 model.thm[i][k] = model.th[i][k];
 
 				#if defined(LINEARIZEDQV)

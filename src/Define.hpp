@@ -9,7 +9,7 @@
 #define dx (200)
 #define dz (200)
 #define XRANGE (120000+2*dx)
-#define ZRANGE (15000+2*dz)
+#define ZRANGE (20000+2*dz)
 #define nx (XRANGE / dx)
 #define nz (ZRANGE / dz)
 #define dt (1.)
@@ -25,7 +25,7 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/6Q16Q2/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/qr_thqv_modify/6Q16Q2_qv_20km_cooling/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -39,6 +39,7 @@
 #define TIMEFILTER
 #define WATER
 #define TROPICALFORCING
+#define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX

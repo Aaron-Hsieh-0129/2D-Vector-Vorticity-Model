@@ -78,6 +78,10 @@ void Iteration::pth_pt(vvmArray &model) {
 				else {
 					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
 				}
+
+				#if defined(RADIATIONCOOLING) 
+					model.thp[i][k] += d2t * (-2 / 86400);
+				#endif
 			#else
 				model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
 			#endif
