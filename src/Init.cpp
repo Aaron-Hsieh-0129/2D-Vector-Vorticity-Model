@@ -92,7 +92,11 @@ void Init::Init2d(vvmArray &model) {
 
         for (int i = 1; i <= nx-2; i++) {
             for (int k = 1; k <= nz-2; k++) {
-                model.th[i][k] = model.init_th_forcing[i][k];
+				#if defined(LINEARIZEDTH)
+                	model.th[i][k] = model.init_th_forcing[i][k];
+				#else
+					model.th[i][k] = model.tb[k] + model.init_th_forcing[i][k];
+				#endif
                 model.thm[i][k] = model.th[i][k];
 
 				#if defined(LINEARIZEDQV)
@@ -126,7 +130,11 @@ void Init::Init2d(vvmArray &model) {
 		// init th
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-				model.th[i][k] = GetTH(i, k);
+				#if defined(LINEARIZEDTH)
+					model.th[i][k] = GetTH(i, k);
+				#else
+					model.th[i][k] = model.th[k] + GetTH(i, k);
+				#endif
 				model.thm[i][k] = model.th[i][k];
 			}
 		}
@@ -261,6 +269,7 @@ void Init::LoadFile(vvmArray &model) {
 	return;
 }
 
+#if defined(TROPICALFORCING)
 void Init::RandomPerturbation(vvmArray &model, int t) {
     std::mt19937 gen(t); // Mersenne Twister engine for random numbers
     std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
@@ -288,3 +297,4 @@ void Init::RandomPerturbation(vvmArray &model, int t) {
     }
     model.BoundaryProcess(model.init_th_forcing);
 }
+#endif

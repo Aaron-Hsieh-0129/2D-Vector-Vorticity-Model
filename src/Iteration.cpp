@@ -57,34 +57,54 @@ void Iteration::pzeta_pt(vvmArray &model) {
 }
 
 void Iteration::pth_pt(vvmArray &model) {
-    double puth_px = 0., prhowth_pz_rho = 0., wptb_pz = 0., forcing = 0.;
+    double puth_px = 0., prhowth_pz_rho = 0., forcing = 0.;
+	#if defined(LINEARIZEDTH)
+		double wptb_pz = 0.;
+	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
 			prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
 							  model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
-			wptb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.tb[k+1] + model.tb[k]) - 0.5*(model.tb[k] + model.tb[k-1])) * rdz;
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
             #else
                 forcing = 0.;
             #endif
-			
-			#if defined(TROPICALFORCING)
-				if (model.status_for_adding_forcing == true) {
-					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
-				}
-				else {
-					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
-				}
 
-				#if defined(RADIATIONCOOLING) 
-					model.thp[i][k] += d2t * (-2 / 86400);
+			#if defined(LINEARIZEDTH)
+				wptb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.tb[k+1] + model.tb[k]) - 0.5*(model.tb[k] + model.tb[k-1])) * rdz;
+				#if defined(TROPICALFORCING)
+					if (model.status_for_adding_forcing == true) {
+						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing + model.init_th_forcing[i][k]);
+					}
+					else {
+						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+					}
+
+					#if defined(RADIATIONCOOLING) 
+						model.thp[i][k] += d2t * (-2 / 86400);
+					#endif
+				#else
+					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
 				#endif
-			#else
-				model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
-			#endif
+            #else
+                #if defined(TROPICALFORCING)
+					if (model.status_for_adding_forcing == true) {
+						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing + model.init_th_forcing[i][k]);
+					}
+					else {
+						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+					}
+
+					#if defined(RADIATIONCOOLING) 
+						model.thp[i][k] += d2t * (-2 / 86400);
+					#endif
+				#else
+					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+				#endif
+            #endif
 
 			#ifdef DIFFUSION
 				model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
@@ -420,11 +440,13 @@ void Iteration::pqr_pt(vvmArray &model) {
 
 void Iteration::condensation(vvmArray &model, int i, int k) {
 	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0); 	// coefficient
-	double pth = model.thp[i][k] + model.tb[k];
+	#if defined(LINEARIZEDTH)
+		double pth = model.thp[i][k] + model.tb[k];
+	#else
+		double pth = model.thp[i][k];
+	#endif
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
 	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
-
-	if (model.qvp[i][k] - qvs <= 0) return;
 
 	#if defined(LINEARIZEDQV)
 		double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
@@ -472,7 +494,11 @@ void Iteration::evaporation(vvmArray &model, int i, int k) {
 	double qvplus = std::max(0., model.qvp[i][k]);
 
 	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
-	double pth = model.thp[i][k] + model.tb[k];
+	#if defined(LINEARIZEDTH)
+		double pth = model.thp[i][k] + model.tb[k];
+	#else
+		double pth = model.thp[i][k];
+	#endif
 	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));	// Tetens equation
 
 	double coef = 1.6 + 30.39 * pow((model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
@@ -488,7 +514,7 @@ void Iteration::evaporation(vvmArray &model, int i, int k) {
 	return;
 }
 
-void Iteration::heatflux(vvmArray & model, int i, int k, int ishflux) {
+void Iteration::heatflux(vvmArray &model, int i, int k, int ishflux) {
 	if (ishflux == 1 && k == 1) {
 		double cdh = 7e-3;
 		double tground = 303.;
@@ -499,6 +525,26 @@ void Iteration::heatflux(vvmArray & model, int i, int k, int ishflux) {
 		double vel = sqrt(pow(avgu, 2) + pow(wnetc, 2));
 		model.thp[i][k] = model.thp[i][k] + d2t * cdh * vel * model.addflx[i] * tdif * rdz;
 	}
+}
+
+void Iteration::updateMean(vvmArray &model) {
+	double tb = 0.;
+	for (int k = 1; k < nz-1; k++) {
+		tb = 0.;
+		for (int i = 1; i < nx-1; i++) {
+			tb += model.thp[i][k];
+		}
+		model.tb[k] = tb / (nx-2);
+	}
+	model.tb[0] = model.tb[1];
+	model.tb[nz-1] = model.tb[nz-2];
+
+	for (int k = 1; k < nz-1; k++) {
+		model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
+	}
+	model.tb_zeta[0] = model.tb_zeta[1];
+	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
+	
 }
 
 void Iteration::LeapFrog(vvmArray &model) {
@@ -548,6 +594,10 @@ void Iteration::LeapFrog(vvmArray &model) {
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
+
+		#ifndef LINEARIZEDTH
+			updateMean(model);
+		#endif 
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {
