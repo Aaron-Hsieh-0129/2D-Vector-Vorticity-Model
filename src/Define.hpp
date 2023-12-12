@@ -25,7 +25,7 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/Bubble/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/6Q16Q2_linrqv_20km_cooling/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -37,14 +37,14 @@
 // #define NoBouyance
 #define DIFFUSION
 #define TIMEFILTER
-// #define WATER
-// #define TROPICALFORCING
-// #define RADIATIONCOOLING
+#define WATER
+#define TROPICALFORCING
+#define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-// #define LOADFILE
-#define ADDFORCINGTIME (-1.)
-// #define LINEARIZEDQV
-// #define LINEARIZEDTH
+#define LOADFILE
+#define ADDFORCINGTIME (1200.)
+#define LINEARIZEDQV
+#define LINEARIZEDTH
