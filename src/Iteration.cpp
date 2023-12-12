@@ -554,7 +554,6 @@ void Iteration::LeapFrog(vvmArray &model) {
 	while (n < nmax) {
 		std::cout << n << std::endl;
 		// output
-		Output::create_all_directory();
 		if (n % OUTPUTSTEP == 0) {
 			#if defined(OUTPUTTXT)
 				Output::output_zeta(n, model);

@@ -133,7 +133,7 @@ void Init::Init2d(vvmArray &model) {
 				#if defined(LINEARIZEDTH)
 					model.th[i][k] = GetTH(i, k);
 				#else
-					model.th[i][k] = model.th[k] + GetTH(i, k);
+					model.th[i][k] = model.tb[k] + GetTH(i, k);
 				#endif
 				model.thm[i][k] = model.th[i][k];
 			}
