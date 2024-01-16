@@ -19,13 +19,13 @@
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
 #define TIMEEND (86400. * 3. + 1.)
-#define Kx (1000.)
-#define Kz (1000.)
+#define Kx (250.)
+#define Kz (250.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/6Q16Q2_linrqv_20km_cooling/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/6Q16Q2_qvfull_diff250/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -46,5 +46,5 @@
 
 #define LOADFILE
 #define ADDFORCINGTIME (1200.)
-#define LINEARIZEDQV
+// #define LINEARIZEDQV
 #define LINEARIZEDTH

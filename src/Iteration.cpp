@@ -454,7 +454,7 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 		double C = (model.qvp[i][k] - qvs) / (1 + phi); 
 	#endif
 
-	// C should less than qc
+	// C should less than qc (C can be sink for qc and source for qv, so it should not excess qc)
 	if (fabs(C) > model.qcp[i][k] && C < 0) C = -model.qcp[i][k];
 	
 	model.qvp[i][k] = model.qvp[i][k] - C;

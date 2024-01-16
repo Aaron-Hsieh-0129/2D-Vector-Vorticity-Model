@@ -6,3 +6,5 @@ outputs
 doc
 log.txt
 input
+*.e
+*.o
