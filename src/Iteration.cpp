@@ -586,8 +586,6 @@ void Iteration::LeapFrog(vvmArray &model) {
 		// calculate
 		pzeta_pt(model);
 		pth_pt(model);
-		cal_w(model);
-		cal_u(model);
 		#if defined(WATER)
 			pqv_pt(model);
 			pqc_pt(model);
