@@ -593,6 +593,8 @@ void Iteration::LeapFrog(vvmArray &model) {
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
+		cal_w(model);
+		cal_u(model);
 
 		#ifndef LINEARIZEDTH
 			updateMean(model);
