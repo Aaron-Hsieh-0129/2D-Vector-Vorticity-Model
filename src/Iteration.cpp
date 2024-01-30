@@ -17,7 +17,7 @@ void Iteration::pzeta_pt(vvmArray &model) {
 			#elif defined(NoBouyance)
 				g_tb_pth_px = 0.;
 			#else
-				g_tb_pth_px = gravity / model.tb_zeta[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				g_tb_pth_px = gravity / model.tb[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 			#endif
 
 			// Add water 
@@ -220,7 +220,7 @@ void Iteration::cal_w(vvmArray &model) {
 		}
 
 		// make sure w at surface and top = 0
-        for (int i = 0; i < nx; i++) model.w[i][1] = model.w[i][nz-2] = 0.;
+        // for (int i = 0; i < nx; i++) model.w[i][1] = 0.;
 		model.BoundaryProcessZETA(model.w);
 	#endif
 	return;

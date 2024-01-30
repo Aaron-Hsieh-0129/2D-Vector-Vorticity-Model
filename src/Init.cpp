@@ -272,9 +272,11 @@ void Init::LoadFile(vvmArray &model) {
 	model.qvsb[0] = model.qvsb[1];
 	model.qvsb[nz-1] = model.qvsb[nz-2];
 
-	for (int k = 1; k < nz-1; k++) {
+	for (int k = 2; k < nz-1; k++) {
 		model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
 	}
+	model.tb_zeta[1] = model.tb_zeta[2] - (model.tb_zeta[3] - model.tb_zeta[2]);
+
 	model.tb_zeta[0] = model.tb_zeta[1];
 	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
 
