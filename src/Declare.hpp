@@ -19,6 +19,7 @@ class vvmArray {
 			double qcp[nx][nz], qc[nx][nz], qcm[nx][nz];
 			double qrp[nx][nz], qr[nx][nz], qrm[nx][nz];
 			double u[nx][nz];
+            double ubarTopp = 0., ubarTop = 0., ubarTopm = 0.;
 			double w[nx][nz];
 			double xi[nx], uxi[nx];
 			double addflx[nx];

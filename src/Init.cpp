@@ -184,6 +184,14 @@ void Init::Init2d(vvmArray &model) {
 	}
 	model.BoundaryProcessZETA(model.zeta);
 	model.BoundaryProcessZETA(model.zetam);
+
+    // init ubar at top
+    for (int i = 1; i < nx-1; i++) {
+        model.ubarTopm += model.u[i][nz-2];
+    }
+    model.ubarTopm /= (nx-2);
+    model.ubarTopp = model.ubarTopm;
+    return;
 }
 
 

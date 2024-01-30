@@ -9,6 +9,7 @@ class Iteration {
         static void pth_pt(vvmArray &);
         static void cal_w(vvmArray &);
         static void cal_u(vvmArray &);
+        static void pubarTop_pt(vvmArray &);
         static void pqv_pt(vvmArray &);
         static void pqc_pt(vvmArray &);
         static void pqr_pt(vvmArray &);

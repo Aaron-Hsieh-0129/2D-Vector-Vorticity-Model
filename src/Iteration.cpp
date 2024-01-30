@@ -137,6 +137,18 @@ void Iteration::pth_pt(vvmArray &model) {
 	return;
 }
 
+void Iteration::pubarTop_pt(vvmArray &model) {
+    double uwUp = 0., uwDown = 0.;
+    for (int i = 1; i < nx-1; i++) {
+        uwUp += 0.5*(model.u[i][nz-1]+model.u[i][nz-2]) * 0.5*(model.w[i][nz-1]+model.w[i-1][nz-1]);
+        uwDown += 0.5*(model.u[i][nz-2]+model.u[i][nz-3]) * 0.5*(model.w[i][nz-2]+model.w[i-1][nz-2]);
+    }
+    uwUp /= (nx-2);
+    uwDown /= (nx-2);
+    double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
+    model.ubarTopp = model.ubarTopm + d2t * (-prhouw_pz_rho);
+}
+
 void Iteration::cal_w(vvmArray &model) {
 	#if defined(ADVECTIONU)
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.u[i][k] = 10.;}}
@@ -218,7 +230,6 @@ void Iteration::cal_u(vvmArray &model) {
 	#elif defined(ADVECTIONW)
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.w[i][k] = 10.;}}
 	#else
-		const double ubar = 0.;
 		// G
 		int NX = nx;
 		Eigen::VectorXd y(NX-2), h(NX-2);
@@ -263,9 +274,9 @@ void Iteration::cal_u(vvmArray &model) {
 		for (int i = 1; i <= nx-2; i++) {
 			#if defined(SHEAR)
 			// You should modify the last number which means the fixed u at the top layer
-				model.u[i][nz-2] = model.uxi[i] + ubar + 10.;
+				model.u[i][nz-2] = model.uxi[i] + model.ubarTop + 10.;
 			#else
-				model.u[i][nz-2] = model.uxi[i] + ubar;
+				model.u[i][nz-2] = model.uxi[i] + model.ubarTop;
 			#endif
 		}
 		model.u[0][nz-2] = model.u[nx-2][nz-2];
@@ -591,6 +602,7 @@ void Iteration::LeapFrog(vvmArray &model) {
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
+        pubarTop_pt(model);
 		cal_w(model);
 		cal_u(model);
 
@@ -606,6 +618,9 @@ void Iteration::LeapFrog(vvmArray &model) {
 
 				model.thm[i][k] = model.th[i][k];
 				model.th[i][k] = model.thp[i][k];
+
+                model.ubarTopm = model.ubarTop;
+                model.ubarTop = model.ubarTopp;
 
 				#if defined(WATER)
 					model.qvm[i][k] = model.qv[i][k];
