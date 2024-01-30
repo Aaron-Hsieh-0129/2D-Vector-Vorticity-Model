@@ -55,10 +55,14 @@ void Init::Init1d(vvmArray &model) {
 		model.rhou[nz-1] = model.rhou[nz-2];
 
 		// init tb_zeta, rhow
-		for (int k = 1; k <= nz-1; k++) {
+		for (int k = 2; k <= nz-1; k++) {
 			model.tb_zeta[k] = 0.5 * (model.tb[k] + model.tb[k-1]);
 			model.rhow[k] = 0.5 * (model.rhou[k] + model.rhou[k-1]);
 		}
+        
+        model.tb_zeta[1] = model.tb_zeta[2] - (model.tb_zeta[3] - model.tb_zeta[2]);
+        model.rhow[1] = model.rhow[2] - (model.rhow[3] - model.rhow[2]);
+
 		model.tb_zeta[0] = model.tb_zeta[1];
 		model.rhow[0] = model.rhow[1];
 

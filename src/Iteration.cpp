@@ -108,7 +108,7 @@ void Iteration::pth_pt(vvmArray &model) {
 
 			#ifdef DIFFUSION
 				model.thp[i][k] += d2t * Kx * rdx2 * (model.thm[i+1][k] - 2. * model.thm[i][k] + model.thm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (model.thm[i][k+1] - 2. * model.thm[i][k] + model.thm[i][k-1]);
+								   d2t * Kz * rdz2 * (model.thm[i][k+1] - 2. * model.thm[i][k] + model.thm[i][k-1]);
 			#endif
 		}
 	}
@@ -147,6 +147,7 @@ void Iteration::pubarTop_pt(vvmArray &model) {
     uwDown /= (nx-2);
     double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
     model.ubarTopp = model.ubarTopm + d2t * (-prhouw_pz_rho);
+    return;
 }
 
 void Iteration::cal_w(vvmArray &model) {
@@ -167,9 +168,8 @@ void Iteration::cal_w(vvmArray &model) {
 			if (idx % (NX-2) == 1) k++;
 
 			// D
-			coeff.push_back(T(idx-1, idx-1, 4. -  (- 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]
-												   - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k] 
-												   + 2*(model.rhow[k+1] - 2*model.rhow[k] + model.rhow[k-1]) / (model.rhou[k+1] + model.rhou[k]))));
+			coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+                                               - (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
 
 			// left/right: -1
 			if ((idx-1) % (NX-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
@@ -181,9 +181,8 @@ void Iteration::cal_w(vvmArray &model) {
 				coeff.push_back(T(idx-1+(NX-3), idx-1, -1.));
 			}
 		}
-		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1, 4. - (- 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]
-															      - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k] 
-															      + 2*(model.rhow[k+1] - 2*model.rhow[k] + model.rhow[k-1]) / (model.rhou[k+1] + model.rhou[k]))));
+		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+                                                               - (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
 		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1-1, -1.)); // left
 
 		k = 1;
@@ -192,10 +191,10 @@ void Iteration::cal_w(vvmArray &model) {
 			if (idx % (NX-2) == 1) k++;
 
 			// E
-			coeff.push_back(T(idx-1, idx+(NX-2)-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k+1]));
+			coeff.push_back(T(idx-1, idx+(NX-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k]));
 			
 			// F
-			coeff.push_back(T(idx+(NX-2)-1, idx-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k]));
+			coeff.push_back(T(idx+(NX-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k-1]));
 		}
 		A.setFromTriplets(coeff.begin(), coeff.end());
 
@@ -219,6 +218,9 @@ void Iteration::cal_w(vvmArray &model) {
 				cnt++;
 			}
 		}
+
+		// make sure w at surface and top = 0
+        for (int i = 0; i < nx; i++) model.w[i][1] = model.w[i][nz-2] = 0.;
 		model.BoundaryProcessZETA(model.w);
 	#endif
 	return;
@@ -606,9 +608,9 @@ void Iteration::LeapFrog(vvmArray &model) {
 		cal_w(model);
 		cal_u(model);
 
-		#ifndef LINEARIZEDTH
-			updateMean(model);
-		#endif 
+		// #ifndef LINEARIZEDTH
+		// 	updateMean(model);
+		// #endif 
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {

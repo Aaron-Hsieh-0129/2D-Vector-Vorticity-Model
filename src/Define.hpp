@@ -25,7 +25,8 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0126/6Q16Q2_full_diff250_NoCooling_testNewU/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0126/6Q16Q2_newcalwu_full_diff250_NoCooling_testNewU/"
+// #define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0126/test_new_calwu/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
