@@ -558,16 +558,16 @@ void Iteration::LeapFrog(vvmArray &model) {
         #endif
 
 		// calculate
-		// pzeta_pt(model);
+		pzeta_pt(model);
 		pth_pt(model);
 		#if defined(WATER)
 			pqv_pt(model);
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
-        // pubarTop_pt(model);
-		// cal_w(model);
-		// cal_u(model);
+        pubarTop_pt(model);
+		cal_w(model);
+		cal_u(model);
 
 		// #ifndef LINEARIZEDTH
 		// 	updateMean(model);
