@@ -241,13 +241,15 @@ void Init::InitPoissonMatrix(vvmArray &model) {
 		// Height
 		if (idx % (nx-2) == 1) k++;
 
-		// E
-		coeff.push_back(T(idx-1, idx+(nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k]));
+		// E (the k of row should be added by 1 because it starts from k-1)
+		coeff.push_back(T(idx-1, idx+(nx-2)-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k-1+1]) / model.rhou[k+1]));
 		
-		// F (the k of row should be added by 1 because it starts from 3)
-		coeff.push_back(T(idx+(nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k]));
+		// F (the k of row should be minus by 1 because it starts from k-1)
+		coeff.push_back(T(idx+(nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k-1] - model.rhou[k-1-1]) / model.rhou[k-1-1]));
 	}
 	model.A.setFromTriplets(coeff.begin(), coeff.end());
+
+	// std::cout << std::setprecision << model.A << std::endl;
 
 	// ###########################################
 	// For solving u
@@ -287,10 +289,10 @@ double Init::GetTHRAD(int i, int k) {
 }
 
 double Init::GetTH(int i, int k) {
-	// double rad = GetTHRAD(i, k);
-	// double delta = 3.;
-	// if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
-	if (k >= 10 && k <= 20) return 3.;
+	double rad = GetTHRAD(i, k);
+	double delta = 3.;
+	if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
+	// if (k >= 10 && k <= 20) return 3.;
 	else return 0.;
 }
 

@@ -9,8 +9,10 @@
 #define dz (200)
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
-#define nx (XRANGE / dx)
-#define nz (ZRANGE / dz)
+// #define nx (XRANGE / dx)
+// #define nz (ZRANGE / dz)
+#define nx (7)
+#define nz (7)
 #define dt (1.)
 #define rdx (1. / (double) dx)
 #define rdz (1. / (double) dz)
@@ -34,7 +36,7 @@
 // #define ADVECTIONU
 // #define ADVECTIONW
 // #define NoBouyance
-#define DIFFUSION
+// #define DIFFUSION
 #define TIMEFILTER
 // #define WATER
 // #define TROPICALFORCING
