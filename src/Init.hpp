@@ -17,4 +17,5 @@ class Init {
 		static double GetTHRAD(int, int);
 		static double GetTH(int, int);
 		static double GetQVB(int);
+		static void InitPoissonMatrix(vvmArray &);
 };

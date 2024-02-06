@@ -86,6 +86,10 @@ void Init::Init1d(vvmArray &model) {
 			}
 		#endif
 	#endif
+
+	for (int k = 0; k < nz; k++) {
+		model.tb[k] = 300.;
+	}
 	return;
 }
 
@@ -137,6 +141,7 @@ void Init::Init2d(vvmArray &model) {
 				#if defined(LINEARIZEDTH)
 					model.th[i][k] = GetTH(i, k);
 				#else
+					// model.th[i][k] = model.tb[k];
 					model.th[i][k] = model.tb[k] + GetTH(i, k);
 				#endif
 				model.thm[i][k] = model.th[i][k];
@@ -195,7 +200,74 @@ void Init::Init2d(vvmArray &model) {
     }
     model.ubarTopm /= (nx-2);
     model.ubarTopp = model.ubarTopm;
-    return;
+
+	// Assign values to the matrices that solve the Poisson equation for u and w
+	InitPoissonMatrix(model);
+	return;
+}
+
+void Init::InitPoissonMatrix(vvmArray &model) {
+	// ###########################################
+	// For solving w
+	// A: i = 1~NX-2, k = 2~NZ-2
+	// ###########################################
+	int k = 1;
+	std::vector<T> coeff;
+	for (int idx = 1; idx < (nx-2)*(nz-3); idx++) {
+		// Height
+		if (idx % (nx-2) == 1) k++;
+
+		// D
+		coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+											- (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
+
+		// left/right: -1
+		if ((idx-1) % (nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
+		if (idx % (nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
+
+		// Boundary
+		if ((idx-1) % (nx-2) == 0) {
+			coeff.push_back(T(idx-1, idx-1+(nx-3), -1.));
+			coeff.push_back(T(idx-1+(nx-3), idx-1, -1.));
+		}
+	}
+	// Last row of A
+	coeff.push_back(T((nx-2)*(nz-3)-1, (nx-2)*(nz-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+															- (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
+	coeff.push_back(T((nx-2)*(nz-3)-1, (nx-2)*(nz-3)-1-1, -1.)); // left
+
+	k = 1;
+	for (int idx = 1; idx <= (nx-2)*(nz-4); idx++) {
+		// Height
+		if (idx % (nx-2) == 1) k++;
+
+		// E
+		coeff.push_back(T(idx-1, idx+(nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k]));
+		
+		// F (the k of row should be added by 1 because it starts from 3)
+		coeff.push_back(T(idx+(nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k+1] - model.rhou[k]) / model.rhou[k]));
+	}
+	model.A.setFromTriplets(coeff.begin(), coeff.end());
+
+	// ###########################################
+	// For solving u
+	// G: i = 1~NX-2
+	// ###########################################
+	std::vector<T> coeff_xi;
+
+	for (int k = 1; k < nx-2; k++) {
+		// D
+		coeff_xi.push_back(T(k-1, k-1, 2.));
+		coeff_xi.push_back(T(k, k-1, -1.));
+		coeff_xi.push_back(T(k-1, k, -1.));
+	}
+	// Boundary
+	coeff_xi.push_back(T(0, nx-3, -1.));
+	coeff_xi.push_back(T(nx-3, 0, -1.));
+	coeff_xi.push_back(T(nx-3, nx-3, 2.));
+	model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
+	// std::cout << model.G << std::endl;
+	return;
 }
 
 
@@ -215,9 +287,10 @@ double Init::GetTHRAD(int i, int k) {
 }
 
 double Init::GetTH(int i, int k) {
-	double rad = GetTHRAD(i, k);
-	double delta = 3.;
-	if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
+	// double rad = GetTHRAD(i, k);
+	// double delta = 3.;
+	// if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
+	if (k >= 10 && k <= 20) return 3.;
 	else return 0.;
 }
 

@@ -31,6 +31,10 @@ vvmArray::vvmArray() {
         addflx[i] = 1.;
         qrAcc[i] = 0.;
     }
+
+    A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
+    G = Eigen::SparseMatrix<double>(nx-2, nx-2);
+    return;
 }
 
 void vvmArray::BoundaryProcess(double tmp[][nz]) {

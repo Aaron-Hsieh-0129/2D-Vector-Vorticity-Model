@@ -19,33 +19,32 @@
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
 #define TIMEEND (10000.)
-#define Kx (250.)
-#define Kz (250.)
+#define Kx (20.)
+#define Kz (20.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0130/6Q16Q2_linrqv_diff250_WithRadiation/"
-// #define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0126/test_new_calwu/"
+#define OUTPUTSTEP (1)
+#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0131/Bubble/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
 
-// #define DRY
-// #define RHO1
+#define DRY
+#define RHO1
 // #define ADVECTIONU
 // #define ADVECTIONW
 // #define NoBouyance
 #define DIFFUSION
 #define TIMEFILTER
-#define WATER
-#define TROPICALFORCING
-#define RADIATIONCOOLING
+// #define WATER
+// #define TROPICALFORCING
+// #define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-#define LOADFILE
+// #define LOADFILE
 #define ADDFORCINGTIME (1200.)
-#define LINEARIZEDQV
-#define LINEARIZEDTH
+// #define LINEARIZEDQV
+// #define LINEARIZEDTH

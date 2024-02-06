@@ -1,8 +1,7 @@
 #include "Outputfile.hpp"
-#include "Eigen/Sparse"
+#include<Eigen/SparseCholesky>	
 // #include <matplotlib-cpp-master/matplotlibcpp.h>
 
-typedef Eigen::Triplet<double> T;
 class Iteration {
     public:
         static void pzeta_pt(vvmArray &);

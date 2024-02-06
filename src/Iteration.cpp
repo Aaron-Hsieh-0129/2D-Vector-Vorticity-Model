@@ -1,45 +1,44 @@
 #include "Iteration.hpp"
 
 void Iteration::pzeta_pt(vvmArray &model) {
-	double puzeta_px = 0., pwzeta_pz = 0., g_tb_pth_px = 0.;
+	double puzeta_px = 0., prhowzeta_pz_rho = 0., g_tbrho_pth_px = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puzeta_px = (0.25*(model.u[i+1][k] + model.u[i+1][k-1] + model.u[i][k] + model.u[i][k-1]) * 0.5*(model.zeta[i+1][k] + model.zeta[i][k]) - 
 						 0.25*(model.u[i][k] + model.u[i][k-1] + model.u[i-1][k] + model.u[i-1][k-1]) * 0.5*(model.zeta[i][k] + model.zeta[i-1][k])) * rdx;
-			pwzeta_pz = (0.25*(model.w[i][k+1] + model.w[i-1][k+1] + model.w[i][k] + model.w[i-1][k]) * 0.5*(model.zeta[i][k+1] + model.zeta[i][k]) - 
-						 0.25*(model.w[i][k] + model.w[i-1][k] + model.w[i][k-1] + model.w[i-1][k-1]) * 0.5*(model.zeta[i][k] + model.zeta[i][k-1])) * rdz;
+			prhowzeta_pz_rho = (model.rhou[k]*0.25*(model.w[i][k+1] + model.w[i-1][k+1] + model.w[i][k] + model.w[i-1][k]) * 0.5*(model.zeta[i][k+1] + model.zeta[i][k]) - 
+						 		model.rhou[k-1]*0.25*(model.w[i][k] + model.w[i-1][k] + model.w[i][k-1] + model.w[i-1][k-1]) * 0.5*(model.zeta[i][k] + model.zeta[i][k-1])) / model.rhow[k] * rdz;
 
 			// Advection test
-			#if defined(ADVECTIONU)
-				g_tb_pth_px = 0.;
-			#elif defined(ADVECTIONW)
-				g_tb_pth_px = 0.;
-			#elif defined(NoBouyance)
-				g_tb_pth_px = 0.;
+			#if defined(ADVECTIONU) || defined(ADVECTIONW) || defined(NoBouyance)
+				g_tbrho_pth_px = 0.;
 			#else
-				g_tb_pth_px = gravity / model.tb[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				// g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				// g_tbrho_pth_px = gravity / model.tb_zeta[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				g_tbrho_pth_px = gravity / 300. / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 			#endif
 
 			// Add water 
 			#if defined(WATER)
-				double g_pqv_px = gravity * (0.5*(model.qv[i][k] + model.qv[i][k-1]) - 0.5*(model.qv[i-1][k] + model.qv[i-1][k-1])) * rdx;
-				double gpqc_px = gravity * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * rdx;
-				double gpqr_px = gravity * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * rdx;
-				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
+				double g_pqv_px = gravity / model.rhow[k] * (0.5*(model.qv[i][k] + model.qv[i][k-1]) - 0.5*(model.qv[i-1][k] + model.qv[i-1][k-1])) * rdx;
+				double gpqc_px = gravity / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * rdx;
+				double gpqr_px = gravity / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * rdx;
+				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
 			#else
-				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tb_pth_px - puzeta_px - pwzeta_pz);
+				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho);
 			#endif
 
 			// Add diffusion
 			#ifdef DIFFUSION
 				model.zetap[i][k] += d2t * Kx * rdx2 * (model.zetam[i+1][k] - 2. * model.zetam[i][k] + model.zetam[i-1][k]) + 
 									 d2t * Kz * rdz2 * (model.zetam[i][k+1] - 2. * model.zetam[i][k] + model.zetam[i][k-1]);
+				// model.zetap[i][k] += d2t * Kx * rdx2 * (model.zeta[i+1][k] - 2. * model.zeta[i][k] + model.zeta[i-1][k]) + 
+				// 					 d2t * Kz * rdz2 * (model.zeta[i][k+1] - 2. * model.zeta[i][k] + model.zeta[i][k-1]);
+
 			#endif
 		}
 	}
-	#if defined(ADVECTIONU)
-		model.BoundaryProcessDouble(model.zetap);
-	#elif defined(ADVECTIONW)
+	#if defined(ADVECTIONU) || defined(ADVECTIONW)
 		model.BoundaryProcessDouble(model.zetap);
 	#else
 		model.BoundaryProcessZETA(model.zetap);
@@ -156,59 +155,20 @@ void Iteration::cal_w(vvmArray &model) {
 	#elif defined(ADVECTIONW)
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.u[i][k] = 0.;}}
 	#else
-		// eigen
-		// A: i = 1~NX-2, k = 2~NZ-2
-		int NX = nx, NZ = nz;
-		int k = 1;
-		Eigen::VectorXd x((NX-2)*(NZ-3)), b((NX-2)*(NZ-3));
-		Eigen::SparseMatrix<double> A((NX-2)*(NZ-3), (NX-2)*(NZ-3));
-		std::vector<T> coeff;
-		for (int idx = 1; idx < (NX-2)*(NZ-3); idx++) {
-			// Height
-			if (idx % (NX-2) == 1) k++;
-
-			// D
-			coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                               - (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
-
-			// left/right: -1
-			if ((idx-1) % (NX-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
-			if (idx % (NX-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
-
-			// Boundary
-			if ((idx-1) % (NX-2) == 0) {
-				coeff.push_back(T(idx-1, idx-1+(NX-3), -1.));
-				coeff.push_back(T(idx-1+(NX-3), idx-1, -1.));
-			}
-		}
-		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                                               - (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
-		coeff.push_back(T((NX-2)*(NZ-3)-1, (NX-2)*(NZ-3)-1-1, -1.)); // left
-
-		k = 1;
-		for (int idx = 1; idx <= (NX-2)*(NZ-4); idx++) {
-			// Height
-			if (idx % (NX-2) == 1) k++;
-
-			// E
-			coeff.push_back(T(idx-1, idx+(NX-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k]));
-			
-			// F
-			coeff.push_back(T(idx+(NX-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhou[k-1]));
-		}
-		A.setFromTriplets(coeff.begin(), coeff.end());
-
+		// eigen solver
+		Eigen::VectorXd x((nx-2)*(nz-3)), b((nx-2)*(nz-3));
+		
 		// b
 		int count = 0;
-		for (int k = 2; k <= NZ-2; k++) {
-			for (int i = 1; i <= NX-2; i++) {
-				b(count) = -(model.zetap[i+1][k] - model.zetap[i][k]) * dx;
+		for (int k = 2; k <= nz-2; k++) {
+			for (int i = 1; i <= nx-2; i++) {
+				b(count) = -model.rhow[k]*(model.zetap[i+1][k] - model.zetap[i][k]) * dx;
 				count++;
 			}
 		}
 
 		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
-		solver.compute(A);
+		solver.compute(model.A);
 		x = solver.solve(b);
 
 		int cnt = 0;
@@ -232,38 +192,37 @@ void Iteration::cal_u(vvmArray &model) {
 	#elif defined(ADVECTIONW)
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.w[i][k] = 10.;}}
 	#else
-		// G
-		int NX = nx;
-		Eigen::VectorXd y(NX-2), h(NX-2);
-		Eigen::SparseMatrix<double> G(NX-2, NX-2);
-		std::vector<T> coeff_xi;
-
-		for (int k = 1; k < NX-2; k++) {
-			// D
-			coeff_xi.push_back(T(k-1, k-1, 2.));
-			coeff_xi.push_back(T(k, k-1, -1.));
-			coeff_xi.push_back(T(k-1, k, -1.));
-		}
-		// Boundary
-		coeff_xi.push_back(T(0, NX-3, -1.));
-		coeff_xi.push_back(T(NX-3, 0, -1.));
-		coeff_xi.push_back(T(NX-3, NX-3, -2.));
-		G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
-
+		Eigen::VectorXd y(nx-2), h(nx-2);
+		
 		// h
-		for (int i = 1; i <= NX-2; i++) {
+		for (int i = 1; i <= nx-2; i++) {
 			h(i-1) = (-model.rhow[nz-2] * model.w[i][nz-2]) / model.rhou[nz-2] * dx;
 		}
 
+		// std::cout << model.G << std::endl;
+		// std::cout << std::setprecision(10) << h << std::endl;
 		// solve
-		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solve_xi;
-		y = solve_xi.compute(G).solve(h);
+		// Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solve_xi;
+		Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
+		// Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solve_xi;
+		// Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
+		y = solve_xi.compute(model.G).solve(h);
+		// std::cout << solve_xi.error() << std::endl;
+		// std::cout << y << std::endl;
 		// xi
 		for (int i = 1; i <= nx-2; i++) {
 			model.xi[i] = y[i-1];
 		}
 		model.xi[0] = model.xi[nx-2];
 		model.xi[nx-1] = model.xi[1];
+
+		// std::cout << "================" << std::endl;
+		// std::cout << model.G * y << std::endl;
+
+		// for (int i = 0; i < nx; i++) {
+		// 	std::cout << model.xi[i] << " ";
+		// }
+		// std::cout << std::endl;
 
 		// uxi
 		for (int i = 1; i <= nx-2; i++) {
@@ -276,9 +235,10 @@ void Iteration::cal_u(vvmArray &model) {
 		for (int i = 1; i <= nx-2; i++) {
 			#if defined(SHEAR)
 			// You should modify the last number which means the fixed u at the top layer
-				model.u[i][nz-2] = model.uxi[i] + model.ubarTop + 10.;
+				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp + 10.;
 			#else
-				model.u[i][nz-2] = model.uxi[i] + model.ubarTop;
+				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp;
+				// model.u[i][nz-2] = model.uxi[i];
 			#endif
 		}
 		model.u[0][nz-2] = model.u[nx-2][nz-2];
@@ -289,9 +249,10 @@ void Iteration::cal_u(vvmArray &model) {
 		for (int i = 1; i <= nx-2; i++) {
 			double area = 0.;
 			for (int k = nz-3; k >= 1; k--) {
-				uper = (0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * rdx - 0.5*(model.zetap[i][k+2] + model.zetap[i][k+1]);
-				now = (0.5*(model.w[i][k+1] + model.w[i][k]) - 0.5*(model.w[i-1][k+1] + model.w[i-1][k])) * rdx - 0.5*(model.zetap[i][k+1] + model.zetap[i][k]);
-				area += (uper + now) * 0.5 * (-dz);
+				// uper = (0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * rdx + 0.5*(model.zetap[i][k+2] + model.zetap[i][k+1]);
+				// now = (0.5*(model.w[i][k+1] + model.w[i][k]) - 0.5*(model.w[i-1][k+1] + model.w[i-1][k])) * rdx + 0.5*(model.zetap[i][k+1] + model.zetap[i][k]);
+				// area += (uper + now) * 0.5 * (-dz);
+				area += ((0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * rdx - 0.5*(model.zetap[i][k+2] + model.zetap[i][k+1])*model.rhou[k+1]) * -dz;
 				model.u[i][k] = area + model.u[i][nz-2];
 			}
 		}
@@ -597,16 +558,16 @@ void Iteration::LeapFrog(vvmArray &model) {
         #endif
 
 		// calculate
-		pzeta_pt(model);
+		// pzeta_pt(model);
 		pth_pt(model);
 		#if defined(WATER)
 			pqv_pt(model);
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
-        pubarTop_pt(model);
-		cal_w(model);
-		cal_u(model);
+        // pubarTop_pt(model);
+		// cal_w(model);
+		// cal_u(model);
 
 		// #ifndef LINEARIZEDTH
 		// 	updateMean(model);
