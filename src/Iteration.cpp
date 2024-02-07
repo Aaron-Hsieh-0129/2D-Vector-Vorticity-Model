@@ -1,7 +1,7 @@
 #include "Iteration.hpp"
 
 void Iteration::pzeta_pt(vvmArray &model) {
-	double puzeta_px = 0., prhowzeta_pz_rho = 0., g_tbrho_pth_px = 0.;
+	long double puzeta_px = 0., prhowzeta_pz_rho = 0., g_tbrho_pth_px = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puzeta_px = (0.25*(model.u[i+1][k] + model.u[i+1][k-1] + model.u[i][k] + model.u[i][k-1]) * 0.5*(model.zeta[i+1][k] + model.zeta[i][k]) - 
@@ -20,9 +20,9 @@ void Iteration::pzeta_pt(vvmArray &model) {
 
 			// Add water 
 			#if defined(WATER)
-				double g_pqv_px = gravity / model.rhow[k] * (0.5*(model.qv[i][k] + model.qv[i][k-1]) - 0.5*(model.qv[i-1][k] + model.qv[i-1][k-1])) * rdx;
-				double gpqc_px = gravity / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * rdx;
-				double gpqr_px = gravity / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * rdx;
+				long double g_pqv_px = gravity / model.rhow[k] * (0.5*(model.qv[i][k] + model.qv[i][k-1]) - 0.5*(model.qv[i-1][k] + model.qv[i-1][k-1])) * rdx;
+				long double gpqc_px = gravity / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * rdx;
+				long double gpqr_px = gravity / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * rdx;
 				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
 			#else
 				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho);
@@ -56,15 +56,19 @@ void Iteration::pzeta_pt(vvmArray &model) {
 }
 
 void Iteration::pth_pt(vvmArray &model) {
-    double puth_px = 0., prhowth_pz_rho = 0., forcing = 0.;
+    long double puth_px = 0., prhowth_pz_rho = 0., forcing = 0.;
 	#if defined(LINEARIZEDTH)
-		double wptb_pz = 0.;
+		long double wptb_pz = 0.;
 	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
-			prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
-							  model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
+			// prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
+			// 				  model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
+			// prhowth_pz_rho = (model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
+			// 				  model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz;
+			prhowth_pz_rho = 0.5*((model.th[i][k+1]  - 
+							  	  + model.th[i][k-1])) * rdz;
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
@@ -101,7 +105,8 @@ void Iteration::pth_pt(vvmArray &model) {
 						model.thp[i][k] += d2t * (-2 / 86400);
 					#endif
 				#else
-					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+					// model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho - wptb_pz + forcing);
+					model.thp[i][k] = model.thm[i][k] + d2t * ( - prhowth_pz_rho);
 				#endif
             #endif
 
@@ -137,14 +142,14 @@ void Iteration::pth_pt(vvmArray &model) {
 }
 
 void Iteration::pubarTop_pt(vvmArray &model) {
-    double uwUp = 0., uwDown = 0.;
+    long double uwUp = 0., uwDown = 0.;
     for (int i = 1; i < nx-1; i++) {
         uwUp += 0.5*(model.u[i][nz-1]+model.u[i][nz-2]) * 0.5*(model.w[i][nz-1]+model.w[i-1][nz-1]);
         uwDown += 0.5*(model.u[i][nz-2]+model.u[i][nz-3]) * 0.5*(model.w[i][nz-2]+model.w[i-1][nz-2]);
     }
     uwUp /= (nx-2);
     uwDown /= (nx-2);
-    double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
+    long double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
     model.ubarTopp = model.ubarTopm + d2t * (-prhouw_pz_rho);
     return;
 }
@@ -156,25 +161,33 @@ void Iteration::cal_w(vvmArray &model) {
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.u[i][k] = 0.;}}
 	#else
 		// eigen solver
-		Eigen::VectorXd x((nx-2)*(nz-3)), b((nx-2)*(nz-3));
+		// Eigen::VectorXd x((nx-2)*(nz-3)), b((nx-2)*(nz-3));
+		Eigen::SparseMatrix<long double> x, b;
+    	x = Eigen::SparseMatrix<long double>((nx-2)*(nz-3),1);
+    	b = Eigen::SparseMatrix<long double>((nx-2)*(nz-3),1);
+		std::vector<T> coeff_x;
+
+		// x = Eigen::SparseMatrix<long double> ((nx-2)*(nz-3));
 		
 		// b
 		int count = 0;
 		for (int k = 2; k <= nz-2; k++) {
 			for (int i = 1; i <= nx-2; i++) {
-				b(count) = -model.rhow[k]*(model.zetap[i+1][k] - model.zetap[i][k]) * dx;
+				coeff_x.push_back(T(count, 0, -model.rhow[k]*(model.zetap[i+1][k] - model.zetap[i][k]) * dx));
 				count++;
 			}
 		}
+		b.setFromTriplets(coeff_x.begin(), coeff_x.end());
 
-		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
+		Eigen::BiCGSTAB<Eigen::SparseMatrix<long double> > solver;
+		solver.setTolerance(1e-30);
 		solver.compute(model.A);
 		x = solver.solve(b);
 
 		int cnt = 0;
 		for (int k = 2; k <= nz-2; k++) {
 			for (int i = 1; i <= nx-2; i++) {
-				model.w[i][k] = x[cnt];
+				model.w[i][k] = x.coeff(cnt,0);
 				cnt++;
 			}
 		}
@@ -185,7 +198,7 @@ void Iteration::cal_w(vvmArray &model) {
 	#endif
 	return;
 }
-
+/*
 void Iteration::cal_u(vvmArray &model) {
 	#if defined(ADVECTIONU)
 		for (int i = 0; i <= nx-1; i++) { for (int k = 0; k <= nz-1; k++) { model.w[i][k] = 0.;}}
@@ -202,10 +215,10 @@ void Iteration::cal_u(vvmArray &model) {
 		// std::cout << model.G << std::endl;
 		// std::cout << std::setprecision(10) << h << std::endl;
 		// solve
-		// Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solve_xi;
-		Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
-		// Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solve_xi;
-		// Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
+		// Eigen::BiCGSTAB<Eigen::SparseMatrix<long double> > solve_xi;
+		Eigen::ConjugateGradient<Eigen::SparseMatrix<long double> > solve_xi;
+		// Eigen::SimplicialLDLT<Eigen::SparseMatrix<long double> > solve_xi;
+		// Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<long double> > solve_xi;
 		y = solve_xi.compute(model.G).solve(h);
 		// std::cout << solve_xi.error() << std::endl;
 		// std::cout << y << std::endl;
@@ -245,9 +258,9 @@ void Iteration::cal_u(vvmArray &model) {
 		model.u[nx-1][nz-2] = model.u[1][nz-2];
 
 		// u
-		double uper = 0., now = 0.;
+		long double uper = 0., now = 0.;
 		for (int i = 1; i <= nx-2; i++) {
-			double area = 0.;
+			long double area = 0.;
 			for (int k = nz-3; k >= 1; k--) {
 				// uper = (0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * rdx + 0.5*(model.zetap[i][k+2] + model.zetap[i][k+1]);
 				// now = (0.5*(model.w[i][k+1] + model.w[i][k]) - 0.5*(model.w[i-1][k+1] + model.w[i-1][k])) * rdx + 0.5*(model.zetap[i][k+1] + model.zetap[i][k]);
@@ -260,11 +273,11 @@ void Iteration::cal_u(vvmArray &model) {
 	#endif
 	return;
 }
-
+*/
 void Iteration::pqv_pt(vvmArray &model) {
-	double puqv_px = 0., prhowqv_pz_rho = 0., forcing = 0.;
+	long double puqv_px = 0., prhowqv_pz_rho = 0., forcing = 0.;
 	#if defined(LINEARIZEDQV)
-		double wpqvb_pz = 0.;
+		long double wpqvb_pz = 0.;
 	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
@@ -305,9 +318,9 @@ void Iteration::pqv_pt(vvmArray &model) {
 	#ifdef CLOUDLESS
 		for (int i = 1; i <= nx-2; i++) {
 			for (int k = 1; k <= nz-2; k++) {
-				double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);   // coefficient
-				double pth = model.thp[i][k] + model.tb[k];
-				double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
+				long double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);   // coefficient
+				long double pth = model.thp[i][k] + model.tb[k];
+				long double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
 				if (model.qvp[i][k] + model.qvb[k] > qvs) {
 					model.qvp[i][k] = qvs - model.qvb[k];
 				}
@@ -328,9 +341,9 @@ void Iteration::pqv_pt(vvmArray &model) {
 
 	return;
 }
-
+/*
 void Iteration::pqc_pt(vvmArray &model) {
-	double puqc_px = 0., prhowqc_pz_rho = 0.;
+	long double puqc_px = 0., prhowqc_pz_rho = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			puqc_px = (model.u[i+1][k] * 0.5*(model.qc[i+1][k] + model.qc[i][k]) - model.u[i][k] * 0.5*(model.qc[i][k] + model.qc[i-1][k])) * rdx;
@@ -364,7 +377,7 @@ void Iteration::pqc_pt(vvmArray &model) {
 }
 
 void Iteration::pqr_pt(vvmArray &model) {
-	double puqr_px = 0., prhowVTqr_pz_rho = 0.;
+	long double puqr_px = 0., prhowVTqr_pz_rho = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = nz-2; k >= 1; k--) {
 			if (k == 2) model.qr[i][1] = model.qr[i][2];
@@ -375,7 +388,7 @@ void Iteration::pqr_pt(vvmArray &model) {
 
 			puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 			// TODO: VT
-			double VT = 6.;
+			long double VT = 6.;
 			prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
 							    model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
 			
@@ -413,19 +426,19 @@ void Iteration::pqr_pt(vvmArray &model) {
 }
 
 void Iteration::condensation(vvmArray &model, int i, int k) {
-	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0); 	// coefficient
+	long double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0); 	// coefficient
 	#if defined(LINEARIZEDTH)
-		double pth = model.thp[i][k] + model.tb[k];
+		long double pth = model.thp[i][k] + model.tb[k];
 	#else
-		double pth = model.thp[i][k];
+		long double pth = model.thp[i][k];
 	#endif
-	double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
-	double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
+	long double qvs = pc * exp(17.27 * (model.pib[k] * pth - 273.) / (model.pib[k] * pth - 36.));
+	long double phi = qvs * (17.27 * 237. * Lv) / (C_p * pow(pth * model.pib[k] - 36., 2));
 
 	#if defined(LINEARIZEDQV)
-		double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
+		long double C = (model.qvp[i][k] + model.qvb[k] - qvs) / (1 + phi); 
 	#else
-		double C = (model.qvp[i][k] - qvs) / (1 + phi); 
+		long double C = (model.qvp[i][k] - qvs) / (1 + phi); 
 	#endif
 
 	// C should less than qc (C can be sink for qc and source for qv, so it should not excess qc)
@@ -437,6 +450,7 @@ void Iteration::condensation(vvmArray &model, int i, int k) {
 }
 
 // autoconversion of qc to qr
+
 void Iteration::autoconversion(vvmArray & model, int i, int k) {
 	double autort = 0.001, autotr = 0.001; // autocon rate [1/sec], autocon threshold [kg/kg]
 	double qcplus = std::max(0., model.qcp[i][k]);
@@ -500,7 +514,7 @@ void Iteration::heatflux(vvmArray &model, int i, int k, int ishflux) {
 		model.thp[i][k] = model.thp[i][k] + d2t * cdh * vel * model.addflx[i] * tdif * rdz;
 	}
 }
-
+*/
 void Iteration::updateMean(vvmArray &model) {
 	double tb = 0.;
 	for (int k = 1; k < nz-1; k++) {
@@ -565,9 +579,9 @@ void Iteration::LeapFrog(vvmArray &model) {
 			pqc_pt(model);
 			pqr_pt(model);
 		#endif
-        pubarTop_pt(model);
+        // pubarTop_pt(model);
 		cal_w(model);
-		cal_u(model);
+		// cal_u(model);
 
 		// #ifndef LINEARIZEDTH
 		// 	updateMean(model);

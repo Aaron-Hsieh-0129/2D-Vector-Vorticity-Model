@@ -31,11 +31,11 @@ void Init::Init1d(vvmArray &model) {
 		model.tvb[nz-1] = model.tvb[nz-2];
 
 		// init pib
-		double pisfc = pow((PSURF / P0), Rd / C_p);
+		long double pisfc = pow((PSURF / P0), Rd / C_p);
 		for (int k = 1; k <= nz-2; k++) {
 			if (k == 1) model.pib[k] = pisfc - gravity * 0.5 * dz / (C_p * model.tvb[k]);
 			else {
-				double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
+				long double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
 				model.pib[k] = model.pib[k-1] - gravity * dz / (C_p * tvbavg);
 			}
 		}
@@ -69,7 +69,7 @@ void Init::Init1d(vvmArray &model) {
 		// init pb, qvsb
 		for (int k = 1; k <= nz-2; k++) {
 			model.pb[k] = P0 * pow(model.pib[k], C_p / Rd);
-			double Tbar = model.tb[k] * model.pib[k];
+			long double Tbar = model.tb[k] * model.pib[k];
 			model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
 		}
 		model.pb[0] = model.pb[1];
@@ -169,7 +169,7 @@ void Init::Init2d(vvmArray &model) {
 		// init u
 		#if defined(SHEAR)
 			// From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
-			double umin = -10, umax = 10.;
+			long double umin = -10, umax = 10.;
 			int bubble_center_idx = 2500/dz + 1;
 			for (int i = 1; i <= nx-2; i++) {
 				for (int k = 1; k <= nz-2; k++) {
@@ -182,7 +182,7 @@ void Init::Init2d(vvmArray &model) {
 	#endif
 
 	// init zeta
-	double pu_pz = 0., pw_px = 0.;
+	long double pu_pz = 0., pw_px = 0.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
 			pw_px = (model.w[i][k] - model.w[i-1][k]) * rdx;
@@ -268,36 +268,36 @@ void Init::InitPoissonMatrix(vvmArray &model) {
 	coeff_xi.push_back(T(nx-3, 0, -1.));
 	coeff_xi.push_back(T(nx-3, nx-3, 2.));
 	model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
-	// std::cout << model.G << std::endl;
+	// std::cout << std::setprecision(10) << model.G << std::endl;
 	return;
 }
 
 
-double Init::GetTB(int k) {
-	double z_top = 12000., T_top = 213., tb_top = 343.;
-	double z_t = dz * (k - 0.5);
+long double Init::GetTB(int k) {
+	long double z_top = 12000., T_top = 213., tb_top = 343.;
+	long double z_t = dz * (k - 0.5);
 	if (z_t <= z_top) return 300. + 43. * pow(z_t / z_top, 1.25);
 	else return tb_top * exp(gravity * (z_t - z_top) / (C_p * T_top));
 }
 
-double Init::GetTHRAD(int i, int k) {
-	double XC = XRANGE / 2., XR = 4000.;
-	double ZC = 2500., ZR = 2000.;
-	double x = (i-0.5) * dx, z = (k-0.5) * dz;
-	double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
+long double Init::GetTHRAD(int i, int k) {
+	long double XC = XRANGE / 2., XR = 4000.;
+	long double ZC = 2500., ZR = 2000.;
+	long double x = (i-0.5) * dx, z = (k-0.5) * dz;
+	long double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
 	return rad;
 }
 
-double Init::GetTH(int i, int k) {
-	double rad = GetTHRAD(i, k);
-	double delta = 3.;
+long double Init::GetTH(int i, int k) {
+	long double rad = GetTHRAD(i, k);
+	long double delta = 3.;
 	if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
 	// if (k >= 10 && k <= 20) return 3.;
 	else return 0.;
 }
 
-double Init::GetQVB(int k) {
-	double z_t = (k - 0.5) * dz;
+long double Init::GetQVB(int k) {
+	long double z_t = (k - 0.5) * dz;
 	if (z_t <= 4000) return 0.0161 - 0.000003375 * z_t;
 	else if (4000 < z_t && z_t <= 8000) return 0.0026 - 0.00000065 * (z_t - 4000);
 	else return 0.;
@@ -310,7 +310,7 @@ void Init::LoadFile(vvmArray &model) {
 	std::string line;
 	std::getline(inputFile, line);
 	std::getline(inputFile, line); // Skip the zero level
-	double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
+	long double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
 
 	int i = 1;
 	while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {

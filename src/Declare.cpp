@@ -32,12 +32,12 @@ vvmArray::vvmArray() {
         qrAcc[i] = 0.;
     }
 
-    A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
-    G = Eigen::SparseMatrix<double>(nx-2, nx-2);
+    A = Eigen::SparseMatrix<long double>((nx-2)*(nz-3), (nx-2)*(nz-3));
+    G = Eigen::SparseMatrix<long double>(nx-2, nx-2);
     return;
 }
 
-void vvmArray::BoundaryProcess(double tmp[][nz]) {
+void vvmArray::BoundaryProcess(long double tmp[][nz]) {
   for (int k = 1; k <= nz - 2; k++) {
     tmp[0][k] = tmp[nx - 2][k];
     tmp[nx - 1][k] = tmp[1][k];
@@ -48,7 +48,7 @@ void vvmArray::BoundaryProcess(double tmp[][nz]) {
   }
 }
 
-void vvmArray::BoundaryProcessZETA(double tmp[][nz]) {
+void vvmArray::BoundaryProcessZETA(long double tmp[][nz]) {
     for (int k = 1; k <= nz - 2; k++) {
         tmp[0][k] = tmp[nx - 2][k];
         tmp[nx - 1][k] = tmp[1][k];
@@ -59,7 +59,7 @@ void vvmArray::BoundaryProcessZETA(double tmp[][nz]) {
     }
 }
 
-void vvmArray::BoundaryProcessDouble(double tmp[][nz]) {
+void vvmArray::BoundaryProcessDouble(long double tmp[][nz]) {
     for (int k = 1; k <= nz - 2; k++) {
         tmp[0][k] = tmp[nx - 2][k];
         tmp[nx - 1][k] = tmp[1][k];

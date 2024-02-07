@@ -14,9 +14,9 @@ class Init {
 		#endif
 			
 	private:
-		static double GetTB(int);
-		static double GetTHRAD(int, int);
-		static double GetTH(int, int);
-		static double GetQVB(int);
+		static long double GetTB(int);
+		static long double GetTHRAD(int, int);
+		static long double GetTH(int, int);
+		static long double GetQVB(int);
 		static void InitPoissonMatrix(vvmArray &);
 };

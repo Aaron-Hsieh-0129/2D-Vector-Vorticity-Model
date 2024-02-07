@@ -3,36 +3,36 @@
 #include "Eigen/Sparse"
 #include "Define.hpp"
 
-typedef Eigen::Triplet<double> T;
+typedef Eigen::Triplet<long double> T;
 class vvmArray {
 	public:
 		// constructor
 		vvmArray();
 
-		double tb[nz], tb_zeta[nz], rhou[nz], rhow[nz], pib[nz], qvb[nz], qvsb[nz], tvb[nz], pb[nz];
+		long double tb[nz], tb_zeta[nz], rhou[nz], rhow[nz], pib[nz], qvb[nz], qvsb[nz], tvb[nz], pb[nz];
 		#if defined(TROPICALFORCING)
-			double Q1LS[nz], Q2LS[nz];
-			double init_th_forcing[nx][nz];
+			long double Q1LS[nz], Q2LS[nz];
+			long double init_th_forcing[nx][nz];
 			bool status_for_adding_forcing = false;
 		#endif
-		double zetap[nx][nz], zeta[nx][nz], zetam[nx][nz];
-		double thp[nx][nz], th[nx][nz], thm[nx][nz];
-		double qvp[nx][nz], qv[nx][nz], qvm[nx][nz];
-		double qcp[nx][nz], qc[nx][nz], qcm[nx][nz];
-		double qrp[nx][nz], qr[nx][nz], qrm[nx][nz];
-		double u[nx][nz];
+		long double zetap[nx][nz], zeta[nx][nz], zetam[nx][nz];
+		long double thp[nx][nz], th[nx][nz], thm[nx][nz];
+		long double qvp[nx][nz], qv[nx][nz], qvm[nx][nz];
+		long double qcp[nx][nz], qc[nx][nz], qcm[nx][nz];
+		long double qrp[nx][nz], qr[nx][nz], qrm[nx][nz];
+		long double u[nx][nz];
 
-		double ubarTopp = 0., ubarTop = 0., ubarTopm = 0.;
-		double w[nx][nz];
-		double xi[nx], uxi[nx];
-		double addflx[nx];
-		double qrAcc[nx];
+		long double ubarTopp = 0., ubarTop = 0., ubarTopm = 0.;
+		long double w[nx][nz];
+		long double xi[nx], uxi[nx];
+		long double addflx[nx];
+		long double qrAcc[nx];
 
 		// Metrices to solve the Poisson equation
-		Eigen::SparseMatrix<double> A;
-		Eigen::SparseMatrix<double> G;
+		Eigen::SparseMatrix<long double> A;
+		Eigen::SparseMatrix<long double> G;
 
-		static void BoundaryProcess(double tmp[][nz]);
-		static void BoundaryProcessZETA(double tmp[][nz]);
-		static void BoundaryProcessDouble(double tmp[][nz]);
+		static void BoundaryProcess(long double tmp[][nz]);
+		static void BoundaryProcessZETA(long double tmp[][nz]);
+		static void BoundaryProcessDouble(long double tmp[][nz]);
 };
