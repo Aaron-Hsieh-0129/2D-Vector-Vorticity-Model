@@ -28,7 +28,7 @@ void Output::printInit(vvmArray &model) {
 
 void Output::output_zeta(int n, vvmArray &model) {
 	std::fstream foutzeta;
-	string zetaName = OUTPUTPATH + (string) "/zeta/zeta_" + std::to_string(n) + (string) ".txt";
+	string zetaName = OUTPUTPATH + (string) "txtoutputs/zeta/zeta_" + std::to_string(n) + (string) ".txt";
 	foutzeta.open(zetaName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -39,7 +39,7 @@ void Output::output_zeta(int n, vvmArray &model) {
 
 void Output::output_th(int n, vvmArray &model) {
 	std::fstream foutth;
-	string thName = OUTPUTPATH + (string) "th/th_" + std::to_string(n) + (string) ".txt";
+	string thName = OUTPUTPATH + (string) "txtoutputs/th/th_" + std::to_string(n) + (string) ".txt";
 	foutth.open(thName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -50,7 +50,7 @@ void Output::output_th(int n, vvmArray &model) {
 
 void Output::output_u(int n, vvmArray &model) {
 	std::fstream foutu;
-	string uName = OUTPUTPATH + (string) "u/u_" + std::to_string(n) + (string) ".txt";
+	string uName = OUTPUTPATH + (string) "txtoutputs/u/u_" + std::to_string(n) + (string) ".txt";
 	foutu.open(uName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -61,7 +61,7 @@ void Output::output_u(int n, vvmArray &model) {
 
 void Output::output_w(int n, vvmArray &model) {
 	std::fstream foutw;
-	string wName = OUTPUTPATH + (string) "w/w_" + std::to_string(n) + (string) ".txt";
+	string wName = OUTPUTPATH + (string) "txtoutputs/w/w_" + std::to_string(n) + (string) ".txt";
 	foutw.open(wName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -72,7 +72,7 @@ void Output::output_w(int n, vvmArray &model) {
 
 void Output::output_qv(int n, vvmArray &model) {
 	std::fstream foutqv;
-	string qvName = OUTPUTPATH + (string) "qv/qv_" + std::to_string(n) + (string) ".txt";
+	string qvName = OUTPUTPATH + (string) "txtoutputs/qv/qv_" + std::to_string(n) + (string) ".txt";
 	foutqv.open(qvName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -83,7 +83,7 @@ void Output::output_qv(int n, vvmArray &model) {
 
 void Output::output_qc(int n, vvmArray &model) {
 	std::fstream foutqc;
-	string qcName = OUTPUTPATH + (string) "qc/qc_" + std::to_string(n) + (string) ".txt";
+	string qcName = OUTPUTPATH + (string) "txtoutputs/qc/qc_" + std::to_string(n) + (string) ".txt";
 	foutqc.open(qcName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -94,7 +94,7 @@ void Output::output_qc(int n, vvmArray &model) {
 
 void Output::output_qr(int n, vvmArray &model) {
 	std::fstream foutqr;
-	string qrName = OUTPUTPATH + (string) "qr/qr_" + std::to_string(n) + (string) ".txt";
+	string qrName = OUTPUTPATH + (string) "txtoutputs/qr/qr_" + std::to_string(n) + (string) ".txt";
 	foutqr.open(qrName, std::ios::out);
 	for (int k = 0; k < nz; k++) {
 		for (int i = 0; i < nx; i++) {
@@ -161,13 +161,14 @@ void Output::create_directory(string directory_name) {
 void Output::create_all_directory() {
     // data directory
     #ifdef OUTPUTTXT
-        create_directory(OUTPUTPATH + (string) "u");
-        create_directory(OUTPUTPATH + (string) "w");
-        create_directory(OUTPUTPATH + (string) "zeta");
-        create_directory(OUTPUTPATH + (string) "th");
-        create_directory(OUTPUTPATH + (string) "qc");
-        create_directory(OUTPUTPATH + (string) "qr");
-        create_directory(OUTPUTPATH + (string) "qv");
+        create_directory(OUTPUTPATH + (string) "txtoutputs");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/u");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/w");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/zeta");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/th");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/qc");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/qr");
+        create_directory(OUTPUTPATH + (string) "txtoutputs/qv");
     #endif
     #ifdef OUTPUTNC
         create_directory(OUTPUTPATH + (string) "nc");

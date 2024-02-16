@@ -9,10 +9,10 @@
 #define dz (200)
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
-// #define nx (XRANGE / dx)
-// #define nz (ZRANGE / dz)
-#define nx (7)
-#define nz (7)
+#define nx (XRANGE / dx)
+#define nz (ZRANGE / dz)
+// #define nx (9)
+// #define nz (9)
 #define dt (1.)
 #define rdx (1. / (double) dx)
 #define rdz (1. / (double) dz)
@@ -20,8 +20,8 @@
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
 #define TIMEEND (10000.)
-#define Kx (20.)
-#define Kz (20.)
+#define Kx (250.)
+#define Kz (250.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
@@ -36,7 +36,7 @@
 // #define ADVECTIONU
 // #define ADVECTIONW
 // #define NoBouyance
-// #define DIFFUSION
+#define DIFFUSION
 #define TIMEFILTER
 // #define WATER
 // #define TROPICALFORCING

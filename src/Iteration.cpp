@@ -26,6 +26,7 @@ void Iteration::pzeta_pt(vvmArray &model) {
 				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho + 0.61 * g_pqv_px - gpqc_px - gpqr_px);
 			#else
 				model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px - prhowzeta_pz_rho);
+				// model.zetap[i][k] = model.zetam[i][k] + d2t * (g_tbrho_pth_px - puzeta_px);
 			#endif
 
 			// Add diffusion
@@ -57,6 +58,7 @@ void Iteration::pzeta_pt(vvmArray &model) {
 
 void Iteration::pth_pt(vvmArray &model) {
     double puth_px = 0., prhowth_pz_rho = 0., forcing = 0.;
+	double wpth_pz = 0., thpw_pz = 0.;
 	#if defined(LINEARIZEDTH)
 		double wptb_pz = 0.;
 	#endif
@@ -65,6 +67,10 @@ void Iteration::pth_pt(vvmArray &model) {
 			puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
 			prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
 							  model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
+			// prhowth_pz_rho = (model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
+			// 				  model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1]));
+			// wpth_pz = 0.5*(model.w[i][k+1]+model.w[i][k]) * (0.5*(model.th[i][k+1]-model.th[i][k-1]) * rdz);
+			// thpw_pz = model.th[i][k] * (model.w[i][k+1]-model.w[i][k]) * rdz;
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
@@ -102,6 +108,11 @@ void Iteration::pth_pt(vvmArray &model) {
 					#endif
 				#else
 					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+					// model.thp[i][k] = model.thm[i][k] + d2t * ( - prhowth_pz_rho);
+					// model.thp[i][k] = model.thm[i][k] + d2t * ( - wpth_pz - thpw_pz);
+					// model.thp[i][k] = model.thm[i][k] + d2t * ( -wpth_pz);
+					// model.thp[i][k] = model.thm[i][k] + d2t * ( -thpw_pz);
+					// model.thp[i][k] = model.thm[i][k] + d2t * ( 0.);
 				#endif
             #endif
 
@@ -137,16 +148,16 @@ void Iteration::pth_pt(vvmArray &model) {
 }
 
 void Iteration::pubarTop_pt(vvmArray &model) {
-    double uwUp = 0., uwDown = 0.;
-    for (int i = 1; i < nx-1; i++) {
-        uwUp += 0.5*(model.u[i][nz-1]+model.u[i][nz-2]) * 0.5*(model.w[i][nz-1]+model.w[i-1][nz-1]);
-        uwDown += 0.5*(model.u[i][nz-2]+model.u[i][nz-3]) * 0.5*(model.w[i][nz-2]+model.w[i-1][nz-2]);
-    }
-    uwUp /= (nx-2);
-    uwDown /= (nx-2);
-    double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
-    model.ubarTopp = model.ubarTopm + d2t * (-prhouw_pz_rho);
-    return;
+	double uwUp = 0., uwDown = 0.;
+	for (int i = 1; i < nx-1; i++) {
+		uwUp += 0.5*(model.u[i][nz-1]+model.u[i][nz-2]) * 0.5*(model.w[i][nz-1]+model.w[i-1][nz-1]);
+		uwDown += 0.5*(model.u[i][nz-2]+model.u[i][nz-3]) * 0.5*(model.w[i][nz-2]+model.w[i-1][nz-2]);
+	}
+	uwUp /= (static_cast<double>(nx - 2)); // Cast the denominator to double
+	uwDown /= (static_cast<double>(nx - 2)); // Cast the denominator to double
+	double prhouw_pz_rho = 1. / model.rhou[nz-2] * (model.rhow[nz-1]*uwUp - model.rhow[nz-2]*uwDown) * rdz;
+	model.ubarTopp = model.ubarTopm + d2t * (-prhouw_pz_rho);
+	return;
 }
 
 void Iteration::cal_w(vvmArray &model) {
@@ -168,6 +179,7 @@ void Iteration::cal_w(vvmArray &model) {
 		}
 
 		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
+		solver.setTolerance(1e-30);
 		solver.compute(model.A);
 		x = solver.solve(b);
 
@@ -237,8 +249,8 @@ void Iteration::cal_u(vvmArray &model) {
 			// You should modify the last number which means the fixed u at the top layer
 				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp + 10.;
 			#else
-				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp;
-				// model.u[i][nz-2] = model.uxi[i];
+				// model.u[i][nz-2] = model.uxi[i] + model.ubarTopp;
+				model.u[i][nz-2] = model.uxi[i];
 			#endif
 		}
 		model.u[0][nz-2] = model.u[nx-2][nz-2];
@@ -508,7 +520,7 @@ void Iteration::updateMean(vvmArray &model) {
 		for (int i = 1; i < nx-1; i++) {
 			tb += model.thp[i][k];
 		}
-		model.tb[k] = tb / (nx-2);
+		model.tb[k] = tb / static_cast<double>(nx-2);
 	}
 	model.tb[0] = model.tb[1];
 	model.tb[nz-1] = model.tb[nz-2];
@@ -569,9 +581,9 @@ void Iteration::LeapFrog(vvmArray &model) {
 		cal_w(model);
 		cal_u(model);
 
-		// #ifndef LINEARIZEDTH
-		// 	updateMean(model);
-		// #endif 
+		#ifndef LINEARIZEDTH
+			updateMean(model);
+		#endif 
 
 		// next step
 		for (int i = 0; i <= nx-1; i++) {

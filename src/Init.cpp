@@ -194,12 +194,12 @@ void Init::Init2d(vvmArray &model) {
 	model.BoundaryProcessZETA(model.zeta);
 	model.BoundaryProcessZETA(model.zetam);
 
-    // init ubar at top
-    for (int i = 1; i < nx-1; i++) {
-        model.ubarTopm += model.u[i][nz-2];
-    }
-    model.ubarTopm /= (nx-2);
-    model.ubarTopp = model.ubarTopm;
+	// init ubar at top
+	for (int i = 1; i < nx-1; i++) {
+		model.ubarTopm += model.u[i][nz-2];
+	}
+	model.ubarTopm /= static_cast<double>(nx-2);
+	model.ubarTopp = model.ubarTopm;
 
 	// Assign values to the matrices that solve the Poisson equation for u and w
 	InitPoissonMatrix(model);
@@ -268,7 +268,7 @@ void Init::InitPoissonMatrix(vvmArray &model) {
 	coeff_xi.push_back(T(nx-3, 0, -1.));
 	coeff_xi.push_back(T(nx-3, nx-3, 2.));
 	model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
-	// std::cout << model.G << std::endl;
+	// std::cout << std::setprecision(10) << model.G << std::endl;
 	return;
 }
 
