@@ -249,8 +249,8 @@ void Iteration::cal_u(vvmArray &model) {
 			// You should modify the last number which means the fixed u at the top layer
 				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp + 10.;
 			#else
-				// model.u[i][nz-2] = model.uxi[i] + model.ubarTopp;
-				model.u[i][nz-2] = model.uxi[i];
+				model.u[i][nz-2] = model.uxi[i] + model.ubarTopp;
+				// model.u[i][nz-2] = model.uxi[i];
 			#endif
 		}
 		model.u[0][nz-2] = model.u[nx-2][nz-2];
