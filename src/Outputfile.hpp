@@ -1,5 +1,3 @@
-#include <fstream>
-#include <iomanip>
 #include "Init.hpp"
 #include <netcdf>
 #include <vector>
