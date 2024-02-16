@@ -20,8 +20,8 @@ include_directories(
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp)
 add_executable(vvm2d ${SRC})
 
-find_library(libncPath netcdf lib/netcdf)
-find_library(libncxxPath netcdf_c++4 lib/netcdf)
+find_library(libncPath netcdf)
+find_library(libncxxPath netcdf_c++4)
 target_link_libraries(vvm2d ${libncPath} ${libncxxPath})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

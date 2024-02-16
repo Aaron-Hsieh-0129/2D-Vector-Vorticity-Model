@@ -13,9 +13,9 @@ void Iteration::pzeta_pt(vvmArray &model) {
 			#if defined(ADVECTIONU) || defined(ADVECTIONW) || defined(NoBouyance)
 				g_tbrho_pth_px = 0.;
 			#else
-				// g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 				// g_tbrho_pth_px = gravity / model.tb_zeta[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
-				g_tbrho_pth_px = gravity / 300. / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				// g_tbrho_pth_px = gravity / 300. / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 			#endif
 
 			// Add water 
