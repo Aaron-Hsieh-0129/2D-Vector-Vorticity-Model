@@ -3,8 +3,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -20,9 +20,8 @@ include_directories(
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp)
 add_executable(vvm2d ${SRC})
 
-find_library(libncPath netcdf)
-find_library(libncxxPath netcdf_c++4)
-target_link_libraries(vvm2d ${libncPath} ${libncxxPath})
+find_library(libncxxPath netcdf_c++4 "/home/Aaron/miniforge3/lib/netcdf_c++4")
+target_link_libraries(vvm2d ${libncxxPath})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
