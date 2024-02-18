@@ -10,7 +10,7 @@ This is a 2D cloud-resolving model based on vorticity equation
 2. Using miniconda (or anaconda) to install netcdf_cxx4 library (using the command under terminal)
     ```
     conda install -c conda-forge libnetcdf
-    conda install -c conda-forge libnetcdf_cxx4
+    conda install -c conda-forge netcdf-cxx4=4.3.1
     ```
 
 3. Find the installed netcdf library under miniconda and use the paths to modify the paths into CMakeLists.txt. Usually, it will be at ``` <your_path_to_miniconda>/lib/netcdf_c++4 ```
