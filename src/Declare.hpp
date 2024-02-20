@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "Eigen/Sparse"
+#include "../include/Eigen/Sparse"
 #include "Define.hpp"
 
 typedef Eigen::Triplet<double> T;
