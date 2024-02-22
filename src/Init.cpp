@@ -87,9 +87,9 @@ void Init::Init1d(vvmArray &model) {
 		#endif
 	#endif
 
-	for (int k = 0; k < nz; k++) {
-		model.tb[k] = 300.;
-	}
+	// for (int k = 0; k < nz; k++) {
+	// 	model.tb[k] = 300.;
+	// }
 	return;
 }
 

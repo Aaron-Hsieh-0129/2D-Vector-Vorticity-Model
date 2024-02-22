@@ -9,3 +9,4 @@ input
 *.e
 *.o
 compile_flags.txt
+.cache

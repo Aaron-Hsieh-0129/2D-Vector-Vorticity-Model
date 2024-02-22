@@ -13,9 +13,13 @@ void Iteration::pzeta_pt(vvmArray &model) {
 			#if defined(ADVECTIONU) || defined(ADVECTIONW) || defined(NoBouyance)
 				g_tbrho_pth_px = 0.;
 			#else
-				g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				#if defined(LINEARIZEDTH)
+					g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 				// g_tbrho_pth_px = gravity / model.tb_zeta[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
 				// g_tbrho_pth_px = gravity / 300. / model.rhow[k] * (0.5*(model.th[i][k] + model.th[i][k-1]) - 0.5*(model.th[i-1][k] + model.th[i-1][k-1])) * rdx;
+				#else
+					g_tbrho_pth_px = gravity / model.tb_zeta[k] / model.rhow[k] * ((0.5*(model.th[i][k] + model.th[i][k-1])-model.tb_zeta[k]) - (0.5*(model.th[i-1][k] + model.th[i-1][k-1])-model.tb_zeta[k])) * rdx;
+				#endif
 			#endif
 
 			// Add water 
@@ -57,20 +61,25 @@ void Iteration::pzeta_pt(vvmArray &model) {
 }
 
 void Iteration::pth_pt(vvmArray &model) {
-    double puth_px = 0., prhowth_pz_rho = 0., forcing = 0.;
-	double wpth_pz = 0., thpw_pz = 0.;
+	#if defined(FLUXFORM)
+    	double puth_px = 0., prhowth_pz_rho = 0.;
+	#else
+		double upth_px = 0., wpth_pz = 0.;
+	#endif
+	double forcing = 0.;
 	#if defined(LINEARIZEDTH)
 		double wptb_pz = 0.;
 	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
-			prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
-							  model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
-			// prhowth_pz_rho = (model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
-			// 				  model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1]));
-			// wpth_pz = 0.5*(model.w[i][k+1]+model.w[i][k]) * (0.5*(model.th[i][k+1]-model.th[i][k-1]) * rdz);
-			// thpw_pz = model.th[i][k] * (model.w[i][k+1]-model.w[i][k]) * rdz;
+			#if defined(FLUXFORM)
+				puth_px = (model.u[i+1][k] * 0.5*(model.th[i+1][k] + model.th[i][k]) - model.u[i][k] * 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
+				prhowth_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.th[i][k+1] + model.th[i][k]) - 
+								model.rhow[k] * model.w[i][k] * 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz / model.rhou[k];
+			#else
+				upth_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.th[i+1][k] + model.th[i][k]) - 0.5*(model.th[i][k] + model.th[i-1][k])) * rdx;
+				wpth_pz = 0.5*(model.w[i][k+1]+model.w[i][k]) * (0.5*(model.th[i][k+1] + model.th[i][k]) - 0.5*(model.th[i][k] + model.th[i][k-1])) * rdz;
+			#endif
 
 			#if defined(TROPICALFORCING)
                 forcing = model.Q1LS[k];
@@ -97,22 +106,29 @@ void Iteration::pth_pt(vvmArray &model) {
             #else
                 #if defined(TROPICALFORCING)
 					if (model.status_for_adding_forcing == true) {
-						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing + model.init_th_forcing[i][k]);
+						#if defined(FLUXFORM)
+							model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing + model.init_th_forcing[i][k]);
+						#else
+							model.thp[i][k] = model.thm[i][k] + d2t * (-upth_px - wpth_pz + forcing + model.init_th_forcing[i][k]);
+						#endif
 					}
 					else {
-						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+						#if defined(FLUXFORM)
+							model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+						#else
+							model.thp[i][k] = model.thm[i][k] + d2t * (-upth_px - wpth_pz + forcing);
+						#endif
 					}
 
 					#if defined(RADIATIONCOOLING) 
 						model.thp[i][k] += d2t * (-2 / 86400);
 					#endif
 				#else
-					model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
-					// model.thp[i][k] = model.thm[i][k] + d2t * ( - prhowth_pz_rho);
-					// model.thp[i][k] = model.thm[i][k] + d2t * ( - wpth_pz - thpw_pz);
-					// model.thp[i][k] = model.thm[i][k] + d2t * ( -wpth_pz);
-					// model.thp[i][k] = model.thm[i][k] + d2t * ( -thpw_pz);
-					// model.thp[i][k] = model.thm[i][k] + d2t * ( 0.);
+					#if defined(FLUXFORM)
+						model.thp[i][k] = model.thm[i][k] + d2t * (-puth_px - prhowth_pz_rho + forcing);
+					#else
+						model.thp[i][k] = model.thm[i][k] + d2t * (-upth_px - wpth_pz + forcing);
+					#endif
 				#endif
             #endif
 
@@ -274,16 +290,26 @@ void Iteration::cal_u(vvmArray &model) {
 }
 
 void Iteration::pqv_pt(vvmArray &model) {
-	double puqv_px = 0., prhowqv_pz_rho = 0., forcing = 0.;
+	#if defined(FLUXFORM)
+		double puqv_px = 0., prhowqv_pz_rho = 0.;
+	#else
+		double upqv_px = 0., wpqv_pz = 0.;
+	#endif
+	double forcing = 0.;
 	#if defined(LINEARIZEDQV)
 		double wpqvb_pz = 0.;
 	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puqv_px = (model.u[i+1][k] * 0.5*(model.qv[i+1][k] + model.qv[i][k]) - model.u[i][k] * 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
-			prhowqv_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qv[i][k+1] + model.qv[i][k]) - 
-							  model.rhow[k] * model.w[i][k] * 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz / model.rhou[k];
-			
+			#if defined(FLUXFORM)
+				puqv_px = (model.u[i+1][k] * 0.5*(model.qv[i+1][k] + model.qv[i][k]) - model.u[i][k] * 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
+				prhowqv_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qv[i][k+1] + model.qv[i][k]) - 
+								  model.rhow[k] * model.w[i][k] * 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz / model.rhou[k];
+			#else
+				upqv_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qv[i+1][k] + model.qv[i][k]) - 0.5*(model.qv[i][k] + model.qv[i-1][k])) * rdx;
+				wpqv_pz = 0.5*(model.w[i][k+1]+model.w[i][k]) * (0.5*(model.qv[i][k+1] + model.qv[i][k]) - 0.5*(model.qv[i][k] + model.qv[i][k-1])) * rdz;
+			#endif
+						
 			#if defined(TROPICALFORCING)
                 forcing = model.Q2LS[k];
             #else
@@ -294,7 +320,11 @@ void Iteration::pqv_pt(vvmArray &model) {
 				wpqvb_pz = 0.5*(model.w[i][k+1] + model.w[i][k]) * (0.5*(model.qvb[k+1] + model.qvb[k]) - 0.5*(model.qvb[k] + model.qvb[k-1])) * rdz;
                 model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho - wpqvb_pz + forcing);
             #else
-                model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho + forcing);
+				#if defined(FLUXFORM)
+					model.qvp[i][k] = model.qvm[i][k] + d2t * (-puqv_px - prhowqv_pz_rho + forcing);
+				#else
+                	model.qvp[i][k] = model.qvm[i][k] + d2t * (-upqv_px - wpqv_pz + forcing);
+				#endif
             #endif
 
 			// diffusion
@@ -342,14 +372,24 @@ void Iteration::pqv_pt(vvmArray &model) {
 }
 
 void Iteration::pqc_pt(vvmArray &model) {
-	double puqc_px = 0., prhowqc_pz_rho = 0.;
+	#if defined(FLUXFORM)
+		double puqc_px = 0., prhowqc_pz_rho = 0.;
+	#else
+		double upqc_px = 0., wpqc_pz = 0.;
+	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = 1; k <= nz-2; k++) {
-			puqc_px = (model.u[i+1][k] * 0.5*(model.qc[i+1][k] + model.qc[i][k]) - model.u[i][k] * 0.5*(model.qc[i][k] + model.qc[i-1][k])) * rdx;
-			prhowqc_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qc[i][k+1] + model.qc[i][k]) - 
-							  model.rhow[k] * model.w[i][k] * 0.5*(model.qc[i][k] + model.qc[i][k-1])) * rdz / model.rhou[k];
+			#if defined(FLUXFORM)
+				puqc_px = (model.u[i+1][k] * 0.5*(model.qc[i+1][k] + model.qc[i][k]) - model.u[i][k] * 0.5*(model.qc[i][k] + model.qc[i-1][k])) * rdx;
+				prhowqc_pz_rho = (model.rhow[k+1] * model.w[i][k+1] * 0.5*(model.qc[i][k+1] + model.qc[i][k]) - 
+								  model.rhow[k] * model.w[i][k] * 0.5*(model.qc[i][k] + model.qc[i][k-1])) * rdz / model.rhou[k];
+				model.qcp[i][k] = model.qcm[i][k] + d2t * (-puqc_px - prhowqc_pz_rho);
+			#else
+				upqc_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qc[i+1][k] + model.qc[i][k]) - 0.5*(model.qc[i][k] + model.qc[i-1][k])) * rdx;
+				wpqc_pz = 0.5*(model.w[i][k+1]+model.w[i][k]) * (0.5*(model.qc[i][k+1] + model.qc[i][k]) - 0.5*(model.qc[i][k] + model.qc[i][k-1])) * rdz;
+				model.qcp[i][k] = model.qcm[i][k] + d2t * (-upqc_px - wpqc_pz);
+			#endif
 
-			model.qcp[i][k] = model.qcm[i][k] + d2t * (-puqc_px - prhowqc_pz_rho);
 			// negative qc process
 			if (model.qcp[i][k] < 0.) model.qcp[i][k] = 0.;
 
@@ -358,7 +398,7 @@ void Iteration::pqc_pt(vvmArray &model) {
 
 			#ifdef DIFFUSION
 				model.qcp[i][k] += d2t * Kx * rdx2 * (model.qcm[i+1][k] - 2. * model.qcm[i][k] + model.qcm[i-1][k]) + 
-									 d2t * Kz * rdz2 * (model.qcm[i][k+1] - 2. * model.qcm[i][k] + model.qcm[i][k-1]);
+								   d2t * Kz * rdz2 * (model.qcm[i][k+1] - 2. * model.qcm[i][k] + model.qcm[i][k-1]);
 			#endif
 		}
 	}
@@ -376,7 +416,11 @@ void Iteration::pqc_pt(vvmArray &model) {
 }
 
 void Iteration::pqr_pt(vvmArray &model) {
-	double puqr_px = 0., prhowVTqr_pz_rho = 0.;
+	#if defined(FLUXFORM)
+		double puqr_px = 0., prhowVTqr_pz_rho = 0.;
+	#else
+		double upqr_px = 0., wVTpqr_pz = 0.;
+	#endif
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = nz-2; k >= 1; k--) {
 			if (k == 2) model.qr[i][1] = model.qr[i][2];
@@ -385,14 +429,24 @@ void Iteration::pqr_pt(vvmArray &model) {
 				model.qr[i][0] = 0.;
 			}
 
-			puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
-			// TODO: VT
-			double VT = 6.;
-			prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
-							    model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
-			
-			if (k == 1) model.qrp[i][k] = d2t * (-prhowVTqr_pz_rho);
-			else model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
+			#if defined(FLUXFORM)
+				puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
+				// TODO: VT
+				double VT = 6.;
+				prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
+									model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
+				
+				if (k == 1) model.qrp[i][k] = d2t * (-prhowVTqr_pz_rho);
+				else model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
+			#else
+				upqr_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qr[i+1][k] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
+				// TODO: VT
+				double VT = 6.;
+				wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
+				
+				if (k == 1) model.qrp[i][k] = d2t * (-wVTpqr_pz);
+				else model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
+			#endif
 
 			// negative qr process
 			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
@@ -530,7 +584,6 @@ void Iteration::updateMean(vvmArray &model) {
 	}
 	model.tb_zeta[0] = model.tb_zeta[1];
 	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
-	
 }
 
 void Iteration::LeapFrog(vvmArray &model) {
