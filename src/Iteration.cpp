@@ -421,6 +421,8 @@ void Iteration::pqr_pt(vvmArray &model) {
 	#else
 		double upqr_px = 0., wVTpqr_pz = 0.;
 	#endif
+	// TODO: VT
+	double VT = 6.;
 	for (int i = 1; i <= nx-2; i++) {
 		for (int k = nz-2; k >= 1; k--) {
 			if (k == 2) model.qr[i][1] = model.qr[i][2];
@@ -428,11 +430,9 @@ void Iteration::pqr_pt(vvmArray &model) {
 				model.qr[i][1] = 0.;
 				model.qr[i][0] = 0.;
 			}
-
+			
 			#if defined(FLUXFORM)
 				puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
-				// TODO: VT
-				double VT = 6.;
 				prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
 									model.rhow[k] * (model.w[i][k] - VT) * 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz / model.rhou[k];
 				
@@ -440,8 +440,6 @@ void Iteration::pqr_pt(vvmArray &model) {
 				else model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
 			#else
 				upqr_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qr[i+1][k] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
-				// TODO: VT
-				double VT = 6.;
 				wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
 				
 				if (k == 1) model.qrp[i][k] = d2t * (-wVTpqr_pz);
