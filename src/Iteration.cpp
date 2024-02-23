@@ -121,7 +121,7 @@ void Iteration::pth_pt(vvmArray &model) {
 					}
 
 					#if defined(RADIATIONCOOLING) 
-						model.thp[i][k] += d2t * (-2 / 86400);
+						model.thp[i][k] += d2t * (-2. / 86400.);
 					#endif
 				#else
 					#if defined(FLUXFORM)

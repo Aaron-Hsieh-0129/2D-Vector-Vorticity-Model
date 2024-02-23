@@ -26,7 +26,7 @@
 #define Lv (2500000.)
 
 #define OUTPUTSTEP (1)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0131/6Q16Q2/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0131/6Q16Q2_cooling_VT3/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -42,7 +42,7 @@
 #define TIMEFILTER
 #define WATER
 #define TROPICALFORCING
-// #define RADIATIONCOOLING
+#define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
