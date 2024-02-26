@@ -442,10 +442,12 @@ void Iteration::pqr_pt(vvmArray &model) {
 	for (int i = 1; i <= nx-2; i++) { 
 		// precipitation to surface
 		#if defined(FLUXFORM)
-			prhowVTqr_pz_rho = (model.rhow[k+1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1] - 
-								model.rhow[k] * (0. - VT) * 0.) * rdz / model.rhou[k];
+			prhowVTqr_pz_rho = (model.rhow[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1] - 0.) * (rdz * 2.) / model.rhou[1];
+			if (prhowVTqr_pz_rho > 0.) prhowVTqr_pz_rho = 0.;
+			model.qrAcc[i] += d2t * (-prhowVTqr_pz_rho);
+			model.qrp[i][1] -= d2t * (-prhowVTqr_pz_rho);
 		#else
-			wVTpqr_pz = (0.5*(0.5*(model.w[i][2]+model.w[i][1]) + 0.) - VT) * (model.qrp[i][1] - 0.) * rdz;
+			wVTpqr_pz = (0.5*(0.5*(model.w[i][2]+model.w[i][1]) + 0.) - VT) * (model.qrp[i][1] - 0.) * (rdz * 2.);
 			if (wVTpqr_pz > 0.) wVTpqr_pz = 0.; // only sink for qr because it falls to the ground
 			model.qrAcc[i] += d2t * (-wVTpqr_pz);
 			model.qrp[i][1] -= d2t * (-wVTpqr_pz);
