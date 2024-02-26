@@ -19,14 +19,14 @@
 #define rdx2 (1. / ((double) dx * dx))
 #define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
-#define TIMEEND (100000.)
+#define TIMEEND (300000.)
 #define Kx (250.)
 #define Kz (250.)
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTSTEP (1)
-#define OUTPUTPATH "/data/Aaron/2DVVM/20km_full_qv/0131/6Q16Q2_cooling_VT3/"
+#define OUTPUTSTEP (10)
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0223/6Q16Q2_300000/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
@@ -42,7 +42,7 @@
 #define TIMEFILTER
 #define WATER
 #define TROPICALFORCING
-#define RADIATIONCOOLING
+// #define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX

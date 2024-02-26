@@ -195,7 +195,7 @@ void Iteration::cal_w(vvmArray &model) {
 		}
 
 		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
-		solver.setTolerance(1e-30);
+		solver.setTolerance(1e-16);
 		solver.compute(model.A);
 		x = solver.solve(b);
 
@@ -227,16 +227,10 @@ void Iteration::cal_u(vvmArray &model) {
 			h(i-1) = (-model.rhow[nz-2] * model.w[i][nz-2]) / model.rhou[nz-2] * dx;
 		}
 
-		// std::cout << model.G << std::endl;
-		// std::cout << std::setprecision(10) << h << std::endl;
-		// solve
-		// Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solve_xi;
-		Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
-		// Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solve_xi;
-		// Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double> > solve_xi;
-		y = solve_xi.compute(model.G).solve(h);
-		// std::cout << solve_xi.error() << std::endl;
-		// std::cout << y << std::endl;
+		Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solver_xi;
+		solver_xi.setTolerance(1e-16);
+		y = solver_xi.compute(model.G).solve(h);
+
 		// xi
 		for (int i = 1; i <= nx-2; i++) {
 			model.xi[i] = y[i-1];
@@ -423,14 +417,8 @@ void Iteration::pqr_pt(vvmArray &model) {
 	#endif
 	// TODO: VT
 	double VT = 6.;
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = nz-2; k >= 1; k--) {
-			if (k == 2) model.qr[i][1] = model.qr[i][2];
-			if (k == 1) {
-				model.qr[i][1] = 0.;
-				model.qr[i][0] = 0.;
-			}
-			
+	for (int k = 1; k <= nz-2; k++) {
+		for (int i = 1; i <= nx-2; i++) {
 			#if defined(FLUXFORM)
 				puqr_px = (model.u[i+1][k] * 0.5*(model.qr[i+1][k] + model.qr[i][k]) - model.u[i][k] * 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 				prhowVTqr_pz_rho = (model.rhow[k+1] * (model.w[i][k+1] - VT) * 0.5*(model.qr[i][k+1] + model.qr[i][k]) - 
@@ -442,13 +430,25 @@ void Iteration::pqr_pt(vvmArray &model) {
 				upqr_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qr[i+1][k] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 				wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
 				
-				if (k == 1) model.qrp[i][k] = d2t * (-wVTpqr_pz);
-				else model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
+				model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
 			#endif
 
 			// negative qr process
 			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
-			
+		}
+	}
+	model.BoundaryProcess(model.qrp);
+
+	for (int i = 1; i <= nx-2; i++) { 
+		// precipitation to surface
+		wVTpqr_pz = (0.5*(0.5*(model.w[i][2]+model.w[i][1]) + 0.) - VT) * (model.qrp[i][1] - 0.) * rdz;
+		if (wVTpqr_pz > 0.) wVTpqr_pz = 0.; // only sink for qr because it falls to the ground
+		model.qrAcc[i] += d2t * (-wVTpqr_pz);
+		model.qrp[i][1] -= d2t * (-wVTpqr_pz);
+	}
+
+	for (int k = 1; k <= nz-2; k++) {
+		for (int i = 1; i <= nx-2; i++) {
 			#ifdef DIFFUSION
 				model.qrp[i][k] += d2t * Kx * rdx2 * (model.qrm[i+1][k] - 2. * model.qrm[i][k] + model.qrm[i-1][k]) + 
 								   d2t * Kz * rdz2 * (model.qrm[i][k+1] - 2. * model.qrm[i][k] + model.qrm[i][k-1]);
@@ -459,8 +459,6 @@ void Iteration::pqr_pt(vvmArray &model) {
 				accretion(model, i, k);
 				evaporation(model, i, k);
 			}
-
-			model.qrAcc[i] += model.qrp[i][1];
 		}
 	}
 	model.BoundaryProcess(model.qrp);
