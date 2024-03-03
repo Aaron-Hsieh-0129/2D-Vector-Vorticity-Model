@@ -428,34 +428,15 @@ void Iteration::pqr_pt(vvmArray &model) {
 				else model.qrp[i][k] = model.qrm[i][k] + d2t * (-puqr_px - prhowVTqr_pz_rho);
 			#else
 				upqr_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qr[i+1][k] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
-				wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
+				if (k == 1) {
+					wVTpqr_pz = (((model.w[i][2]-VT) * model.qr[i][2]) - ((model.w[i][1]-VT) * model.qr[i][1])) * rdz;
+					model.qrAcc[i] += wVTpqr_pz;
+				}
+				else wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
 				
 				model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
 			#endif
 
-			// negative qr process
-			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
-		}
-	}
-	model.BoundaryProcess(model.qrp);
-
-	for (int i = 1; i <= nx-2; i++) { 
-		// precipitation to surface
-		#if defined(FLUXFORM)
-			prhowVTqr_pz_rho = (model.rhow[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1] - 0.) * (rdz * 2.) / model.rhou[1];
-			if (prhowVTqr_pz_rho > 0.) prhowVTqr_pz_rho = 0.;
-			model.qrAcc[i] += d2t * (-prhowVTqr_pz_rho);
-			model.qrp[i][1] -= d2t * (-prhowVTqr_pz_rho);
-		#else
-			wVTpqr_pz = (0.5*(0.5*(model.w[i][2]+model.w[i][1]) + 0.) - VT) * (model.qrp[i][1] - 0.) * (rdz * 2.);
-			if (wVTpqr_pz > 0.) wVTpqr_pz = 0.; // only sink for qr because it falls to the ground
-			model.qrAcc[i] += d2t * (-wVTpqr_pz);
-			model.qrp[i][1] -= d2t * (-wVTpqr_pz);
-		#endif
-	}
-
-	for (int k = 1; k <= nz-2; k++) {
-		for (int i = 1; i <= nx-2; i++) {
 			#ifdef DIFFUSION
 				model.qrp[i][k] += d2t * Kx * rdx2 * (model.qrm[i+1][k] - 2. * model.qrm[i][k] + model.qrm[i-1][k]) + 
 								   d2t * Kz * rdz2 * (model.qrm[i][k+1] - 2. * model.qrm[i][k] + model.qrm[i][k-1]);
@@ -466,6 +447,9 @@ void Iteration::pqr_pt(vvmArray &model) {
 				accretion(model, i, k);
 				evaporation(model, i, k);
 			}
+			
+			// negative qr process
+			if (model.qrp[i][k] < 0.) model.qrp[i][k] = 0.;
 		}
 	}
 	model.BoundaryProcess(model.qrp);
