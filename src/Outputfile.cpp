@@ -124,6 +124,9 @@ void Output::output_nc(int n, vvmArray &model) {
 	NcVar qrData = dataFile.addVar("qr", ncDouble, xzDim);
 	NcVar qvData = dataFile.addVar("qv", ncDouble, xzDim);
 	NcVar qrAccData = dataFile.addVar("qrAcc", ncDouble, xDim);
+	NcVar accretionData = dataFile.addVar("accretion", ncDouble, xzDim);
+	NcVar autoconversionData = dataFile.addVar("autoconversion", ncDouble, xzDim);
+	NcVar evaporationData = dataFile.addVar("evaporation", ncDouble, xzDim);
 
 	thData.putVar(model.th);
 	zetaData.putVar(model.zeta);
@@ -132,7 +135,10 @@ void Output::output_nc(int n, vvmArray &model) {
 	qcData.putVar(model.qc);
 	qrData.putVar(model.qr);
 	qvData.putVar(model.qv);
-	qrAccData.putVar(model.qrAcc);	
+	qrAccData.putVar(model.qrAcc);
+	accretionData.putVar(model.accretion);
+	autoconversionData.putVar(model.autoconversion);
+	evaporationData.putVar(model.evaporation);
 
 	if (n == 0) {
 		NcVar tbData = dataFile.addVar("tb", ncDouble, zNcDim);

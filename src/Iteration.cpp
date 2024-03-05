@@ -429,12 +429,17 @@ void Iteration::pqr_pt(vvmArray &model) {
 			#else
 				upqr_px = 0.5*(model.u[i+1][k]+model.u[i][k]) * (0.5*(model.qr[i+1][k] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i-1][k])) * rdx;
 				if (k == 1) {
-					wVTpqr_pz = (((model.w[i][2]-VT) * model.qr[i][2]) - ((model.w[i][1]-VT) * model.qr[i][1])) * rdz;
-					model.qrAcc[i] += wVTpqr_pz;
+					wVTpqr_pz = (model.w[i][2] - VT) * (model.qr[i][2] - model.qr[i][1]) * rdz;
+					if (wVTpqr_pz < 0) {
+						model.qrAcc[i] += (-wVTpqr_pz);
+						model.qrp[i][k] = model.qrm[i][k] + d2t * (- wVTpqr_pz);
+					}
 				}
-				else wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
+				else {
+					wVTpqr_pz = (0.5*(model.w[i][k+1]+model.w[i][k])-VT) * (0.5*(model.qr[i][k+1] + model.qr[i][k]) - 0.5*(model.qr[i][k] + model.qr[i][k-1])) * rdz;
+					model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
+				}
 				
-				model.qrp[i][k] = model.qrm[i][k] + d2t * (-upqr_px - wVTpqr_pz);
 			#endif
 
 			#ifdef DIFFUSION
@@ -498,6 +503,7 @@ void Iteration::autoconversion(vvmArray & model, int i, int k) {
 	double arcrdt = std::min(ar * d2t, qcplus);
 	model.qcp[i][k] = model.qcp[i][k] - arcrdt;
 	model.qrp[i][k] = model.qrp[i][k] + arcrdt;
+	model.autoconversion[i][k] = arcrdt;
 	return;
 }
 
@@ -512,13 +518,18 @@ void Iteration::accretion(vvmArray &model, int i, int k) {
 
 	model.qcp[i][k] = model.qcp[i][k] - arcrdt;
 	model.qrp[i][k] = model.qrp[i][k] + arcrdt;
+	model.accretion[i][k] = arcrdt;
 	return;
 }
 
 // evaporation of rain water
 void Iteration::evaporation(vvmArray &model, int i, int k) {
 	double qrplus = std::max(0., model.qrp[i][k]);
-	double qvplus = std::max(0., model.qvp[i][k]);
+	#if defined(LINEARIZEDQV)
+		double qvplus = std::max(0., model.qvp[i][k] + model.qvb[k]);
+	#else
+		double qvplus = std::max(0., model.qvp[i][k]);
+	#endif
 
 	double pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
 	#if defined(LINEARIZEDTH)
@@ -535,9 +546,15 @@ void Iteration::evaporation(vvmArray &model, int i, int k) {
 				((2.03e4 + 9.584e6 / (model.pb[k] * qvs)) * model.rhou[k]);
 	double erdt = std::min(qrplus, std::max(0., er * d2t));
 
+	if (erdt < 0.) {
+		std::cout << "Evaporation Wrong" << std::endl;
+		return;
+	}
+
 	model.qrp[i][k] = model.qrp[i][k] - erdt;
 	model.qvp[i][k] = model.qvp[i][k] + erdt;
 	model.thp[i][k] = model.thp[i][k] - Lv * erdt / (C_p * model.pib[k]);
+	model.evaporation[i][k] = erdt;
 	return;
 }
 

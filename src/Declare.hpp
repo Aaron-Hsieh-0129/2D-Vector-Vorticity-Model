@@ -21,6 +21,9 @@ class vvmArray {
 		double qcp[nx][nz], qc[nx][nz], qcm[nx][nz];
 		double qrp[nx][nz], qr[nx][nz], qrm[nx][nz];
 		double u[nx][nz];
+		#if defined(WATER)
+			double evaporation[nx][nz], accretion[nx][nz], autoconversion[nx][nz];
+		#endif
 
 		double ubarTopp = 0., ubarTop = 0., ubarTopm = 0.;
 		double w[nx][nz];

@@ -13,6 +13,11 @@ vvmArray::vvmArray() {
             #if defined(TROPICALFORCING)
                 init_th_forcing[i][k] = 0.;
             #endif
+            #if defined(WATER)
+                evaporation[i][k] = 0.;
+                accretion[i][k] = 0.;
+                autoconversion[i][k] = 0.;
+            #endif
         }
         tb[k] = 0.;
         tb_zeta[k] = 0.;
