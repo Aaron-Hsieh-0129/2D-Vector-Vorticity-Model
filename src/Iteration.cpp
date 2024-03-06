@@ -282,7 +282,7 @@ void Iteration::cal_u(vvmArray &model) {
 	#endif
 	return;
 }
-
+#if defined(WATER)
 void Iteration::pqv_pt(vvmArray &model) {
 	#if defined(FLUXFORM)
 		double puqv_px = 0., prhowqv_pz_rho = 0.;
@@ -557,6 +557,7 @@ void Iteration::evaporation(vvmArray &model, int i, int k) {
 	model.evaporation[i][k] = erdt;
 	return;
 }
+#endif
 
 void Iteration::heatflux(vvmArray &model, int i, int k, int ishflux) {
 	if (ishflux == 1 && k == 1) {
