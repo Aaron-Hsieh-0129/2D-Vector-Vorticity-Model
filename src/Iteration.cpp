@@ -325,6 +325,7 @@ void Iteration::cal_w(vvmArray &model) {
 			}
 		}
 
+		// Eigen::SparseLU<Eigen::SparseMatrix<double> > solver;
 		Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
 		solver.setTolerance(1e-16);
 		solver.compute(model.A);

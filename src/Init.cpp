@@ -260,7 +260,7 @@ void Init::InitPoissonMatrix(vvmArray &model) {
 
             // D
             coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) ));
+                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) + 1E-8 ));
 
             // left/right: -1
             if ((idx-1) % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
@@ -274,7 +274,7 @@ void Init::InitPoissonMatrix(vvmArray &model) {
         }
         // Last row of A
         coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) ));
+                                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) + 1E-8 ));
         coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1-1, -1.)); // left
 
         k = 1;
@@ -285,7 +285,7 @@ void Init::InitPoissonMatrix(vvmArray &model) {
             // E
             coeff.push_back(T(idx-1, idx+(model.nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
             
-            // F (the k of row should be minus by 1 because it starts from k-1)
+            // F
             coeff.push_back(T(idx+(model.nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
         }
         model.A.setFromTriplets(coeff.begin(), coeff.end());
