@@ -6,7 +6,7 @@ void Init::Init1d(vvmArray &model) {
 	#else
 		// init tb
 		model.tb[1] = 300.;
-		for (int k = 2; k <= nz-2; k++) {
+		for (int k = 2; k <= model.nz-2; k++) {
 			#ifdef DRY
 				model.tb[k] = 300.;
 			#else
@@ -14,10 +14,10 @@ void Init::Init1d(vvmArray &model) {
 			#endif
 		}
 		model.tb[0] = model.tb[1];
-		model.tb[nz-1] = model.tb[nz-2];
+		model.tb[model.nz-1] = model.tb[model.nz-2];
 
 		// init qvb, tvb
-		for (int k = 1; k <= nz-2; k++) {
+		for (int k = 1; k <= model.nz-2; k++) {
 			#if defined(WATER)
 				model.qvb[k] = GetQVB(k);
 			#else
@@ -26,13 +26,13 @@ void Init::Init1d(vvmArray &model) {
 			model.tvb[k] = model.tb[k] * (1. + 0.61 * model.qvb[k]);
 		}
 		model.qvb[0] = model.qvb[1];
-		model.qvb[nz-1] = model.qvb[nz-2];
+		model.qvb[model.nz-1] = model.qvb[model.nz-2];
 		model.tvb[0] = model.tvb[1];
-		model.tvb[nz-1] = model.tvb[nz-2];
+		model.tvb[model.nz-1] = model.tvb[model.nz-2];
 
 		// init pib
 		double pisfc = pow((PSURF / P0), Rd / C_p);
-		for (int k = 1; k <= nz-2; k++) {
+		for (int k = 1; k <= model.nz-2; k++) {
 			if (k == 1) model.pib[k] = pisfc - gravity * 0.5 * dz / (C_p * model.tvb[k]);
 			else {
 				double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
@@ -40,10 +40,10 @@ void Init::Init1d(vvmArray &model) {
 			}
 		}
 		model.pib[0] = model.pib[1];
-		model.pib[nz-1] = model.pib[nz-2];
+		model.pib[model.nz-1] = model.pib[model.nz-2];
 
 		// init tb_zeta, rhou
-		for (int k = 1; k <= nz-2; k++) {
+		for (int k = 1; k <= model.nz-2; k++) {
 			model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
 			#ifdef RHO1
 				model.rhou[k] = 1.;
@@ -52,10 +52,10 @@ void Init::Init1d(vvmArray &model) {
 			#endif
 		}
 		model.rhou[0] = model.rhou[1];
-		model.rhou[nz-1] = model.rhou[nz-2];
+		model.rhou[model.nz-1] = model.rhou[model.nz-2];
 
 		// init tb_zeta, rhow
-		for (int k = 2; k <= nz-1; k++) {
+		for (int k = 2; k <= model.nz-1; k++) {
 			model.tb_zeta[k] = 0.5 * (model.tb[k] + model.tb[k-1]);
 			model.rhow[k] = 0.5 * (model.rhou[k] + model.rhou[k-1]);
 		}
@@ -67,27 +67,27 @@ void Init::Init1d(vvmArray &model) {
 		model.rhow[0] = model.rhow[1];
 
 		// init pb, qvsb
-		for (int k = 1; k <= nz-2; k++) {
+		for (int k = 1; k <= model.nz-2; k++) {
 			model.pb[k] = P0 * pow(model.pib[k], C_p / Rd);
 			double Tbar = model.tb[k] * model.pib[k];
 			model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
 		}
 		model.pb[0] = model.pb[1];
-		model.pb[nz-1] = model.pb[nz-2];
+		model.pb[model.nz-1] = model.pb[model.nz-2];
 		model.qvsb[0] = model.qvsb[1];
-		model.qvsb[nz-1] = model.qvsb[nz-2];
+		model.qvsb[model.nz-1] = model.qvsb[model.nz-2];
 
 		// heat flux init
 		#if defined(HEATFLUX)
 			mt19937 mt(20210831);
 			uniform_real_distribution<> distr(-1, 1);
-			for (int i = 1; i <= nx-2; i++) {
+			for (int i = 1; i <= model.nx-2; i++) {
 				model.addflx[i] += distr(mt);
 			}
 		#endif
 	#endif
 
-	// for (int k = 0; k < nz; k++) {
+	// for (int k = 0; k < model.nz; k++) {
 	// 	model.tb[k] = 300.;
 	// }
 	return;
@@ -98,8 +98,8 @@ void Init::Init2d(vvmArray &model) {
 		// Generate random 2D Gaussian noise array within the specified range
 		RandomPerturbation(model, 0);
 
-        for (int i = 1; i <= nx-2; i++) {
-            for (int k = 1; k <= nz-2; k++) {
+        for (int i = 1; i <= model.nx-2; i++) {
+            for (int k = 1; k <= model.nz-2; k++) {
 				#if defined(LINEARIZEDTH)
                 	model.th[i][k] = model.init_th_forcing[i][k];
 				#else
@@ -136,8 +136,8 @@ void Init::Init2d(vvmArray &model) {
 
     #else
 		// init th
-		for (int i = 1; i <= nx-2; i++) {
-			for (int k = 1; k <= nz-2; k++) {
+		for (int i = 1; i <= model.nx-2; i++) {
+			for (int k = 1; k <= model.nz-2; k++) {
 				#if defined(LINEARIZEDTH)
 					model.th[i][k] = GetTH(i, k);
 				#else
@@ -151,8 +151,8 @@ void Init::Init2d(vvmArray &model) {
 		model.BoundaryProcess(model.thm);
 
 		// init qv: where th != 0, qv = qvs
-		for (int i = 1; i <= nx-2; i++) {
-			for (int k = 1; k <= nz-2; k++) {
+		for (int i = 1; i <= model.nx-2; i++) {
+			for (int k = 1; k <= model.nz-2; k++) {
 				// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
 				// else model.qv[i][k] = 0.;
 				#if defined(LINEARIZEDQV)
@@ -171,10 +171,10 @@ void Init::Init2d(vvmArray &model) {
 			// From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
 			double umin = -10, umax = 10.;
 			int bubble_center_idx = 2500/dz + 1;
-			for (int i = 1; i <= nx-2; i++) {
-				for (int k = 1; k <= nz-2; k++) {
+			for (int i = 1; i <= model.nx-2; i++) {
+				for (int k = 1; k <= model.nz-2; k++) {
 					if (k <= bubble_center_idx) model.u[i][k] = umin - umin / (bubble_center_idx-1) * (k-1);
-					else model.u[i][k] = umax / (nz-2 - (bubble_center_idx-1)) * (k-bubble_center_idx+1);
+					else model.u[i][k] = umax / (model.nz-2 - (bubble_center_idx-1)) * (k-bubble_center_idx+1);
 				}
 			}
 			model.BoundaryProcess(model.u);
@@ -183,10 +183,10 @@ void Init::Init2d(vvmArray &model) {
 
 	// init zeta
 	double pu_pz = 0., pw_px = 0.;
-	for (int i = 1; i <= nx-2; i++) {
-		for (int k = 1; k <= nz-2; k++) {
-			pw_px = (model.w[i][k] - model.w[i-1][k]) * rdx;
-			pu_pz = (model.u[i][k] - model.u[i][k-1]) * rdz;
+	for (int i = 1; i <= model.nx-2; i++) {
+		for (int k = 1; k <= model.nz-2; k++) {
+			pw_px = (model.w[i][k] - model.w[i-1][k]) * model.rdx;
+			pu_pz = (model.u[i][k] - model.u[i][k-1]) * model.rdz;
 			model.zeta[i][k] = pw_px - pu_pz;
 			model.zetam[i][k] = model.zeta[i][k];
 		}
@@ -195,10 +195,10 @@ void Init::Init2d(vvmArray &model) {
 	model.BoundaryProcessZETA(model.zetam);
 
 	// init ubar at top
-	for (int i = 1; i < nx-1; i++) {
-		model.ubarTopm += model.u[i][nz-2];
+	for (int i = 1; i < model.nx-1; i++) {
+		model.ubarTopm += model.u[i][model.nz-2];
 	}
-	model.ubarTopm /= static_cast<double>(nx-2);
+	model.ubarTopm /= ((double) (model.nx - 2.));
 	model.ubarTopp = model.ubarTopm;
 
 	// Assign values to the matrices that solve the Poisson equation for u and w
@@ -207,68 +207,110 @@ void Init::Init2d(vvmArray &model) {
 }
 
 void Init::InitPoissonMatrix(vvmArray &model) {
-	// ###########################################
-	// For solving w
-	// A: i = 1~NX-2, k = 2~NZ-2
-	// ###########################################
-	int k = 1;
-	std::vector<T> coeff;
-	for (int idx = 1; idx < (nx-2)*(nz-3); idx++) {
-		// Height
-		if (idx % (nx-2) == 1) k++;
+    #if defined(STREAMFUNCTION)
+        // ###########################################
+        // For solving w
+        // A: i = 1~model.nx-2, k = 2~model.nz-2
+        // ###########################################
+        int k = 1;
+        std::vector<T> coeff;
+        for (int idx = 1; idx < (model.nx-2)*(model.nz-3); idx++) {
+            // Height
+            if (idx % (model.nx-2) == 1) k++;
 
-		// D
-		coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-											- (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
+            // D
+            coeff.push_back(T(idx-1, idx-1, 4.));
 
-		// left/right: -1
-		if ((idx-1) % (nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
-		if (idx % (nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
+            // left/right: -1
+            if ((idx-1) % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
+            if (idx % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
 
-		// Boundary
-		if ((idx-1) % (nx-2) == 0) {
-			coeff.push_back(T(idx-1, idx-1+(nx-3), -1.));
-			coeff.push_back(T(idx-1+(nx-3), idx-1, -1.));
-		}
-	}
-	// Last row of A
-	coeff.push_back(T((nx-2)*(nz-3)-1, (nx-2)*(nz-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-															- (0.5*(model.rhou[k] - model.rhou[k-1]) * (1./model.rhou[k] - 1./model.rhou[k-1]))));
-	coeff.push_back(T((nx-2)*(nz-3)-1, (nx-2)*(nz-3)-1-1, -1.)); // left
+            // Boundary
+            if ((idx-1) % (model.nx-2) == 0) {
+                coeff.push_back(T(idx-1, idx-1+(model.nx-3), -1.));
+                coeff.push_back(T(idx-1+(model.nx-3), idx-1, -1.));
+            }
+        }
+        // Last row of A
+        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1, 4.));
+        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1-1, -1.)); // left
 
-	k = 1;
-	for (int idx = 1; idx <= (nx-2)*(nz-4); idx++) {
-		// Height
-		if (idx % (nx-2) == 1) k++;
+        k = 1;
+        for (int idx = 1; idx <= (model.nx-2)*(model.nz-4); idx++) {
+            // Height
+            if (idx % (model.nx-2) == 1) k++;
 
-		// E (the k of row should be added by 1 because it starts from k-1)
-		coeff.push_back(T(idx-1, idx+(nx-2)-1, -1. - 0.5*(model.rhou[k+1] - model.rhou[k-1+1]) / model.rhou[k+1]));
-		
-		// F (the k of row should be minus by 1 because it starts from k-1)
-		coeff.push_back(T(idx+(nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k-1] - model.rhou[k-1-1]) / model.rhou[k-1-1]));
-	}
-	model.A.setFromTriplets(coeff.begin(), coeff.end());
+            // E
+            coeff.push_back(T(idx-1, idx+(model.nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
+            
+            // F (the k of row should be minus by 1 because it starts from k-1)
+            coeff.push_back(T(idx+(model.nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
+        }
+        model.A.setFromTriplets(coeff.begin(), coeff.end());
+    #else
+        // ###########################################
+        // For solving w
+        // A: i = 1~model.nx-2, k = 2~model.nz-2
+        // ###########################################
+        int k = 1;
+        std::vector<T> coeff;
+        for (int idx = 1; idx < (model.nx-2)*(model.nz-3); idx++) {
+            // Height
+            if (idx % (model.nx-2) == 1) k++;
 
-	// std::cout << std::setprecision << model.A << std::endl;
+            // D
+            coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) ));
 
-	// ###########################################
-	// For solving u
-	// G: i = 1~NX-2
-	// ###########################################
-	std::vector<T> coeff_xi;
+            // left/right: -1
+            if ((idx-1) % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
+            if (idx % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
 
-	for (int k = 1; k < nx-2; k++) {
-		// D
-		coeff_xi.push_back(T(k-1, k-1, 2.));
-		coeff_xi.push_back(T(k, k-1, -1.));
-		coeff_xi.push_back(T(k-1, k, -1.));
-	}
-	// Boundary
-	coeff_xi.push_back(T(0, nx-3, -1.));
-	coeff_xi.push_back(T(nx-3, 0, -1.));
-	coeff_xi.push_back(T(nx-3, nx-3, 2.));
-	model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
-	// std::cout << std::setprecision(10) << model.G << std::endl;
+            // Boundary
+            if ((idx-1) % (model.nx-2) == 0) {
+                coeff.push_back(T(idx-1, idx-1+(model.nx-3), -1.));
+                coeff.push_back(T(idx-1+(model.nx-3), idx-1, -1.));
+            }
+        }
+        // Last row of A
+        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
+                                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) ));
+        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1-1, -1.)); // left
+
+        k = 1;
+        for (int idx = 1; idx <= (model.nx-2)*(model.nz-4); idx++) {
+            // Height
+            if (idx % (model.nx-2) == 1) k++;
+
+            // E
+            coeff.push_back(T(idx-1, idx+(model.nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
+            
+            // F (the k of row should be minus by 1 because it starts from k-1)
+            coeff.push_back(T(idx+(model.nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
+        }
+        model.A.setFromTriplets(coeff.begin(), coeff.end());
+
+        // std::cout << std::setprecision << model.A << std::endl;
+
+        // ###########################################
+        // For solving u
+        // G: i = 1~model.nx-2
+        // ###########################################
+        std::vector<T> coeff_xi;
+
+        for (int k = 1; k < model.nx-2; k++) {
+            // D
+            coeff_xi.push_back(T(k-1, k-1, 2.));
+            coeff_xi.push_back(T(k, k-1, -1.));
+            coeff_xi.push_back(T(k-1, k, -1.));
+        }
+        // Boundary
+        coeff_xi.push_back(T(0, model.nx-3, -1.));
+        coeff_xi.push_back(T(model.nx-3, 0, -1.));
+        coeff_xi.push_back(T(model.nx-3, model.nx-3, 2.));
+        model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
+        // std::cout << std::setprecision(10) << model.G << std::endl;
+    #endif
 	return;
 }
 
@@ -331,29 +373,29 @@ void Init::LoadFile(vvmArray &model) {
 	}
 
 	model.tb[0] = model.tb[1];
-	model.tb[nz-1] = model.tb[nz-2];
+	model.tb[model.nz-1] = model.tb[model.nz-2];
 	model.qvb[0] = model.qvb[1];
-	model.qvb[nz-1] = model.qvb[nz-2];
+	model.qvb[model.nz-1] = model.qvb[model.nz-2];
 	model.pib[0] = model.pib[1];
-	model.pib[nz-1] = model.pib[nz-2];
+	model.pib[model.nz-1] = model.pib[model.nz-2];
 	model.pb[0] = model.pb[1];
-	model.pb[nz-1] = model.pb[nz-2];
+	model.pb[model.nz-1] = model.pb[model.nz-2];
 	model.rhou[0] = model.rhou[1];
-	model.rhou[nz-1] = model.rhou[nz-2];
+	model.rhou[model.nz-1] = model.rhou[model.nz-2];
 	model.rhow[0] = model.rhow[1];
-	model.rhow[nz-1] = model.rhow[nz-2];
+	model.rhow[model.nz-1] = model.rhow[model.nz-2];
 	model.tvb[0] = model.tvb[1];
-	model.tvb[nz-1] = model.tvb[nz-2];
+	model.tvb[model.nz-1] = model.tvb[model.nz-2];
 	model.qvsb[0] = model.qvsb[1];
-	model.qvsb[nz-1] = model.qvsb[nz-2];
+	model.qvsb[model.nz-1] = model.qvsb[model.nz-2];
 
-	for (int k = 2; k < nz-1; k++) {
+	for (int k = 2; k < model.nz-1; k++) {
 		model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
 	}
 	model.tb_zeta[1] = model.tb_zeta[2] - (model.tb_zeta[3] - model.tb_zeta[2]);
 
 	model.tb_zeta[0] = model.tb_zeta[1];
-	model.tb_zeta[nz-1] = model.tb_zeta[nz-2];
+	model.tb_zeta[model.nz-1] = model.tb_zeta[model.nz-2];
 
 	return;
 }
@@ -369,9 +411,9 @@ void Init::RandomPerturbation(vvmArray &model, int t) {
     double min_range = -1.; // Minimum value of the generated noise
     double max_range = 1.; // Maximum value of the generated noise
 
-    for (int i = 1; i < nx-1; i++) {
-        for (int k = 1; k < nz-1; k++) {
-            if (k <= nz / 15) {
+    for (int i = 1; i < model.nx-1; i++) {
+        for (int k = 1; k < model.nz-1; k++) {
+            if (k <= model.nz / 15) {
                 double random_noise = 0.;
                 do {
                     random_noise = mean + standard_deviation * distribution(gen);

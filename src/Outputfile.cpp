@@ -7,7 +7,7 @@ using std::string;
 void Output::printInit(vvmArray &model) {
 	double z;
 	std::cout << "z          tb        rhou       rhow       qvb	 RH      pib" << std::endl;
-	for (int k = 0; k <= nz-1;k++){
+	for (int k = 0; k <= model.nz-1;k++){
 		z = (double) (k - 0.5) * dz ;
 		std::cout << std::fixed << std::setprecision(2) << z << "    " << model.tb[k] << "    " << model.rhou[k] << "     " 
 		<< model.rhow[k] << "   	 " << model.qvb[k] * 1000 << "    " << model.qvb[k] / model.qvsb[k] << "    "
@@ -16,7 +16,7 @@ void Output::printInit(vvmArray &model) {
 	std::fstream initout;
 	string initName = OUTPUTPATH + (string) "init.txt";
 	initout.open(initName, std::ios::out);
-	for (int k = 0; k <= nz-1; k++) {
+	for (int k = 0; k <= model.nz-1; k++) {
 		z = (double) (k - 0.5) * dz ;
 		initout << z << "    " << model.tb[k] << "    " << model.rhou[k] << "     " 
 		<< model.rhow[k] << "   	 " << model.qvb[k] << "    " << model.qvsb[k] << "    " << model.qvb[k] / model.qvsb[k] << "    "
@@ -30,8 +30,8 @@ void Output::output_zeta(int n, vvmArray &model) {
 	std::fstream foutzeta;
 	string zetaName = OUTPUTPATH + (string) "txtoutputs/zeta/zeta_" + std::to_string(n) + (string) ".txt";
 	foutzeta.open(zetaName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutzeta << model.zeta[i][k] << " ";
 		}
 	}
@@ -41,8 +41,8 @@ void Output::output_th(int n, vvmArray &model) {
 	std::fstream foutth;
 	string thName = OUTPUTPATH + (string) "txtoutputs/th/th_" + std::to_string(n) + (string) ".txt";
 	foutth.open(thName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutth << model.th[i][k] << " ";
 		}
 	}
@@ -52,8 +52,8 @@ void Output::output_u(int n, vvmArray &model) {
 	std::fstream foutu;
 	string uName = OUTPUTPATH + (string) "txtoutputs/u/u_" + std::to_string(n) + (string) ".txt";
 	foutu.open(uName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutu << model.u[i][k] << " ";
 		}
 	}
@@ -63,8 +63,8 @@ void Output::output_w(int n, vvmArray &model) {
 	std::fstream foutw;
 	string wName = OUTPUTPATH + (string) "txtoutputs/w/w_" + std::to_string(n) + (string) ".txt";
 	foutw.open(wName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutw << model.w[i][k] << " ";
 		}
 	}
@@ -74,8 +74,8 @@ void Output::output_qv(int n, vvmArray &model) {
 	std::fstream foutqv;
 	string qvName = OUTPUTPATH + (string) "txtoutputs/qv/qv_" + std::to_string(n) + (string) ".txt";
 	foutqv.open(qvName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutqv << model.qv[i][k] + model.qvb[k] << " ";
 		}
 	}
@@ -85,8 +85,8 @@ void Output::output_qc(int n, vvmArray &model) {
 	std::fstream foutqc;
 	string qcName = OUTPUTPATH + (string) "txtoutputs/qc/qc_" + std::to_string(n) + (string) ".txt";
 	foutqc.open(qcName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutqc << model.qc[i][k] << " ";
 		}
 	}
@@ -96,8 +96,8 @@ void Output::output_qr(int n, vvmArray &model) {
 	std::fstream foutqr;
 	string qrName = OUTPUTPATH + (string) "txtoutputs/qr/qr_" + std::to_string(n) + (string) ".txt";
 	foutqr.open(qrName, std::ios::out);
-	for (int k = 0; k < nz; k++) {
-		for (int i = 0; i < nx; i++) {
+	for (int k = 0; k < model.nz; k++) {
+		for (int i = 0; i < model.nx; i++) {
 			foutqr << model.qr[i][k] << " ";
 		}
 	}
@@ -109,8 +109,8 @@ void Output::output_nc(int n, vvmArray &model) {
 	NcFile dataFile(ncName, NcFile::replace);
 
 	// Create netCDF dimensions
-	NcDim xDim = dataFile.addDim("x", nx);
-	NcDim zDim = dataFile.addDim("z", nz);
+	NcDim xDim = dataFile.addDim("x", model.nx);
+	NcDim zDim = dataFile.addDim("z", model.nz);
 	vector<NcDim> xzDim, zNcDim;
 	xzDim.push_back(xDim);
 	xzDim.push_back(zDim);

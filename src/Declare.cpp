@@ -1,8 +1,8 @@
 #include "Declare.hpp"
 
 vvmArray::vvmArray() {
-    for (int k = 0; k <= nz - 1; k++) {
-        for (int i = 0; i <= nx - 1; i++) {
+    for (int k = 0; k <= nz-1; k++) {
+        for (int i = 0; i <= nx-1; i++) {
             zetap[i][k] = zeta[i][k] = zetam[i][k] = 0.;
             thp[i][k] = th[i][k] = thm[i][k] = 0.;
             qvp[i][k] = qv[i][k] = qvm[i][k] = 0.;
@@ -10,9 +10,15 @@ vvmArray::vvmArray() {
             qrp[i][k] = qr[i][k] = qrm[i][k] = 0.;
             w[i][k] = 0.;
             u[i][k] = 0.;
+            
+            #if defined(STREAMFUNCTION)
+                psi[i][k] = 0.;
+            #endif
+
             #if defined(TROPICALFORCING)
                 init_th_forcing[i][k] = 0.;
             #endif
+
             #if defined(WATER)
                 evaporation[i][k] = 0.;
                 accretion[i][k] = 0.;
@@ -42,35 +48,34 @@ vvmArray::vvmArray() {
     return;
 }
 
-void vvmArray::BoundaryProcess(double tmp[][nz]) {
-  for (int k = 1; k <= nz - 2; k++) {
-    tmp[0][k] = tmp[nx - 2][k];
-    tmp[nx - 1][k] = tmp[1][k];
+void vvmArray::BoundaryProcess(double tmp[][NZ]) {
+  for (int k = 1; k <= NZ-2; k++) {
+    tmp[0][k] = tmp[NX-2][k];
+    tmp[NX-1][k] = tmp[1][k];
   }
-  for (int i = 0; i <= nx - 1; i++) {
+  for (int i = 0; i <= NX - 1; i++) {
     tmp[i][0] = tmp[i][1];
-    tmp[i][nz - 1] = tmp[i][nz - 2];
+    tmp[i][NZ-1] = tmp[i][NZ-2];
   }
 }
 
-void vvmArray::BoundaryProcessZETA(double tmp[][nz]) {
-    for (int k = 1; k <= nz - 2; k++) {
-        tmp[0][k] = tmp[nx - 2][k];
-        tmp[nx - 1][k] = tmp[1][k];
+void vvmArray::BoundaryProcessZETA(double tmp[][NZ]) {
+    for (int k = 1; k <= NZ-2; k++) {
+        tmp[0][k] = tmp[NX-2][k];
+        tmp[NX-1][k] = tmp[1][k];
     }
-    for (int i = 0; i <= nx - 1; i++) {
-        tmp[i][0] = tmp[i][1];
-        tmp[i][nz - 1] = 0.;
+    for (int i = 0; i <= NX - 1; i++) {
+        tmp[i][0] = tmp[i][1] = tmp[i][NZ-1] = 0.;
     }
 }
 
-void vvmArray::BoundaryProcessDouble(double tmp[][nz]) {
-    for (int k = 1; k <= nz - 2; k++) {
-        tmp[0][k] = tmp[nx - 2][k];
-        tmp[nx - 1][k] = tmp[1][k];
+void vvmArray::BoundaryProcessDouble(double tmp[][NZ]) {
+    for (int k = 1; k <= NZ-2; k++) {
+        tmp[0][k] = tmp[NX-2][k];
+        tmp[NX-1][k] = tmp[1][k];
     }
-    for (int i = 0; i <= nx - 1; i++) {
-        tmp[i][0] = tmp[i][nz - 2];
-        tmp[i][nz - 1] = tmp[i][1];
+    for (int i = 0; i <= NX - 1; i++) {
+        tmp[i][0] = tmp[i][NZ-2];
+        tmp[i][NZ-1] = tmp[i][1];
     }
 }

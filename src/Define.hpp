@@ -9,15 +9,9 @@
 #define dz (200)
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
-#define nx (XRANGE / dx)
-#define nz (ZRANGE / dz)
-// #define nx (9)
-// #define nz (9)
+#define NX (XRANGE / dx)
+#define NZ (ZRANGE / dz)
 #define dt (1.)
-#define rdx (1. / (double) dx)
-#define rdz (1. / (double) dz)
-#define rdx2 (1. / ((double) dx * dx))
-#define rdz2 (1. / ((double) dz * dz))
 #define d2t (2. * dt)
 #define TIMEEND (300000.)
 #define Kx (250.)
@@ -25,29 +19,30 @@
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTSTEP (10)
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0305/6Q16Q2_cooling/"
+#define OUTPUTSTEP (1)
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0308/Bubble_newFlux/"
 // #define OUTPUTTXT
 #define OUTPUTNC
 // #define OUTPUTGRAPHMODE
 
-// #define FLUXFORM
+#define FLUXFORM
+// #define STREAMFUNCTION
 
-// #define DRY
+#define DRY
 // #define RHO1
 // #define ADVECTIONU
 // #define ADVECTIONW
 // #define NoBouyance
 #define DIFFUSION
 #define TIMEFILTER
-#define WATER
-#define TROPICALFORCING
-#define RADIATIONCOOLING
+// #define WATER
+// #define TROPICALFORCING
+// #define RADIATIONCOOLING
 // #define SHEAR
 // #define CLOUDLESS
 // #define HEATFLUX
 
-#define LOADFILE
+// #define LOADFILE
 #define ADDFORCINGTIME (1200.)
 // #define LINEARIZEDQV
 // #define LINEARIZEDTH
