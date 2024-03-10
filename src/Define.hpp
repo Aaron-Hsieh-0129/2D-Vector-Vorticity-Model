@@ -19,7 +19,7 @@
 #define TIMETS (0.01)
 #define Lv (2500000.)
 
-#define OUTPUTSTEP (1)
+#define OUTPUTSTEP (10)
 #define OUTPUTPATH "/data/Aaron/2DVVM/full/0308/Bubble_newFlux/"
 // #define OUTPUTTXT
 #define OUTPUTNC
@@ -28,7 +28,7 @@
 #define FLUXFORM
 // #define STREAMFUNCTION
 
-#define DRY
+// #define DRY
 // #define RHO1
 // #define ADVECTIONU
 // #define ADVECTIONW
