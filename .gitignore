@@ -10,3 +10,6 @@ input
 *.o
 compile_flags.txt
 .cache
+node_modules
+docs
+

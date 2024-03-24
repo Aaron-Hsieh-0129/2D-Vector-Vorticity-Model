@@ -8,6 +8,6 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=b08209006@ntu.edu.tw
 
-rm -rf build outputs
+rm -rf build
 mkdir build
-cd build/ && cmake ../ && make && ./vvm2d
+cd build/ && cmake ../ && make -j 4 && mpiexec -n 1 ./vvm2d -ksp_type cg 

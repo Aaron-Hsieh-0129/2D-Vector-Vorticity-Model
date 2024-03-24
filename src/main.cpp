@@ -1,15 +1,15 @@
 #include "Iteration.hpp"
-#ifdef OUTPUTGRAPHMODE
-	#include "matplotlib-cpp-master/matplotlibcpp.h"
-#endif 
+#include <petsc.h>
 
-vvmArray model;
+vvm model;
+int main(int argc, char **argv) {
+    Init::Init1d(model);
+    Init::Init2d(model);
+    Output::printInit(model);
+    Output::create_all_directory();
 
-int main(void) {
-	Init::Init1d(model);
-	Init::Init2d(model);
-	Output::create_all_directory();
-	Output::printInit(model);
-	Iteration::LeapFrog(model);
-	return 0;
+    PetscInitialize(&argc, &argv, NULL, NULL);
+    Iteration::TimeMarching(model);
+    PetscFinalize();
+    return 0;
 }

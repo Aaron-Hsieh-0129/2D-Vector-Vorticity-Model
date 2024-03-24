@@ -1,27 +1,15 @@
-#include "Outputfile.hpp"
-#include <Eigen/SparseCholesky>	
-// #include <matplotlib-cpp-master/matplotlibcpp.h>
+#include "OutputNC.hpp"
 
 class Iteration {
-    public:
-        static void pzeta_pt(vvmArray &);
-        static void pth_pt(vvmArray &);
-        #if defined(STREAMFUNCTION)
-            static void calpsiuw(vvmArray &);
-        #else
-            static void cal_w(vvmArray &);
-            static void cal_u(vvmArray &);
-            static void pubarTop_pt(vvmArray &);
-        #endif
-        #if defined(WATER)
-            static void pqv_pt(vvmArray &);
-            static void pqc_pt(vvmArray &);
-            static void pqr_pt(vvmArray &);
-            static void condensation(vvmArray &, int, int); 	// condensation of qc by qv
-            static void autoconversion(vvmArray &, int, int); 	// autoconversion of qc to qr
-            static void accretion(vvmArray &, int, int); 		// accretion of qc by qr
-            static void evaporation(vvmArray &, int, int); 	// evaporation of rain water
-        #endif
-        static void LeapFrog(vvmArray &);
-        static void updateMean(vvmArray &);
+public:
+    static void pzeta_pt(vvm &);
+    static void pth_pt(vvm &);
+    #if defined(WATER)
+        static void pqv_pt(vvm &);
+        static void pqc_pt(vvm &);
+        static void pqr_pt(vvm &);
+    #endif
+
+    static void updateMean(vvm &);
+    static void TimeMarching(vvm &);
 };

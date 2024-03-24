@@ -1,170 +1,139 @@
 #include "Init.hpp"
+#include "Eigen/src/SparseCore/SparseMatrixBase.h"
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <petsc.h>
+#include <random>
 
-void Init::Init1d(vvmArray &model) {
-	#if defined(LOADFILE)
-		LoadFile(model);
-	#else
-		// init tb
-		model.tb[1] = 300.;
-		for (int k = 2; k <= model.nz-2; k++) {
-			#ifdef DRY
-				model.tb[k] = 300.;
-			#else
-				model.tb[k] = GetTB(k);
-			#endif
-		}
-		model.tb[0] = model.tb[1];
-		model.tb[model.nz-1] = model.tb[model.nz-2];
+void Init::Init1d(vvm &model) {
+    #if defined(LOADFILE)
+        LoadFile(model);
+    #else
+        // init tb
+        model.thb[1] = 300.;
+        for (int k = 2; k <= model.nz-2; k++) {
+            #ifdef DRY
+                model.thb[k] = 300.;
+            #else
+                model.thb[k] = GetTB(k);
+            #endif
+        }
+        model.BoundaryProcess1D_center(model.thb);
 
-		// init qvb, tvb
-		for (int k = 1; k <= model.nz-2; k++) {
-			#if defined(WATER)
-				model.qvb[k] = GetQVB(k);
-			#else
-				model.qvb[k] = 0.;
-			#endif
-			model.tvb[k] = model.tb[k] * (1. + 0.61 * model.qvb[k]);
-		}
-		model.qvb[0] = model.qvb[1];
-		model.qvb[model.nz-1] = model.qvb[model.nz-2];
-		model.tvb[0] = model.tvb[1];
-		model.tvb[model.nz-1] = model.tvb[model.nz-2];
+        // init qvb, tvb
+        for (int k = 1; k <= model.nz-2; k++) {
+            #if defined(WATER)
+                model.qvb[k] = GetQVB(k);
+            #else
+                model.qvb[k] = 0.;
+            #endif
+            model.tvb[k] = model.thb[k] * (1. + 0.61 * model.qvb[k]);
+        }
+        model.BoundaryProcess1D_center(model.qvb);
+        model.BoundaryProcess1D_center(model.tvb);
 
-		// init pib
-		double pisfc = pow((PSURF / P0), Rd / C_p);
-		for (int k = 1; k <= model.nz-2; k++) {
-			if (k == 1) model.pib[k] = pisfc - gravity * 0.5 * dz / (C_p * model.tvb[k]);
-			else {
-				double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
-				model.pib[k] = model.pib[k-1] - gravity * dz / (C_p * tvbavg);
-			}
-		}
-		model.pib[0] = model.pib[1];
-		model.pib[model.nz-1] = model.pib[model.nz-2];
+        // init pib
+        double pisfc = pow((PSURF / P0), Rd / C_p);
+        for (int k = 1; k <= model.nz-2; k++) {
+            if (k == 1) model.pib[k] = pisfc - GRAVITY * 0.5 * dz / (C_p * model.tvb[k]);
+            else {
+                double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
+                model.pib[k] = model.pib[k-1] - GRAVITY * dz / (C_p * tvbavg);
+            }
+        }
+        model.BoundaryProcess1D_center(model.pib);
 
-		// init tb_zeta, rhou
-		for (int k = 1; k <= model.nz-2; k++) {
-			model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
-			#ifdef RHO1
-				model.rhou[k] = 1.;
-			#else
-				model.rhou[k] = P0 * pow(model.pib[k], Cv/Rd) / (Rd * model.tvb[k]);
-			#endif
-		}
-		model.rhou[0] = model.rhou[1];
-		model.rhou[model.nz-1] = model.rhou[model.nz-2];
+        // init tb_zeta, rhou
+        for (int k = 1; k <= model.nz-2; k++) {
+            #ifdef RHO1
+                model.rhou[k] = 1.;
+            #else
+                model.rhou[k] = P0 * pow(model.pib[k], Cv/Rd) / (Rd * model.tvb[k]);
+            #endif
+        }
+        model.BoundaryProcess1D_center(model.rhou);
 
-		// init tb_zeta, rhow
-		for (int k = 2; k <= model.nz-1; k++) {
-			model.tb_zeta[k] = 0.5 * (model.tb[k] + model.tb[k-1]);
-			model.rhow[k] = 0.5 * (model.rhou[k] + model.rhou[k-1]);
-		}
-        
-        model.tb_zeta[1] = model.tb_zeta[2] - (model.tb_zeta[3] - model.tb_zeta[2]);
+        // init tb_zeta, rhow
+        for (int k = 2; k <= model.nz-1; k++) {
+            model.thb_zeta[k] = 0.5 * (model.thb[k] + model.thb[k-1]);
+            model.rhow[k] = 0.5 * (model.rhou[k] + model.rhou[k-1]);
+        }    
+        model.thb_zeta[1] = model.thb_zeta[2] - (model.thb_zeta[3] - model.thb_zeta[2]);
         model.rhow[1] = model.rhow[2] - (model.rhow[3] - model.rhow[2]);
+        model.thb_zeta[0] = model.thb_zeta[1];
+        model.rhow[0] = model.rhow[1];
+        model.rhou[0] = model.rhow[0];
 
-		model.tb_zeta[0] = model.tb_zeta[1];
-		model.rhow[0] = model.rhow[1];
+        // init pb, qvsb
+        for (int k = 1; k <= model.nz-2; k++) {
+            model.pb[k] = P0 * pow(model.pib[k], C_p / Rd);
+            double Tbar = model.thb[k] * model.pib[k];
+            model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
+        }
+        model.BoundaryProcess1D_center(model.pb);
+        model.BoundaryProcess1D_center(model.qvsb);
 
-		// init pb, qvsb
-		for (int k = 1; k <= model.nz-2; k++) {
-			model.pb[k] = P0 * pow(model.pib[k], C_p / Rd);
-			double Tbar = model.tb[k] * model.pib[k];
-			model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
-		}
-		model.pb[0] = model.pb[1];
-		model.pb[model.nz-1] = model.pb[model.nz-2];
-		model.qvsb[0] = model.qvsb[1];
-		model.qvsb[model.nz-1] = model.qvsb[model.nz-2];
+        #if defined(WATER)
+            for (int k = 1; k <= model.nz-2; k++) {
+                model.qvb[k] = GetQVB(k);
+            }
+            model.BoundaryProcess1D_center(model.qvb);
+        #endif
 
-		// heat flux init
-		#if defined(HEATFLUX)
-			mt19937 mt(20210831);
-			uniform_real_distribution<> distr(-1, 1);
-			for (int i = 1; i <= model.nx-2; i++) {
-				model.addflx[i] += distr(mt);
-			}
-		#endif
-	#endif
+        #if defined(RHO1)
+            for (int k = 0; k < model.nz; k++) {
+                model.rhou[k] = model.rhow[k] = 1.;
+            }
+        #endif
+    #endif
 
-	// for (int k = 0; k < model.nz; k++) {
-	// 	model.tb[k] = 300.;
-	// }
-	return;
+    for (int k = 0; k < model.nz; k++) {
+        model.thbm[k] = model.thb[k];
+    }
+    return;
 }
 
-void Init::Init2d(vvmArray &model) {
+void Init::Init2d(vvm &model) {
 	#if defined(TROPICALFORCING)
 		// Generate random 2D Gaussian noise array within the specified range
 		RandomPerturbation(model, 0);
 
         for (int i = 1; i <= model.nx-2; i++) {
             for (int k = 1; k <= model.nz-2; k++) {
-				#if defined(LINEARIZEDTH)
-                	model.th[i][k] = model.init_th_forcing[i][k];
-				#else
-					model.th[i][k] = model.tb[k] + model.init_th_forcing[i][k];
-				#endif
+				model.th[i][k] = model.thb[k] + model.init_th_forcing[i][k];
                 model.thm[i][k] = model.th[i][k];
 
-				#if defined(LINEARIZEDQV)
-					model.qv[i][k] = 0.;
-				#else
-                	model.qv[i][k] = model.qvb[k];
-				#endif
+                model.qv[i][k] = model.qvb[k];
                 model.qvm[i][k] = model.qv[i][k];
-
-                #if defined(SHEAR)
-                    if ((k-0.5) * dz <= 5000) {
-                        model.u[i][k] = 0.004 * (k - 0.5) * dz - 10.5;
-                    }
-                    else {
-                        model.u[i][k] = 0.001 * (k - 0.5) * dz + 5.5;
-                    }
-                #else
-                    model.u[i][k] = 0.;
-                    model.w[i][k] = 0.;
-                #endif
             }
         }
-        model.BoundaryProcess(model.th);
-        model.BoundaryProcess(model.thm);
-        model.BoundaryProcess(model.qv);
-        model.BoundaryProcess(model.qvm);
-        model.BoundaryProcess(model.u);
-        model.BoundaryProcess(model.w);
-
+        model.BoundaryProcess2D_center(model.th);
+        model.BoundaryProcess2D_center(model.thm);
+        model.BoundaryProcess2D_center(model.qv);
+        model.BoundaryProcess2D_center(model.qvm);
     #else
-		// init th
-		for (int i = 1; i <= model.nx-2; i++) {
-			for (int k = 1; k <= model.nz-2; k++) {
-				#if defined(LINEARIZEDTH)
-					model.th[i][k] = GetTH(i, k);
-				#else
-					// model.th[i][k] = model.tb[k];
-					model.th[i][k] = model.tb[k] + GetTH(i, k);
-				#endif
-				model.thm[i][k] = model.th[i][k];
-			}
-		}
-		model.BoundaryProcess(model.th);
-		model.BoundaryProcess(model.thm);
+        // init th
+        for (int i = 1; i <= model.nx-2; i++) {
+            for (int k = 1; k <= model.nz-2; k++) {
+                model.th[i][k] = GetTH(i, k);
+                model.th[i][k] = model.thb[k] + GetTH(i, k);
+                model.thm[i][k] = model.th[i][k];
+            }
+        }
+        model.BoundaryProcess2D_center(model.th);
+        model.BoundaryProcess2D_center(model.thm);
 
-		// init qv: where th != 0, qv = qvs
-		for (int i = 1; i <= model.nx-2; i++) {
-			for (int k = 1; k <= model.nz-2; k++) {
-				// if (model.th[i][k] != 0) model.qv[i][k] = model.qvsb[k] - model.qvb[k];
-				// else model.qv[i][k] = 0.;
-				#if defined(LINEARIZEDQV)
-					model.qv[i][k] = 0.;
-				#else
-					model.qv[i][k] = model.qvb[k];
-				#endif
-				model.qvm[i][k] = model.qv[i][k];
-			}
-		}
-		model.BoundaryProcess(model.qv);
-		model.BoundaryProcess(model.qvm);
+        #if defined(WATER)
+            // init qv: where th != 0, qv = qvs
+            for (int i = 1; i <= model.nx-2; i++) {
+                for (int k = 1; k <= model.nz-2; k++) {
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                }
+            }
+            model.BoundaryProcess2D_center(model.qv);
+            model.BoundaryProcess2D_center(model.qvm);
+        #endif
 
 		// init u
 		#if defined(SHEAR)
@@ -177,7 +146,7 @@ void Init::Init2d(vvmArray &model) {
 					else model.u[i][k] = umax / (model.nz-2 - (bubble_center_idx-1)) * (k-bubble_center_idx+1);
 				}
 			}
-			model.BoundaryProcess(model.u);
+			model.BoundaryProcess2D_center(model.u);
 		#endif
 	#endif
 
@@ -187,221 +156,107 @@ void Init::Init2d(vvmArray &model) {
 		for (int k = 1; k <= model.nz-2; k++) {
 			pw_px = (model.w[i][k] - model.w[i-1][k]) * model.rdx;
 			pu_pz = (model.u[i][k] - model.u[i][k-1]) * model.rdz;
-			model.zeta[i][k] = pw_px - pu_pz;
+			model.zeta[i][k] = (pw_px - pu_pz) / model.rhow[k];
 			model.zetam[i][k] = model.zeta[i][k];
 		}
 	}
-	model.BoundaryProcessZETA(model.zeta);
-	model.BoundaryProcessZETA(model.zetam);
+	model.BoundaryProcess2D_westdown(model.zeta);
+	model.BoundaryProcess2D_westdown(model.zetam);
 
 	// init ubar at top
 	for (int i = 1; i < model.nx-1; i++) {
 		model.ubarTopm += model.u[i][model.nz-2];
 	}
 	model.ubarTopm /= ((double) (model.nx - 2.));
-	model.ubarTopp = model.ubarTopm;
+	model.ubarTop = model.ubarTopm;
 
-	// Assign values to the matrices that solve the Poisson equation for u and w
-	InitPoissonMatrix(model);
-	return;
-}
-
-void Init::InitPoissonMatrix(vvmArray &model) {
-    #if defined(STREAMFUNCTION)
-        // ###########################################
-        // For solving w
-        // A: i = 1~model.nx-2, k = 2~model.nz-2
-        // ###########################################
-        int k = 1;
-        std::vector<T> coeff;
-        for (int idx = 1; idx < (model.nx-2)*(model.nz-3); idx++) {
-            // Height
-            if (idx % (model.nx-2) == 1) k++;
-
-            // D
-            coeff.push_back(T(idx-1, idx-1, 4.));
-
-            // left/right: -1
-            if ((idx-1) % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
-            if (idx % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
-
-            // Boundary
-            if ((idx-1) % (model.nx-2) == 0) {
-                coeff.push_back(T(idx-1, idx-1+(model.nx-3), -1.));
-                coeff.push_back(T(idx-1+(model.nx-3), idx-1, -1.));
-            }
-        }
-        // Last row of A
-        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1, 4.));
-        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1-1, -1.)); // left
-
-        k = 1;
-        for (int idx = 1; idx <= (model.nx-2)*(model.nz-4); idx++) {
-            // Height
-            if (idx % (model.nx-2) == 1) k++;
-
-            // E
-            coeff.push_back(T(idx-1, idx+(model.nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
-            
-            // F (the k of row should be minus by 1 because it starts from k-1)
-            coeff.push_back(T(idx+(model.nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
-        }
-        model.A.setFromTriplets(coeff.begin(), coeff.end());
-    #else
-        // ###########################################
-        // For solving w
-        // A: i = 1~model.nx-2, k = 2~model.nz-2
-        // ###########################################
-        int k = 1;
-        std::vector<T> coeff;
-        for (int idx = 1; idx < (model.nx-2)*(model.nz-3); idx++) {
-            // Height
-            if (idx % (model.nx-2) == 1) k++;
-
-            // D
-            coeff.push_back(T(idx-1, idx-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) + 1E-8 ));
-
-            // left/right: -1
-            if ((idx-1) % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx-2, -1.));
-            if (idx % (model.nx-2) != 0) coeff.push_back(T(idx-1, idx, -1.));
-
-            // Boundary
-            if ((idx-1) % (model.nx-2) == 0) {
-                coeff.push_back(T(idx-1, idx-1+(model.nx-3), -1.));
-                coeff.push_back(T(idx-1+(model.nx-3), idx-1, -1.));
-            }
-        }
-        // Last row of A
-        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1, 4. - (model.rhow[k+1] - 2.*model.rhow[k] + model.rhow[k-1]) / (model.rhow[k])
-                                                                    + pow(model.rhou[k] - model.rhou[k-1], 2) / pow(model.rhow[k], 2) + 1E-8 ));
-        coeff.push_back(T((model.nx-2)*(model.nz-3)-1, (model.nx-2)*(model.nz-3)-1-1, -1.)); // left
-
-        k = 1;
-        for (int idx = 1; idx <= (model.nx-2)*(model.nz-4); idx++) {
-            // Height
-            if (idx % (model.nx-2) == 1) k++;
-
-            // E
-            coeff.push_back(T(idx-1, idx+(model.nx-2)-1, -1. - 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
-            
-            // F
-            coeff.push_back(T(idx+(model.nx-2)-1, idx-1, -1. + 0.5*(model.rhou[k] - model.rhou[k-1]) / model.rhow[k]));
-        }
-        model.A.setFromTriplets(coeff.begin(), coeff.end());
-
-        // std::cout << std::setprecision << model.A << std::endl;
-
-        // ###########################################
-        // For solving u
-        // G: i = 1~model.nx-2
-        // ###########################################
-        std::vector<T> coeff_xi;
-
-        for (int k = 1; k < model.nx-2; k++) {
-            // D
-            coeff_xi.push_back(T(k-1, k-1, 2.));
-            coeff_xi.push_back(T(k, k-1, -1.));
-            coeff_xi.push_back(T(k-1, k, -1.));
-        }
-        // Boundary
-        coeff_xi.push_back(T(0, model.nx-3, -1.));
-        coeff_xi.push_back(T(model.nx-3, 0, -1.));
-        coeff_xi.push_back(T(model.nx-3, model.nx-3, 2.));
-        model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
-        // std::cout << std::setprecision(10) << model.G << std::endl;
+    #ifndef PETSC
+	    // Assign values to the matrices that solve the Poisson equation for u and w
+        vvm::PoissonSolver::InitPoissonMatrix(model);
     #endif
 	return;
 }
 
-
 double Init::GetTB(int k) {
-	double z_top = 12000., T_top = 213., tb_top = 343.;
-	double z_t = dz * (k - 0.5);
-	if (z_t <= z_top) return 300. + 43. * pow(z_t / z_top, 1.25);
-	else return tb_top * exp(gravity * (z_t - z_top) / (C_p * T_top));
+    double z_top = 12000., T_top = 213., tb_top = 343.;
+    double z_t = dz * (k - 0.5);
+    if (z_t <= z_top) return 300. + 43. * pow(z_t / z_top, 1.25);
+    else return tb_top * exp(GRAVITY * (z_t - z_top) / (C_p * T_top));
 }
 
 double Init::GetTHRAD(int i, int k) {
-	double XC = XRANGE / 2., XR = 4000.;
-	double ZC = 2500., ZR = 2000.;
-	double x = (i-0.5) * dx, z = (k-0.5) * dz;
-	double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
-	return rad;
+    double XC = XRANGE / 2., XR = 4000.;
+    double ZC = 2500., ZR = 2000.;
+    double x = (i-0.5) * dx, z = (k-0.5) * dz;
+    double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
+    return rad;
 }
 
 double Init::GetTH(int i, int k) {
-	double rad = GetTHRAD(i, k);
-	double delta = 3.;
-	if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
-	// if (k >= 10 && k <= 20) return 3.;
-	else return 0.;
+    double rad = GetTHRAD(i, k);
+    double delta = 3.;
+    if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
+    // if (k >= 10 && k <= 20) return 3.;
+    else return 0.;
 }
 
+#if defined(WATER)
 double Init::GetQVB(int k) {
-	double z_t = (k - 0.5) * dz;
-	if (z_t <= 4000) return 0.0161 - 0.000003375 * z_t;
-	else if (4000 < z_t && z_t <= 8000) return 0.0026 - 0.00000065 * (z_t - 4000);
-	else return 0.;
+    double z_t = (k - 0.5) * dz;
+    if (z_t <= 4000) return 0.0161 - 0.000003375 * z_t;
+    else if (4000 < z_t && z_t <= 8000) return 0.0026 - 0.00000065 * (z_t - 4000);
+    else return 0.;
 }
+#endif
 
-void Init::LoadFile(vvmArray &model) {
-	std::ifstream inputFile;
+void Init::LoadFile(vvm &model) {
+    std::ifstream inputFile;
 
-	inputFile.open("../input/init.txt");
-	std::string line;
-	std::getline(inputFile, line);
-	std::getline(inputFile, line); // Skip the zero level
-	double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
+    inputFile.open("../input/init.txt");
+    std::string line;
+    std::getline(inputFile, line);
+    std::getline(inputFile, line); // Skip the zero level
+    double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
 
-	int i = 1;
-	while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
-		model.tb[i] = THBAR;
-		model.qvb[i] = QVBAR;
-		model.pib[i] = PIBAR;
-		model.pb[i] = PBAR;
-		model.rhou[i] = RHOZ;
-		model.rhow[i] = RHO;
-		#if defined(TROPICALFORCING)
-			model.Q1LS[i] = Q1LS * 6.;
-			model.Q2LS[i] = Q2LS * 6.;
-		#endif
+    int i = 1;
+    while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
+        model.thb[i] = THBAR;
+        model.qvb[i] = QVBAR;
+        model.pib[i] = PIBAR;
+        model.pb[i] = PBAR;
+        model.rhou[i] = RHOZ;
+        model.rhow[i] = RHO;
+        #if defined(TROPICALFORCING)
+            model.Q1LS[i] = Q1LS * 6.;
+            model.Q2LS[i] = Q2LS * 6.;
+        #endif
 
-		model.tvb[i] = model.tb[i] * (1. + 0.61 * model.qvb[i]);
-		model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.tb[i] * model.pib[i] - 273.)) / (model.tb[i] * model.pib[i] - 36.));
-		i++;
-	}
+        model.tvb[i] = model.thb[i] * (1. + 0.61 * model.qvb[i]);
+        model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.thb[i] * model.pib[i] - 273.)) / (model.thb[i] * model.pib[i] - 36.));
+        i++;
+    }
 
-	model.tb[0] = model.tb[1];
-	model.tb[model.nz-1] = model.tb[model.nz-2];
-	model.qvb[0] = model.qvb[1];
-	model.qvb[model.nz-1] = model.qvb[model.nz-2];
-	model.pib[0] = model.pib[1];
-	model.pib[model.nz-1] = model.pib[model.nz-2];
-	model.pb[0] = model.pb[1];
-	model.pb[model.nz-1] = model.pb[model.nz-2];
-	model.rhou[0] = model.rhou[1];
-	model.rhou[model.nz-1] = model.rhou[model.nz-2];
-	model.rhow[0] = model.rhow[1];
-	model.rhow[model.nz-1] = model.rhow[model.nz-2];
-	model.tvb[0] = model.tvb[1];
-	model.tvb[model.nz-1] = model.tvb[model.nz-2];
-	model.qvsb[0] = model.qvsb[1];
-	model.qvsb[model.nz-1] = model.qvsb[model.nz-2];
+    model.BoundaryProcess1D_center(model.thb);
+    model.BoundaryProcess1D_center(model.qvb);
+    model.BoundaryProcess1D_center(model.pib);
+    model.BoundaryProcess1D_center(model.pb);
+    model.BoundaryProcess1D_center(model.rhou);
+    model.BoundaryProcess1D_center(model.rhow);
+    model.BoundaryProcess1D_center(model.tvb);
+    model.BoundaryProcess1D_center(model.qvsb);
+    model.rhow[NZ-1] = model.rhou[NZ-2];
 
-	for (int k = 2; k < model.nz-1; k++) {
-		model.tb_zeta[k] = 0.5 * (model.tb[k-1] + model.tb[k]);
-	}
-	model.tb_zeta[1] = model.tb_zeta[2] - (model.tb_zeta[3] - model.tb_zeta[2]);
-
-	model.tb_zeta[0] = model.tb_zeta[1];
-	model.tb_zeta[model.nz-1] = model.tb_zeta[model.nz-2];
-
-	return;
+    for (int k = 1; k <= model.nz-2; k++) {
+        model.thb_zeta[k] = 0.5 * (model.thb[k] + model.thb[k-1]);
+    }
+	model.thb_zeta[1] = model.thb_zeta[2] - (model.thb_zeta[3] - model.thb_zeta[2]);
+    model.BoundaryProcess1D_center(model.thb_zeta);
+    model.thb_zeta[NZ-1] = model.thb[NZ-2];
+    return;
 }
 
 #if defined(TROPICALFORCING)
-void Init::RandomPerturbation(vvmArray &model, int t) {
+void Init::RandomPerturbation(vvm &model, int t) {
     std::mt19937 gen(t); // Mersenne Twister engine for random numbers
     std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
 
@@ -426,6 +281,8 @@ void Init::RandomPerturbation(vvmArray &model, int t) {
             }
         }
     }
-    model.BoundaryProcess(model.init_th_forcing);
+    model.BoundaryProcess2D_center(model.init_th_forcing);
 }
 #endif
+
+
