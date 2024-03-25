@@ -245,7 +245,6 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
             
             idx_i = (i % (model.nx-2)) + 1;
             
-            // double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.rdx;
             double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * dx;
             VecSetValues(b, 1, &i, &bval, INSERT_VALUES);
         }

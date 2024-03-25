@@ -23,6 +23,7 @@ vvm::vvm() {
         uxi[i] = 0.;
         #if defined(WATER)
             qrAcc[i] = 0.;
+            precip[i] = 0.;
         #endif
     }
 

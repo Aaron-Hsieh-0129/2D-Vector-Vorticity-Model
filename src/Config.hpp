@@ -3,19 +3,19 @@
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
 #define DT (1.)
-#define TIMEEND (10000.)
+#define TIMEEND (300000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/3rd/Water/"
-#define OUTPUTSTEP (1)
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0325/6Q16Q2_dt1_diff100_VT6/"
+#define OUTPUTSTEP (10)
 #define OUTPUTNC
 
 #define PETSC
 // #define AB3
 #define DIFFUSION
-#define Kx (250.)
-#define Kz (250.)
-#define POISSONPARAM (1E-9)
-#define POISSONPARAMU (1E-9)
+#define Kx (100.)
+#define Kz (100.)
+#define POISSONPARAM (0.)
+#define POISSONPARAMU (0.)
 #ifndef AB3
     #define TIMEFILTER
 #endif

@@ -58,6 +58,7 @@ public:
 		double qrp[NX][NZ], qr[NX][NZ], qrm[NX][NZ];
         double evaporation[NX][NZ], accretion[NX][NZ], autoconversion[NX][NZ];
         double qrAcc[NX];
+        double precip[NX];
     #endif
 
 // Boundary Process => BoundaryProcess.cpp

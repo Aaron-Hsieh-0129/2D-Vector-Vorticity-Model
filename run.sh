@@ -10,4 +10,4 @@
 
 rm -rf build
 mkdir build
-cd build/ && cmake ../ && make -j 4 && mpiexec -n 1 ./vvm2d -ksp_type cg 
+cd build/ && cmake ../ && make -j 4 && mpiexec -n 1 ./vvm2d -ksp_type gmres

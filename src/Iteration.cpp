@@ -69,6 +69,7 @@ void Iteration::pqr_pt(vvm &model) {
         double rain = -model.rhow[1] * (model.w[i][2] - 0.5*(VT_u + VT_d)) * model.qr[i][1];
         if (rain < 0) continue;
         model.qrAcc[i] += rain;
+        model.precip[i] = rain;
     }
             
     model.BoundaryProcess2D_center(model.qrp);

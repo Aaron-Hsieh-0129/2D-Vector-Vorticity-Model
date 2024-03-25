@@ -55,6 +55,7 @@ void Output::output_nc(int n, vvm &model) {
         NcVar qrData = dataFile.addVar("qr", ncDouble, xzDim);
         NcVar qvData = dataFile.addVar("qv", ncDouble, xzDim);
         NcVar qrAccData = dataFile.addVar("qrAcc", ncDouble, xDim);
+        NcVar precipData = dataFile.addVar("precip", ncDouble, xDim);
         NcVar accretionData = dataFile.addVar("accretion", ncDouble, xzDim);
         NcVar autoconversionData = dataFile.addVar("autoconversion", ncDouble, xzDim);
         NcVar evaporationData = dataFile.addVar("evaporation", ncDouble, xzDim);
@@ -62,6 +63,7 @@ void Output::output_nc(int n, vvm &model) {
         qrData.putVar(model.qr);
         qvData.putVar(model.qv);
         qrAccData.putVar(model.qrAcc);
+        precipData.putVar(model.precip);
         accretionData.putVar(model.accretion);
         autoconversionData.putVar(model.autoconversion);
         evaporationData.putVar(model.evaporation);
