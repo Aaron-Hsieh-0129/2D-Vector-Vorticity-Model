@@ -1,0 +1,835 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Class &#8212; 2DVVM  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/class2DVVM';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Model Design" href="ModelDesign.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">2DVVM  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelDesign.html">Model Design</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Class</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api/class2DVVM.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Class</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="class">
+<h1>Class<a class="headerlink" href="#class" title="Permalink to this heading">#</a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv43vvm">
+<span id="_CPPv33vvm"></span><span id="_CPPv23vvm"></span><span id="vvm"></span><span class="target" id="classvvm"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vvm</span></span></span><a class="headerlink" href="#_CPPv43vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>vvm class. This is class for the whole model. The configuration for the model is put inside the class and some functions related to model proccessing such as advection, boundary process, etc. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3vvmEv">
+<span id="_CPPv3N3vvm3vvmEv"></span><span id="_CPPv2N3vvm3vvmEv"></span><span id="vvm::vvm"></span><span class="target" id="classvvm_1aa95fad9f6760c23d6ecc162c0c494653"></span><span class="sig-name descname"><span class="n"><span class="pre">vvm</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm3vvmEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>vvm constructor. Used to initialize the model. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3rdxE">
+<span id="_CPPv3N3vvm3rdxE"></span><span id="_CPPv2N3vvm3rdxE"></span><span id="vvm::rdx__double"></span><span class="target" id="classvvm_1a3ca267ed2f973f92e35d839085baf702"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rdx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.</span></span><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="n"><span class="pre">dx</span></span><a class="headerlink" href="#_CPPv4N3vvm3rdxE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / dx </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4r2dxE">
+<span id="_CPPv3N3vvm4r2dxE"></span><span id="_CPPv2N3vvm4r2dxE"></span><span id="vvm::r2dx__double"></span><span class="target" id="classvvm_1ae3249304cc3a6fa7f98394dccce57f61"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">r2dx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdxE" title="vvm::rdx"><span class="n"><span class="pre">rdx</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><span class="m"><span class="pre">2.</span></span><a class="headerlink" href="#_CPPv4N3vvm4r2dxE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / (2dx) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3rdzE">
+<span id="_CPPv3N3vvm3rdzE"></span><span id="_CPPv2N3vvm3rdzE"></span><span id="vvm::rdz__double"></span><span class="target" id="classvvm_1a68ea5e54b9a54c4256969b5ba5dd4cbd"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rdz</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.</span></span><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="n"><span class="pre">dz</span></span><a class="headerlink" href="#_CPPv4N3vvm3rdzE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / dz </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4r2dzE">
+<span id="_CPPv3N3vvm4r2dzE"></span><span id="_CPPv2N3vvm4r2dzE"></span><span id="vvm::r2dz__double"></span><span class="target" id="classvvm_1ae1f95980069895fdafc4ba4b29826bf0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">r2dz</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdzE" title="vvm::rdz"><span class="n"><span class="pre">rdz</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><span class="m"><span class="pre">2.</span></span><a class="headerlink" href="#_CPPv4N3vvm4r2dzE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / (2dz) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4rdx2E">
+<span id="_CPPv3N3vvm4rdx2E"></span><span id="_CPPv2N3vvm4rdx2E"></span><span id="vvm::rdx2__double"></span><span class="target" id="classvvm_1afffcb69c8a35d11b82148c7579797faa"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rdx2</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdxE" title="vvm::rdx"><span class="n"><span class="pre">rdx</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdxE" title="vvm::rdx"><span class="n"><span class="pre">rdx</span></span></a><a class="headerlink" href="#_CPPv4N3vvm4rdx2E" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / (dx^2) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4rdz2E">
+<span id="_CPPv3N3vvm4rdz2E"></span><span id="_CPPv2N3vvm4rdz2E"></span><span id="vvm::rdz2__double"></span><span class="target" id="classvvm_1af7179d7dab6b6488a024db42b47f47e8"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rdz2</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdzE" title="vvm::rdz"><span class="n"><span class="pre">rdz</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3vvm3rdzE" title="vvm::rdz"><span class="n"><span class="pre">rdz</span></span></a><a class="headerlink" href="#_CPPv4N3vvm4rdz2E" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>1 / (dz^2) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2nxE">
+<span id="_CPPv3N3vvm2nxE"></span><span id="_CPPv2N3vvm2nxE"></span><span id="vvm::nx__i"></span><span class="target" id="classvvm_1a54019773003b18a98f267df45ee230bb"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">NX</span></span><a class="headerlink" href="#_CPPv4N3vvm2nxE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Number of grid points in z direction. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2nzE">
+<span id="_CPPv3N3vvm2nzE"></span><span id="_CPPv2N3vvm2nzE"></span><span id="vvm::nz__i"></span><span class="target" id="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nz</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">NZ</span></span><a class="headerlink" href="#_CPPv4N3vvm2nzE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Number of grid points in z direction. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3d2tE">
+<span id="_CPPv3N3vvm3d2tE"></span><span id="_CPPv2N3vvm3d2tE"></span><span id="vvm::d2t__double"></span><span class="target" id="classvvm_1a35038a3310f0394ec73c928ff9801f84"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">d2t</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2.</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><span class="n"><span class="pre">DT</span></span><a class="headerlink" href="#_CPPv4N3vvm3d2tE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Integration time step. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm8ubarToppE">
+<span id="_CPPv3N3vvm8ubarToppE"></span><span id="_CPPv2N3vvm8ubarToppE"></span><span id="vvm::ubarTopp__double"></span><span class="target" id="classvvm_1a2494ade44221bcd3aed164d73bf208f4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ubarTopp</span></span></span><a class="headerlink" href="#_CPPv4N3vvm8ubarToppE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm7ubarTopE">
+<span id="_CPPv3N3vvm7ubarTopE"></span><span id="_CPPv2N3vvm7ubarTopE"></span><span id="vvm::ubarTop__double"></span><span class="target" id="classvvm_1a15f5bebeb59fa99feedd3945e7cd7669"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ubarTop</span></span></span><a class="headerlink" href="#_CPPv4N3vvm7ubarTopE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm8ubarTopmE">
+<span id="_CPPv3N3vvm8ubarTopmE"></span><span id="_CPPv2N3vvm8ubarTopmE"></span><span id="vvm::ubarTopm__double"></span><span class="target" id="classvvm_1a418daede3a9c0ed998842ff792647f2f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ubarTopm</span></span></span><a class="headerlink" href="#_CPPv4N3vvm8ubarTopmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3thbE">
+<span id="_CPPv3N3vvm3thbE"></span><span id="_CPPv2N3vvm3thbE"></span><span id="vvm::thb__doubleA"></span><span class="target" id="classvvm_1a7725cca3f943224b5878255f97a5bcfd"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3thbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4thbmE">
+<span id="_CPPv3N3vvm4thbmE"></span><span id="_CPPv2N3vvm4thbmE"></span><span id="vvm::thbm__doubleA"></span><span class="target" id="classvvm_1ab05b2f05a32bba013072d9e643fe4c60"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thbm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4thbmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm8thb_zetaE">
+<span id="_CPPv3N3vvm8thb_zetaE"></span><span id="_CPPv2N3vvm8thb_zetaE"></span><span id="vvm::thb_zeta__doubleA"></span><span class="target" id="classvvm_1a4af2d0685fff1ca80719520000435a72"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thb_zeta</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm8thb_zetaE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4rhouE">
+<span id="_CPPv3N3vvm4rhouE"></span><span id="_CPPv2N3vvm4rhouE"></span><span id="vvm::rhou__doubleA"></span><span class="target" id="classvvm_1a460b941aba46eeaf9d777d93ec472cc1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rhou</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4rhouE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4rhowE">
+<span id="_CPPv3N3vvm4rhowE"></span><span id="_CPPv2N3vvm4rhowE"></span><span id="vvm::rhow__doubleA"></span><span class="target" id="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rhow</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4rhowE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3pibE">
+<span id="_CPPv3N3vvm3pibE"></span><span id="_CPPv2N3vvm3pibE"></span><span id="vvm::pib__doubleA"></span><span class="target" id="classvvm_1af3b16daf7541428d52fabed88807430c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pib</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3pibE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qvbE">
+<span id="_CPPv3N3vvm3qvbE"></span><span id="_CPPv2N3vvm3qvbE"></span><span id="vvm::qvb__doubleA"></span><span class="target" id="classvvm_1a13d01725e31e43adb064e132d1c02516"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qvb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qvbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4qvsbE">
+<span id="_CPPv3N3vvm4qvsbE"></span><span id="_CPPv2N3vvm4qvsbE"></span><span id="vvm::qvsb__doubleA"></span><span class="target" id="classvvm_1a128c6144ffb235b49bcdebf85c0ce8e9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qvsb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4qvsbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3tvbE">
+<span id="_CPPv3N3vvm3tvbE"></span><span id="_CPPv2N3vvm3tvbE"></span><span id="vvm::tvb__doubleA"></span><span class="target" id="classvvm_1a06c8b7613b14bb7d815a20ee3060bb01"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tvb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3tvbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2pbE">
+<span id="_CPPv3N3vvm2pbE"></span><span id="_CPPv2N3vvm2pbE"></span><span id="vvm::pb__doubleA"></span><span class="target" id="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2pbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2xiE">
+<span id="_CPPv3N3vvm2xiE"></span><span id="_CPPv2N3vvm2xiE"></span><span id="vvm::xi__doubleA"></span><span class="target" id="classvvm_1a546ef99056f9c89ab84d5157b8400c9d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xi</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2xiE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3uxiE">
+<span id="_CPPv3N3vvm3uxiE"></span><span id="_CPPv2N3vvm3uxiE"></span><span id="vvm::uxi__doubleA"></span><span class="target" id="classvvm_1abb74b46a37b339933f113039b22744b7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uxi</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3uxiE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4thvbE">
+<span id="_CPPv3N3vvm4thvbE"></span><span id="_CPPv2N3vvm4thvbE"></span><span id="vvm::thvb__doubleA"></span><span class="target" id="classvvm_1a55d4854ed17e4bd829beb73427702895"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thvb</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4thvbE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm5thvbmE">
+<span id="_CPPv3N3vvm5thvbmE"></span><span id="_CPPv2N3vvm5thvbmE"></span><span id="vvm::thvbm__doubleA"></span><span class="target" id="classvvm_1a0e8dbd05de632bfa80c6538130872c3f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thvbm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm5thvbmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm5zetapE">
+<span id="_CPPv3N3vvm5zetapE"></span><span id="_CPPv2N3vvm5zetapE"></span><span id="vvm::zetap__doubleAA"></span><span class="target" id="classvvm_1ae6a43e969fcfb9de0ba751369881a03f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zetap</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm5zetapE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm4zetaE">
+<span id="_CPPv3N3vvm4zetaE"></span><span id="_CPPv2N3vvm4zetaE"></span><span id="vvm::zeta__doubleAA"></span><span class="target" id="classvvm_1a1a7a6273bb2bd701445f7f3e42c244e0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zeta</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm4zetaE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm5zetamE">
+<span id="_CPPv3N3vvm5zetamE"></span><span id="_CPPv2N3vvm5zetamE"></span><span id="vvm::zetam__doubleAA"></span><span class="target" id="classvvm_1a1175b5c8c3bb07dbea7f0b614a65317b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zetam</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm5zetamE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3thpE">
+<span id="_CPPv3N3vvm3thpE"></span><span id="_CPPv2N3vvm3thpE"></span><span id="vvm::thp__doubleAA"></span><span class="target" id="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thp</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3thpE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2thE">
+<span id="_CPPv3N3vvm2thE"></span><span id="_CPPv2N3vvm2thE"></span><span id="vvm::th__doubleAA"></span><span class="target" id="classvvm_1add34568af43cf188bec69d61cc9c5bee"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">th</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2thE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3thmE">
+<span id="_CPPv3N3vvm3thmE"></span><span id="_CPPv2N3vvm3thmE"></span><span id="vvm::thm__doubleAA"></span><span class="target" id="classvvm_1a1ffd59976b9a6948fe23f65a57335c38"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">thm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3thmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm1uE">
+<span id="_CPPv3N3vvm1uE"></span><span id="_CPPv2N3vvm1uE"></span><span id="vvm::u__doubleAA"></span><span class="target" id="classvvm_1ad7c0652b11cf78af50e5b03e593e1774"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">u</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm1uE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm1wE">
+<span id="_CPPv3N3vvm1wE"></span><span id="_CPPv2N3vvm1wE"></span><span id="vvm::w__doubleAA"></span><span class="target" id="classvvm_1a42bbd446ef820ca6930ed4c727cf17ea"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">w</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm1wE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2umE">
+<span id="_CPPv3N3vvm2umE"></span><span id="_CPPv2N3vvm2umE"></span><span id="vvm::um__doubleAA"></span><span class="target" id="classvvm_1aad45508e035143d9ef2db38bf1e553ad"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">um</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2umE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2wmE">
+<span id="_CPPv3N3vvm2wmE"></span><span id="_CPPv2N3vvm2wmE"></span><span id="vvm::wm__doubleAA"></span><span class="target" id="classvvm_1afff0d8c9d5ce26801f20bf796ec71416"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">wm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2wmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qvpE">
+<span id="_CPPv3N3vvm3qvpE"></span><span id="_CPPv2N3vvm3qvpE"></span><span id="vvm::qvp__doubleAA"></span><span class="target" id="classvvm_1ab2102a76763307034e6e6a65bf2716af"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qvp</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qvpE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2qvE">
+<span id="_CPPv3N3vvm2qvE"></span><span id="_CPPv2N3vvm2qvE"></span><span id="vvm::qv__doubleAA"></span><span class="target" id="classvvm_1abea7eda17bdb83b23d16d901c35c1f96"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qv</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2qvE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qvmE">
+<span id="_CPPv3N3vvm3qvmE"></span><span id="_CPPv2N3vvm3qvmE"></span><span id="vvm::qvm__doubleAA"></span><span class="target" id="classvvm_1a882e391014e3a15f92d99c27aa6e5ac3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qvm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qvmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qcpE">
+<span id="_CPPv3N3vvm3qcpE"></span><span id="_CPPv2N3vvm3qcpE"></span><span id="vvm::qcp__doubleAA"></span><span class="target" id="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qcp</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qcpE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2qcE">
+<span id="_CPPv3N3vvm2qcE"></span><span id="_CPPv2N3vvm2qcE"></span><span id="vvm::qc__doubleAA"></span><span class="target" id="classvvm_1af7d6790d6bca3b09918e06fb7362220e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qc</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2qcE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qcmE">
+<span id="_CPPv3N3vvm3qcmE"></span><span id="_CPPv2N3vvm3qcmE"></span><span id="vvm::qcm__doubleAA"></span><span class="target" id="classvvm_1a505a8fd79cd2fc55460235310e6ff1d3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qcm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qcmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qrpE">
+<span id="_CPPv3N3vvm3qrpE"></span><span id="_CPPv2N3vvm3qrpE"></span><span id="vvm::qrp__doubleAA"></span><span class="target" id="classvvm_1a280123bac37412349ba76e7d042d1004"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qrp</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qrpE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm2qrE">
+<span id="_CPPv3N3vvm2qrE"></span><span id="_CPPv2N3vvm2qrE"></span><span id="vvm::qr__doubleAA"></span><span class="target" id="classvvm_1ab5e5009447f9f2a9f8497baada78175d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qr</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm2qrE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm3qrmE">
+<span id="_CPPv3N3vvm3qrmE"></span><span id="_CPPv2N3vvm3qrmE"></span><span id="vvm::qrm__doubleAA"></span><span class="target" id="classvvm_1ac6012d07a04c3c5e18a6da0b65b71b1a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qrm</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm3qrmE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm11evaporationE">
+<span id="_CPPv3N3vvm11evaporationE"></span><span id="_CPPv2N3vvm11evaporationE"></span><span id="vvm::evaporation__doubleAA"></span><span class="target" id="classvvm_1ae1a38973a7dfe7577f47cc41fc5e66b0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaporation</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm11evaporationE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm9accretionE">
+<span id="_CPPv3N3vvm9accretionE"></span><span id="_CPPv2N3vvm9accretionE"></span><span id="vvm::accretion__doubleAA"></span><span class="target" id="classvvm_1ad6e341d145021d01fd4ebca79787240e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">accretion</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm9accretionE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm14autoconversionE">
+<span id="_CPPv3N3vvm14autoconversionE"></span><span id="_CPPv2N3vvm14autoconversionE"></span><span id="vvm::autoconversion__doubleAA"></span><span class="target" id="classvvm_1aacc9ca191f0c94b063ad84e44951eb69"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">autoconversion</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm14autoconversionE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm5qrAccE">
+<span id="_CPPv3N3vvm5qrAccE"></span><span id="_CPPv2N3vvm5qrAccE"></span><span id="vvm::qrAcc__doubleA"></span><span class="target" id="classvvm_1a7243b4de829e5b18f6e92248a37a6069"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qrAcc</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm5qrAccE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm6precipE">
+<span id="_CPPv3N3vvm6precipE"></span><span id="_CPPv2N3vvm6precipE"></span><span id="vvm::precip__doubleA"></span><span class="target" id="classvvm_1a63095564c677502c49dae2d69d24e317"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">precip</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NX</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N3vvm6precipE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm1AE">
+<span id="_CPPv3N3vvm1AE"></span><span id="_CPPv2N3vvm1AE"></span><span id="vvm::A__Eigen::SparseMatrix:double:"></span><span class="target" id="classvvm_1ac87ca230e4801653418101e80a986b5b"></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SparseMatrix</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">A</span></span></span><a class="headerlink" href="#_CPPv4N3vvm1AE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm1GE">
+<span id="_CPPv3N3vvm1GE"></span><span id="_CPPv2N3vvm1GE"></span><span id="vvm::G__Eigen::SparseMatrix:double:"></span><span class="target" id="classvvm_1a2b0b1a4ac6932d797805238e973cc01d"></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SparseMatrix</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">G</span></span></span><a class="headerlink" href="#_CPPv4N3vvm1GE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm24BoundaryProcess1D_centerEA_d">
+<span id="_CPPv3N3vvm24BoundaryProcess1D_centerEA_d"></span><span id="_CPPv2N3vvm24BoundaryProcess1D_centerEA_d"></span><span id="vvm::BoundaryProcess1D_center__doubleA"></span><span class="target" id="classvvm_1ace6f793034804810c37b0363b70648ed"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundaryProcess1D_center</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm24BoundaryProcess1D_centerEA_d" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that process the boundary of the 1D array where the varibles are at the center of the grid </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> – an one dimensional array that should be put into boundary process. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm24BoundaryProcess2D_centerEA_A2NZ_d">
+<span id="_CPPv3N3vvm24BoundaryProcess2D_centerEA_A2NZ_d"></span><span id="_CPPv2N3vvm24BoundaryProcess2D_centerEA_ANZ_d"></span><span id="vvm::BoundaryProcess2D_center__doubleAA"></span><span class="target" id="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundaryProcess2D_center</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm24BoundaryProcess2D_centerEA_A2NZ_d" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that process the boundary of the 2D array where the varibles are at the center of the grid </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> – an two dimensional array that should be put into boundary process. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm26BoundaryProcess2D_westdownEA_A2NZ_d">
+<span id="_CPPv3N3vvm26BoundaryProcess2D_westdownEA_A2NZ_d"></span><span id="_CPPv2N3vvm26BoundaryProcess2D_westdownEA_ANZ_d"></span><span id="vvm::BoundaryProcess2D_westdown__doubleAA"></span><span class="target" id="classvvm_1a88f21d908dca06f5c725da83a36caf96"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundaryProcess2D_westdown</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm26BoundaryProcess2D_westdownEA_A2NZ_d" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that process the boundary of the 2D array where the varibles are at the southwestern side of the grid </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> – an two dimensional array that should be put into boundary process. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm14Advection_zetaER3vvm">
+<span id="_CPPv3N3vvm14Advection_zetaER3vvm"></span><span id="_CPPv2N3vvm14Advection_zetaER3vvm"></span><span id="vvm::Advection_zeta__vvmR"></span><span class="target" id="classvvm_1aec9080346387072f75c1e5907a5f9964"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Advection_zeta</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm14Advection_zetaER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that do advection process to the vorticity (zeta) field. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> – the vvm object which is used to advect the vorticity field and put into it. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm16Advection_thermoEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm">
+<span id="_CPPv3N3vvm16Advection_thermoEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm"></span><span id="_CPPv2N3vvm16Advection_thermoEA_ANZ_dA_ANZ_dA_ANZ_dR3vvm"></span><span id="vvm::Advection_thermo__doubleAA.doubleAA.doubleAA.vvmR"></span><span class="target" id="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Advection_thermo</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">previous</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">now</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">future</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm16Advection_thermoEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that do advection process to the vorticity (zeta) field. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>previous</strong> – an two dimensional array that the timestep is the previous one such as zetam, thm. </p></li>
+<li><p><strong>now</strong> – an two dimensional array that the timestep is now such as zeta, th. </p></li>
+<li><p><strong>future</strong> – an two dimensional array that the timestep is the future one such as zetap, thp. </p></li>
+<li><p><strong>model</strong> – the vvm object which is the model that will be used to do the diffusion (mainly the wind and the grid info). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm14Advection_qrVTER3vvm">
+<span id="_CPPv3N3vvm14Advection_qrVTER3vvm"></span><span id="_CPPv2N3vvm14Advection_qrVTER3vvm"></span><span id="vvm::Advection_qrVT__vvmR"></span><span class="target" id="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Advection_qrVT</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm14Advection_qrVTER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm8BouyancyER3vvm">
+<span id="_CPPv3N3vvm8BouyancyER3vvm"></span><span id="_CPPv2N3vvm8BouyancyER3vvm"></span><span id="vvm::Bouyancy__vvmR"></span><span class="target" id="classvvm_1ad5a7610975364e5b4163e7aff3c8e7ef"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Bouyancy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm8BouyancyER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm9DiffusionEA_A2NZ_dA_A2NZ_dR3vvm">
+<span id="_CPPv3N3vvm9DiffusionEA_A2NZ_dA_A2NZ_dR3vvm"></span><span id="_CPPv2N3vvm9DiffusionEA_ANZ_dA_ANZ_dR3vvm"></span><span id="vvm::Diffusion__doubleAA.doubleAA.vvmR"></span><span class="target" id="classvvm_1ac6e47dca620f5b32dd6b0d1be432a347"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Diffusion</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var_in</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var_out</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm9DiffusionEA_A2NZ_dA_A2NZ_dR3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that do advection process to the vorticity (zeta) field. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var_in</strong> – an two dimensional array that should be put in to be diffused. </p></li>
+<li><p><strong>var_out</strong> – an two dimensional array that the result will be put into. </p></li>
+<li><p><strong>model</strong> – the vvm object which is the model that will be used to do the diffusion (mainly the grid information). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm10TimeFilterEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm">
+<span id="_CPPv3N3vvm10TimeFilterEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm"></span><span id="_CPPv2N3vvm10TimeFilterEA_ANZ_dA_ANZ_dA_ANZ_dR3vvm"></span><span id="vvm::TimeFilter__doubleAA.doubleAA.doubleAA.vvmR"></span><span class="target" id="classvvm_1ab10c85732f7f7256133cf53f099232c2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TimeFilter</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">previous</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">now</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">future</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span>, <a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm10TimeFilterEA_A2NZ_dA_A2NZ_dA_A2NZ_dR3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>A member function that do advection process to the vorticity (zeta) field. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>previous</strong> – an two dimensional array that the timestep is the previous one such as zetam, thm. </p></li>
+<li><p><strong>now</strong> – an two dimensional array that the timestep is now such as zeta, th. </p></li>
+<li><p><strong>future</strong> – an two dimensional array that the timestep is the future one such as zetap, thp. </p></li>
+<li><p><strong>model</strong> – the vvm object which is the model that will be used to do the diffusion (mainly the grid information). </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysicsE">
+<span id="_CPPv3N3vvm12MicroPhysicsE"></span><span id="_CPPv2N3vvm12MicroPhysicsE"></span><span id="vvm::MicroPhysics"></span><span class="target" id="classvvm_1_1MicroPhysics"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MicroPhysics</span></span></span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysicsE" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysics12condensationER3vvm">
+<span id="_CPPv3N3vvm12MicroPhysics12condensationER3vvm"></span><span id="_CPPv2N3vvm12MicroPhysics12condensationER3vvm"></span><span id="vvm::MicroPhysics::condensation__vvmR"></span><span class="target" id="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">condensation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysics12condensationER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysics14autoconversionER3vvm">
+<span id="_CPPv3N3vvm12MicroPhysics14autoconversionER3vvm"></span><span id="_CPPv2N3vvm12MicroPhysics14autoconversionER3vvm"></span><span id="vvm::MicroPhysics::autoconversion__vvmR"></span><span class="target" id="classvvm_1_1MicroPhysics_1a30ea0fb37f59a0c9196225aa460049e1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">autoconversion</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysics14autoconversionER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysics9accretionER3vvm">
+<span id="_CPPv3N3vvm12MicroPhysics9accretionER3vvm"></span><span id="_CPPv2N3vvm12MicroPhysics9accretionER3vvm"></span><span id="vvm::MicroPhysics::accretion__vvmR"></span><span class="target" id="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">accretion</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysics9accretionER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysics11evaporationER3vvm">
+<span id="_CPPv3N3vvm12MicroPhysics11evaporationER3vvm"></span><span id="_CPPv2N3vvm12MicroPhysics11evaporationER3vvm"></span><span id="vvm::MicroPhysics::evaporation__vvmR"></span><span class="target" id="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaporation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysics11evaporationER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm12MicroPhysics20NegativeValueProcessEA_A2NZ_d">
+<span id="_CPPv3N3vvm12MicroPhysics20NegativeValueProcessEA_A2NZ_d"></span><span id="_CPPv2N3vvm12MicroPhysics20NegativeValueProcessEA_ANZ_d"></span><span id="vvm::MicroPhysics::NegativeValueProcess__doubleAA"></span><span class="target" id="classvvm_1_1MicroPhysics_1aa6a9e66b8c45fa524936db5a225d680e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NegativeValueProcess</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">var</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NZ</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm12MicroPhysics20NegativeValueProcessEA_A2NZ_d" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm13PoissonSolverE">
+<span id="_CPPv3N3vvm13PoissonSolverE"></span><span id="_CPPv2N3vvm13PoissonSolverE"></span><span id="vvm::PoissonSolver"></span><span class="target" id="classvvm_1_1PoissonSolver"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PoissonSolver</span></span></span><a class="headerlink" href="#_CPPv4N3vvm13PoissonSolverE" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm13PoissonSolver5cal_wER3vvm">
+<span id="_CPPv3N3vvm13PoissonSolver5cal_wER3vvm"></span><span id="_CPPv2N3vvm13PoissonSolver5cal_wER3vvm"></span><span id="vvm::PoissonSolver::cal_w__vvmR"></span><span class="target" id="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cal_w</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm13PoissonSolver5cal_wER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm13PoissonSolver5cal_uER3vvm">
+<span id="_CPPv3N3vvm13PoissonSolver5cal_uER3vvm"></span><span id="_CPPv2N3vvm13PoissonSolver5cal_uER3vvm"></span><span id="vvm::PoissonSolver::cal_u__vvmR"></span><span class="target" id="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cal_u</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm13PoissonSolver5cal_uER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3vvm13PoissonSolver11pubarTop_ptER3vvm">
+<span id="_CPPv3N3vvm13PoissonSolver11pubarTop_ptER3vvm"></span><span id="_CPPv2N3vvm13PoissonSolver11pubarTop_ptER3vvm"></span><span id="vvm::PoissonSolver::pubarTop_pt__vvmR"></span><span class="target" id="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pubarTop_pt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv43vvm" title="vvm"><span class="n"><span class="pre">vvm</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3vvm13PoissonSolver11pubarTop_ptER3vvm" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ModelDesign.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Model Design</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aaron Hsieh
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Aaron Hsieh.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

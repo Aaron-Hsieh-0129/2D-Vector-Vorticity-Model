@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classvvm_1_1PoissonSolver" kind="class" language="C++" prot="public">
+    <compoundname>vvm::PoissonSolver</compoundname>
+    <includes refid="Declare_8hpp" local="no">Declare.hpp</includes>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::PoissonSolver::cal_w</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>cal_w</name>
+        <qualifiedname>vvm::PoissonSolver::cal_w</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="125" column="25" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/PoissonSolver.cpp" bodystart="183" bodyend="364"/>
+        <references refid="classvvm_1ac87ca230e4801653418101e80a986b5b" compoundref="Declare_8hpp" startline="113">vvm::A</references>
+        <references refid="classvvm_1a88f21d908dca06f5c725da83a36caf96" compoundref="Boundary_8cpp" startline="21" endline="30">vvm::BoundaryProcess2D_westdown</references>
+        <references refid="Config_8hpp_1ae1d0d606e7eb860732925d6dbb82f18a" compoundref="Config_8hpp" startline="1">dx</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" compoundref="Const_8hpp" startline="12">NX</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" compoundref="Const_8hpp" startline="13">NZ</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="Config_8hpp_1a6cc99de22fbfffb5c4432738ba6c74f8" compoundref="Config_8hpp" startline="18">POISSONPARAM</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
+        <references refid="classvvm_1a42bbd446ef820ca6930ed4c727cf17ea" compoundref="Declare_8hpp" startline="50">vvm::w</references>
+        <references refid="classvvm_1ae6a43e969fcfb9de0ba751369881a03f" compoundref="Declare_8hpp" startline="48">vvm::zetap</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="5" endline="21">main</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::PoissonSolver::cal_u</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>cal_u</name>
+        <qualifiedname>vvm::PoissonSolver::cal_u</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="126" column="25" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/PoissonSolver.cpp" bodystart="366" bodyend="533"/>
+        <references refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" compoundref="Boundary_8cpp" startline="9" endline="19">vvm::BoundaryProcess2D_center</references>
+        <references refid="Config_8hpp_1ae1d0d606e7eb860732925d6dbb82f18a" compoundref="Config_8hpp" startline="1">dx</references>
+        <references refid="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4" compoundref="Config_8hpp" startline="2">dz</references>
+        <references refid="classvvm_1a2b0b1a4ac6932d797805238e973cc01d" compoundref="Declare_8hpp" startline="114">vvm::G</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="Config_8hpp_1ab22842bcdca3b2d9a2c60e78326e45bb" compoundref="Config_8hpp" startline="19">POISSONPARAMU</references>
+        <references refid="classvvm_1a3ca267ed2f973f92e35d839085baf702" compoundref="Declare_8hpp" startline="29">vvm::rdx</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
+        <references refid="classvvm_1ad7c0652b11cf78af50e5b03e593e1774" compoundref="Declare_8hpp" startline="50">vvm::u</references>
+        <references refid="classvvm_1a2494ade44221bcd3aed164d73bf208f4" compoundref="Declare_8hpp" startline="40">vvm::ubarTopp</references>
+        <references refid="classvvm_1abb74b46a37b339933f113039b22744b7" compoundref="Declare_8hpp" startline="44">vvm::uxi</references>
+        <references refid="classvvm_1a42bbd446ef820ca6930ed4c727cf17ea" compoundref="Declare_8hpp" startline="50">vvm::w</references>
+        <references refid="classvvm_1a546ef99056f9c89ab84d5157b8400c9d" compoundref="Declare_8hpp" startline="44">vvm::xi</references>
+        <references refid="classvvm_1ae6a43e969fcfb9de0ba751369881a03f" compoundref="Declare_8hpp" startline="48">vvm::zetap</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="5" endline="21">main</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::PoissonSolver::pubarTop_pt</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>pubarTop_pt</name>
+        <qualifiedname>vvm::PoissonSolver::pubarTop_pt</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="127" column="25" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/PoissonSolver.cpp" bodystart="535" bodyend="547"/>
+        <references refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" compoundref="Declare_8hpp" startline="37">vvm::d2t</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="classvvm_1a68ea5e54b9a54c4256969b5ba5dd4cbd" compoundref="Declare_8hpp" startline="31">vvm::rdz</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1ad7c0652b11cf78af50e5b03e593e1774" compoundref="Declare_8hpp" startline="50">vvm::u</references>
+        <references refid="classvvm_1a418daede3a9c0ed998842ff792647f2f" compoundref="Declare_8hpp" startline="40">vvm::ubarTopm</references>
+        <references refid="classvvm_1a2494ade44221bcd3aed164d73bf208f4" compoundref="Declare_8hpp" startline="40">vvm::ubarTopp</references>
+        <references refid="classvvm_1a42bbd446ef820ca6930ed4c727cf17ea" compoundref="Declare_8hpp" startline="50">vvm::w</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>vvm::PoissonSolver</label>
+        <link refid="classvvm_1_1PoissonSolver"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="115" column="5" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="115" bodyend="129"/>
+    <listofallmembers>
+      <member refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" prot="public" virt="non-virtual"><scope>vvm::PoissonSolver</scope><name>cal_u</name></member>
+      <member refid="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f" prot="public" virt="non-virtual"><scope>vvm::PoissonSolver</scope><name>cal_w</name></member>
+      <member refid="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab" prot="public" virt="non-virtual"><scope>vvm::PoissonSolver</scope><name>pubarTop_pt</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

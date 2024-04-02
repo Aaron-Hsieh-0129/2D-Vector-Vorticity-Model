@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="AddForcing_8cpp" kind="file" language="C++">
+    <compoundname>AddForcing.cpp</compoundname>
+    <includes refid="Declare_8hpp" local="yes">Declare.hpp</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>../include/Eigen/Sparse</label>
+      </node>
+      <node id="1">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/AddForcing.cpp</label>
+        <link refid="AddForcing_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>Config.hpp</label>
+        <link refid="Config_8hpp"/>
+      </node>
+      <node id="3">
+        <label>Const.hpp</label>
+        <link refid="Const_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Declare.hpp</label>
+        <link refid="Declare_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Declare_8hpp" kindref="compound">Declare.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(WATER)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(TROPICALFORCING)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>vvm::AddForcing(<ref refid="classvvm" kindref="compound">vvm</ref><sp/>&amp;<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt<sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>1;<sp/>i<sp/>&lt;=<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-2;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#ifndef<sp/>AB3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dt<sp/>=<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" kindref="member">d2t</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dt<sp/>=<sp/><ref refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" kindref="member">DT</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" kindref="member">thp</ref>[i][k]<sp/>+=<sp/>dt<sp/>*<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.Q1LS[k];</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.status_for_adding_forcing<sp/>==<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" kindref="member">thp</ref>[i][k]<sp/>+=<sp/>dt<sp/>*<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.init_th_forcing[i][k];</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(RADIATIONCOOLING)<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" kindref="member">thp</ref>[i][k]<sp/>+=<sp/>dt<sp/>*<sp/>(-2.<sp/>/<sp/>86400.);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1ab2102a76763307034e6e6a65bf2716af" kindref="member">qvp</ref>[i][k]<sp/>+=<sp/>dt<sp/>*<sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.Q2LS[k];</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" kindref="member">BoundaryProcess2D_center</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" kindref="member">thp</ref>);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" kindref="member">BoundaryProcess2D_center</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>.<ref refid="classvvm_1ab2102a76763307034e6e6a65bf2716af" kindref="member">qvp</ref>);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/AddForcing.cpp"/>
+  </compounddef>
+</doxygen>

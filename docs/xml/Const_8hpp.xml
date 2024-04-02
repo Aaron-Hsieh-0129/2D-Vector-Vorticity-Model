@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="Const_8hpp" kind="file" language="C++">
+    <compoundname>Const.hpp</compoundname>
+    <includes refid="Config_8hpp" local="yes">Config.hpp</includes>
+    <includedby refid="Declare_8hpp" local="yes">/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>Config.hpp</label>
+        <link refid="Config_8hpp"/>
+      </node>
+      <node id="1">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Const.hpp</label>
+        <link refid="Const_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/AddForcing.cpp</label>
+        <link refid="AddForcing_8cpp"/>
+      </node>
+      <node id="4">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Advection.cpp</label>
+        <link refid="Advection_8cpp"/>
+      </node>
+      <node id="5">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Boundary.cpp</label>
+        <link refid="Boundary_8cpp"/>
+      </node>
+      <node id="6">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Buoyancy.cpp</label>
+        <link refid="Buoyancy_8cpp"/>
+      </node>
+      <node id="1">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Const.hpp</label>
+        <link refid="Const_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Declare.cpp</label>
+        <link refid="Declare_8cpp"/>
+      </node>
+      <node id="2">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp</label>
+        <link refid="Declare_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Init.cpp</label>
+        <link refid="Init_8cpp"/>
+      </node>
+      <node id="8">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Init.hpp</label>
+        <link refid="Init_8hpp"/>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Iteration.cpp</label>
+        <link refid="Iteration_8cpp"/>
+      </node>
+      <node id="11">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Iteration.hpp</label>
+        <link refid="Iteration_8hpp"/>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp</label>
+        <link refid="MicroPhysics_8cpp"/>
+      </node>
+      <node id="16">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/NumericalProcess.cpp</label>
+        <link refid="NumericalProcess_8cpp"/>
+      </node>
+      <node id="14">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Output.cpp</label>
+        <link refid="Output_8cpp"/>
+      </node>
+      <node id="10">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/Output.hpp</label>
+        <link refid="Output_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/PoissonSolver.cpp</label>
+        <link refid="PoissonSolver_8cpp"/>
+      </node>
+      <node id="13">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="Const_8hpp_1a6801baa546c6112d19eb095111d24720" prot="public" static="no">
+        <name>GRAVITY</name>
+        <initializer>(9.80665)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The gravity constant (m/s^2) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="3" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" prot="public" static="no">
+        <name>C_p</name>
+        <initializer>(1003.5)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The specific heat at constant pressure (J/kg/K) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="4" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" prot="public" static="no">
+        <name>Rd</name>
+        <initializer>(287.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The gas constant for dry air (J/kg/K) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="5" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a1796b981de799fa29e4a761dc0c538f6" prot="public" static="no">
+        <name>Cv</name>
+        <initializer>(<ref refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" kindref="member">C_p</ref> - <ref refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" kindref="member">Rd</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The specific heat at constant volume (J/kg/K) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="6" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" prot="public" static="no">
+        <name>PSURF</name>
+        <initializer>(96500.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The surface pressure (Pa) for the initial condition </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="8" column="13" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" prot="public" static="no">
+        <name>P0</name>
+        <initializer>(100000.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The reference pressure (Pa) for the initial condition </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="10" column="10" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" prot="public" static="no">
+        <name>Lv</name>
+        <initializer>(2500000.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The latent heat of vaporization (J/kg) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="11" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" prot="public" static="no">
+        <name>NX</name>
+        <initializer>(<ref refid="Config_8hpp_1a4332ee01d55412ae2f7d4bc6fc1f5437" kindref="member">XRANGE</ref> / <ref refid="Config_8hpp_1ae1d0d606e7eb860732925d6dbb82f18a" kindref="member">dx</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The number of grid points in x direction </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="12" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" prot="public" static="no">
+        <name>NZ</name>
+        <initializer>(<ref refid="Config_8hpp_1a9d5ee4461c576344cbcb8c68014a9a9d" kindref="member">ZRANGE</ref> / <ref refid="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4" kindref="member">dz</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The number of grid points in z direction </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="13" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Const_8hpp_1af5abd28c44c29b7397c84f1fec4b1d84" prot="public" static="no">
+        <name>ALPHA</name>
+        <initializer>(0.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="17" column="14" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="17" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Here are some constants defined in this model. You don&apos;t need to change them. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="author"><para>Aaron Hsieh (<ulink url="mailto:b08209006@ntu.edu.tw">b08209006@ntu.edu.tw</ulink>) </para>
+</simplesect>
+<simplesect kind="version"><para>0.1 </para>
+</simplesect>
+<simplesect kind="date"><para>2024-03-13</para>
+</simplesect>
+<simplesect kind="copyright"><para>Copyright (c) 2024  </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Config_8hpp" kindref="compound">Config.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="Const_8hpp_1a6801baa546c6112d19eb095111d24720" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>GRAVITY<sp/>(9.80665)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>C_p<sp/>(1003.5)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Rd<sp/>(287.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="Const_8hpp_1a1796b981de799fa29e4a761dc0c538f6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Cv<sp/>(C_p<sp/>-<sp/>Rd)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>LOADFILE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>PSURF<sp/>(96500.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>P0<sp/>(100000.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Lv<sp/>(2500000.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NX<sp/>(XRANGE<sp/>/<sp/>dx)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NZ<sp/>(ZRANGE<sp/>/<sp/>dz)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(AB3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>ALPHA<sp/>(1.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="Const_8hpp_1af5abd28c44c29b7397c84f1fec4b1d84" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>ALPHA<sp/>(0.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Documentation<sp/>Part</highlight></codeline>
+<codeline lineno="55"><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp"/>
+  </compounddef>
+</doxygen>

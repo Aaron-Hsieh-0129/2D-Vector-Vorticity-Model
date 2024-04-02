@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classInit" kind="class" language="C++" prot="public">
+    <compoundname>Init</compoundname>
+    <includes refid="Init_8hpp" local="no">Init.hpp</includes>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classInit_1a4b373a923fb486df695e82608ff081c4" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Init::Init1d</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>Init1d</name>
+        <qualifiedname>Init::Init1d</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="5" column="17" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="9" bodyend="100"/>
+        <references refid="classvvm_1ace6f793034804810c37b0363b70648ed" compoundref="Boundary_8cpp" startline="3" endline="7">vvm::BoundaryProcess1D_center</references>
+        <references refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" compoundref="Const_8hpp" startline="4">C_p</references>
+        <references refid="Const_8hpp_1a1796b981de799fa29e4a761dc0c538f6" compoundref="Const_8hpp" startline="6">Cv</references>
+        <references refid="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4" compoundref="Config_8hpp" startline="2">dz</references>
+        <references refid="Const_8hpp_1a6801baa546c6112d19eb095111d24720" compoundref="Const_8hpp" startline="3">GRAVITY</references>
+        <references refid="classInit_1a18f209b227e2b6894dcd45969eec4339" compoundref="Init_8cpp" startline="217" endline="261">LoadFile</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" compoundref="Const_8hpp" startline="10">P0</references>
+        <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">vvm::pb</references>
+        <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
+        <references refid="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" compoundref="Const_8hpp" startline="8">PSURF</references>
+        <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
+        <references refid="classvvm_1a128c6144ffb235b49bcdebf85c0ce8e9" compoundref="Declare_8hpp" startline="43">vvm::qvsb</references>
+        <references refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" compoundref="Const_8hpp" startline="5">Rd</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
+        <references refid="classvvm_1a7725cca3f943224b5878255f97a5bcfd" compoundref="Declare_8hpp" startline="43">vvm::thb</references>
+        <references refid="classvvm_1a4af2d0685fff1ca80719520000435a72" compoundref="Declare_8hpp" startline="43">vvm::thb_zeta</references>
+        <references refid="classvvm_1ab05b2f05a32bba013072d9e643fe4c60" compoundref="Declare_8hpp" startline="43">vvm::thbm</references>
+        <references refid="classvvm_1a55d4854ed17e4bd829beb73427702895" compoundref="Declare_8hpp" startline="45">vvm::thvb</references>
+        <references refid="classvvm_1a0e8dbd05de632bfa80c6538130872c3f" compoundref="Declare_8hpp" startline="45">vvm::thvbm</references>
+        <references refid="classvvm_1a06c8b7613b14bb7d815a20ee3060bb01" compoundref="Declare_8hpp" startline="43">vvm::tvb</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="5" endline="21">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Init::Init2d</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>Init2d</name>
+        <qualifiedname>Init::Init2d</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="6" column="17" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="102" bodyend="183"/>
+        <references refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" compoundref="Boundary_8cpp" startline="9" endline="19">vvm::BoundaryProcess2D_center</references>
+        <references refid="classvvm_1a88f21d908dca06f5c725da83a36caf96" compoundref="Boundary_8cpp" startline="21" endline="30">vvm::BoundaryProcess2D_westdown</references>
+        <references refid="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4" compoundref="Config_8hpp" startline="2">dz</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="classvvm_1abea7eda17bdb83b23d16d901c35c1f96" compoundref="Declare_8hpp" startline="57">vvm::qv</references>
+        <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
+        <references refid="classvvm_1a882e391014e3a15f92d99c27aa6e5ac3" compoundref="Declare_8hpp" startline="57">vvm::qvm</references>
+        <references refid="classvvm_1a3ca267ed2f973f92e35d839085baf702" compoundref="Declare_8hpp" startline="29">vvm::rdx</references>
+        <references refid="classvvm_1a68ea5e54b9a54c4256969b5ba5dd4cbd" compoundref="Declare_8hpp" startline="31">vvm::rdz</references>
+        <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
+        <references refid="classvvm_1add34568af43cf188bec69d61cc9c5bee" compoundref="Declare_8hpp" startline="49">vvm::th</references>
+        <references refid="classvvm_1a7725cca3f943224b5878255f97a5bcfd" compoundref="Declare_8hpp" startline="43">vvm::thb</references>
+        <references refid="classvvm_1a1ffd59976b9a6948fe23f65a57335c38" compoundref="Declare_8hpp" startline="49">vvm::thm</references>
+        <references refid="classvvm_1ad7c0652b11cf78af50e5b03e593e1774" compoundref="Declare_8hpp" startline="50">vvm::u</references>
+        <references refid="classvvm_1a15f5bebeb59fa99feedd3945e7cd7669" compoundref="Declare_8hpp" startline="40">vvm::ubarTop</references>
+        <references refid="classvvm_1a418daede3a9c0ed998842ff792647f2f" compoundref="Declare_8hpp" startline="40">vvm::ubarTopm</references>
+        <references refid="classvvm_1a42bbd446ef820ca6930ed4c727cf17ea" compoundref="Declare_8hpp" startline="50">vvm::w</references>
+        <references refid="classvvm_1a1a7a6273bb2bd701445f7f3e42c244e0" compoundref="Declare_8hpp" startline="48">vvm::zeta</references>
+        <references refid="classvvm_1a1175b5c8c3bb07dbea7f0b614a65317b" compoundref="Declare_8hpp" startline="48">vvm::zetam</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="5" endline="21">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1a18f209b227e2b6894dcd45969eec4339" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Init::LoadFile</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>LoadFile</name>
+        <qualifiedname>Init::LoadFile</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="7" column="17" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="217" bodyend="261"/>
+        <references refid="classvvm_1ace6f793034804810c37b0363b70648ed" compoundref="Boundary_8cpp" startline="3" endline="7">vvm::BoundaryProcess1D_center</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" compoundref="Const_8hpp" startline="13">NZ</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">vvm::pb</references>
+        <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
+        <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
+        <references refid="classvvm_1a128c6144ffb235b49bcdebf85c0ce8e9" compoundref="Declare_8hpp" startline="43">vvm::qvsb</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
+        <references refid="classvvm_1a7725cca3f943224b5878255f97a5bcfd" compoundref="Declare_8hpp" startline="43">vvm::thb</references>
+        <references refid="classvvm_1a4af2d0685fff1ca80719520000435a72" compoundref="Declare_8hpp" startline="43">vvm::thb_zeta</references>
+        <references refid="classvvm_1a06c8b7613b14bb7d815a20ee3060bb01" compoundref="Declare_8hpp" startline="43">vvm::tvb</references>
+        <referencedby refid="classInit_1a4b373a923fb486df695e82608ff081c4" compoundref="Init_8cpp" startline="9" endline="100">Init1d</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classInit_1a743d215d0b8e6e70d05b3c376378d340" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Init::GetTB</definition>
+        <argsstring>(int)</argsstring>
+        <name>GetTB</name>
+        <qualifiedname>Init::GetTB</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>k</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="13" column="19" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="185" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1a09bc5d643ea4bd3af95e7e0a280cade6" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Init::GetTHRAD</definition>
+        <argsstring>(int, int)</argsstring>
+        <name>GetTHRAD</name>
+        <qualifiedname>Init::GetTHRAD</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>i</defname>
+        </param>
+        <param>
+          <type>int</type>
+          <defname>k</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="14" column="19" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="192" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1aacd502057acbb768e093c91ef8f2e2f0" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Init::GetTH</definition>
+        <argsstring>(int, int)</argsstring>
+        <name>GetTH</name>
+        <qualifiedname>Init::GetTH</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>i</defname>
+        </param>
+        <param>
+          <type>int</type>
+          <defname>k</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="15" column="19" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="200" bodyend="206"/>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1ac29dd24eb0f590f54e8bcddeb8e0ebae" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Init::GetQVB</definition>
+        <argsstring>(int)</argsstring>
+        <name>GetQVB</name>
+        <qualifiedname>Init::GetQVB</qualifiedname>
+        <param>
+          <type>int</type>
+          <defname>k</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="17" column="23" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="209" bodyend="214"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Init</label>
+        <link refid="classInit"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="3" column="1" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" bodystart="3" bodyend="19"/>
+    <listofallmembers>
+      <member refid="classInit_1ac29dd24eb0f590f54e8bcddeb8e0ebae" prot="private" virt="non-virtual"><scope>Init</scope><name>GetQVB</name></member>
+      <member refid="classInit_1a743d215d0b8e6e70d05b3c376378d340" prot="private" virt="non-virtual"><scope>Init</scope><name>GetTB</name></member>
+      <member refid="classInit_1aacd502057acbb768e093c91ef8f2e2f0" prot="private" virt="non-virtual"><scope>Init</scope><name>GetTH</name></member>
+      <member refid="classInit_1a09bc5d643ea4bd3af95e7e0a280cade6" prot="private" virt="non-virtual"><scope>Init</scope><name>GetTHRAD</name></member>
+      <member refid="classInit_1a4b373a923fb486df695e82608ff081c4" prot="public" virt="non-virtual"><scope>Init</scope><name>Init1d</name></member>
+      <member refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" prot="public" virt="non-virtual"><scope>Init</scope><name>Init2d</name></member>
+      <member refid="classInit_1a18f209b227e2b6894dcd45969eec4339" prot="public" virt="non-virtual"><scope>Init</scope><name>LoadFile</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

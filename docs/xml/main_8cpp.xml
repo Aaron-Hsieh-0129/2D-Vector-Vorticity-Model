@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="main_8cpp" kind="file" language="C++">
+    <compoundname>main.cpp</compoundname>
+    <includes refid="Iteration_8hpp" local="yes">Iteration.hpp</includes>
+    <includes local="no">petsc.h</includes>
+    <incdepgraph>
+      <node id="8">
+        <label>../include/Eigen/Sparse</label>
+      </node>
+      <node id="7">
+        <label>Config.hpp</label>
+        <link refid="Config_8hpp"/>
+      </node>
+      <node id="6">
+        <label>Const.hpp</label>
+        <link refid="Const_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>Declare.hpp</label>
+        <link refid="Declare_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>Init.hpp</label>
+        <link refid="Init_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Iteration.hpp</label>
+        <link refid="Iteration_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>Output.hpp</label>
+        <link refid="Output_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/Aaron/2DVVM/full/0402/model/src/main.cpp</label>
+        <link refid="main_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>netcdf</label>
+      </node>
+      <node id="10">
+        <label>petsc.h</label>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" prot="public" static="no" mutable="no">
+        <type><ref refid="classvvm" kindref="compound">vvm</ref></type>
+        <definition>vvm model</definition>
+        <argsstring></argsstring>
+        <name>model</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/main.cpp" line="4" column="5" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/main.cpp" bodystart="4" bodyend="-1"/>
+        <referencedby refid="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" compoundref="MicroPhysics_8cpp" startline="48" endline="67">vvm::MicroPhysics::accretion</referencedby>
+        <referencedby refid="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5" compoundref="Advection_8cpp" startline="176" endline="250">vvm::Advection_qrVT</referencedby>
+        <referencedby refid="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491" compoundref="Advection_8cpp" startline="120" endline="173">vvm::Advection_thermo</referencedby>
+        <referencedby refid="classvvm_1aec9080346387072f75c1e5907a5f9964" compoundref="Advection_8cpp" startline="41" endline="118">vvm::Advection_zeta</referencedby>
+        <referencedby refid="classvvm_1_1MicroPhysics_1a30ea0fb37f59a0c9196225aa460049e1" compoundref="MicroPhysics_8cpp" startline="26" endline="45">vvm::MicroPhysics::autoconversion</referencedby>
+        <referencedby refid="classvvm_1ad5a7610975364e5b4163e7aff3c8e7ef" compoundref="Buoyancy_8cpp" startline="21" endline="53">vvm::Bouyancy</referencedby>
+        <referencedby refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" compoundref="PoissonSolver_8cpp" startline="366" endline="533">vvm::PoissonSolver::cal_u</referencedby>
+        <referencedby refid="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f" compoundref="PoissonSolver_8cpp" startline="183" endline="364">vvm::PoissonSolver::cal_w</referencedby>
+        <referencedby refid="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f" compoundref="MicroPhysics_8cpp" startline="5" endline="23">vvm::MicroPhysics::condensation</referencedby>
+        <referencedby refid="classvvm_1ac6e47dca620f5b32dd6b0d1be432a347" compoundref="NumericalProcess_8cpp" startline="3" endline="11">vvm::Diffusion</referencedby>
+        <referencedby refid="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65" compoundref="MicroPhysics_8cpp" startline="70" endline="101">vvm::MicroPhysics::evaporation</referencedby>
+        <referencedby refid="Buoyancy_8cpp_1a8ecf3975b610cb48d26b59dead3553db" compoundref="Buoyancy_8cpp" startline="3" endline="9">getTHV</referencedby>
+        <referencedby refid="classInit_1a4b373a923fb486df695e82608ff081c4" compoundref="Init_8cpp" startline="9" endline="100">Init::Init1d</referencedby>
+        <referencedby refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" compoundref="Init_8cpp" startline="102" endline="183">Init::Init2d</referencedby>
+        <referencedby refid="classInit_1a18f209b227e2b6894dcd45969eec4339" compoundref="Init_8cpp" startline="217" endline="261">Init::LoadFile</referencedby>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="5" endline="21">main</referencedby>
+        <referencedby refid="classOutput_1a29f4af25257a72a15b771089d806fbb3" compoundref="Output_8cpp" startline="32" endline="87">Output::output_nc</referencedby>
+        <referencedby refid="classIteration_1a6b9d511fea92c2569c8da11c1a86a066" compoundref="Iteration_8cpp" startline="77" endline="82">Iteration::pqc_pt</referencedby>
+        <referencedby refid="classIteration_1ac30ea16c9e339a59c78637fa0753f775" compoundref="Iteration_8cpp" startline="84" endline="103">Iteration::pqr_pt</referencedby>
+        <referencedby refid="classIteration_1ab92cc262ad139b14958847277b88d017" compoundref="Iteration_8cpp" startline="69" endline="75">Iteration::pqv_pt</referencedby>
+        <referencedby refid="classOutput_1ac9377ae1019ac4ee88877197685d19fe" compoundref="Output_8cpp" startline="8" endline="27">Output::printInit</referencedby>
+        <referencedby refid="classIteration_1a7d5499ac76ee826bdda0184feb1fef5f" compoundref="Iteration_8cpp" startline="16" endline="20">Iteration::pth_pt</referencedby>
+        <referencedby refid="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab" compoundref="PoissonSolver_8cpp" startline="535" endline="547">vvm::PoissonSolver::pubarTop_pt</referencedby>
+        <referencedby refid="classIteration_1a012d468a6070b5b181d88b226821ce5c" compoundref="Iteration_8cpp" startline="9" endline="14">Iteration::pzeta_pt</referencedby>
+        <referencedby refid="classvvm_1ab10c85732f7f7256133cf53f099232c2" compoundref="NumericalProcess_8cpp" startline="13" endline="20">vvm::TimeFilter</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+        <referencedby refid="Advection_8cpp_1ad84d7b263ba0496ac8d74df75d706075" compoundref="Advection_8cpp" startline="26" endline="28">U_zeta</referencedby>
+        <referencedby refid="Advection_8cpp_1afd67bfda19d291830edf3e9849cc9277" compoundref="Advection_8cpp" startline="34" endline="36">Um_zeta</referencedby>
+        <referencedby refid="classIteration_1a8836fdf87b17b4bc628fd77db64c6af3" compoundref="Iteration_8cpp" startline="22" endline="66">Iteration::updateMean</referencedby>
+        <referencedby refid="Advection_8cpp_1aff7c21fcae63b86ac2b3234e1bc5f188" compoundref="Advection_8cpp" startline="30" endline="32">W_zeta</referencedby>
+        <referencedby refid="Advection_8cpp_1ac8a793aa9b91091521141a121f60ef90" compoundref="Advection_8cpp" startline="38" endline="40">Wm_zeta</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, char **argv)</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/main.cpp" line="5" column="5" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/main.cpp" bodystart="5" bodyend="21"/>
+        <references refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" compoundref="PoissonSolver_8cpp" startline="366" endline="533">vvm::PoissonSolver::cal_u</references>
+        <references refid="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f" compoundref="PoissonSolver_8cpp" startline="183" endline="364">vvm::PoissonSolver::cal_w</references>
+        <references refid="classOutput_1a4a0eecfc03693584192bc8e78c2f872b" compoundref="Output_8cpp" startline="101" endline="124">Output::create_all_directory</references>
+        <references refid="classInit_1a4b373a923fb486df695e82608ff081c4" compoundref="Init_8cpp" startline="9" endline="100">Init::Init1d</references>
+        <references refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" compoundref="Init_8cpp" startline="102" endline="183">Init::Init2d</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classOutput_1ac9377ae1019ac4ee88877197685d19fe" compoundref="Output_8cpp" startline="8" endline="27">Output::printInit</references>
+        <references refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Iteration_8hpp" kindref="compound">Iteration.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;petsc.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" refkind="member"><highlight class="normal"><ref refid="classvvm" kindref="compound">vvm</ref><sp/><ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>;</highlight></codeline>
+<codeline lineno="5" refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" kindref="member">main</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)<sp/>{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classInit_1a4b373a923fb486df695e82608ff081c4" kindref="member">Init::Init1d</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" kindref="member">Init::Init2d</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classOutput_1ac9377ae1019ac4ee88877197685d19fe" kindref="member">Output::printInit</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classOutput_1a4a0eecfc03693584192bc8e78c2f872b" kindref="member">Output::create_all_directory</ref>();</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>PetscInitialize(&amp;argc,<sp/>&amp;argv,<sp/>NULL,<sp/>NULL);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>defined(POISSONTEST)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classvvm_1_1PoissonSolver" kindref="compound">vvm::PoissonSolver</ref><sp/>PoissonSolver;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PoissonSolver.<ref refid="classvvm_1_1PoissonSolver_1a03f3af096f7aa1861ee6512f41b5298f" kindref="member">cal_w</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>PoissonSolver.<ref refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" kindref="member">cal_u</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classIteration_1ae341a02edb030229055de37fd518ac89" kindref="member">Iteration::TimeMarching</ref>(<ref refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" kindref="member">model</ref>);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>PetscFinalize();</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/main.cpp"/>
+  </compounddef>
+</doxygen>

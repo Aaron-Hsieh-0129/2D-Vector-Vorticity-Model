@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classvvm_1_1MicroPhysics" kind="class" language="C++" prot="public">
+    <compoundname>vvm::MicroPhysics</compoundname>
+    <includes refid="Declare_8hpp" local="no">Declare.hpp</includes>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::MicroPhysics::condensation</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>condensation</name>
+        <qualifiedname>vvm::MicroPhysics::condensation</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="156" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp" bodystart="5" bodyend="23"/>
+        <references refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" compoundref="Const_8hpp" startline="4">C_p</references>
+        <references refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" compoundref="Const_8hpp" startline="11">Lv</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" compoundref="Const_8hpp" startline="10">P0</references>
+        <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
+        <references refid="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f" compoundref="Declare_8hpp" startline="58">vvm::qcp</references>
+        <references refid="classvvm_1ab2102a76763307034e6e6a65bf2716af" compoundref="Declare_8hpp" startline="57">vvm::qvp</references>
+        <references refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" compoundref="Const_8hpp" startline="5">Rd</references>
+        <references refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" compoundref="Declare_8hpp" startline="49">vvm::thp</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1MicroPhysics_1a30ea0fb37f59a0c9196225aa460049e1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::MicroPhysics::autoconversion</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>autoconversion</name>
+        <qualifiedname>vvm::MicroPhysics::autoconversion</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="157" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp" bodystart="26" bodyend="45"/>
+        <references refid="classvvm_1aacc9ca191f0c94b063ad84e44951eb69" compoundref="Declare_8hpp" startline="60">vvm::autoconversion</references>
+        <references refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" compoundref="Declare_8hpp" startline="37">vvm::d2t</references>
+        <references refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" compoundref="Config_8hpp" startline="5">DT</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f" compoundref="Declare_8hpp" startline="58">vvm::qcp</references>
+        <references refid="classvvm_1a280123bac37412349ba76e7d042d1004" compoundref="Declare_8hpp" startline="59">vvm::qrp</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::MicroPhysics::accretion</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>accretion</name>
+        <qualifiedname>vvm::MicroPhysics::accretion</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="158" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp" bodystart="48" bodyend="67"/>
+        <references refid="classvvm_1ad6e341d145021d01fd4ebca79787240e" compoundref="Declare_8hpp" startline="60">vvm::accretion</references>
+        <references refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" compoundref="Declare_8hpp" startline="37">vvm::d2t</references>
+        <references refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" compoundref="Config_8hpp" startline="5">DT</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f" compoundref="Declare_8hpp" startline="58">vvm::qcp</references>
+        <references refid="classvvm_1a280123bac37412349ba76e7d042d1004" compoundref="Declare_8hpp" startline="59">vvm::qrp</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::MicroPhysics::evaporation</definition>
+        <argsstring>(vvm &amp;)</argsstring>
+        <name>evaporation</name>
+        <qualifiedname>vvm::MicroPhysics::evaporation</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="159" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp" bodystart="70" bodyend="101"/>
+        <references refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" compoundref="Const_8hpp" startline="4">C_p</references>
+        <references refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" compoundref="Declare_8hpp" startline="37">vvm::d2t</references>
+        <references refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" compoundref="Config_8hpp" startline="5">DT</references>
+        <references refid="classvvm_1ae1a38973a7dfe7577f47cc41fc5e66b0" compoundref="Declare_8hpp" startline="60">vvm::evaporation</references>
+        <references refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" compoundref="Const_8hpp" startline="11">Lv</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <references refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" compoundref="Const_8hpp" startline="10">P0</references>
+        <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">vvm::pb</references>
+        <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
+        <references refid="classvvm_1a280123bac37412349ba76e7d042d1004" compoundref="Declare_8hpp" startline="59">vvm::qrp</references>
+        <references refid="classvvm_1ab2102a76763307034e6e6a65bf2716af" compoundref="Declare_8hpp" startline="57">vvm::qvp</references>
+        <references refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" compoundref="Const_8hpp" startline="5">Rd</references>
+        <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
+        <references refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" compoundref="Declare_8hpp" startline="49">vvm::thp</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1MicroPhysics_1aa6a9e66b8c45fa524936db5a225d680e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::MicroPhysics::NegativeValueProcess</definition>
+        <argsstring>(double var[][NZ])</argsstring>
+        <name>NegativeValueProcess</name>
+        <qualifiedname>vvm::MicroPhysics::NegativeValueProcess</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>var</declname>
+          <array>[][NZ]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="160" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/MicroPhysics.cpp" bodystart="104" bodyend="111"/>
+        <references refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" compoundref="Const_8hpp" startline="12">NX</references>
+        <references refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" compoundref="Const_8hpp" startline="13">NZ</references>
+        <referencedby refid="classIteration_1a6b9d511fea92c2569c8da11c1a86a066" compoundref="Iteration_8cpp" startline="77" endline="82">Iteration::pqc_pt</referencedby>
+        <referencedby refid="classIteration_1ac30ea16c9e339a59c78637fa0753f775" compoundref="Iteration_8cpp" startline="84" endline="103">Iteration::pqr_pt</referencedby>
+        <referencedby refid="classIteration_1ab92cc262ad139b14958847277b88d017" compoundref="Iteration_8cpp" startline="69" endline="75">Iteration::pqv_pt</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>vvm::MicroPhysics</label>
+        <link refid="classvvm_1_1MicroPhysics"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="154" column="5" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="154" bodyend="161"/>
+    <listofallmembers>
+      <member refid="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" prot="public" virt="non-virtual"><scope>vvm::MicroPhysics</scope><name>accretion</name></member>
+      <member refid="classvvm_1_1MicroPhysics_1a30ea0fb37f59a0c9196225aa460049e1" prot="public" virt="non-virtual"><scope>vvm::MicroPhysics</scope><name>autoconversion</name></member>
+      <member refid="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f" prot="public" virt="non-virtual"><scope>vvm::MicroPhysics</scope><name>condensation</name></member>
+      <member refid="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65" prot="public" virt="non-virtual"><scope>vvm::MicroPhysics</scope><name>evaporation</name></member>
+      <member refid="classvvm_1_1MicroPhysics_1aa6a9e66b8c45fa524936db5a225d680e" prot="public" virt="non-virtual"><scope>vvm::MicroPhysics</scope><name>NegativeValueProcess</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

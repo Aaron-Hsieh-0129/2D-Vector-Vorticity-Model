@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Two-dimension Vector Vorticity Model &#8212; 2DVVM  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials for Installing C/C++ compiler and libraries" href="api/install_compilers_libraries.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">2DVVM  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html">Model Design</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="api/class2DVVM.html">Class</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Two-dimension Vector Vorticity Model</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-dimension Vector Vorticity Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">If you cannot solve the netcdf_cxx4 and petsc installation problem.</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="two-dimension-vector-vorticity-model">
+<h1>Two-dimension Vector Vorticity Model<a class="headerlink" href="#two-dimension-vector-vorticity-model" title="Permalink to this heading">#</a></h1>
+<p>This is a 2D cloud-resolving model based on vorticity equation</p>
+</section>
+<section id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/install_compilers_libraries.html#install-compiler">Install compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/install_compilers_libraries.html#install-mpich">Install mpich</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/install_compilers_libraries.html#the-procedure-to-install-netcdf-cxx">The procedure to install netcdf-cxx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/install_compilers_libraries.html#install-petsc">Install petsc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html">Model Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#governing-equation-set">Governing Equation Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#how-this-model-works">How this model works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#grid-setting">Grid Setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html#numerical-method">Numerical Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html#boundary-condition">Boundary Condition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/class2DVVM.html">Class</a></li>
+</ul>
+</div>
+</section>
+<section id="prerequisite">
+<h1>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>C++ compiler (higher than C++11)</p></li>
+<li><p>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)</p></li>
+<li><p>PETSc</p></li>
+<li><p>Eigen (this has already be installed in include folder)</p></li>
+</ul>
+<p>The tutorial for installing them can be found in the tutorial section .</p>
+<p>This model will use netcdf-cxx and petsc in default. However:</p>
+<ul class="simple">
+<li><p>You can turn off the <cite>OUTPUTNC</cite> and turn on <cite>OUTPUTTXT</cite> in <cite>./src/Config.hpp</cite> to use txt output without installing <cite>netcdf-cxx4</cite>.</p></li>
+<li><p>Turn off <cite>PETSC</cite> in <cite>./src/Config.hpp</cite>, the model will change the Poisson solver package to <cite>Eigen</cite>, which means you don’t need to install PETSc.</p></li>
+</ul>
+</section>
+<section id="how-to-use">
+<h1>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading">#</a></h1>
+<ol class="arabic">
+<li><p>Clone the project using:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
+</pre></div>
+</div>
+</li>
+<li><p>Install netcdf-cxx, petsc</p>
+<p>It’s a little bit complicated to install libraries for C/C++.</p>
+<p>I will provide a tutorial for installing C/C++ compiler and the libraries in another file in the tutorial section.
+Here, you don’t need to have sudo privilege to install anything.</p>
+</li>
+<li><p>Link the installed libraries</p>
+<ul>
+<li><p>You need to change the libraries path (netcdf, petsc) to your own path.</p></li>
+<li><p>Change include path in CMakeLists.txt:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span>
+<span class="w">  </span><span class="s">include</span>
+<span class="w">  </span><span class="s">/path/to/your/petsc/include</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Change library link path:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_library</span><span class="p">(</span><span class="s">libncxxPath</span><span class="w"> </span><span class="s">netcdf_c++4</span><span class="w"> </span><span class="s2">&quot;/path to your netcdf_c++4/lib&quot;</span><span class="p">)</span>
+<span class="nb">find_library</span><span class="p">(</span><span class="s">libpetscPath</span><span class="w"> </span><span class="s">petsc</span><span class="w"> </span><span class="s2">&quot;/path to your petsc/lib&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>You are able to run the model by running the command under the project folder:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sh<span class="w"> </span>run.sh
+</pre></div>
+</div>
+</li>
+<li><p>You can change the model settings by changing the macro flags in the <cite>./src/Config.hpp</cite>.</p></li>
+</ol>
+<section id="if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">
+<h2>If you cannot solve the netcdf_cxx4 and petsc installation problem.<a class="headerlink" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem" title="Permalink to this heading">#</a></h2>
+<ol class="arabic">
+<li><p>Turn off the flag <cite>OUTPUTNC</cite> and turn on the flag <cite>OUTPUTTXT</cite> in <cite>./src/Config.hpp</cite>.</p></li>
+<li><p>Turn off the flag <cite>PETSC</cite> in <cite>./src/Config.hpp</cite> and this will in turn make the model use the Eigen C++ Solver.</p></li>
+<li><p>Create a folder called bin under project root by:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>bin
+</pre></div>
+</div>
+</li>
+<li><p>Create a file called Makefile under the project and the content will be the following:</p>
+<div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># CC and CFLAGS are varilables</span>
+<span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>g++
+<span class="nv">CFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-Wall<span class="w"> </span>-c<span class="w"> </span>-std<span class="o">=</span>c++11
+<span class="c"># -c option ask g++ to compile the source files, but do not link.</span>
+<span class="nv">OPTFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-O3
+
+<span class="nf">all       </span><span class="o">:</span><span class="w"> </span><span class="n">bin</span>/<span class="n">vvm</span>2<span class="n">d</span>
+<span class="w">        </span>@echo<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span>
+
+<span class="nf">bin/vvm2d </span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">Declare</span>.<span class="n">o</span> <span class="n">Init</span>.<span class="n">o</span> <span class="n">Iteration</span>.<span class="n">o</span> <span class="n">Outputfile</span>.<span class="n">o</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>main.o<span class="w"> </span>Declare.o<span class="w"> </span>Init.o<span class="w"> </span>Outputfile.o<span class="w"> </span>Iteration.o<span class="w"> </span>-o<span class="w"> </span>bin/vvm2d
+<span class="nf">main.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">main</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Declare.o </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Declare</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Init.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Init</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Outputfile.o</span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Outputfile</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Iteration.o       </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Iteration</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+</pre></div>
+</div>
+</li>
+<li><p>Using <cite>make</cite> under project root to compile the project and you will the the execution file at <cite>./bin/vvm2d</cite>.</p></li>
+<li><p>You will be able to use the model’s output by the txt files.</p></li>
+</ol>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="api/install_compilers_libraries.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorials for Installing C/C++ compiler and libraries</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-dimension Vector Vorticity Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">If you cannot solve the netcdf_cxx4 and petsc installation problem.</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aaron Hsieh
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Aaron Hsieh.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

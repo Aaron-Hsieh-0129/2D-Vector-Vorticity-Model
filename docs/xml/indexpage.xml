@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>Two-dimension Vector Vorticity Model</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="index_1md__2home_2Aaron_22DVVM_2full_20402_2model_2README"/>This is a 2D cloud-resolving model based on vorticity equation</para>
+<para><itemizedlist>
+<listitem><para>Two-dimension Vector Vorticity Model<itemizedlist>
+<listitem><para>Prerequisite</para>
+</listitem><listitem><para>How to Use<itemizedlist>
+<listitem><para>If you cannot solve the netcdf\_cxx4 and petsc installation problem.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="index_1autotoc_md1">
+<title>Prerequisite</title><para><itemizedlist>
+<listitem><para>C++ compiler (higher than C++11)</para>
+</listitem><listitem><para>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)</para>
+</listitem><listitem><para>PETSc</para>
+</listitem><listitem><para>Eigen (this has already be installed in include folder)</para>
+</listitem></itemizedlist>
+</para>
+<para>The tutorial for installing them can be found here</para>
+<para><itemizedlist>
+<listitem><para>This model will use netcdf-cxx and petsc in default. However<itemizedlist>
+<listitem><para>You can turn off the <computeroutput>OUTPUTNC</computeroutput> and turn on <computeroutput>OUTPUTTXT</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput> to use txt output without installing <computeroutput>netcdf-cxx4</computeroutput>.</para>
+</listitem><listitem><para>Turn off <computeroutput>PETSC</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput>, the model will change the Poisson solver package to <computeroutput>Eigen</computeroutput>, which means you don&apos;t need to install PETSc.</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="index_1autotoc_md2">
+<title>How to Use</title><para><orderedlist>
+<listitem><para>Clone the project using <programlisting><codeline><highlight class="normal">git<sp/>clone<sp/>https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Install netcdf-cxx, petsc</para>
+<para>It&apos;s a little bit complicated to install libraries for C/C++.</para>
+<para>I will provide a tutorial for installing C/C++ compiler and the libraries in another file <ulink url="./Install_compilers_libraries">here</ulink>. Here, you don&apos;t need to have sudo privilege to install anything.</para>
+</listitem><listitem><para>Link the installed libraries</para>
+</listitem></orderedlist>
+<itemizedlist>
+<listitem><para>You need to change the libraries path (netcdf, petsc) to your own path.</para>
+</listitem><listitem><para>Change include path in CMakeLists.txt <programlisting filename=".CMake"><codeline><highlight class="normal">include_directories(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>include</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>&lt;/path/to/your/petsc&gt;/include<sp/></highlight></codeline>
+<codeline><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Change library link path <programlisting><codeline><highlight class="normal">find_library(libncxxPath<sp/>netcdf_c++4<sp/>&quot;&lt;path<sp/>to<sp/>your<sp/>netcdf_c++4&gt;/lib&quot;)</highlight></codeline>
+<codeline><highlight class="normal">find_library(libpetscPath<sp/>petsc<sp/>&quot;&lt;path<sp/>to<sp/>your<sp/>petsc&gt;/lib&quot;)</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+<orderedlist>
+<listitem><para>You are able to run the model by running the command under the project folder <programlisting><codeline><highlight class="normal">sh<sp/>run.sh</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>You can change the model settings by changing the macro flags in the <computeroutput>./src/Config.hpp</computeroutput></para>
+</listitem></orderedlist>
+</para>
+<sect2 id="index_1autotoc_md3">
+<title>If you cannot solve the netcdf_cxx4 and petsc installation problem.</title><para><orderedlist>
+<listitem><para>Turn off the flag <computeroutput>OUTPUTNC</computeroutput> and turn on the flag <computeroutput>OUTPUTTXT</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput></para>
+</listitem><listitem><para>Turn off the flag <computeroutput>PETSC</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput> and this will in turn make the model use the Eigen C++ Solver</para>
+</listitem><listitem><para>Create a folder called bin under project root by <computeroutput>mkdir bin</computeroutput></para>
+</listitem><listitem><para>Create a file called Makefile under the project and the content will be the following <programlisting filename=".Makefile"><codeline><highlight class="normal">#<sp/>CC<sp/>and<sp/>CFLAGS<sp/>are<sp/>varilables</highlight></codeline>
+<codeline><highlight class="normal">CC<sp/>=<sp/>g++</highlight></codeline>
+<codeline><highlight class="normal">CFLAGS<sp/>=<sp/>-Wall<sp/>-c<sp/>-std=c++11</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>-c<sp/>option<sp/>ask<sp/>g++<sp/>to<sp/>compile<sp/>the<sp/>source<sp/>files,<sp/>but<sp/>do<sp/>not<sp/>link.</highlight></codeline>
+<codeline><highlight class="normal">OPTFLAGS<sp/>=<sp/>-O3</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">all<sp/>:<sp/>bin/vvm2d</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>@echo<sp/>-n<sp/>&quot;&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bin/vvm2d<sp/><sp/><sp/>:<sp/>main.o<sp/>Declare.o<sp/>Init.o<sp/>Iteration.o<sp/>Outputfile.o<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(OPTFLAGS)<sp/>main.o<sp/>Declare.o<sp/>Init.o<sp/>Outputfile.o<sp/>Iteration.o<sp/>-o<sp/>bin/vvm2d</highlight></codeline>
+<codeline><highlight class="normal">main.o<sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>src/main.cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
+<codeline><highlight class="normal">Declare.o<sp/><sp/><sp/>:<sp/>src/Declare.cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
+<codeline><highlight class="normal">Init.o<sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>src/Init.cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
+<codeline><highlight class="normal">Outputfile.o:<sp/>src/Outputfile.cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
+<codeline><highlight class="normal">Iteration.o<sp/>:<sp/>src/Iteration.cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Using <computeroutput>make</computeroutput> under project root to compile the project and you will the the execution file at <computeroutput>./bin/vvm2d</computeroutput> .</para>
+</listitem><listitem><para>You will be able to use the model&apos;s output by the txt files </para>
+</listitem></orderedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="/home/Aaron/2DVVM/full/0402/model/README.md"/>
+  </compounddef>
+</doxygen>
