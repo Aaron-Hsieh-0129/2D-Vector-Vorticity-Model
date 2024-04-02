@@ -1,4 +1,4 @@
-#include "OutputNC.hpp"
+#include "Output.hpp"
 
 class Iteration {
 public:

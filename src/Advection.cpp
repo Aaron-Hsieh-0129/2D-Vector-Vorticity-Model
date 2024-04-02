@@ -44,7 +44,7 @@ void vvm::Advection_zeta(vvm &model) {
     double F_ik_r = 0., F_ik_l = 0., G_ik_u = 0., G_ik_d = 0.;
     double prhouzeta_px_rho = 0., prhowzeta_pz_rho = 0.;
     double prhouzeta_px_rho_m = 0., prhowzeta_pz_rho_m = 0.;
-    for (int k = 1; k <= model.nz-2; k++) {
+    for (int k = 2; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             U_ik_r = U_zeta(i, k, model);
             U_ik_l = U_zeta(i-1, k, model);
@@ -55,6 +55,7 @@ void vvm::Advection_zeta(vvm &model) {
             W_ik_d = W_zeta(i, k-1, model);
             G_ik_u = W_ik_u * (model.zeta[i][k+1] + model.zeta[i][k]);
             G_ik_d = W_ik_d * (model.zeta[i][k] + model.zeta[i][k-1]);
+            #if defined(AB3)
             if (i != 1 && i != model.nx-2 && k != 2 && k != model.nz-2 && ALPHA != 0.) {
                 U_ik_rr = U_zeta(i+1, k, model);
                 U_ik_ll = U_zeta(i-2, k, model);
@@ -71,6 +72,7 @@ void vvm::Advection_zeta(vvm &model) {
                 G_ik_d += ALPHA/3. * (PLUS(W_ik_d)*(model.zeta[i][k]-model.zeta[i][k-1]) - std::pow(PLUS(W_ik_d), 0.5)*std::pow(PLUS(W_ik_dd), 0.5)*(model.zeta[i][k-1]-model.zeta[i][k-2]) - 
                                       MINUS(W_ik_d)*(model.zeta[i][k]-model.zeta[i][k-1]) - std::pow(MINUS(W_ik_d), 0.5)*std::pow(MINUS(W_ik_u), 0.5)*(model.zeta[i][k+1]-model.zeta[i][k]));
             }
+            #endif
             prhouzeta_px_rho = (F_ik_r - F_ik_l) * model.r2dx / model.rhow[k];
             prhowzeta_pz_rho = (G_ik_u - G_ik_d) * model.r2dz / model.rhow[k];
 
@@ -125,6 +127,7 @@ void vvm::Advection_thermo(double past[][NZ], double now[][NZ], double future[][
             F_ik_l = model.u[i][k] * (now[i][k] + now[i-1][k]);
             G_ik_u = model.rhow[k+1] * model.w[i][k+1] * (now[i][k+1] + now[i][k]);
             G_ik_d = model.rhow[k] * model.w[i][k] * (now[i][k] + now[i][k-1]);
+            #if defined(AB3)
             if (i != 1 && i != model.nx-2 && k != 1 && k != model.nz-2 && ALPHA != 0.) {
                 F_ik_r += -ALPHA/3. * (PLUS(model.u[i+1][k]) * (now[i+1][k] - now[i][k]) - std::pow(PLUS(model.u[i+1][k]), 0.5)*std::pow(PLUS(model.u[i][k]), 0.5)*(now[i][k] - now[i-1][k]) - 
                                        MINUS(model.u[i+1][k]) * (now[i+1][k] - now[i][k]) - std::pow(MINUS(model.u[i+1][k]), 0.5)*std::pow(MINUS(model.u[i+2][k]), 0.5)*(now[i+2][k] - now[i+1][k]));
@@ -135,6 +138,7 @@ void vvm::Advection_thermo(double past[][NZ], double now[][NZ], double future[][
                 G_ik_d += -ALPHA/3. * (model.rhow[k]*PLUS(model.w[i][k]) * (now[i][k] - now[i][k-1]) - std::pow(model.rhow[k]*PLUS(model.w[i][k]), 0.5)*std::pow(model.rhow[k]*PLUS(model.w[i][k-1]), 0.5)*(now[i][k-1] - now[i][k-2]) - 
                                        model.rhow[k]*MINUS(model.w[i][k]) * (now[i][k] - now[i][k-1]) - std::pow(model.rhow[k]*MINUS(model.w[i][k]), 0.5)*std::pow(model.rhow[k+1]*MINUS(model.w[i][k+1]), 0.5)*(now[i][k+1] - now[i][k]));
             }
+            #endif
             pvar_px = (F_ik_r - F_ik_l) * model.r2dx;
             prhowvar_pz_rho = (G_ik_u - G_ik_d) * model.r2dz / model.rhou[k];
 

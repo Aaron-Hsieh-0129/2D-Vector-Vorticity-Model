@@ -13,6 +13,7 @@ vvm::vvm() {
         tvb[k] = 0.;
         pb[k] = pib[k] = 0.;
         qvb[k] = qvsb[k] = 0.;
+        thvb[k] = thvbm[k] = 0.;
 
         #if defined(TROPICALFORCING)
             Q1LS[k] = Q2LS[k] = 0.;
@@ -58,6 +59,8 @@ vvm::vvm() {
         A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
         G = Eigen::SparseMatrix<double>(nx-2, nx-2);
     #endif
+    A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
+    G = Eigen::SparseMatrix<double>(nx-2, nx-2);
     return;
 }
 

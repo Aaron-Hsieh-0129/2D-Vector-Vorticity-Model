@@ -60,7 +60,7 @@ void vvm::MicroPhysics::accretion(vvm &model) {
             #endif
             model.qcp[i][k] = model.qcp[i][k] - arcrdt;
             model.qrp[i][k] = model.qrp[i][k] + arcrdt;
-            model.autoconversion[i][k] = arcrdt;
+            model.accretion[i][k] = arcrdt;
         }
     }
     return;

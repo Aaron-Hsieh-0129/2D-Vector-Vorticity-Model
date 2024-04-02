@@ -1,35 +1,65 @@
 # Two-dimension Vector Vorticity Model
 This is a 2D cloud-resolving model based on vorticity equation
 
+- [Two-dimension Vector Vorticity Model](#two-dimension-vector-vorticity-model)
+  - [Prerequisite](#prerequisite)
+  - [How to Use](#how-to-use)
+    - [If you cannot solve the netcdf\_cxx4 and petsc installation problem.](#if-you-cannot-solve-the-netcdf_cxx4-and-petsc-installation-problem)
+
+## Prerequisite
+- C++ compiler (higher than C++11)
+- netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)
+- PETSc
+- Eigen (this has already be installed in include folder)
+
+The tutorial for installing them can be found [here](./Install_compilers_libraries.md)
+
+- This model will use netcdf-cxx and petsc in default. However
+  - You can turn off the `OUTPUTNC`  and turn on  `OUTPUTTXT` in `./src/Config.hpp` to use txt output without installing `netcdf-cxx4`.
+  - Turn off `PETSC` in `./src/Config.hpp`, the model will change the Poisson solver package to `Eigen`, which means you don't need to install PETSc.
+
 ## How to Use
 1. Clone the project using
     ```
     git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
     ```
 
-2. Using miniconda (or anaconda) to install netcdf_cxx4 library (using the command under terminal)
+2. Install netcdf-cxx, petsc
+   
+   It's a little bit complicated to install libraries for C/C++.
+   
+   I will provide a tutorial for installing C/C++ compiler and the libraries in another file [here](./Install_compilers_libraries). 
+   Here, you don't need to have sudo privilege to install anything.
+
+
+3. Link the installed libraries 
+
+- You need to change the libraries path (netcdf, petsc) to your own path.
+- Change include path in CMakeLists.txt
+  ```CMake
+  include_directories(
+    include
+    </path/to/your/petsc>/include 
+  )
+  ```
+- Change library link path
     ```
-    conda install -c conda-forge libnetcdf
-    conda install -c conda-forge netcdf-cxx4=4.3.1
+    find_library(libncxxPath netcdf_c++4 "<path to your netcdf_c++4>/lib")
+    find_library(libpetscPath petsc "<path to your petsc>/lib")
     ```
 
-3. Find the installed netcdf library under miniconda and use the paths to modify the paths into CMakeLists.txt. Usually, it will be at ``` <your_path_to_miniconda>/lib/netcdf_c++4 ```
-
-    ```
-    find_library(libncxxPath netcdf_c++4 "<your path>")
-    ```
-
-4. You are able to run the model by running the command under the project folder
+1. You are able to run the model by running the command under the project folder
     ```
     sh run.sh
     ```
 
-5. You can change the model settings by  changing the macro flags in the ``` ./src/define.hpp ```
+2. You can change the model settings by  changing the macro flags in the ``` ./src/Config.hpp ```
 
-### If you cannot solve the netcdf_cxx4 problem
-1. Turn off the flag ```OUTPUTNC``` and turn on the flag ```OUTPUTTXT``` in ``` ./src/define.hpp ```
-2. Create a folder called bin under project root by ```mkdir bin```
-3. Create a file called Makefile under the project and the content will be the following
+### If you cannot solve the netcdf_cxx4 and petsc installation problem.
+1. Turn off the flag ```OUTPUTNC``` and turn on the flag ```OUTPUTTXT``` in ``` ./src/Config.hpp ```
+2. Turn off the flag ```PETSC``` in ``` ./src/Config.hpp ``` and this will in turn make the model use the Eigen C++ Solver
+3. Create a folder called bin under project root by ```mkdir bin```
+4. Create a file called Makefile under the project and the content will be the following
     ```Makefile
     # CC and CFLAGS are varilables
     CC = g++
@@ -53,9 +83,5 @@ This is a 2D cloud-resolving model based on vorticity equation
     Iteration.o	: src/Iteration.cpp
                 $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
     ```
-4. Using ```make``` under project root to compile the project and you will the the execution file at ```./bin/vvm2d``` .
-5. You will be able to use the model's output by the txt files
-
-
-## Develope Status
-- This is an ongoing work. The linerized governing equations set is tested and the non-linearized version is not correct now. If you want to use this model, you need to make sure you the macro in ```src/Define.hpp``` is set to be linearized. (2024.02.18)
+5. Using ```make``` under project root to compile the project and you will the the execution file at ```./bin/vvm2d``` .
+6. You will be able to use the model's output by the txt files

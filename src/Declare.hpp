@@ -42,6 +42,7 @@ public:
     // 1D variables
     double thb[NZ], thbm[NZ], thb_zeta[NZ], rhou[NZ], rhow[NZ], pib[NZ], qvb[NZ], qvsb[NZ], tvb[NZ], pb[NZ];
     double xi[NX], uxi[NX];
+    double thvb[NZ], thvbm[NZ];
 
     // 2D variables
     double zetap[NX][NZ], zeta[NX][NZ], zetam[NX][NZ];
@@ -109,6 +110,8 @@ public:
 // Poisson Solver => PoissonSolver.cpp
 // *********************************************************************************
     
+    Eigen::SparseMatrix<double> A;
+    Eigen::SparseMatrix<double> G;
     class PoissonSolver {
     public:
         #ifndef PETSC

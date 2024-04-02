@@ -9,7 +9,13 @@ int main(int argc, char **argv) {
     Output::create_all_directory();
 
     PetscInitialize(&argc, &argv, NULL, NULL);
-    Iteration::TimeMarching(model);
+    #if defined(POISSONTEST)
+        vvm::PoissonSolver PoissonSolver;
+        PoissonSolver.cal_w(model);
+        PoissonSolver.cal_u(model);
+    #else
+        Iteration::TimeMarching(model);
+    #endif
     PetscFinalize();
     return 0;
 }

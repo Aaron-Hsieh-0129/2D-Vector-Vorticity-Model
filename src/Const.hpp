@@ -4,20 +4,18 @@
 #define C_p (1003.5)
 #define Rd (287.)
 #define Cv (C_p - Rd)
-#define PSURF (96500.)
+#ifndef LOADFILE
+    #define PSURF (96500.)
+#endif
 #define P0 (100000.)
 #define Lv (2500000.)
 #define NX (XRANGE / dx)
 #define NZ (ZRANGE / dz)
-
 #if defined(AB3)
     #define ALPHA (1.)
 #else
     #define ALPHA (0.)
 #endif
-
-
-
 
 
 // ***********************************************************************************

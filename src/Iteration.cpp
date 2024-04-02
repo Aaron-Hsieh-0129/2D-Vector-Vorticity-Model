@@ -21,19 +21,41 @@ void Iteration::pth_pt(vvm &model) {
 
 void Iteration::updateMean(vvm &model) {
     #if defined(AB3)
-        for (int k = 0; k < model.nz; k++) model.thbm[k] = model.thb[k];
+        for (int k = 0; k < model.nz; k++) {
+            model.thbm[k] = model.thb[k];
+            model.thvbm[k] = model.thvb[k];
+        }
     #endif
     double tb = 0.;
+    #if defined(WATER)
+        double qvb = 0.;
+    #endif
     for (int k = 1; k < model.nz-1; k++) {
         tb = 0.;
+
+        #if defined(WATER)
+            qvb = 0.;
+        #endif
         
         for (int i = 1; i < model.nx-1; i++) {
             tb += model.thp[i][k];
+            #if defined(WATER)
+                qvb += model.qvp[i][k];
+            #endif
         }
         model.thb[k] = tb / (double) (model.nx - 2.);
+        #if defined(WATER)
+            model.qvb[k] = qvb / (double) (model.nx - 2.);
+            model.thvb[k] = model.thb[k] + 0.61 * model.qvb[k];
+        #else
+            model.thvb[k] = model.thb[k];
+        #endif
     }
-    model.thb[0] = model.thb[1];
-    model.thb[model.nz-1] = model.thb[model.nz-2];
+    model.BoundaryProcess1D_center(model.thb);
+    model.BoundaryProcess1D_center(model.thvb);
+    #if defined(WATER)
+        model.BoundaryProcess1D_center(model.qvb);
+    #endif
 
     for (int k = 1; k < model.nz-1; k++) {
         model.thb_zeta[k] = 0.5 * (model.thb[k-1] + model.thb[k]);
@@ -67,9 +89,13 @@ void Iteration::pqr_pt(vvm &model) {
     double VT_u = 6., VT_d = 6.;
     for (int i = 1; i <= model.nx-2; i++) {
         double rain = -model.rhow[1] * (model.w[i][2] - 0.5*(VT_u + VT_d)) * model.qr[i][1];
-        if (rain < 0) continue;
-        model.qrAcc[i] += rain;
-        model.precip[i] = rain;
+        if (rain < 0) {
+            model.precip[i] = 0.;
+        }
+        else {
+            model.qrAcc[i] += rain;
+            model.precip[i] = rain;
+        }
     }
             
     model.BoundaryProcess2D_center(model.qrp);
@@ -81,12 +107,29 @@ void Iteration::TimeMarching(vvm &model) {
     int n = 0;
     double temp = TIMEEND / DT;
     int nmax = (int) temp;
+    #ifndef PETSC
+        poissonSolver.InitPoissonMatrix(model);
+    #endif
     while (n < nmax) {
         std::cout << n << std::endl;
         // output
         if (n % OUTPUTSTEP == 0 || n == TIMEEND-1) {
             #if defined(OUTPUTNC)
                 Output::output_nc(n, model);
+            #endif
+
+            #if defined(OUTPUTTXT)
+                Output::output_zeta(n, model);
+                Output::output_th(n, model);
+                Output::output_u(n, model);
+                Output::output_w(n, model);
+                #if defined(WATER)
+                    Output::output_qv(n, model);
+                    Output::output_qc(n, model);
+                    Output::output_qr(n, model);
+                    Output::output_precip(n, model);
+                    Output::output_precipAcc(n, model);
+                #endif
             #endif
         }
         n++;
@@ -101,23 +144,17 @@ void Iteration::TimeMarching(vvm &model) {
             }
         #endif
 
+        #if defined(AB3)
         for (int i = 0; i <= model.nx-1; i++) {
             for (int k = 0; k <= model.nz-1; k++) {
                 model.um[i][k] = model.u[i][k];
                 model.wm[i][k] = model.w[i][k];
             }
         }
+        #endif
 
         pzeta_pt(model);
         pth_pt(model);
-        #if defined(STREAMFUNCTION)
-            calpsiuw(model);
-        #else
-            poissonSolver.pubarTop_pt(model);
-            poissonSolver.cal_w(model);
-            poissonSolver.cal_u(model);
-        #endif
-        
         #if defined(WATER)
             pqv_pt(model);
             pqc_pt(model);
@@ -126,6 +163,14 @@ void Iteration::TimeMarching(vvm &model) {
                 model.AddForcing(model);
             #endif
         #endif
+        #if defined(STREAMFUNCTION)
+            poissonSolver.calpsiuw(model);
+        #else
+            poissonSolver.pubarTop_pt(model);
+            poissonSolver.cal_w(model);
+            poissonSolver.cal_u(model);
+        #endif
+        
 
         #if defined(DIFFUSION)
             model.Diffusion(model.zetam, model.zetap, model);
@@ -135,6 +180,15 @@ void Iteration::TimeMarching(vvm &model) {
                 model.Diffusion(model.qcm, model.qcp, model);
                 model.Diffusion(model.qrm, model.qrp, model);
             #endif
+        #endif
+        model.BoundaryProcess2D_westdown(model.zetap);
+        model.BoundaryProcess2D_center(model.thp);
+        model.BoundaryProcess2D_westdown(model.w);
+        model.BoundaryProcess2D_center(model.u);
+        #if defined(WATER)
+            model.BoundaryProcess2D_center(model.qvp);
+            model.BoundaryProcess2D_center(model.qcp);
+            model.BoundaryProcess2D_center(model.qrp);
         #endif
 
         #if defined(WATER)
@@ -149,6 +203,16 @@ void Iteration::TimeMarching(vvm &model) {
             microphysics.NegativeValueProcess(model.qrp);
         #endif
 
+        model.BoundaryProcess2D_westdown(model.zetap);
+        model.BoundaryProcess2D_center(model.thp);
+        model.BoundaryProcess2D_westdown(model.w);
+        model.BoundaryProcess2D_center(model.u);
+        #if defined(WATER)
+            model.BoundaryProcess2D_center(model.qvp);
+            model.BoundaryProcess2D_center(model.qcp);
+            model.BoundaryProcess2D_center(model.qrp);
+        #endif
+
         #ifndef AB3
             #if defined(TIMEFILTER)
                 model.TimeFilter(model.zetam, model.zeta, model.zetap, model);
@@ -160,6 +224,7 @@ void Iteration::TimeMarching(vvm &model) {
                 #endif
             #endif
         #endif
+
 
         updateMean(model);
 

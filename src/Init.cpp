@@ -90,6 +90,11 @@ void Init::Init1d(vvm &model) {
 
     for (int k = 0; k < model.nz; k++) {
         model.thbm[k] = model.thb[k];
+        #if defined(WATER)
+            model.thvb[k] = model.thvbm[k] = model.thb[k] + 0.61 * model.qvb[k];
+        #else
+            model.thvb[k] = model.thvbm[k] = model.thb[k];
+        #endif
     }
     return;
 }
@@ -268,6 +273,7 @@ void Init::RandomPerturbation(vvm &model, int t) {
 
     for (int i = 1; i < model.nx-1; i++) {
         for (int k = 1; k < model.nz-1; k++) {
+            // TODO: Change it to physical parameter
             if (k <= model.nz / 15) {
                 double random_noise = 0.;
                 do {

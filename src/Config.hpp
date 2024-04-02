@@ -3,19 +3,21 @@
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
 #define DT (1.)
-#define TIMEEND (300000.)
+#define TIMEEND (10000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0325/6Q16Q2_dt1_diff100_VT6/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0402/Water_diff250_VT6/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
+// #define OUTPUTTXT
 
 #define PETSC
-// #define AB3
+// #define AB3 // Don't turn this on. Debugging!!!!!
 #define DIFFUSION
-#define Kx (100.)
-#define Kz (100.)
+#define Kx (250.)
+#define Kz (250.)
 #define POISSONPARAM (0.)
-#define POISSONPARAMU (0.)
+#define POISSONPARAMU (1E-8)
+
 #ifndef AB3
     #define TIMEFILTER
 #endif
@@ -24,13 +26,15 @@
 // #define DRY
 // #define RHO1
 #define WATER
-#define TROPICALFORCING
-#define ADDFORCINGTIME (1200.)
-#define RADIATIONCOOLING
-#define LOADFILE
+// #define TROPICALFORCING
+// #define ADDFORCINGTIME (1200.)
+// #define RADIATIONCOOLING
+// #define LOADFILE
 // #define STREAMFUNCTION
 
 #define VTconst
+
+// #define POISSONTEST
 
 // ***********************************************************************************
 // Documentation Part
