@@ -46,7 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/ModelDesign';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Class" href="class2DVVM.html" />
+    <link rel="next" title="Class" href="class.html" />
     <link rel="prev" title="Tutorials for Installing C/C++ compiler and libraries" href="install_compilers_libraries.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -139,9 +139,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Model Design</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="class2DVVM.html">Class</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="class/vvm.html">vvm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/Init.html">Init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/Iteration.html">Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/Output.html">Output</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -305,23 +309,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Model Design</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equation-set">Governing Equation Set</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-model-works">How this model works</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for thermo-related variables</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for vorticity</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize w</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagnize-u">Solving 1D Poisson equation to diagnize u</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-method">Numerical Method</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -343,7 +342,7 @@ document.write(`
     \frac{\partial q_v}{\partial t} &amp;= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}}\\
     \frac{\partial q_c}{\partial t} &amp;= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}}\\
     \frac{\partial q_r}{\partial t} &amp;= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}}\\
-    \frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
+    \bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
     u_{top} &amp;= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x}\\
     \frac{\partial^2 \chi}{\partial x^2} &amp;= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z}\\
     \frac{\partial \bar{u}^{xy}}{\partial t} &amp;= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \\
@@ -364,6 +363,47 @@ document.write(`
 <section id="grid-setting">
 <h2>Grid Setting<a class="headerlink" href="#grid-setting" title="Permalink to this heading">#</a></h2>
 <img alt="../_images/grid.png" src="../_images/grid.png" />
+</section>
+<section id="boundary-condition">
+<h2>Boundary Condition<a class="headerlink" href="#boundary-condition" title="Permalink to this heading">#</a></h2>
+<ul>
+<li><p>Periodic boundary condition is adopted in x-direction.</p></li>
+<li><p>Rigid boundary condition is given in z-direction.</p></li>
+<li><dl>
+<dt>The boundary condition for <span class="math notranslate nohighlight">\(\zeta,\ \theta,\ q_v,\ q_c,\ q_r\)</span> are given as below:</dt><dd><ul>
+<li><p>For x-direction:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+   \zeta_{i,0} &amp;= \zeta_{i,nz-1};\ \zeta_{i,nz-1} = \zeta_{i,1}\\
+   w_{i,0} &amp;= w_{i,nz-1};\ w_{i,nz-1} = w_{i,1}\\
+   u_{i,0} &amp;= u_{i,nz-1};\ u_{i,nz-1} = u_{i,1}\\
+   \theta_{i,0} &amp;= \theta_{i,nz-1};\ \theta_{i,nz-1} = \theta_{i,1}\\
+   q_{v,i,0} &amp;= q_{v,i,nz-1};\ q_{v,i,nz-1} = q_{v,i,1}\\
+   q_{c,i,0} &amp;= q_{c,i,nz-1};\ q_{c,i,nz-1} = q_{c,i,1}\\
+   q_{r,i,0} &amp;= q_{r,i,nz-1};\ q_{r,i,nz-1} = q_{r,i,1}\\
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+</li>
+<li><p>For z-direction:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+   \zeta_{i,0} &amp;= \zeta_{i,1} = \zeta_{i,nz-1} = 0\\
+   w_{i,0} &amp;= w_{i,1} = w_{i,nz-1} = 0\\
+   u_{i,0} &amp;= u_{i,1}, u_{i,nz-1} = u_{i,nz-2}\\
+   \theta_{i,0} &amp;= \theta_{i,1}, \theta_{i,nz-1} = \theta_{i,nz-2}\\
+   q_{v,i,0} &amp;= q_{v,i,1}, q_{v,i,nz-1} = q_{v,i,nz-2}\\
+   q_{c,i,0} &amp;= q_{c,i,1}, q_{c,i,nz-1} = q_{c,i,nz-2}\\
+   q_{r,i,0} &amp;= q_{r,i,1}, q_{r,i,nz-1} = q_{r,i,nz-2}\\
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </section>
 <section id="discretization-of-the-governing-equation-set">
 <h2>Discretization of the Governing Equation Set<a class="headerlink" href="#discretization-of-the-governing-equation-set" title="Permalink to this heading">#</a></h2>
@@ -389,20 +429,152 @@ F_u &amp;= W_{i,k}(\zeta_{i,k+1} - \zeta_{i,k}),\ F_d = W_{i,k-1}(\zeta_{i,k} - 
 U_{i,k} &amp;= 0.25 \times (\overline{\rho}_k(u_{i+1,k} + u_{i,k}) + \overline{\rho}_{k-1}(u_{i+1,k-1} + u_{u,k-1}) )\end{split}\]</div>
 </section>
 <section id="solving-2d-poisson-equation-to-diagnize-w">
-<h3>Solving 2D Poisson equation to diagnize w<a class="headerlink" href="#solving-2d-poisson-equation-to-diagnize-w" title="Permalink to this heading">#</a></h3>
+<h3>Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span><a class="headerlink" href="#solving-2d-poisson-equation-to-diagnize-w" title="Permalink to this heading">#</a></h3>
 <div class="math notranslate nohighlight">
-\[\begin{split}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\\end{split}\]</div>
+\[\begin{split}\bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
+\Rightarrow \overline{\rho}^2\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 \bar{\rho}w}{\partial x^{2}} + \bar{\rho}\frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\overline{\rho_{w,k}}^2}{dx}(\zeta_{i+1,k}-\zeta_{i,k}) = &amp;\frac{1}{dx^2}(\overline{\rho_{w,k}}w_{i+1,k} - 2\overline{\rho_{w,k}}w_{i,k} + \overline{\rho_{w,k}}w_{i-1,k})\\ +
+  &amp;\frac{1}{dz^2}(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}}\overline{\rho_{w,k}}w_{i,k+1} - (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) \overline{\rho_{w,k}}w_{i,k} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}\overline{\rho_{w,k-1}}w_{i,k-1}    )\end{split}\]</div>
+<ul class="simple">
+<li><p>The discretization form can be written into matrix form <span class="math notranslate nohighlight">\(A\vec{w} = \vec{b}\)</span>.</p></li>
+<li><p>First, the boundary condition should be given. The periodic boundary is adopted in x-direction and the rigid boundary condition is given in z-direction.</p></li>
+<li><p>Assume there are n grids in x-direction, m grids in z-direction.</p>
+<ul>
+<li><p>For x-direction: <span class="math notranslate nohighlight">\(w_{0,k} = w_{nz-2,k},\ w_{nz-1,k} = w_{1,k}\)</span>.</p></li>
+<li><p>For z-direction: <span class="math notranslate nohighlight">\(w_{i,0} = w_{i,nz-1} = 0\)</span> are boundaries, and <span class="math notranslate nohighlight">\(w_{i,1} = 0\)</span> is physical ground and prescribed to be 0.</p></li>
+</ul>
+</li>
+<li><p>The dimension of A would be <span class="math notranslate nohighlight">\(((nx-2)(nz-3),\ (nx-2)(nz-3))\)</span>, and <span class="math notranslate nohighlight">\(\vec{w},\ \vec{b}\)</span> would be ((nx-2)*(nz-3)).</p>
+<ul>
+<li><p>The size of matrix D, E, and F would be <span class="math notranslate nohighlight">\((nx-2, nz-3)\)</span>.</p></li>
+</ul>
+</li>
+<li><p>In this model, dx = dz. The matrix A can be written as below:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+A =
+\begin{bmatrix}
+        ~D &amp; E &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        F &amp; ~D &amp; E &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        ~0 &amp; F &amp; ~D &amp; E &amp; ~0 &amp; \ldots &amp; ~0 \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+        ~0 &amp; \ldots &amp; ~0 &amp; F &amp; ~D &amp; E &amp; ~0 \\
+        ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; F &amp; ~D &amp; E \\
+        ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; F &amp; ~D
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+D =
+\begin{bmatrix}
+        -2-(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~1 \\
+        1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})&amp; 1 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})&amp; 1 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+        ~0 &amp; \ldots &amp; ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 &amp; ~0 \\
+        ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 \\
+        ~1 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; -2-(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+E =
+\begin{bmatrix}
+    ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+    ~0 &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 \\
+    ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 \\
+    ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}}
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+ F =
+ \begin{bmatrix}
+     ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+     ~0 &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 \\
+     ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 \\
+     ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}
+ \end{bmatrix}
+ \end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{w} = \begin{bmatrix}
+         w_{1,2} \\
+         w_{2,2} \\
+         \vdots \\
+         w_{nx-2,2} \\
+         w_{1,3} \\
+         w_{2,3} \\
+         \vdots \\
+         w_{nx-2,3} \\
+         \vdots \\
+         w_{1,nz-2} \\
+         w_{2,nz-2} \\
+         \vdots \\
+         w_{nx-2,nz-2} \\
+ \end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{b} = dx\begin{bmatrix}
+         \overline{\rho_{w,2}}^2(\zeta_{2,2}-\zeta_{1,2}) \\
+         \overline{\rho_{w,2}}^2(\zeta_{3,2}-\zeta_{2,2}) \\
+         \vdots \\
+         \overline{\rho_{w,2}}^2(\zeta_{nx-2,2}-\zeta_{nx-3,2}) \\
+         \overline{\rho_{w,3}}^2(\zeta_{2,3}-\zeta_{1,3}) \\
+         \overline{\rho_{w,3}}^2(\zeta_{3,3}-\zeta_{2,3}) \\
+         \vdots \\
+         \overline{\rho_{w,3}}^2(\zeta_{nx-2,3}-\zeta_{nx-3,3}) \\
+         \vdots \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{2,nz-2}-\zeta_{1,nz-2}) \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{3,nz-2}-\zeta_{2,nz-2}) \\
+         \vdots \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{nx-2,nz-2}-\zeta_{nx-3,nz-2}) \\
+ \end{bmatrix}\end{split}\]</div>
 </section>
-<section id="solving-1d-poisson-equation-to-diagnize-u">
-<h3>Solving 1D Poisson equation to diagnize u<a class="headerlink" href="#solving-1d-poisson-equation-to-diagnize-u" title="Permalink to this heading">#</a></h3>
+<section id="solving-1d-poisson-equation-to-diagonize-u">
+<h3>Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span><a class="headerlink" href="#solving-1d-poisson-equation-to-diagonize-u" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\frac{\partial^2 \chi}{\partial x^2} = -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z}\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{1}{dx^2}(\chi_{i+1,nz-2}-2\chi_{i,nz-2}+\chi_{i,nz-2}) = -\frac{1}{dz}(\frac{1}{\overline{\rho_{u,nz-2}}}(0 - \overline{\rho_{w,nz-2}} w_{i,nz-2}))\]</div>
+<ul class="simple">
+<li><p>The discretization form can be written into matrix form <span class="math notranslate nohighlight">\(G\vec{\chi} = \vec{h}\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+G =
+\begin{bmatrix}
+         ~-2 &amp; 1 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~1 \\
+         1 &amp; ~-2 &amp; 1 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+         ~0 &amp; 1 &amp; ~-2 &amp; 1 &amp; ~0 &amp; \ldots &amp; ~0 \\
+         \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+         ~0 &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2 &amp; 1 &amp; ~0 \\
+         ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2 &amp; 1 \\
+         ~1 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{\chi} = \begin{bmatrix}
+         \chi_{1,nz-2} \\
+         \chi_{2,nz-2} \\
+         \vdots \\
+         \chi_{nx-2,nz-2} \\
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{h} = dx\begin{bmatrix}
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{1,nz-2} \\
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{2,nz-2} \\
+         \vdots \\
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{nx-2,nz-2} \\
+\end{bmatrix}\end{split}\]</div>
 </section>
 </section>
-</section>
-<section id="numerical-method">
-<h1>Numerical Method<a class="headerlink" href="#numerical-method" title="Permalink to this heading">#</a></h1>
-</section>
-<section id="boundary-condition">
-<h1>Boundary Condition<a class="headerlink" href="#boundary-condition" title="Permalink to this heading">#</a></h1>
 </section>
 
 
@@ -426,7 +598,7 @@ U_{i,k} &amp;= 0.25 \times (\overline{\rho}_k(u_{i+1,k} + u_{i,k}) + \overline{\
       </div>
     </a>
     <a class="right-next"
-       href="class2DVVM.html"
+       href="class.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -449,23 +621,18 @@ U_{i,k} &amp;= 0.25 \times (\overline{\rho}_k(u_{i+1,k} + u_{i,k}) + \overline{\
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Model Design</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equation-set">Governing Equation Set</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-model-works">How this model works</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for thermo-related variables</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for vorticity</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize w</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagnize-u">Solving 1D Poisson equation to diagnize u</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-method">Numerical Method</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>

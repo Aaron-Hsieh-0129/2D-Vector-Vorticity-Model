@@ -130,6 +130,7 @@
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="35" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="35" bodyend="-1"/>
         <referencedby refid="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" compoundref="MicroPhysics_8cpp" startline="48" endline="67">vvm::MicroPhysics::accretion</referencedby>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5" compoundref="Advection_8cpp" startline="176" endline="250">Advection_qrVT</referencedby>
         <referencedby refid="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491" compoundref="Advection_8cpp" startline="120" endline="173">Advection_thermo</referencedby>
         <referencedby refid="classvvm_1aec9080346387072f75c1e5907a5f9964" compoundref="Advection_8cpp" startline="41" endline="118">Advection_zeta</referencedby>
@@ -144,6 +145,7 @@
         <referencedby refid="classOutput_1a29f4af25257a72a15b771089d806fbb3" compoundref="Output_8cpp" startline="32" endline="87">Output::output_nc</referencedby>
         <referencedby refid="classIteration_1ac30ea16c9e339a59c78637fa0753f775" compoundref="Iteration_8cpp" startline="84" endline="103">Iteration::pqr_pt</referencedby>
         <referencedby refid="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab" compoundref="PoissonSolver_8cpp" startline="535" endline="547">vvm::PoissonSolver::pubarTop_pt</referencedby>
+        <referencedby refid="classInit_1a83424c08602c8f29653a28361be9c152" compoundref="Init_8cpp" startline="264" endline="291">Init::RandomPerturbation</referencedby>
         <referencedby refid="classvvm_1ab10c85732f7f7256133cf53f099232c2" compoundref="NumericalProcess_8cpp" startline="13" endline="20">TimeFilter</referencedby>
         <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
         <referencedby refid="classIteration_1a8836fdf87b17b4bc628fd77db64c6af3" compoundref="Iteration_8cpp" startline="22" endline="66">Iteration::updateMean</referencedby>
@@ -165,6 +167,7 @@
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="36" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="36" bodyend="-1"/>
         <referencedby refid="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" compoundref="MicroPhysics_8cpp" startline="48" endline="67">vvm::MicroPhysics::accretion</referencedby>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5" compoundref="Advection_8cpp" startline="176" endline="250">Advection_qrVT</referencedby>
         <referencedby refid="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491" compoundref="Advection_8cpp" startline="120" endline="173">Advection_thermo</referencedby>
         <referencedby refid="classvvm_1aec9080346387072f75c1e5907a5f9964" compoundref="Advection_8cpp" startline="41" endline="118">Advection_zeta</referencedby>
@@ -181,6 +184,7 @@
         <referencedby refid="classOutput_1a29f4af25257a72a15b771089d806fbb3" compoundref="Output_8cpp" startline="32" endline="87">Output::output_nc</referencedby>
         <referencedby refid="classOutput_1ac9377ae1019ac4ee88877197685d19fe" compoundref="Output_8cpp" startline="8" endline="27">Output::printInit</referencedby>
         <referencedby refid="classvvm_1_1PoissonSolver_1a47ac6e26a9dde6ed72a178dcb92d3bab" compoundref="PoissonSolver_8cpp" startline="535" endline="547">vvm::PoissonSolver::pubarTop_pt</referencedby>
+        <referencedby refid="classInit_1a83424c08602c8f29653a28361be9c152" compoundref="Init_8cpp" startline="264" endline="291">Init::RandomPerturbation</referencedby>
         <referencedby refid="classvvm_1ab10c85732f7f7256133cf53f099232c2" compoundref="NumericalProcess_8cpp" startline="13" endline="20">TimeFilter</referencedby>
         <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
         <referencedby refid="classIteration_1a8836fdf87b17b4bc628fd77db64c6af3" compoundref="Iteration_8cpp" startline="22" endline="66">Iteration::updateMean</referencedby>
@@ -202,6 +206,7 @@
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="37" column="12" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="37" bodyend="-1"/>
         <referencedby refid="classvvm_1_1MicroPhysics_1a124b68c95137705e772e933f3ff388c9" compoundref="MicroPhysics_8cpp" startline="48" endline="67">vvm::MicroPhysics::accretion</referencedby>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5" compoundref="Advection_8cpp" startline="176" endline="250">Advection_qrVT</referencedby>
         <referencedby refid="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491" compoundref="Advection_8cpp" startline="120" endline="173">Advection_thermo</referencedby>
         <referencedby refid="classvvm_1aec9080346387072f75c1e5907a5f9964" compoundref="Advection_8cpp" startline="41" endline="118">Advection_zeta</referencedby>
@@ -610,6 +615,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="49" column="12" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="49" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f" compoundref="MicroPhysics_8cpp" startline="5" endline="23">vvm::MicroPhysics::condensation</referencedby>
         <referencedby refid="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65" compoundref="MicroPhysics_8cpp" startline="70" endline="101">vvm::MicroPhysics::evaporation</referencedby>
         <referencedby refid="classIteration_1a7d5499ac76ee826bdda0184feb1fef5f" compoundref="Iteration_8cpp" startline="16" endline="20">Iteration::pth_pt</referencedby>
@@ -750,6 +756,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="57" column="16" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="57" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1_1MicroPhysics_1a0e14e9f52aabebc378538378e39da16f" compoundref="MicroPhysics_8cpp" startline="5" endline="23">vvm::MicroPhysics::condensation</referencedby>
         <referencedby refid="classvvm_1_1MicroPhysics_1aaaad239d8aa4db479cde21ce4ce12a65" compoundref="MicroPhysics_8cpp" startline="70" endline="101">vvm::MicroPhysics::evaporation</referencedby>
         <referencedby refid="classIteration_1ab92cc262ad139b14958847277b88d017" compoundref="Iteration_8cpp" startline="69" endline="75">Iteration::pqv_pt</referencedby>
@@ -1029,6 +1036,75 @@
         <referencedby refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" compoundref="PoissonSolver_8cpp" startline="366" endline="533">vvm::PoissonSolver::cal_u</referencedby>
         <referencedby refid="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" compoundref="Declare_8cpp" startline="4" endline="65">vvm</referencedby>
       </memberdef>
+      <memberdef kind="variable" id="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double vvm::Q1LS[NZ]</definition>
+        <argsstring>[NZ]</argsstring>
+        <name>Q1LS</name>
+        <qualifiedname>vvm::Q1LS</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="170" column="16" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="170" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
+        <referencedby refid="classInit_1a18f209b227e2b6894dcd45969eec4339" compoundref="Init_8cpp" startline="217" endline="261">Init::LoadFile</referencedby>
+        <referencedby refid="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" compoundref="Declare_8cpp" startline="4" endline="65">vvm</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="classvvm_1ab25ae9e0821f275766879a4b40d806a1" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double vvm::Q2LS[NZ]</definition>
+        <argsstring>[NZ]</argsstring>
+        <name>Q2LS</name>
+        <qualifiedname>vvm::Q2LS</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="170" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="170" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
+        <referencedby refid="classInit_1a18f209b227e2b6894dcd45969eec4339" compoundref="Init_8cpp" startline="217" endline="261">Init::LoadFile</referencedby>
+        <referencedby refid="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" compoundref="Declare_8cpp" startline="4" endline="65">vvm</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double vvm::init_th_forcing[NX][NZ]</definition>
+        <argsstring>[NX][NZ]</argsstring>
+        <name>init_th_forcing</name>
+        <qualifiedname>vvm::init_th_forcing</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="171" column="16" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="171" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
+        <referencedby refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" compoundref="Init_8cpp" startline="102" endline="183">Init::Init2d</referencedby>
+        <referencedby refid="classInit_1a83424c08602c8f29653a28361be9c152" compoundref="Init_8cpp" startline="264" endline="291">Init::RandomPerturbation</referencedby>
+        <referencedby refid="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" compoundref="Declare_8cpp" startline="4" endline="65">vvm</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="classvvm_1ac062ac68687e7171fd71da3236b2e6a9" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool vvm::status_for_adding_forcing</definition>
+        <argsstring></argsstring>
+        <name>status_for_adding_forcing</name>
+        <qualifiedname>vvm::status_for_adding_forcing</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="172" column="14" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="172" bodyend="-1"/>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
       <memberdef kind="function" id="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -1050,6 +1126,7 @@
         <references refid="classvvm_1aacc9ca191f0c94b063ad84e44951eb69" compoundref="Declare_8hpp" startline="60">autoconversion</references>
         <references refid="classvvm_1ae1a38973a7dfe7577f47cc41fc5e66b0" compoundref="Declare_8hpp" startline="60">evaporation</references>
         <references refid="classvvm_1a2b0b1a4ac6932d797805238e973cc01d" compoundref="Declare_8hpp" startline="114">G</references>
+        <references refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" compoundref="Declare_8hpp" startline="171">init_th_forcing</references>
         <references refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" compoundref="Const_8hpp" startline="12">NX</references>
         <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">nx</references>
         <references refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" compoundref="Const_8hpp" startline="13">NZ</references>
@@ -1057,6 +1134,8 @@
         <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">pb</references>
         <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">pib</references>
         <references refid="classvvm_1a63095564c677502c49dae2d69d24e317" compoundref="Declare_8hpp" startline="62">precip</references>
+        <references refid="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" compoundref="Declare_8hpp" startline="170">Q1LS</references>
+        <references refid="classvvm_1ab25ae9e0821f275766879a4b40d806a1" compoundref="Declare_8hpp" startline="170">Q2LS</references>
         <references refid="classvvm_1af7d6790d6bca3b09918e06fb7362220e" compoundref="Declare_8hpp" startline="58">qc</references>
         <references refid="classvvm_1a505a8fd79cd2fc55460235310e6ff1d3" compoundref="Declare_8hpp" startline="58">qcm</references>
         <references refid="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f" compoundref="Declare_8hpp" startline="58">qcp</references>
@@ -1157,12 +1236,14 @@
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="77" column="17" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Boundary.cpp" bodystart="9" bodyend="19"/>
         <references refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" compoundref="Const_8hpp" startline="12">NX</references>
         <references refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" compoundref="Const_8hpp" startline="13">NZ</references>
+        <referencedby refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" compoundref="AddForcing_8cpp" startline="7" endline="27">AddForcing</referencedby>
         <referencedby refid="classvvm_1_1PoissonSolver_1a741f59b97f794a79a15fd919b3b2501e" compoundref="PoissonSolver_8cpp" startline="366" endline="533">vvm::PoissonSolver::cal_u</referencedby>
         <referencedby refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" compoundref="Init_8cpp" startline="102" endline="183">Init::Init2d</referencedby>
         <referencedby refid="classIteration_1a6b9d511fea92c2569c8da11c1a86a066" compoundref="Iteration_8cpp" startline="77" endline="82">Iteration::pqc_pt</referencedby>
         <referencedby refid="classIteration_1ac30ea16c9e339a59c78637fa0753f775" compoundref="Iteration_8cpp" startline="84" endline="103">Iteration::pqr_pt</referencedby>
         <referencedby refid="classIteration_1ab92cc262ad139b14958847277b88d017" compoundref="Iteration_8cpp" startline="69" endline="75">Iteration::pqv_pt</referencedby>
         <referencedby refid="classIteration_1a7d5499ac76ee826bdda0184feb1fef5f" compoundref="Iteration_8cpp" startline="16" endline="20">Iteration::pth_pt</referencedby>
+        <referencedby refid="classInit_1a83424c08602c8f29653a28361be9c152" compoundref="Init_8cpp" startline="264" endline="291">Init::RandomPerturbation</referencedby>
         <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
       </memberdef>
       <memberdef kind="function" id="classvvm_1a88f21d908dca06f5c725da83a36caf96" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -1539,6 +1620,37 @@
         <references refid="Config_8hpp_1acdf4e08f4cada9c7bb2693c6b2e4c2e2" compoundref="Config_8hpp" startline="24">TIMETS</references>
         <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
       </memberdef>
+      <memberdef kind="function" id="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::AddForcing</definition>
+        <argsstring>(vvm &amp;model)</argsstring>
+        <name>AddForcing</name>
+        <qualifiedname>vvm::AddForcing</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="164" column="25" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/AddForcing.cpp" bodystart="7" bodyend="27"/>
+        <references refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" compoundref="Boundary_8cpp" startline="9" endline="19">BoundaryProcess2D_center</references>
+        <references refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" compoundref="Declare_8hpp" startline="37">d2t</references>
+        <references refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" compoundref="Config_8hpp" startline="5">DT</references>
+        <references refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" compoundref="Declare_8hpp" startline="171">init_th_forcing</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">nz</references>
+        <references refid="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" compoundref="Declare_8hpp" startline="170">Q1LS</references>
+        <references refid="classvvm_1ab25ae9e0821f275766879a4b40d806a1" compoundref="Declare_8hpp" startline="170">Q2LS</references>
+        <references refid="classvvm_1ab2102a76763307034e6e6a65bf2716af" compoundref="Declare_8hpp" startline="57">qvp</references>
+        <references refid="classvvm_1ac062ac68687e7171fd71da3236b2e6a9" compoundref="Declare_8hpp" startline="172">status_for_adding_forcing</references>
+        <references refid="classvvm_1a3b3860b805e1f0e21f0834537a1d4feb" compoundref="Declare_8hpp" startline="49">thp</references>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
+      </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
@@ -1548,6 +1660,9 @@
     <collaborationgraph>
       <node id="4">
         <label>SparseMatrix&lt; double &gt;</label>
+      </node>
+      <node id="5">
+        <label>bool</label>
       </node>
       <node id="2">
         <label>double</label>
@@ -1559,16 +1674,16 @@
         <label>vvm</label>
         <link refid="classvvm"/>
         <childnode refid="2" relation="usage">
+          <edgelabel>+Q1LS</edgelabel>
+          <edgelabel>+Q2LS</edgelabel>
           <edgelabel>+accretion</edgelabel>
           <edgelabel>+autoconversion</edgelabel>
           <edgelabel>+d2t</edgelabel>
           <edgelabel>+evaporation</edgelabel>
+          <edgelabel>+init_th_forcing</edgelabel>
           <edgelabel>+pb</edgelabel>
           <edgelabel>+pib</edgelabel>
           <edgelabel>+precip</edgelabel>
-          <edgelabel>+qc</edgelabel>
-          <edgelabel>+qcm</edgelabel>
-          <edgelabel>+qcp</edgelabel>
           <edgelabel>...</edgelabel>
         </childnode>
         <childnode refid="3" relation="usage">
@@ -1579,12 +1694,16 @@
           <edgelabel>+A</edgelabel>
           <edgelabel>+G</edgelabel>
         </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>+status_for_adding_forcing</edgelabel>
+        </childnode>
       </node>
     </collaborationgraph>
     <location file="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" line="22" column="1" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Declare.hpp" bodystart="22" bodyend="174"/>
     <listofallmembers>
       <member refid="classvvm_1ac87ca230e4801653418101e80a986b5b" prot="public" virt="non-virtual"><scope>vvm</scope><name>A</name></member>
       <member refid="classvvm_1ad6e341d145021d01fd4ebca79787240e" prot="public" virt="non-virtual"><scope>vvm</scope><name>accretion</name></member>
+      <member refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" prot="public" virt="non-virtual"><scope>vvm</scope><name>AddForcing</name></member>
       <member refid="classvvm_1a5a6a59d52a4562766f6c57429cae2cb5" prot="public" virt="non-virtual"><scope>vvm</scope><name>Advection_qrVT</name></member>
       <member refid="classvvm_1a7a376a97df688fa6a19e5f6d9fc02491" prot="public" virt="non-virtual"><scope>vvm</scope><name>Advection_thermo</name></member>
       <member refid="classvvm_1aec9080346387072f75c1e5907a5f9964" prot="public" virt="non-virtual"><scope>vvm</scope><name>Advection_zeta</name></member>
@@ -1597,11 +1716,14 @@
       <member refid="classvvm_1ac6e47dca620f5b32dd6b0d1be432a347" prot="public" virt="non-virtual"><scope>vvm</scope><name>Diffusion</name></member>
       <member refid="classvvm_1ae1a38973a7dfe7577f47cc41fc5e66b0" prot="public" virt="non-virtual"><scope>vvm</scope><name>evaporation</name></member>
       <member refid="classvvm_1a2b0b1a4ac6932d797805238e973cc01d" prot="public" virt="non-virtual"><scope>vvm</scope><name>G</name></member>
+      <member refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" prot="public" virt="non-virtual"><scope>vvm</scope><name>init_th_forcing</name></member>
       <member refid="classvvm_1a54019773003b18a98f267df45ee230bb" prot="public" virt="non-virtual"><scope>vvm</scope><name>nx</name></member>
       <member refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" prot="public" virt="non-virtual"><scope>vvm</scope><name>nz</name></member>
       <member refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" prot="public" virt="non-virtual"><scope>vvm</scope><name>pb</name></member>
       <member refid="classvvm_1af3b16daf7541428d52fabed88807430c" prot="public" virt="non-virtual"><scope>vvm</scope><name>pib</name></member>
       <member refid="classvvm_1a63095564c677502c49dae2d69d24e317" prot="public" virt="non-virtual"><scope>vvm</scope><name>precip</name></member>
+      <member refid="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" prot="public" virt="non-virtual"><scope>vvm</scope><name>Q1LS</name></member>
+      <member refid="classvvm_1ab25ae9e0821f275766879a4b40d806a1" prot="public" virt="non-virtual"><scope>vvm</scope><name>Q2LS</name></member>
       <member refid="classvvm_1af7d6790d6bca3b09918e06fb7362220e" prot="public" virt="non-virtual"><scope>vvm</scope><name>qc</name></member>
       <member refid="classvvm_1a505a8fd79cd2fc55460235310e6ff1d3" prot="public" virt="non-virtual"><scope>vvm</scope><name>qcm</name></member>
       <member refid="classvvm_1a8fb6dd58f0dae8301f414f4d2fccf60f" prot="public" virt="non-virtual"><scope>vvm</scope><name>qcp</name></member>
@@ -1622,6 +1744,7 @@
       <member refid="classvvm_1af7179d7dab6b6488a024db42b47f47e8" prot="public" virt="non-virtual"><scope>vvm</scope><name>rdz2</name></member>
       <member refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" prot="public" virt="non-virtual"><scope>vvm</scope><name>rhou</name></member>
       <member refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" prot="public" virt="non-virtual"><scope>vvm</scope><name>rhow</name></member>
+      <member refid="classvvm_1ac062ac68687e7171fd71da3236b2e6a9" prot="public" virt="non-virtual"><scope>vvm</scope><name>status_for_adding_forcing</name></member>
       <member refid="classvvm_1add34568af43cf188bec69d61cc9c5bee" prot="public" virt="non-virtual"><scope>vvm</scope><name>th</name></member>
       <member refid="classvvm_1a7725cca3f943224b5878255f97a5bcfd" prot="public" virt="non-virtual"><scope>vvm</scope><name>thb</name></member>
       <member refid="classvvm_1a4af2d0685fff1ca80719520000435a72" prot="public" virt="non-virtual"><scope>vvm</scope><name>thb_zeta</name></member>

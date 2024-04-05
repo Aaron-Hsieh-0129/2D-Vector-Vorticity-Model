@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="Config_8hpp.html" target="_top" xlink:title="Here are the parameters for the model that you can tune to fit your needs.">
+<g id="a_Node000002"><a xlink:href="Config_8hpp.html" target="_top" xlink:title="Here are the parameters for the model that you can tune them to fit your needs.">
 <polygon fill="white" stroke="#666666" points="100.09,-20 35.39,-20 35.39,0 100.09,0 100.09,-20"/>
 <text text-anchor="middle" x="67.74" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config.hpp</text>
 </a>

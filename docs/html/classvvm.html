@@ -106,7 +106,7 @@ $(function(){initNavTree('classvvm.html',''); initResizable(); });
 <div class="dynheader">
 Collaboration diagram for vvm:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classvvm__coll__graph.svg" width="243" height="267"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classvvm__coll__graph.svg" width="399" height="267"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -141,6 +141,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ac6e47dca620f5b32dd6b0d1be432a347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab10c85732f7f7256133cf53f099232c2" id="r_ab10c85732f7f7256133cf53f099232c2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab10c85732f7f7256133cf53f099232c2">TimeFilter</a> (double previous[][<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>], double now[][<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>], double future[][<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>], <a class="el" href="classvvm.html">vvm</a> &amp;<a class="el" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>)</td></tr>
 <tr class="separator:ab10c85732f7f7256133cf53f099232c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae95d349fc79929ad9bd5b95e3cd97c0b" id="r_ae95d349fc79929ad9bd5b95e3cd97c0b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae95d349fc79929ad9bd5b95e3cd97c0b">AddForcing</a> (<a class="el" href="classvvm.html">vvm</a> &amp;<a class="el" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>)</td></tr>
+<tr class="separator:ae95d349fc79929ad9bd5b95e3cd97c0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -257,6 +259,14 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac87ca230e4801653418101e80a986b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b0b1a4ac6932d797805238e973cc01d" id="r_a2b0b1a4ac6932d797805238e973cc01d"><td class="memItemLeft" align="right" valign="top">Eigen::SparseMatrix&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b0b1a4ac6932d797805238e973cc01d">G</a></td></tr>
 <tr class="separator:a2b0b1a4ac6932d797805238e973cc01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1748124b5a9e89fb1eac1e879e8cfd1" id="r_ad1748124b5a9e89fb1eac1e879e8cfd1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1748124b5a9e89fb1eac1e879e8cfd1">Q1LS</a> [<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td></tr>
+<tr class="separator:ad1748124b5a9e89fb1eac1e879e8cfd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab25ae9e0821f275766879a4b40d806a1" id="r_ab25ae9e0821f275766879a4b40d806a1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab25ae9e0821f275766879a4b40d806a1">Q2LS</a> [<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td></tr>
+<tr class="separator:ab25ae9e0821f275766879a4b40d806a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1c6d782be56a7e0179fb8f755df44a2" id="r_ac1c6d782be56a7e0179fb8f755df44a2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a> [<a class="el" href="Const_8hpp.html#a4a9d32ff035c82119003134767948ebf">NX</a>][<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td></tr>
+<tr class="separator:ac1c6d782be56a7e0179fb8f755df44a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac062ac68687e7171fd71da3236b2e6a9" id="r_ac062ac68687e7171fd71da3236b2e6a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac062ac68687e7171fd71da3236b2e6a9">status_for_adding_forcing</a> = false</td></tr>
+<tr class="separator:ac062ac68687e7171fd71da3236b2e6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>vvm class. This is class for the whole model. The configuration for the model is put inside the class and some functions related to model proccessing such as advection, boundary process, etc. </p>
@@ -295,7 +305,7 @@ Public Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   16</span>        <a class="code hl_variable" href="#a55d4854ed17e4bd829beb73427702895">thvb</a>[k] = <a class="code hl_variable" href="#a0e8dbd05de632bfa80c6538130872c3f">thvbm</a>[k] = 0.;</div>
 <div class="line"><span class="lineno">   17</span> </div>
 <div class="line"><span class="lineno">   18</span><span class="preprocessor">        #if defined(TROPICALFORCING)</span></div>
-<div class="line"><span class="lineno">   19</span>            Q1LS[k] = Q2LS[k] = 0.;</div>
+<div class="line"><span class="lineno">   19</span>            <a class="code hl_variable" href="#ad1748124b5a9e89fb1eac1e879e8cfd1">Q1LS</a>[k] = <a class="code hl_variable" href="#ab25ae9e0821f275766879a4b40d806a1">Q2LS</a>[k] = 0.;</div>
 <div class="line"><span class="lineno">   20</span><span class="preprocessor">        #endif</span></div>
 <div class="line"><span class="lineno">   21</span>    }</div>
 <div class="line"><span class="lineno">   22</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_define" href="Const_8hpp.html#a4a9d32ff035c82119003134767948ebf">NX</a>; i++) {</div>
@@ -328,7 +338,7 @@ Public Attributes</h2></td></tr>
 <div class="line"><span class="lineno">   49</span><span class="preprocessor">            #endif</span></div>
 <div class="line"><span class="lineno">   50</span> </div>
 <div class="line"><span class="lineno">   51</span><span class="preprocessor">            #if defined(TROPICALFORCING)</span></div>
-<div class="line"><span class="lineno">   52</span>                init_th_forcing[i][k] = 0.;</div>
+<div class="line"><span class="lineno">   52</span>                <a class="code hl_variable" href="#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>[i][k] = 0.;</div>
 <div class="line"><span class="lineno">   53</span><span class="preprocessor">            #endif</span></div>
 <div class="line"><span class="lineno">   54</span>        }</div>
 <div class="line"><span class="lineno">   55</span>    }</div>
@@ -375,11 +385,14 @@ Public Attributes</h2></td></tr>
 <div class="ttc" id="aclassvvm_html_aacc9ca191f0c94b063ad84e44951eb69"><div class="ttname"><a href="#aacc9ca191f0c94b063ad84e44951eb69">vvm::autoconversion</a></div><div class="ttdeci">double autoconversion[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00060">Declare.hpp:60</a></div></div>
 <div class="ttc" id="aclassvvm_html_aad45508e035143d9ef2db38bf1e553ad"><div class="ttname"><a href="#aad45508e035143d9ef2db38bf1e553ad">vvm::um</a></div><div class="ttdeci">double um[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00051">Declare.hpp:51</a></div></div>
 <div class="ttc" id="aclassvvm_html_ab2102a76763307034e6e6a65bf2716af"><div class="ttname"><a href="#ab2102a76763307034e6e6a65bf2716af">vvm::qvp</a></div><div class="ttdeci">double qvp[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00057">Declare.hpp:57</a></div></div>
+<div class="ttc" id="aclassvvm_html_ab25ae9e0821f275766879a4b40d806a1"><div class="ttname"><a href="#ab25ae9e0821f275766879a4b40d806a1">vvm::Q2LS</a></div><div class="ttdeci">double Q2LS[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00170">Declare.hpp:170</a></div></div>
 <div class="ttc" id="aclassvvm_html_ab5e5009447f9f2a9f8497baada78175d"><div class="ttname"><a href="#ab5e5009447f9f2a9f8497baada78175d">vvm::qr</a></div><div class="ttdeci">double qr[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00059">Declare.hpp:59</a></div></div>
 <div class="ttc" id="aclassvvm_html_abb74b46a37b339933f113039b22744b7"><div class="ttname"><a href="#abb74b46a37b339933f113039b22744b7">vvm::uxi</a></div><div class="ttdeci">double uxi[NX]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00044">Declare.hpp:44</a></div></div>
 <div class="ttc" id="aclassvvm_html_abea7eda17bdb83b23d16d901c35c1f96"><div class="ttname"><a href="#abea7eda17bdb83b23d16d901c35c1f96">vvm::qv</a></div><div class="ttdeci">double qv[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00057">Declare.hpp:57</a></div></div>
+<div class="ttc" id="aclassvvm_html_ac1c6d782be56a7e0179fb8f755df44a2"><div class="ttname"><a href="#ac1c6d782be56a7e0179fb8f755df44a2">vvm::init_th_forcing</a></div><div class="ttdeci">double init_th_forcing[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00171">Declare.hpp:171</a></div></div>
 <div class="ttc" id="aclassvvm_html_ac6012d07a04c3c5e18a6da0b65b71b1a"><div class="ttname"><a href="#ac6012d07a04c3c5e18a6da0b65b71b1a">vvm::qrm</a></div><div class="ttdeci">double qrm[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00059">Declare.hpp:59</a></div></div>
 <div class="ttc" id="aclassvvm_html_ac87ca230e4801653418101e80a986b5b"><div class="ttname"><a href="#ac87ca230e4801653418101e80a986b5b">vvm::A</a></div><div class="ttdeci">Eigen::SparseMatrix&lt; double &gt; A</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00113">Declare.hpp:113</a></div></div>
+<div class="ttc" id="aclassvvm_html_ad1748124b5a9e89fb1eac1e879e8cfd1"><div class="ttname"><a href="#ad1748124b5a9e89fb1eac1e879e8cfd1">vvm::Q1LS</a></div><div class="ttdeci">double Q1LS[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00170">Declare.hpp:170</a></div></div>
 <div class="ttc" id="aclassvvm_html_ad6e341d145021d01fd4ebca79787240e"><div class="ttname"><a href="#ad6e341d145021d01fd4ebca79787240e">vvm::accretion</a></div><div class="ttdeci">double accretion[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00060">Declare.hpp:60</a></div></div>
 <div class="ttc" id="aclassvvm_html_ad7c0652b11cf78af50e5b03e593e1774"><div class="ttname"><a href="#ad7c0652b11cf78af50e5b03e593e1774">vvm::u</a></div><div class="ttdeci">double u[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00050">Declare.hpp:50</a></div></div>
 <div class="ttc" id="aclassvvm_html_add34568af43cf188bec69d61cc9c5bee"><div class="ttname"><a href="#add34568af43cf188bec69d61cc9c5bee">vvm::th</a></div><div class="ttdeci">double th[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00049">Declare.hpp:49</a></div></div>
@@ -392,6 +405,69 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae95d349fc79929ad9bd5b95e3cd97c0b" name="ae95d349fc79929ad9bd5b95e3cd97c0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae95d349fc79929ad9bd5b95e3cd97c0b">&#9670;&#160;</a></span>AddForcing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vvm::AddForcing </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classvvm.html">vvm</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>model</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AddForcing_8cpp_source.html#l00007">7</a> of file <a class="el" href="AddForcing_8cpp_source.html">AddForcing.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    7</span>                               {</div>
+<div class="line"><span class="lineno">    8</span>    <span class="keywordtype">double</span> dt = 0.;</div>
+<div class="line"><span class="lineno">    9</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a1c19d7dc2ab861379c3c69c7e79bd5c8">nz</a>-2; k++) {</div>
+<div class="line"><span class="lineno">   10</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a54019773003b18a98f267df45ee230bb">nx</a>-2; i++) {</div>
+<div class="line"><span class="lineno">   11</span><span class="preprocessor">            #ifndef AB3</span></div>
+<div class="line"><span class="lineno">   12</span>                dt = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a35038a3310f0394ec73c928ff9801f84">d2t</a>;</div>
+<div class="line"><span class="lineno">   13</span><span class="preprocessor">            #else</span></div>
+<div class="line"><span class="lineno">   14</span>                dt = <a class="code hl_define" href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a>;</div>
+<div class="line"><span class="lineno">   15</span><span class="preprocessor">            #endif</span></div>
+<div class="line"><span class="lineno">   16</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a3b3860b805e1f0e21f0834537a1d4feb">thp</a>[i][k] += dt * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ad1748124b5a9e89fb1eac1e879e8cfd1">Q1LS</a>[k];</div>
+<div class="line"><span class="lineno">   17</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ac062ac68687e7171fd71da3236b2e6a9">status_for_adding_forcing</a> == <span class="keyword">true</span>) <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a3b3860b805e1f0e21f0834537a1d4feb">thp</a>[i][k] += dt * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>[i][k];</div>
+<div class="line"><span class="lineno">   18</span><span class="preprocessor">            #if defined(RADIATIONCOOLING) </span></div>
+<div class="line"><span class="lineno">   19</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a3b3860b805e1f0e21f0834537a1d4feb">thp</a>[i][k] += dt * (-2. / 86400.);</div>
+<div class="line"><span class="lineno">   20</span><span class="preprocessor">            #endif</span></div>
+<div class="line"><span class="lineno">   21</span> </div>
+<div class="line"><span class="lineno">   22</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ab2102a76763307034e6e6a65bf2716af">qvp</a>[i][k] += dt * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ab25ae9e0821f275766879a4b40d806a1">Q2LS</a>[k];</div>
+<div class="line"><span class="lineno">   23</span>        }</div>
+<div class="line"><span class="lineno">   24</span>    }</div>
+<div class="line"><span class="lineno">   25</span>    <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_function" href="#a0f7695aeeea1dac87393db3edfc7acd8">BoundaryProcess2D_center</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#a3b3860b805e1f0e21f0834537a1d4feb">thp</a>);</div>
+<div class="line"><span class="lineno">   26</span>    <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_function" href="#a0f7695aeeea1dac87393db3edfc7acd8">BoundaryProcess2D_center</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="#ab2102a76763307034e6e6a65bf2716af">qvp</a>);</div>
+<div class="line"><span class="lineno">   27</span>}</div>
+<div class="ttc" id="aConfig_8hpp_html_a943f07034774ef1261d62cd0d3d1fec9"><div class="ttname"><a href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a></div><div class="ttdeci">#define DT</div><div class="ttdef"><b>Definition</b> <a href="Config_8hpp_source.html#l00005">Config.hpp:5</a></div></div>
+<div class="ttc" id="aclassvvm_html_a0f7695aeeea1dac87393db3edfc7acd8"><div class="ttname"><a href="#a0f7695aeeea1dac87393db3edfc7acd8">vvm::BoundaryProcess2D_center</a></div><div class="ttdeci">static void BoundaryProcess2D_center(double var[][NZ])</div><div class="ttdef"><b>Definition</b> <a href="Boundary_8cpp_source.html#l00009">Boundary.cpp:9</a></div></div>
+<div class="ttc" id="aclassvvm_html_a35038a3310f0394ec73c928ff9801f84"><div class="ttname"><a href="#a35038a3310f0394ec73c928ff9801f84">vvm::d2t</a></div><div class="ttdeci">double d2t</div><div class="ttdoc">Integration time step.</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00037">Declare.hpp:37</a></div></div>
+<div class="ttc" id="aclassvvm_html_ac062ac68687e7171fd71da3236b2e6a9"><div class="ttname"><a href="#ac062ac68687e7171fd71da3236b2e6a9">vvm::status_for_adding_forcing</a></div><div class="ttdeci">bool status_for_adding_forcing</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00172">Declare.hpp:172</a></div></div>
+<div class="ttc" id="amain_8cpp_html_a5e376a387fdce5400f2e8ed865388257"><div class="ttname"><a href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a></div><div class="ttdeci">vvm model</div><div class="ttdef"><b>Definition</b> <a href="main_8cpp_source.html#l00004">main.cpp:4</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classvvm_ae95d349fc79929ad9bd5b95e3cd97c0b_cgraph.svg" width="356" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classvvm_ae95d349fc79929ad9bd5b95e3cd97c0b_icgraph.svg" width="440" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a5a6a59d52a4562766f6c57429cae2cb5" name="a5a6a59d52a4562766f6c57429cae2cb5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a6a59d52a4562766f6c57429cae2cb5">&#9670;&#160;</a></span>Advection_qrVT()</h2>
 
@@ -493,11 +569,8 @@ Public Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  250</span>}</div>
 <div class="ttc" id="aAdvection_8cpp_html_a8566d63c1693d34aba0fa86f658532a2"><div class="ttname"><a href="Advection_8cpp.html#a8566d63c1693d34aba0fa86f658532a2">MINUS</a></div><div class="ttdeci">double MINUS(double var)</div><div class="ttdef"><b>Definition</b> <a href="Advection_8cpp_source.html#l00022">Advection.cpp:22</a></div></div>
 <div class="ttc" id="aAdvection_8cpp_html_ac35c0748e7807333a355cd2b8e5dfef8"><div class="ttname"><a href="Advection_8cpp.html#ac35c0748e7807333a355cd2b8e5dfef8">PLUS</a></div><div class="ttdeci">double PLUS(double var)</div><div class="ttdef"><b>Definition</b> <a href="Advection_8cpp_source.html#l00018">Advection.cpp:18</a></div></div>
-<div class="ttc" id="aConfig_8hpp_html_a943f07034774ef1261d62cd0d3d1fec9"><div class="ttname"><a href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a></div><div class="ttdeci">#define DT</div><div class="ttdef"><b>Definition</b> <a href="Config_8hpp_source.html#l00005">Config.hpp:5</a></div></div>
 <div class="ttc" id="aConst_8hpp_html_af5abd28c44c29b7397c84f1fec4b1d84"><div class="ttname"><a href="Const_8hpp.html#af5abd28c44c29b7397c84f1fec4b1d84">ALPHA</a></div><div class="ttdeci">#define ALPHA</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00017">Const.hpp:17</a></div></div>
-<div class="ttc" id="aclassvvm_html_a35038a3310f0394ec73c928ff9801f84"><div class="ttname"><a href="#a35038a3310f0394ec73c928ff9801f84">vvm::d2t</a></div><div class="ttdeci">double d2t</div><div class="ttdoc">Integration time step.</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00037">Declare.hpp:37</a></div></div>
 <div class="ttc" id="aclassvvm_html_ae1f95980069895fdafc4ba4b29826bf0"><div class="ttname"><a href="#ae1f95980069895fdafc4ba4b29826bf0">vvm::r2dz</a></div><div class="ttdeci">double r2dz</div><div class="ttdoc">1 / (2dz)</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00032">Declare.hpp:32</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a5e376a387fdce5400f2e8ed865388257"><div class="ttname"><a href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a></div><div class="ttdeci">vvm model</div><div class="ttdef"><b>Definition</b> <a href="main_8cpp_source.html#l00004">main.cpp:4</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -839,7 +912,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classvvm_a0f7695aeeea1dac87393db3edfc7acd8_icgraph.svg" width="100%" height="548"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classvvm_a0f7695aeeea1dac87393db3edfc7acd8_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -1190,6 +1263,22 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ac1c6d782be56a7e0179fb8f755df44a2" name="ac1c6d782be56a7e0179fb8f755df44a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1c6d782be56a7e0179fb8f755df44a2">&#9670;&#160;</a></span>init_th_forcing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double vvm::init_th_forcing[<a class="el" href="Const_8hpp.html#a4a9d32ff035c82119003134767948ebf">NX</a>][<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00171">171</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a54019773003b18a98f267df45ee230bb" name="a54019773003b18a98f267df45ee230bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54019773003b18a98f267df45ee230bb">&#9670;&#160;</a></span>nx</h2>
 
@@ -1271,6 +1360,38 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00062">62</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad1748124b5a9e89fb1eac1e879e8cfd1" name="ad1748124b5a9e89fb1eac1e879e8cfd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1748124b5a9e89fb1eac1e879e8cfd1">&#9670;&#160;</a></span>Q1LS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double vvm::Q1LS[<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00170">170</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab25ae9e0821f275766879a4b40d806a1" name="ab25ae9e0821f275766879a4b40d806a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab25ae9e0821f275766879a4b40d806a1">&#9670;&#160;</a></span>Q2LS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double vvm::Q2LS[<a class="el" href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00170">170</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
 
 </div>
 </div>
@@ -1603,6 +1724,22 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00043">43</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac062ac68687e7171fd71da3236b2e6a9" name="ac062ac68687e7171fd71da3236b2e6a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac062ac68687e7171fd71da3236b2e6a9">&#9670;&#160;</a></span>status_for_adding_forcing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool vvm::status_for_adding_forcing = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Declare_8hpp_source.html#l00172">172</a> of file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
 
 </div>
 </div>
@@ -1944,6 +2081,7 @@ Here is the caller graph for this function:</div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/Aaron/2DVVM/full/0402/model/src/<a class="el" href="Declare_8hpp_source.html">Declare.hpp</a></li>
+<li>/home/Aaron/2DVVM/full/0402/model/src/<a class="el" href="AddForcing_8cpp_source.html">AddForcing.cpp</a></li>
 <li>/home/Aaron/2DVVM/full/0402/model/src/<a class="el" href="Advection_8cpp_source.html">Advection.cpp</a></li>
 <li>/home/Aaron/2DVVM/full/0402/model/src/<a class="el" href="Boundary_8cpp_source.html">Boundary.cpp</a></li>
 <li>/home/Aaron/2DVVM/full/0402/model/src/<a class="el" href="Buoyancy_8cpp_source.html">Buoyancy.cpp</a></li>

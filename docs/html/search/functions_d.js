@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['u_5fzeta_0',['U_zeta',['../Advection_8cpp.html#ad84d7b263ba0496ac8d74df75d706075',1,'Advection.cpp']]],
-  ['um_5fzeta_1',['Um_zeta',['../Advection_8cpp.html#afd67bfda19d291830edf3e9849cc9277',1,'Advection.cpp']]],
-  ['updatemean_2',['updateMean',['../classIteration.html#a8836fdf87b17b4bc628fd77db64c6af3',1,'Iteration']]]
+  ['timefilter_0',['TimeFilter',['../classvvm.html#ab10c85732f7f7256133cf53f099232c2',1,'vvm']]],
+  ['timemarching_1',['TimeMarching',['../classIteration.html#ae341a02edb030229055de37fd518ac89',1,'Iteration']]]
 ];

@@ -137,9 +137,18 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html">Model Design</a></li>
-
-
-<li class="toctree-l1"><a class="reference internal" href="api/class2DVVM.html">Class</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/header/Config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/header/Const.html">Const</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/class/vvm.html">vvm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Init.html">Init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Iteration.html">Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Output.html">Output</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -342,12 +351,22 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#governing-equation-set">Governing Equation Set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#how-this-model-works">How this model works</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#grid-setting">Grid Setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#boundary-condition">Boundary Condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/ModelDesign.html#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html#numerical-method">Numerical Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html#boundary-condition">Boundary Condition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/class2DVVM.html">Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/header.html">Model Parameters Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/header/Config.html">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/header/Const.html">Const</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/class.html">Class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/class/vvm.html">vvm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Init.html">Init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Iteration.html">Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/class/Output.html">Output</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -423,19 +442,33 @@ Here, you don’t need to have sudo privilege to install anything.</p>
 <span class="nv">OPTFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-O3
 
 <span class="nf">all       </span><span class="o">:</span><span class="w"> </span><span class="n">bin</span>/<span class="n">vvm</span>2<span class="n">d</span>
-<span class="w">        </span>@echo<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">   </span>@echo<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span>
 
-<span class="nf">bin/vvm2d </span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">Declare</span>.<span class="n">o</span> <span class="n">Init</span>.<span class="n">o</span> <span class="n">Iteration</span>.<span class="n">o</span> <span class="n">Outputfile</span>.<span class="n">o</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>main.o<span class="w"> </span>Declare.o<span class="w"> </span>Init.o<span class="w"> </span>Outputfile.o<span class="w"> </span>Iteration.o<span class="w"> </span>-o<span class="w"> </span>bin/vvm2d
+<span class="nf">bin/vvm2d </span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">AddForcing</span>.<span class="n">o</span> <span class="n">Advection</span>.<span class="n">o</span> <span class="n">Boundary</span>.<span class="n">o</span> <span class="n">Boundary</span>.<span class="n">o</span> <span class="n">Declare</span>.<span class="n">o</span> <span class="n">Init</span>.<span class="n">o</span> <span class="n">Iteration</span>.<span class="n">o</span> <span class="n">Output</span>.<span class="n">o</span> <span class="n">MicroPhysics</span>.<span class="n">o</span> <span class="n">NumericalProcess</span>.<span class="n">o</span> <span class="n">PoissonSolver</span>.<span class="n">o</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>main.o<span class="w"> </span>AddForcing.o<span class="w"> </span>Advection.o<span class="w"> </span>Boundary.o<span class="w"> </span>Boundary.o<span class="w"> </span>Declare.o<span class="w"> </span>Init.o<span class="w"> </span>Iteration.o<span class="w"> </span>Output.o<span class="w"> </span>MicroPhysics.o<span class="w"> </span>NumericalProcess.o<span class="w"> </span>PoissonSolver.o<span class="w"> </span>-o<span class="w"> </span>bin/vvm2d
 <span class="nf">main.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">main</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">AddForcing.o      </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">AddForcing</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Advection.o       </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Advection</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Boundary.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Boundary</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">Buoyancy.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Boundary</span>.<span class="n">cpp</span>
 <span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 <span class="nf">Declare.o </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Declare</span>.<span class="n">cpp</span>
 <span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 <span class="nf">Init.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Init</span>.<span class="n">cpp</span>
 <span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Outputfile.o</span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Outputfile</span>.<span class="n">cpp</span>
+<span class="nf">Output.o</span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Output</span>.<span class="n">cpp</span>
 <span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 <span class="nf">Iteration.o       </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Iteration</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">MicroPhyscis.o    </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">MicroPhyscis</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">NumericalProcess.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">NumericalProcess</span>.<span class="n">cpp</span>
+<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
+<span class="nf">PoissonSolver.o   </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">NumericalProcess</span>.<span class="n">cpp</span>
 <span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
 </pre></div>
 </div>

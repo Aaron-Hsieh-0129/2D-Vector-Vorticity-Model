@@ -3,9 +3,9 @@
 #define XRANGE (120000+2*dx)
 #define ZRANGE (20000+2*dz)
 #define DT (1.)
-#define TIMEEND (10000.)
+#define TIMEEND (300000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0402/Water_diff250_VT6/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0401/newBuoyancy/6Q16Q2_diff5_VTcal/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
@@ -13,8 +13,8 @@
 #define PETSC
 // #define AB3 // Don't turn this on. Debugging!!!!!
 #define DIFFUSION
-#define Kx (250.)
-#define Kz (250.)
+#define Kx (5.)
+#define Kz (5.)
 #define POISSONPARAM (0.)
 #define POISSONPARAMU (1E-8)
 
@@ -26,13 +26,13 @@
 // #define DRY
 // #define RHO1
 #define WATER
-// #define TROPICALFORCING
-// #define ADDFORCINGTIME (1200.)
-// #define RADIATIONCOOLING
-// #define LOADFILE
-// #define STREAMFUNCTION
+#define TROPICALFORCING
+#define ADDFORCINGTIME (1200.)
+#define RADIATIONCOOLING
+#define LOADFILE
+// #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
 
-#define VTconst
+// #define VTconst
 
 // #define POISSONTEST
 
@@ -46,7 +46,7 @@
  * @date 2024-03-13
  * 
  * @copyright Copyright (c) 2024
- * @brief Here are the parameters for the model that you can tune to fit your needs.
+ * @brief Here are the parameters for the model that you can tune them to fit your needs.
  * 
 */
 
@@ -68,20 +68,42 @@
     \def OUTPUTSTEP
     The time step for output
     \def OUTPUTNC
-    The switch for output file
+    The switch for output file in .nc datatype
+    \def OUTPUTTXT
+    The switch for output file in .txt datatype
+    \def PETSC
+    The switch for Poisson Solver PETSc
+    \def AB3
+    The switch for Adams-Bashforth Numerical Method
+    \def Diffusion
+    The switch for the diffusion process
     \def Kx
     The diffusion coefficient in x direction
     \def Kz
     The diffusion coefficient in z direction
+    \def POISSONPARAM
+    When solving 2D Poisson equation, adding small values to main diagonal to make the matrix solvable.
+    \def POISSONPARAMU
+    When solving 1D Poisson equation, adding small values to main diagonal to make the matrix solvable.
     \def TIMETS
     The coefficient for removing the computational mode
     \def DRY
     Switch for constant potential temperature (300K)
-    \def TROPICALFORCING
-    Switch for tropical forcing test case (With Q1, Q2)
-    \def LOADFILE
-    Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test
+    \def RHO1
+    Switch for constant density profile (1kg/m3)
     \def WATER
     Switch for microphysics (qc, qv, qr) with warm rain scheme
+    \def TROPICALFORCING
+    Switch for tropical forcing test case (With Q1, Q2)
+    \def ADDFORCINGTIME
+    Time (s) for adding random perturbation into model
+    \def LOADFILE
+    Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test
+    \def STREAMFUNCTION
+    Solving stream function (Krurger 1988) to get u, w rather than solving them directly (Jung 2008)
+    \def VTconst
+    In the Kessler warm rain scheme, set the terminal velocity to a constant (here is 6) or not. If this is turned off the terminal velocity will be calculated according to an imperical function
+    \def POISSONTEST
+    Switch for testing the Poisson matrix
 */
 // ***********************************************************************************

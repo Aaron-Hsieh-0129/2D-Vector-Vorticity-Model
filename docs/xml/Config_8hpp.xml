@@ -173,7 +173,7 @@
       </memberdef>
       <memberdef kind="define" id="Config_8hpp_1af443c034b375d1a180d41d07423accee" prot="public" static="no">
         <name>TIMEEND</name>
-        <initializer>(10000.)</initializer>
+        <initializer>(300000.)</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
@@ -185,7 +185,7 @@
       </memberdef>
       <memberdef kind="define" id="Config_8hpp_1a92f0c8368faf269de7f26d6a6847642e" prot="public" static="no">
         <name>OUTPUTPATH</name>
-        <initializer>&quot;/data/Aaron/2DVVM/full/0402/Water_diff250_VT6/&quot;</initializer>
+        <initializer>&quot;/data/Aaron/2DVVM/full/0401/newBuoyancy/6Q16Q2_diff5_VTcal/&quot;</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
@@ -212,7 +212,7 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para>The switch for output file </para>
+<para>The switch for output file in .nc datatype </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
@@ -223,6 +223,7 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
+<para>The switch for Poisson Solver PETSc </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
@@ -240,7 +241,7 @@
       </memberdef>
       <memberdef kind="define" id="Config_8hpp_1a9751a37abbbd9680f3c0cc311573efdf" prot="public" static="no">
         <name>Kx</name>
-        <initializer>(250.)</initializer>
+        <initializer>(5.)</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
@@ -252,7 +253,7 @@
       </memberdef>
       <memberdef kind="define" id="Config_8hpp_1a800c5dc676cb83c757155caa7d87f84e" prot="public" static="no">
         <name>Kz</name>
-        <initializer>(250.)</initializer>
+        <initializer>(5.)</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
@@ -268,6 +269,7 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
+<para>When solving 2D Poisson equation, adding small values to main diagonal to make the matrix solvable. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
@@ -279,6 +281,7 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
+<para>When solving 1D Poisson equation, adding small values to main diagonal to make the matrix solvable. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
@@ -317,19 +320,53 @@
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="28" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="28" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="Config_8hpp_1ab999b0d7a9f1de7dab07395017fa6e43" prot="public" static="no">
-        <name>VTconst</name>
+      <memberdef kind="define" id="Config_8hpp_1ae1a5ef3159a24aad5047859e9bafa707" prot="public" static="no">
+        <name>TROPICALFORCING</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Switch for tropical forcing test case (With Q1, Q2) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="29" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Config_8hpp_1a62c1645b450ad25c7cff262aa9a6a3c3" prot="public" static="no">
+        <name>ADDFORCINGTIME</name>
+        <initializer>(1200.)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Time (s) for adding random perturbation into model </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="30" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Config_8hpp_1a1c49559a85a9e1c4ad1b58d738ce0a0b" prot="public" static="no">
+        <name>RADIATIONCOOLING</name>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="35" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="35" bodyend="-1"/>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="31" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="Config_8hpp_1a5c166d882469baaf48008853944b5956" prot="public" static="no">
+        <name>LOADFILE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" line="32" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp" bodystart="32" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
-<para>Here are the parameters for the model that you can tune to fit your needs. </para>
+<para>Here are the parameters for the model that you can tune them to fit your needs. </para>
     </briefdescription>
     <detaileddescription>
 <para><simplesect kind="author"><para>Aaron Hsieh (<ulink url="mailto:b08209006@ntu.edu.tw">b08209006@ntu.edu.tw</ulink>) </para>
@@ -348,9 +385,9 @@
 <codeline lineno="3" refid="Config_8hpp_1a4332ee01d55412ae2f7d4bc6fc1f5437" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>XRANGE<sp/>(120000+2*dx)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="4" refid="Config_8hpp_1a9d5ee4461c576344cbcb8c68014a9a9d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ZRANGE<sp/>(20000+2*dz)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="5" refid="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DT<sp/>(1.)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6" refid="Config_8hpp_1af443c034b375d1a180d41d07423accee" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TIMEEND<sp/>(10000.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="Config_8hpp_1af443c034b375d1a180d41d07423accee" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TIMEEND<sp/>(300000.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8" refid="Config_8hpp_1a92f0c8368faf269de7f26d6a6847642e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>OUTPUTPATH<sp/>&quot;/data/Aaron/2DVVM/full/0402/Water_diff250_VT6/&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="Config_8hpp_1a92f0c8368faf269de7f26d6a6847642e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>OUTPUTPATH<sp/>&quot;/data/Aaron/2DVVM/full/0401/newBuoyancy/6Q16Q2_diff5_VTcal/&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="9" refid="Config_8hpp_1ace0a5490934a8d7bec9ae33f30dee878" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>OUTPUTSTEP<sp/>(10)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10" refid="Config_8hpp_1a964f46a929f9d73c6f926b5aaaab8252" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>OUTPUTNC</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>OUTPUTTXT</highlight><highlight class="normal"></highlight></codeline>
@@ -358,8 +395,8 @@
 <codeline lineno="13" refid="Config_8hpp_1afa694325e45cabb6eac9fe8d0b9d8b0d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PETSC</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>AB3<sp/>//<sp/>Don&apos;t<sp/>turn<sp/>this<sp/>on.<sp/>Debugging!!!!!</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="15" refid="Config_8hpp_1a6752fae1aabe432286905afcfaaa940e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DIFFUSION</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="16" refid="Config_8hpp_1a9751a37abbbd9680f3c0cc311573efdf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Kx<sp/>(250.)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="17" refid="Config_8hpp_1a800c5dc676cb83c757155caa7d87f84e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Kz<sp/>(250.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="Config_8hpp_1a9751a37abbbd9680f3c0cc311573efdf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Kx<sp/>(5.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="Config_8hpp_1a800c5dc676cb83c757155caa7d87f84e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Kz<sp/>(5.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="18" refid="Config_8hpp_1a6cc99de22fbfffb5c4432738ba6c74f8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>POISSONPARAM<sp/>(0.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="19" refid="Config_8hpp_1ab22842bcdca3b2d9a2c60e78326e45bb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>POISSONPARAMU<sp/>(1E-8)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="20"><highlight class="normal"></highlight></codeline>
@@ -371,19 +408,19 @@
 <codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>DRY</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>RHO1</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="28" refid="Config_8hpp_1a5c3fbf45abc4ee50d118d87aecfee212" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>WATER</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>TROPICALFORCING</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>ADDFORCINGTIME<sp/>(1200.)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>RADIATIONCOOLING</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>LOADFILE</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>STREAMFUNCTION</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="Config_8hpp_1ae1a5ef3159a24aad5047859e9bafa707" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TROPICALFORCING</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="Config_8hpp_1a62c1645b450ad25c7cff262aa9a6a3c3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ADDFORCINGTIME<sp/>(1200.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="Config_8hpp_1a1c49559a85a9e1c4ad1b58d738ce0a0b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RADIATIONCOOLING</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="Config_8hpp_1a5c166d882469baaf48008853944b5956" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOADFILE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>STREAMFUNCTION<sp/>//<sp/>Don&apos;t<sp/>turn<sp/>this<sp/>on.<sp/>Debugging!!!!!</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35" refid="Config_8hpp_1ab999b0d7a9f1de7dab07395017fa6e43" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VTconst</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>VTconst</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="36"><highlight class="normal"></highlight></codeline>
 <codeline lineno="37"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#define<sp/>POISSONTEST</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="38"><highlight class="normal"></highlight></codeline>
 <codeline lineno="39"><highlight class="normal"></highlight><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Documentation<sp/>Part</highlight></codeline>
-<codeline lineno="87"><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/home/Aaron/2DVVM/full/0402/model/src/Config.hpp"/>
   </compounddef>

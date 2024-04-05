@@ -167,18 +167,6 @@
         </inbodydescription>
         <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="6" column="9" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="6" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" prot="public" static="no">
-        <name>PSURF</name>
-        <initializer>(96500.)</initializer>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-<para>The surface pressure (Pa) for the initial condition </para>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" line="8" column="13" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp" bodystart="8" bodyend="-1"/>
-      </memberdef>
       <memberdef kind="define" id="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" prot="public" static="no">
         <name>P0</name>
         <initializer>(100000.)</initializer>
@@ -233,6 +221,7 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
+<para>Coefficient for Adams-Bashforth method. If it is 0, it would be reduced to Leapfrog scheme. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
@@ -261,7 +250,7 @@
 <codeline lineno="5" refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Rd<sp/>(287.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="6" refid="Const_8hpp_1a1796b981de799fa29e4a761dc0c538f6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Cv<sp/>(C_p<sp/>-<sp/>Rd)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>LOADFILE</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8" refid="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>PSURF<sp/>(96500.)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>PSURF<sp/>(96500.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10" refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>P0<sp/>(100000.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="11" refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Lv<sp/>(2500000.)</highlight><highlight class="normal"></highlight></codeline>
@@ -276,7 +265,7 @@
 <codeline lineno="20"><highlight class="normal"></highlight></codeline>
 <codeline lineno="21"><highlight class="normal"></highlight><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Documentation<sp/>Part</highlight></codeline>
-<codeline lineno="55"><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="comment">//<sp/>***********************************************************************************</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/home/Aaron/2DVVM/full/0402/model/src/Const.hpp"/>
   </compounddef>

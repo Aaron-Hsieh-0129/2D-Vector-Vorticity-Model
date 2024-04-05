@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xrange_0',['XRANGE',['../Config_8hpp.html#a4332ee01d55412ae2f7d4bc6fc1f5437',1,'Config.hpp']]]
+  ['zrange_0',['ZRANGE',['../Config_8hpp.html#a9d5ee4461c576344cbcb8c68014a9a9d',1,'Config.hpp']]]
 ];

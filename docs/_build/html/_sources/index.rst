@@ -17,8 +17,8 @@ Contents
    Home <self>
    api/install_compilers_libraries.rst
    api/ModelDesign
-   api/class2DVVM
-
+   api/header
+   api/class
 
 .. include:: ./api/README.rst
 

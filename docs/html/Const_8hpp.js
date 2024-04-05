@@ -8,6 +8,5 @@ var Const_8hpp =
     [ "NX", "Const_8hpp.html#a4a9d32ff035c82119003134767948ebf", null ],
     [ "NZ", "Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57", null ],
     [ "P0", "Const_8hpp.html#a1583b00a62bc1138f99bbfcd8ef81a6a", null ],
-    [ "PSURF", "Const_8hpp.html#aa6bbc5496542a09e27553dc0dbba1ea5", null ],
     [ "Rd", "Const_8hpp.html#a9151700714b0ec53aa32af2f907d0a99", null ]
 ];

@@ -5,7 +5,7 @@ This is a 2D cloud-resolving model based on vorticity equation
 - [Two-dimension Vector Vorticity Model](#two-dimension-vector-vorticity-model)
   - [Prerequisite](#prerequisite)
   - [How to Use](#how-to-use)
-    - [If you cannot solve the netcdf_cxx4 and petsc installation problem.](#if-you-cannot-solve-the-netcdf_cxx4-and-petsc-installation-problem)
+    - [If you cannot solve the netcdf\_cxx4 and petsc installation problem.](#if-you-cannot-solve-the-netcdf_cxx4-and-petsc-installation-problem)
 
 ## Prerequisite
 
@@ -76,17 +76,31 @@ The tutorial for installing them can be found [here](./Install_compilers_librari
    all	: bin/vvm2d
        @echo -n ""
 
-   bin/vvm2d	: main.o Declare.o Init.o Iteration.o Outputfile.o
-               $(CC) $(OPTFLAGS) main.o Declare.o Init.o Outputfile.o Iteration.o -o bin/vvm2d
+   bin/vvm2d	: main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o
+               $(CC) $(OPTFLAGS) main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o -o bin/vvm2d
    main.o 	   	: src/main.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   AddForcing.o	: src/AddForcing.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   Advection.o	: src/Advection.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   Boundary.o	: src/Boundary.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   Buoyancy.o	: src/Boundary.cpp
                $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
    Declare.o	: src/Declare.cpp
                $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
    Init.o		: src/Init.cpp
                $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-   Outputfile.o: src/Outputfile.cpp
+   Output.o: src/Output.cpp
                $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
    Iteration.o	: src/Iteration.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   MicroPhyscis.o	: src/MicroPhyscis.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   NumericalProcess.o	: src/NumericalProcess.cpp
+               $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+   PoissonSolver.o	: src/NumericalProcess.cpp
                $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
    ```
 

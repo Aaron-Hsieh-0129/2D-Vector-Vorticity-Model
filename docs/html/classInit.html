@@ -114,6 +114,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a622540f0e2606ee86b781a8eb8f5a67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18f209b227e2b6894dcd45969eec4339" id="r_a18f209b227e2b6894dcd45969eec4339"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18f209b227e2b6894dcd45969eec4339">LoadFile</a> (<a class="el" href="classvvm.html">vvm</a> &amp;)</td></tr>
 <tr class="separator:a18f209b227e2b6894dcd45969eec4339"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83424c08602c8f29653a28361be9c152" id="r_a83424c08602c8f29653a28361be9c152"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83424c08602c8f29653a28361be9c152">RandomPerturbation</a> (<a class="el" href="classvvm.html">vvm</a> &amp;, int)</td></tr>
+<tr class="separator:a83424c08602c8f29653a28361be9c152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -171,7 +173,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   34</span>        <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_function" href="classvvm.html#ace6f793034804810c37b0363b70648ed">BoundaryProcess1D_center</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a06c8b7613b14bb7d815a20ee3060bb01">tvb</a>);</div>
 <div class="line"><span class="lineno">   35</span> </div>
 <div class="line"><span class="lineno">   36</span>        <span class="comment">// init pib</span></div>
-<div class="line"><span class="lineno">   37</span>        <span class="keywordtype">double</span> pisfc = pow((<a class="code hl_define" href="Const_8hpp.html#aa6bbc5496542a09e27553dc0dbba1ea5">PSURF</a> / <a class="code hl_define" href="Const_8hpp.html#a1583b00a62bc1138f99bbfcd8ef81a6a">P0</a>), <a class="code hl_define" href="Const_8hpp.html#a9151700714b0ec53aa32af2f907d0a99">Rd</a> / <a class="code hl_define" href="Const_8hpp.html#a04232fb1dd2fa2aa27b1cc841de87e8b">C_p</a>);</div>
+<div class="line"><span class="lineno">   37</span>        <span class="keywordtype">double</span> pisfc = pow((PSURF / <a class="code hl_define" href="Const_8hpp.html#a1583b00a62bc1138f99bbfcd8ef81a6a">P0</a>), <a class="code hl_define" href="Const_8hpp.html#a9151700714b0ec53aa32af2f907d0a99">Rd</a> / <a class="code hl_define" href="Const_8hpp.html#a04232fb1dd2fa2aa27b1cc841de87e8b">C_p</a>);</div>
 <div class="line"><span class="lineno">   38</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a1c19d7dc2ab861379c3c69c7e79bd5c8">nz</a>-2; k++) {</div>
 <div class="line"><span class="lineno">   39</span>            <span class="keywordflow">if</span> (k == 1) <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#af3b16daf7541428d52fabed88807430c">pib</a>[k] = pisfc - <a class="code hl_define" href="Const_8hpp.html#a6801baa546c6112d19eb095111d24720">GRAVITY</a> * 0.5 * <a class="code hl_define" href="Config_8hpp.html#af96a657aa0277ecc723296cc70efd9f4">dz</a> / (<a class="code hl_define" href="Const_8hpp.html#a04232fb1dd2fa2aa27b1cc841de87e8b">C_p</a> * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a06c8b7613b14bb7d815a20ee3060bb01">tvb</a>[k]);</div>
 <div class="line"><span class="lineno">   40</span>            <span class="keywordflow">else</span> {</div>
@@ -241,7 +243,6 @@ Static Public Member Functions</h2></td></tr>
 <div class="ttc" id="aConst_8hpp_html_a1796b981de799fa29e4a761dc0c538f6"><div class="ttname"><a href="Const_8hpp.html#a1796b981de799fa29e4a761dc0c538f6">Cv</a></div><div class="ttdeci">#define Cv</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00006">Const.hpp:6</a></div></div>
 <div class="ttc" id="aConst_8hpp_html_a6801baa546c6112d19eb095111d24720"><div class="ttname"><a href="Const_8hpp.html#a6801baa546c6112d19eb095111d24720">GRAVITY</a></div><div class="ttdeci">#define GRAVITY</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00003">Const.hpp:3</a></div></div>
 <div class="ttc" id="aConst_8hpp_html_a9151700714b0ec53aa32af2f907d0a99"><div class="ttname"><a href="Const_8hpp.html#a9151700714b0ec53aa32af2f907d0a99">Rd</a></div><div class="ttdeci">#define Rd</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00005">Const.hpp:5</a></div></div>
-<div class="ttc" id="aConst_8hpp_html_aa6bbc5496542a09e27553dc0dbba1ea5"><div class="ttname"><a href="Const_8hpp.html#aa6bbc5496542a09e27553dc0dbba1ea5">PSURF</a></div><div class="ttdeci">#define PSURF</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00008">Const.hpp:8</a></div></div>
 <div class="ttc" id="aclassInit_html_a18f209b227e2b6894dcd45969eec4339"><div class="ttname"><a href="#a18f209b227e2b6894dcd45969eec4339">Init::LoadFile</a></div><div class="ttdeci">static void LoadFile(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00217">Init.cpp:217</a></div></div>
 <div class="ttc" id="aclassvvm_html_a06c8b7613b14bb7d815a20ee3060bb01"><div class="ttname"><a href="classvvm.html#a06c8b7613b14bb7d815a20ee3060bb01">vvm::tvb</a></div><div class="ttdeci">double tvb[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00043">Declare.hpp:43</a></div></div>
 <div class="ttc" id="aclassvvm_html_a0e8dbd05de632bfa80c6538130872c3f"><div class="ttname"><a href="classvvm.html#a0e8dbd05de632bfa80c6538130872c3f">vvm::thvbm</a></div><div class="ttdeci">double thvbm[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00045">Declare.hpp:45</a></div></div>
@@ -298,11 +299,11 @@ Here is the caller graph for this function:</div>
 <div class="fragment"><div class="line"><span class="lineno">  102</span>                            {</div>
 <div class="line"><span class="lineno">  103</span><span class="preprocessor">    #if defined(TROPICALFORCING)</span></div>
 <div class="line"><span class="lineno">  104</span>        <span class="comment">// Generate random 2D Gaussian noise array within the specified range</span></div>
-<div class="line"><span class="lineno">  105</span>        RandomPerturbation(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>, 0);</div>
+<div class="line"><span class="lineno">  105</span>        <a class="code hl_function" href="#a83424c08602c8f29653a28361be9c152">RandomPerturbation</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>, 0);</div>
 <div class="line"><span class="lineno">  106</span> </div>
 <div class="line"><span class="lineno">  107</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a54019773003b18a98f267df45ee230bb">nx</a>-2; i++) {</div>
 <div class="line"><span class="lineno">  108</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a1c19d7dc2ab861379c3c69c7e79bd5c8">nz</a>-2; k++) {</div>
-<div class="line"><span class="lineno">  109</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">th</a>[i][k] = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a7725cca3f943224b5878255f97a5bcfd">thb</a>[k] + <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.init_th_forcing[i][k];</div>
+<div class="line"><span class="lineno">  109</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">th</a>[i][k] = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a7725cca3f943224b5878255f97a5bcfd">thb</a>[k] + <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>[i][k];</div>
 <div class="line"><span class="lineno">  110</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a1ffd59976b9a6948fe23f65a57335c38">thm</a>[i][k] = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">th</a>[i][k];</div>
 <div class="line"><span class="lineno">  111</span> </div>
 <div class="line"><span class="lineno">  112</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#abea7eda17bdb83b23d16d901c35c1f96">qv</a>[i][k] = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a13d01725e31e43adb064e132d1c02516">qvb</a>[k];</div>
@@ -377,6 +378,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  181</span><span class="preprocessor">    #endif</span></div>
 <div class="line"><span class="lineno">  182</span>    <span class="keywordflow">return</span>;</div>
 <div class="line"><span class="lineno">  183</span>}</div>
+<div class="ttc" id="aclassInit_html_a83424c08602c8f29653a28361be9c152"><div class="ttname"><a href="#a83424c08602c8f29653a28361be9c152">Init::RandomPerturbation</a></div><div class="ttdeci">static void RandomPerturbation(vvm &amp;, int)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00264">Init.cpp:264</a></div></div>
 <div class="ttc" id="aclassvvm_html_a0f7695aeeea1dac87393db3edfc7acd8"><div class="ttname"><a href="classvvm.html#a0f7695aeeea1dac87393db3edfc7acd8">vvm::BoundaryProcess2D_center</a></div><div class="ttdeci">static void BoundaryProcess2D_center(double var[][NZ])</div><div class="ttdef"><b>Definition</b> <a href="Boundary_8cpp_source.html#l00009">Boundary.cpp:9</a></div></div>
 <div class="ttc" id="aclassvvm_html_a1175b5c8c3bb07dbea7f0b614a65317b"><div class="ttname"><a href="classvvm.html#a1175b5c8c3bb07dbea7f0b614a65317b">vvm::zetam</a></div><div class="ttdeci">double zetam[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00048">Declare.hpp:48</a></div></div>
 <div class="ttc" id="aclassvvm_html_a15f5bebeb59fa99feedd3945e7cd7669"><div class="ttname"><a href="classvvm.html#a15f5bebeb59fa99feedd3945e7cd7669">vvm::ubarTop</a></div><div class="ttdeci">double ubarTop</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00040">Declare.hpp:40</a></div></div>
@@ -390,12 +392,13 @@ Here is the caller graph for this function:</div>
 <div class="ttc" id="aclassvvm_html_a882e391014e3a15f92d99c27aa6e5ac3"><div class="ttname"><a href="classvvm.html#a882e391014e3a15f92d99c27aa6e5ac3">vvm::qvm</a></div><div class="ttdeci">double qvm[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00057">Declare.hpp:57</a></div></div>
 <div class="ttc" id="aclassvvm_html_a88f21d908dca06f5c725da83a36caf96"><div class="ttname"><a href="classvvm.html#a88f21d908dca06f5c725da83a36caf96">vvm::BoundaryProcess2D_westdown</a></div><div class="ttdeci">static void BoundaryProcess2D_westdown(double var[][NZ])</div><div class="ttdef"><b>Definition</b> <a href="Boundary_8cpp_source.html#l00021">Boundary.cpp:21</a></div></div>
 <div class="ttc" id="aclassvvm_html_abea7eda17bdb83b23d16d901c35c1f96"><div class="ttname"><a href="classvvm.html#abea7eda17bdb83b23d16d901c35c1f96">vvm::qv</a></div><div class="ttdeci">double qv[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00057">Declare.hpp:57</a></div></div>
+<div class="ttc" id="aclassvvm_html_ac1c6d782be56a7e0179fb8f755df44a2"><div class="ttname"><a href="classvvm.html#ac1c6d782be56a7e0179fb8f755df44a2">vvm::init_th_forcing</a></div><div class="ttdeci">double init_th_forcing[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00171">Declare.hpp:171</a></div></div>
 <div class="ttc" id="aclassvvm_html_ad7c0652b11cf78af50e5b03e593e1774"><div class="ttname"><a href="classvvm.html#ad7c0652b11cf78af50e5b03e593e1774">vvm::u</a></div><div class="ttdeci">double u[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00050">Declare.hpp:50</a></div></div>
 <div class="ttc" id="aclassvvm_html_add34568af43cf188bec69d61cc9c5bee"><div class="ttname"><a href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">vvm::th</a></div><div class="ttdeci">double th[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00049">Declare.hpp:49</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classInit_a622540f0e2606ee86b781a8eb8f5a67c_cgraph.svg" width="314" height="120"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classInit_a622540f0e2606ee86b781a8eb8f5a67c_cgraph.svg" width="536" height="126"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -447,8 +450,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  232</span>        <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a460b941aba46eeaf9d777d93ec472cc1">rhou</a>[i] = RHOZ;</div>
 <div class="line"><span class="lineno">  233</span>        <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a8f250b15a87e5698b512aed8c52ca1fa">rhow</a>[i] = RHO;</div>
 <div class="line"><span class="lineno">  234</span><span class="preprocessor">        #if defined(TROPICALFORCING)</span></div>
-<div class="line"><span class="lineno">  235</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.Q1LS[i] = Q1LS * 6.;</div>
-<div class="line"><span class="lineno">  236</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.Q2LS[i] = Q2LS * 6.;</div>
+<div class="line"><span class="lineno">  235</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ad1748124b5a9e89fb1eac1e879e8cfd1">Q1LS</a>[i] = Q1LS * 6.;</div>
+<div class="line"><span class="lineno">  236</span>            <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ab25ae9e0821f275766879a4b40d806a1">Q2LS</a>[i] = Q2LS * 6.;</div>
 <div class="line"><span class="lineno">  237</span><span class="preprocessor">        #endif</span></div>
 <div class="line"><span class="lineno">  238</span> </div>
 <div class="line"><span class="lineno">  239</span>        <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a06c8b7613b14bb7d815a20ee3060bb01">tvb</a>[i] = <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a7725cca3f943224b5878255f97a5bcfd">thb</a>[i] * (1. + 0.61 * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a13d01725e31e43adb064e132d1c02516">qvb</a>[i]);</div>
@@ -475,6 +478,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  260</span>    <span class="keywordflow">return</span>;</div>
 <div class="line"><span class="lineno">  261</span>}</div>
 <div class="ttc" id="aConst_8hpp_html_a693aee47b2103d0a7fcd3a0a0dd4fb57"><div class="ttname"><a href="Const_8hpp.html#a693aee47b2103d0a7fcd3a0a0dd4fb57">NZ</a></div><div class="ttdeci">#define NZ</div><div class="ttdef"><b>Definition</b> <a href="Const_8hpp_source.html#l00013">Const.hpp:13</a></div></div>
+<div class="ttc" id="aclassvvm_html_ab25ae9e0821f275766879a4b40d806a1"><div class="ttname"><a href="classvvm.html#ab25ae9e0821f275766879a4b40d806a1">vvm::Q2LS</a></div><div class="ttdeci">double Q2LS[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00170">Declare.hpp:170</a></div></div>
+<div class="ttc" id="aclassvvm_html_ad1748124b5a9e89fb1eac1e879e8cfd1"><div class="ttname"><a href="classvvm.html#ad1748124b5a9e89fb1eac1e879e8cfd1">vvm::Q1LS</a></div><div class="ttdeci">double Q1LS[NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00170">Declare.hpp:170</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -484,6 +489,75 @@ Here is the call graph for this function:</div>
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classInit_a18f209b227e2b6894dcd45969eec4339_icgraph.svg" width="334" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a83424c08602c8f29653a28361be9c152" name="a83424c08602c8f29653a28361be9c152"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83424c08602c8f29653a28361be9c152">&#9670;&#160;</a></span>RandomPerturbation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Init::RandomPerturbation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classvvm.html">vvm</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>model</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Init_8cpp_source.html#l00264">264</a> of file <a class="el" href="Init_8cpp_source.html">Init.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  264</span>                                               {</div>
+<div class="line"><span class="lineno">  265</span>    std::mt19937 gen(t); <span class="comment">// Mersenne Twister engine for random numbers</span></div>
+<div class="line"><span class="lineno">  266</span>    std::normal_distribution&lt;&gt; distribution(0.0, 1.0); <span class="comment">// Gaussian distribution with mean 0 and standard deviation 1</span></div>
+<div class="line"><span class="lineno">  267</span> </div>
+<div class="line"><span class="lineno">  268</span>    <span class="comment">// Parameters for the 2D Gaussian noise array</span></div>
+<div class="line"><span class="lineno">  269</span>    <span class="keywordtype">double</span> mean = 0.; <span class="comment">// Mean of the Gaussian distribution</span></div>
+<div class="line"><span class="lineno">  270</span>    <span class="keywordtype">double</span> standard_deviation = 1.; <span class="comment">// Standard deviation of the Gaussian distribution</span></div>
+<div class="line"><span class="lineno">  271</span>    <span class="keywordtype">double</span> min_range = -1.; <span class="comment">// Minimum value of the generated noise</span></div>
+<div class="line"><span class="lineno">  272</span>    <span class="keywordtype">double</span> max_range = 1.; <span class="comment">// Maximum value of the generated noise</span></div>
+<div class="line"><span class="lineno">  273</span> </div>
+<div class="line"><span class="lineno">  274</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a54019773003b18a98f267df45ee230bb">nx</a>-1; i++) {</div>
+<div class="line"><span class="lineno">  275</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a1c19d7dc2ab861379c3c69c7e79bd5c8">nz</a>-1; k++) {</div>
+<div class="line"><span class="lineno">  276</span>            <span class="comment">// TODO: Change it to physical parameter</span></div>
+<div class="line"><span class="lineno">  277</span>            <span class="keywordflow">if</span> (k &lt;= <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a1c19d7dc2ab861379c3c69c7e79bd5c8">nz</a> / 15) {</div>
+<div class="line"><span class="lineno">  278</span>                <span class="keywordtype">double</span> random_noise = 0.;</div>
+<div class="line"><span class="lineno">  279</span>                <span class="keywordflow">do</span> {</div>
+<div class="line"><span class="lineno">  280</span>                    random_noise = mean + standard_deviation * distribution(gen);</div>
+<div class="line"><span class="lineno">  281</span>                } <span class="keywordflow">while</span> (random_noise &lt; min_range || random_noise &gt; max_range);</div>
+<div class="line"><span class="lineno">  282</span> </div>
+<div class="line"><span class="lineno">  283</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>[i][k] = random_noise;</div>
+<div class="line"><span class="lineno">  284</span>            }</div>
+<div class="line"><span class="lineno">  285</span>            <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  286</span>                <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>[i][k] = 0.;</div>
+<div class="line"><span class="lineno">  287</span>            }</div>
+<div class="line"><span class="lineno">  288</span>        }</div>
+<div class="line"><span class="lineno">  289</span>    }</div>
+<div class="line"><span class="lineno">  290</span>    <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_function" href="classvvm.html#a0f7695aeeea1dac87393db3edfc7acd8">BoundaryProcess2D_center</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#ac1c6d782be56a7e0179fb8f755df44a2">init_th_forcing</a>);</div>
+<div class="line"><span class="lineno">  291</span>}</div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classInit_a83424c08602c8f29653a28361be9c152_cgraph.svg" width="404" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classInit_a83424c08602c8f29653a28361be9c152_icgraph.svg" width="488" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

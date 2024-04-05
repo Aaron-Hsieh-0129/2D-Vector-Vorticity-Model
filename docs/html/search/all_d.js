@@ -18,8 +18,7 @@ var searchData=
   ['prerequisite_15',['Prerequisite',['../index.html#autotoc_md1',1,'']]],
   ['printinit_16',['printInit',['../classOutput.html#ac9377ae1019ac4ee88877197685d19fe',1,'Output']]],
   ['problem_17',['If you cannot solve the netcdf_cxx4 and petsc installation problem.',['../index.html#autotoc_md3',1,'']]],
-  ['psurf_18',['PSURF',['../Const_8hpp.html#aa6bbc5496542a09e27553dc0dbba1ea5',1,'Const.hpp']]],
-  ['pth_5fpt_19',['pth_pt',['../classIteration.html#a7d5499ac76ee826bdda0184feb1fef5f',1,'Iteration']]],
-  ['pubartop_5fpt_20',['pubarTop_pt',['../classvvm_1_1PoissonSolver.html#a47ac6e26a9dde6ed72a178dcb92d3bab',1,'vvm::PoissonSolver']]],
-  ['pzeta_5fpt_21',['pzeta_pt',['../classIteration.html#a012d468a6070b5b181d88b226821ce5c',1,'Iteration']]]
+  ['pth_5fpt_18',['pth_pt',['../classIteration.html#a7d5499ac76ee826bdda0184feb1fef5f',1,'Iteration']]],
+  ['pubartop_5fpt_19',['pubarTop_pt',['../classvvm_1_1PoissonSolver.html#a47ac6e26a9dde6ed72a178dcb92d3bab',1,'vvm::PoissonSolver']]],
+  ['pzeta_5fpt_20',['pzeta_pt',['../classIteration.html#a012d468a6070b5b181d88b226821ce5c',1,'Iteration']]]
 ];

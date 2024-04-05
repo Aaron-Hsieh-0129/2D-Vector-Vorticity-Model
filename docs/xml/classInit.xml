@@ -32,7 +32,6 @@
         <references refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" compoundref="Const_8hpp" startline="10">P0</references>
         <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">vvm::pb</references>
         <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
-        <references refid="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" compoundref="Const_8hpp" startline="8">PSURF</references>
         <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
         <references refid="classvvm_1a128c6144ffb235b49bcdebf85c0ce8e9" compoundref="Declare_8hpp" startline="43">vvm::qvsb</references>
         <references refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" compoundref="Const_8hpp" startline="5">Rd</references>
@@ -66,12 +65,14 @@
         <references refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" compoundref="Boundary_8cpp" startline="9" endline="19">vvm::BoundaryProcess2D_center</references>
         <references refid="classvvm_1a88f21d908dca06f5c725da83a36caf96" compoundref="Boundary_8cpp" startline="21" endline="30">vvm::BoundaryProcess2D_westdown</references>
         <references refid="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4" compoundref="Config_8hpp" startline="2">dz</references>
+        <references refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" compoundref="Declare_8hpp" startline="171">vvm::init_th_forcing</references>
         <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
         <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
         <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
         <references refid="classvvm_1abea7eda17bdb83b23d16d901c35c1f96" compoundref="Declare_8hpp" startline="57">vvm::qv</references>
         <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
         <references refid="classvvm_1a882e391014e3a15f92d99c27aa6e5ac3" compoundref="Declare_8hpp" startline="57">vvm::qvm</references>
+        <references refid="classInit_1a83424c08602c8f29653a28361be9c152" compoundref="Init_8cpp" startline="264" endline="291">RandomPerturbation</references>
         <references refid="classvvm_1a3ca267ed2f973f92e35d839085baf702" compoundref="Declare_8hpp" startline="29">vvm::rdx</references>
         <references refid="classvvm_1a68ea5e54b9a54c4256969b5ba5dd4cbd" compoundref="Declare_8hpp" startline="31">vvm::rdz</references>
         <references refid="classvvm_1a8f250b15a87e5698b512aed8c52ca1fa" compoundref="Declare_8hpp" startline="43">vvm::rhow</references>
@@ -109,6 +110,8 @@
         <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
         <references refid="classvvm_1a81425e3f8b7fb92cd0f32a6a2c9ab575" compoundref="Declare_8hpp" startline="43">vvm::pb</references>
         <references refid="classvvm_1af3b16daf7541428d52fabed88807430c" compoundref="Declare_8hpp" startline="43">vvm::pib</references>
+        <references refid="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" compoundref="Declare_8hpp" startline="170">vvm::Q1LS</references>
+        <references refid="classvvm_1ab25ae9e0821f275766879a4b40d806a1" compoundref="Declare_8hpp" startline="170">vvm::Q2LS</references>
         <references refid="classvvm_1a13d01725e31e43adb064e132d1c02516" compoundref="Declare_8hpp" startline="43">vvm::qvb</references>
         <references refid="classvvm_1a128c6144ffb235b49bcdebf85c0ce8e9" compoundref="Declare_8hpp" startline="43">vvm::qvsb</references>
         <references refid="classvvm_1a460b941aba46eeaf9d777d93ec472cc1" compoundref="Declare_8hpp" startline="43">vvm::rhou</references>
@@ -117,6 +120,35 @@
         <references refid="classvvm_1a4af2d0685fff1ca80719520000435a72" compoundref="Declare_8hpp" startline="43">vvm::thb_zeta</references>
         <references refid="classvvm_1a06c8b7613b14bb7d815a20ee3060bb01" compoundref="Declare_8hpp" startline="43">vvm::tvb</references>
         <referencedby refid="classInit_1a4b373a923fb486df695e82608ff081c4" compoundref="Init_8cpp" startline="9" endline="100">Init1d</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classInit_1a83424c08602c8f29653a28361be9c152" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Init::RandomPerturbation</definition>
+        <argsstring>(vvm &amp;, int)</argsstring>
+        <name>RandomPerturbation</name>
+        <qualifiedname>Init::RandomPerturbation</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <defname>model</defname>
+        </param>
+        <param>
+          <type>int</type>
+          <defname>t</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/2DVVM/full/0402/model/src/Init.hpp" line="9" column="21" bodyfile="/home/Aaron/2DVVM/full/0402/model/src/Init.cpp" bodystart="264" bodyend="291"/>
+        <references refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" compoundref="Boundary_8cpp" startline="9" endline="19">vvm::BoundaryProcess2D_center</references>
+        <references refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" compoundref="Declare_8hpp" startline="171">vvm::init_th_forcing</references>
+        <references refid="main_8cpp_1a5e376a387fdce5400f2e8ed865388257" compoundref="main_8cpp" startline="4">model</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="35">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="36">vvm::nz</references>
+        <referencedby refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" compoundref="Init_8cpp" startline="102" endline="183">Init2d</referencedby>
+        <referencedby refid="classIteration_1ae341a02edb030229055de37fd518ac89" compoundref="Iteration_8cpp" startline="106" endline="258">Iteration::TimeMarching</referencedby>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-static-func">
@@ -220,6 +252,7 @@
       <member refid="classInit_1a4b373a923fb486df695e82608ff081c4" prot="public" virt="non-virtual"><scope>Init</scope><name>Init1d</name></member>
       <member refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" prot="public" virt="non-virtual"><scope>Init</scope><name>Init2d</name></member>
       <member refid="classInit_1a18f209b227e2b6894dcd45969eec4339" prot="public" virt="non-virtual"><scope>Init</scope><name>LoadFile</name></member>
+      <member refid="classInit_1a83424c08602c8f29653a28361be9c152" prot="public" virt="non-virtual"><scope>Init</scope><name>RandomPerturbation</name></member>
     </listofallmembers>
   </compounddef>
 </doxygen>

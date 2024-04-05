@@ -95,7 +95,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Two-dimension Vector Vorticity Model </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__2home_2Aaron_22DVVM_2full_20402_2model_2README"></a>This is a 2D cloud-resolving model based on vorticity equation</p>
+<div class="textblock"><p><a class="anchor" id="md__2home_2Aaron_22DVVM_2full_20402_2model_2README"></a> This is a 2D cloud-resolving model based on vorticity equation</p>
 <ul>
 <li>Two-dimension Vector Vorticity Model<ul>
 <li>Prerequisite</li>
@@ -125,11 +125,12 @@ Prerequisite</h1>
 <h1><a class="anchor" id="autotoc_md2"></a>
 How to Use</h1>
 <ol type="1">
-<li>Clone the project using <div class="fragment"><div class="line">git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git</div>
+<li><p class="startli">Clone the project using</p>
+<div class="fragment"><div class="line">git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git</div>
 </div><!-- fragment --></li>
 <li><p class="startli">Install netcdf-cxx, petsc</p>
 <p class="startli">It's a little bit complicated to install libraries for C/C++.</p>
-<p class="startli">I will provide a tutorial for installing C/C++ compiler and the libraries in another file <a href="./Install_compilers_libraries">here</a>. Here, you don't need to have sudo privilege to install anything.</p>
+<p class="startli">I will provide a tutorial for installing C/C++ compiler and the libraries in another file here. Here, you don't need to have sudo privilege to install anything.</p>
 </li>
 <li>Link the installed libraries</li>
 </ol>
@@ -137,7 +138,7 @@ How to Use</h1>
 <li>You need to change the libraries path (netcdf, petsc) to your own path.</li>
 <li>Change include path in CMakeLists.txt <div class="fragment"><div class="line">include_directories(</div>
 <div class="line">  include</div>
-<div class="line">  &lt;/path/to/your/petsc&gt;/include </div>
+<div class="line">  &lt;/path/to/your/petsc&gt;/include</div>
 <div class="line">)</div>
 </div><!-- fragment --></li>
 <li>Change library link path <div class="fragment"><div class="line">find_library(libncxxPath netcdf_c++4 &quot;&lt;path to your netcdf_c++4&gt;/lib&quot;)</div>
@@ -145,7 +146,8 @@ How to Use</h1>
 </div><!-- fragment --></li>
 </ul>
 <ol type="1">
-<li>You are able to run the model by running the command under the project folder <div class="fragment"><div class="line">sh run.sh</div>
+<li><p class="startli">You are able to run the model by running the command under the project folder</p>
+<div class="fragment"><div class="line">sh run.sh</div>
 </div><!-- fragment --></li>
 <li>You can change the model settings by changing the macro flags in the <code>./src/Config.hpp</code></li>
 </ol>
@@ -155,26 +157,41 @@ If you cannot solve the netcdf_cxx4 and petsc installation problem.</h2>
 <li>Turn off the flag <code>OUTPUTNC</code> and turn on the flag <code>OUTPUTTXT</code> in <code>./src/Config.hpp</code></li>
 <li>Turn off the flag <code>PETSC</code> in <code>./src/Config.hpp</code> and this will in turn make the model use the Eigen C++ Solver</li>
 <li>Create a folder called bin under project root by <code>mkdir bin</code></li>
-<li>Create a file called Makefile under the project and the content will be the following <div class="fragment"><div class="line"># CC and CFLAGS are varilables</div>
+<li><p class="startli">Create a file called Makefile under the project and the content will be the following</p>
+<div class="fragment"><div class="line"># CC and CFLAGS are varilables</div>
 <div class="line">CC = g++</div>
 <div class="line">CFLAGS = -Wall -c -std=c++11</div>
 <div class="line"># -c option ask g++ to compile the source files, but do not link.</div>
 <div class="line">OPTFLAGS = -O3</div>
 <div class="line"> </div>
-<div class="line">all : bin/vvm2d</div>
+<div class="line">all  : bin/vvm2d</div>
 <div class="line">    @echo -n &quot;&quot;</div>
 <div class="line"> </div>
-<div class="line">bin/vvm2d   : main.o Declare.o Init.o Iteration.o Outputfile.o </div>
-<div class="line">            $(CC) $(OPTFLAGS) main.o Declare.o Init.o Outputfile.o Iteration.o -o bin/vvm2d</div>
-<div class="line">main.o      : src/main.cpp</div>
+<div class="line">bin/vvm2d    : main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o</div>
+<div class="line">            $(CC) $(OPTFLAGS) main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o -o bin/vvm2d</div>
+<div class="line">main.o       : src/main.cpp</div>
 <div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Declare.o   : src/Declare.cpp</div>
+<div class="line">AddForcing.o : src/AddForcing.cpp</div>
 <div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Init.o      : src/Init.cpp</div>
+<div class="line">Advection.o  : src/Advection.cpp</div>
 <div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Outputfile.o: src/Outputfile.cpp</div>
+<div class="line">Boundary.o   : src/Boundary.cpp</div>
 <div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Iteration.o : src/Iteration.cpp</div>
+<div class="line">Buoyancy.o   : src/Boundary.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">Declare.o    : src/Declare.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">Init.o       : src/Init.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">Output.o: src/Output.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">Iteration.o  : src/Iteration.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">MicroPhyscis.o   : src/MicroPhyscis.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">NumericalProcess.o   : src/NumericalProcess.cpp</div>
+<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
+<div class="line">PoissonSolver.o  : src/NumericalProcess.cpp</div>
 <div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
 </div><!-- fragment --></li>
 <li>Using <code>make</code> under project root to compile the project and you will the the execution file at <code>./bin/vvm2d</code> .</li>

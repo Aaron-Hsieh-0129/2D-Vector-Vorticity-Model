@@ -4,6 +4,7 @@
     <member refid="classInit_1a4b373a923fb486df695e82608ff081c4" kind="function"><name>Init1d</name></member>
     <member refid="classInit_1a622540f0e2606ee86b781a8eb8f5a67c" kind="function"><name>Init2d</name></member>
     <member refid="classInit_1a18f209b227e2b6894dcd45969eec4339" kind="function"><name>LoadFile</name></member>
+    <member refid="classInit_1a83424c08602c8f29653a28361be9c152" kind="function"><name>RandomPerturbation</name></member>
     <member refid="classInit_1a743d215d0b8e6e70d05b3c376378d340" kind="function"><name>GetTB</name></member>
     <member refid="classInit_1a09bc5d643ea4bd3af95e7e0a280cade6" kind="function"><name>GetTHRAD</name></member>
     <member refid="classInit_1aacd502057acbb768e093c91ef8f2e2f0" kind="function"><name>GetTH</name></member>
@@ -89,6 +90,10 @@
     <member refid="classvvm_1a63095564c677502c49dae2d69d24e317" kind="variable"><name>precip</name></member>
     <member refid="classvvm_1ac87ca230e4801653418101e80a986b5b" kind="variable"><name>A</name></member>
     <member refid="classvvm_1a2b0b1a4ac6932d797805238e973cc01d" kind="variable"><name>G</name></member>
+    <member refid="classvvm_1ad1748124b5a9e89fb1eac1e879e8cfd1" kind="variable"><name>Q1LS</name></member>
+    <member refid="classvvm_1ab25ae9e0821f275766879a4b40d806a1" kind="variable"><name>Q2LS</name></member>
+    <member refid="classvvm_1ac1c6d782be56a7e0179fb8f755df44a2" kind="variable"><name>init_th_forcing</name></member>
+    <member refid="classvvm_1ac062ac68687e7171fd71da3236b2e6a9" kind="variable"><name>status_for_adding_forcing</name></member>
     <member refid="classvvm_1aa95fad9f6760c23d6ecc162c0c494653" kind="function"><name>vvm</name></member>
     <member refid="classvvm_1ace6f793034804810c37b0363b70648ed" kind="function"><name>BoundaryProcess1D_center</name></member>
     <member refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" kind="function"><name>BoundaryProcess2D_center</name></member>
@@ -99,6 +104,7 @@
     <member refid="classvvm_1ad5a7610975364e5b4163e7aff3c8e7ef" kind="function"><name>Bouyancy</name></member>
     <member refid="classvvm_1ac6e47dca620f5b32dd6b0d1be432a347" kind="function"><name>Diffusion</name></member>
     <member refid="classvvm_1ab10c85732f7f7256133cf53f099232c2" kind="function"><name>TimeFilter</name></member>
+    <member refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" kind="function"><name>AddForcing</name></member>
   </compound>
   <compound refid="namespacenetCDF" kind="namespace"><name>netCDF</name>
   </compound>
@@ -142,14 +148,16 @@
     <member refid="Config_8hpp_1a0726a750fb3d9122ed716b5ed67ae926" kind="define"><name>TIMEFILTER</name></member>
     <member refid="Config_8hpp_1acdf4e08f4cada9c7bb2693c6b2e4c2e2" kind="define"><name>TIMETS</name></member>
     <member refid="Config_8hpp_1a5c3fbf45abc4ee50d118d87aecfee212" kind="define"><name>WATER</name></member>
-    <member refid="Config_8hpp_1ab999b0d7a9f1de7dab07395017fa6e43" kind="define"><name>VTconst</name></member>
+    <member refid="Config_8hpp_1ae1a5ef3159a24aad5047859e9bafa707" kind="define"><name>TROPICALFORCING</name></member>
+    <member refid="Config_8hpp_1a62c1645b450ad25c7cff262aa9a6a3c3" kind="define"><name>ADDFORCINGTIME</name></member>
+    <member refid="Config_8hpp_1a1c49559a85a9e1c4ad1b58d738ce0a0b" kind="define"><name>RADIATIONCOOLING</name></member>
+    <member refid="Config_8hpp_1a5c166d882469baaf48008853944b5956" kind="define"><name>LOADFILE</name></member>
   </compound>
   <compound refid="Const_8hpp" kind="file"><name>Const.hpp</name>
     <member refid="Const_8hpp_1a6801baa546c6112d19eb095111d24720" kind="define"><name>GRAVITY</name></member>
     <member refid="Const_8hpp_1a04232fb1dd2fa2aa27b1cc841de87e8b" kind="define"><name>C_p</name></member>
     <member refid="Const_8hpp_1a9151700714b0ec53aa32af2f907d0a99" kind="define"><name>Rd</name></member>
     <member refid="Const_8hpp_1a1796b981de799fa29e4a761dc0c538f6" kind="define"><name>Cv</name></member>
-    <member refid="Const_8hpp_1aa6bbc5496542a09e27553dc0dbba1ea5" kind="define"><name>PSURF</name></member>
     <member refid="Const_8hpp_1a1583b00a62bc1138f99bbfcd8ef81a6a" kind="define"><name>P0</name></member>
     <member refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" kind="define"><name>Lv</name></member>
     <member refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kind="define"><name>NX</name></member>

@@ -51,5 +51,7 @@
     The number of grid points in x direction
     \def NZ
     The number of grid points in z direction
+    \def ALPHA
+    Coefficient for Adams-Bashforth method. If it is 0, it would be reduced to Leapfrog scheme.
 */
 // ***********************************************************************************
