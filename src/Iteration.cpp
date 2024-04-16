@@ -86,9 +86,9 @@ void Iteration::pqr_pt(vvm &model) {
     model.Advection_qrVT(model);
     microphysics.NegativeValueProcess(model.qrp);
 
-    double VT_u = 6., VT_d = 6.;
     for (int i = 1; i <= model.nx-2; i++) {
-        double rain = -model.rhow[1] * (model.w[i][2] - 0.5*(VT_u + VT_d)) * model.qr[i][1];
+        double VT = 36.34 * pow(model.rhou[1]*model.qr[i][1], 0.1346) * pow(model.rhou[1]/model.rhow[1], -0.5);
+        double rain = -model.rhou[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1];
         if (rain < 0) {
             model.precip[i] = 0.;
         }

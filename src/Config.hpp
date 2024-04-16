@@ -5,7 +5,7 @@
 #define DT (1.)
 #define TIMEEND (300000.)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0401/newBuoyancy/6Q16Q2_diff5_VTcal/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0409/6Q16Q2_diff100_VTcal/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
@@ -13,10 +13,10 @@
 #define PETSC
 // #define AB3 // Don't turn this on. Debugging!!!!!
 #define DIFFUSION
-#define Kx (5.)
-#define Kz (5.)
+#define Kx (100.)
+#define Kz (100.)
 #define POISSONPARAM (0.)
-#define POISSONPARAMU (1E-8)
+#define POISSONPARAMU (1E-9)
 
 #ifndef AB3
     #define TIMEFILTER
