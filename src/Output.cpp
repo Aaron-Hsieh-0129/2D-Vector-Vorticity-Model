@@ -85,6 +85,27 @@ void Output::output_nc(int n, vvm &model) {
         qvsbData.putVar(model.qvsb);
     }
 }
+
+void Output::output_time_nc(int n, vvm &model) {
+    string ncName = OUTPUTPATH + (string) "timer/" + std::to_string(n) + (string) ".nc";
+
+    NcFile dataFile(ncName, NcFile::replace);
+    NcDim tDim = dataFile.addDim("steps", TIMEROUTPUTSIZE);
+
+    NcVar advectionData = dataFile.addVar("advection", ncDouble, tDim);
+    NcVar poissonData = dataFile.addVar("poisson", ncDouble, tDim);
+    NcVar diffusionData = dataFile.addVar("diffusion", ncDouble, tDim);
+    NcVar microphysicsData = dataFile.addVar("microphysics", ncDouble, tDim);
+    NcVar allData = dataFile.addVar("all", ncDouble, tDim);
+
+    advectionData.putVar(model.t_advection);
+    poissonData.putVar(model.t_poisson);
+    diffusionData.putVar(model.t_diffusion);
+    microphysicsData.putVar(model.t_microphysics);
+    allData.putVar(model.t_all);
+    return;
+}
+
 #endif
 
 void Output::create_directory(string directory_name) {
@@ -102,6 +123,7 @@ void Output::create_all_directory() {
     // data directory
     #ifdef OUTPUTNC
         create_directory(OUTPUTPATH + (string) "nc");
+        create_directory(OUTPUTPATH + (string) "timer");
     #endif
 
     #if defined(OUTPUTTXT)

@@ -1,11 +1,12 @@
 #define dx (200)
 #define dz (200)
-#define XRANGE (120000+2*dx)
+#define XRANGE (60000+2*dx)
 #define ZRANGE (20000+2*dz)
 #define DT (1.)
-#define TIMEEND (300000.)
+#define TIMEEND (800000.)
+#define TIMEROUTPUTSIZE (10000)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0409/6Q16Q2_diff100_VTcal/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0428/6Q16Q2_diff10_VTcal/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
@@ -13,8 +14,8 @@
 #define PETSC
 // #define AB3 // Don't turn this on. Debugging!!!!!
 #define DIFFUSION
-#define Kx (100.)
-#define Kz (100.)
+#define Kx (10.)
+#define Kz (10.)
 #define POISSONPARAM (0.)
 #define POISSONPARAMU (1E-9)
 

@@ -7,6 +7,7 @@ public:
     static void create_all_directory();
     #if defined(OUTPUTNC)
         static void output_nc(int, vvm &);
+        static void output_time_nc(int, vvm &);
     #endif
 
     #if defined(OUTPUTTXT)

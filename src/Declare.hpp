@@ -62,6 +62,9 @@ public:
         double precip[NX];
     #endif
 
+    double t_advection[TIMEROUTPUTSIZE], t_poisson[TIMEROUTPUTSIZE], t_diffusion[TIMEROUTPUTSIZE], t_microphysics[TIMEROUTPUTSIZE];
+    double t_all[TIMEROUTPUTSIZE];
+
 // Boundary Process => BoundaryProcess.cpp
 // **********************************************************************
     /**

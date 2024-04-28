@@ -46,17 +46,18 @@ void vvm::MicroPhysics::autoconversion(vvm & model) {
 
 
 void vvm::MicroPhysics::accretion(vvm &model) {
-    double autort = 0.001, autotr = 0.001; // autocon rate [1/sec], autocon threshold [kg/kg]
-    double qcplus = 0., ar = 0., arcrdt = 0.;
+    double accrrt = 2.2;
+    double qcplus = 0., qrplus = 0., cr = 0., arcrdt = 0.;
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             qcplus = std::max(0., model.qcp[i][k]);
-            ar = autort * (qcplus - autotr);
-            ar = std::max(0., ar);
+            qrplus = std::max(0., model.qrp[i][k]);
+
+            cr = accrrt * qcplus * (std::pow(qrplus, 0.875));
             #if defined(AB3)
-                arcrdt = std::min(ar * DT, qcplus);
+                arcrdt = std::min(cr*DT, qcplus);
             #else
-                arcrdt = std::min(ar * model.d2t, qcplus);
+                arcrdt = std::min(cr*model.d2t, qcplus);
             #endif
             model.qcp[i][k] = model.qcp[i][k] - arcrdt;
             model.qrp[i][k] = model.qrp[i][k] + arcrdt;
@@ -72,15 +73,15 @@ void vvm::MicroPhysics::evaporation(vvm &model) {
     double qrplus = 0., qvplus = 0., qvs = 0., coef = 0., deficit = 0.;
     double er = 0., erdt = 0.;
     for (int k = 1; k <= model.nz-2; k++) {
-        pc = 380. / (pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
-        coef = 1.6 + 30.39 * pow((model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
+        pc = 380. / (std::pow(model.pib[k], C_p / Rd) * P0);	 // coefficient
+        coef = 1.6 + 124.9 * std::pow((1E-3 * model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
         for (int i = 1; i <= model.nx-2; i++) {
             qrplus = std::max(0., model.qrp[i][k]);
             qvplus = std::max(0., model.qvp[i][k]);
-            qvs = pc * exp(17.27 * (model.pib[k] * model.thp[i][k] - 273.) / (model.pib[k] * model.thp[i][k] - 36.));	// Tetens equation
+            qvs = pc * std::exp(17.27 * (model.pib[k] * model.thp[i][k] - 273.) / (model.pib[k] * model.thp[i][k] - 36.));	// Tetens equation
 
             deficit = std::max((1. - qvplus / qvs), 0.);					// saturation dificit (RH < 100%)
-            er = coef * deficit * (pow(model.rhou[k] * qrplus, 0.525)) / ((2.03e4 + 9.584e6 / (model.pb[k] * qvs)) * model.rhou[k]);
+            er = coef * deficit * (pow(1E-3 * model.rhou[k] * qrplus, 0.525)) / ((5.4E5 + 2.55E6 / (1E-2*model.pb[k] * qvs)) * 1E-3*model.rhou[k]);
             #if defined(AB3)
                 double erdt = std::min(qrplus, std::max(0., er * DT));
             #else

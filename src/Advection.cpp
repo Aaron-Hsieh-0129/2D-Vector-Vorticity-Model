@@ -190,8 +190,8 @@ void vvm::Advection_qrVT(vvm &model) {
                 G_ik_u = model.rhow[k+1] * VT_u * (model.qr[i][k+1] + model.qr[i][k]);
                 G_ik_d = model.rhow[k] * VT_d * (model.qr[i][k] + model.qr[i][k-1]);
             #else
-                rhoVT_u = 36.34 * pow(model.rhou[k+1]*model.qr[i][k+1], 0.1346) * pow(model.rhou[k+1]/model.rhow[1], -0.5);
-                rhoVT_d = 36.34 * pow(model.rhou[k-1]*model.qr[i][k-1], 0.1346) * pow(model.rhou[k-1]/model.rhow[1], -0.5);
+                rhoVT_u = model.rhow[k+1] * 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
+                rhoVT_d = model.rhow[k] * 1E-2 * (3634 * pow(1E-3*model.rhow[k] * 0.5*(model.qr[i][k]+model.qr[i][k-1]), 0.1346) * pow(model.rhow[k]/model.rhow[1], -0.5));
                 G_ik_u = rhoVT_u * (model.qr[i][k+1] + model.qr[i][k]);
                 G_ik_d = rhoVT_d * (model.qr[i][k] + model.qr[i][k-1]);
             #endif
@@ -202,8 +202,8 @@ void vvm::Advection_qrVT(vvm &model) {
                         rhoVT_u = model.rhow[k+1] * VT_u;
                         rhoVT_d = model.rhow[k] * VT_d;
                     #else
-                        rhoVT_uu = 36.34 * pow(model.rhou[k+2]*model.qr[i][k+2], 0.1346) * pow(model.rhou[k+2]/model.rhow[1], -0.5);
-                        rhoVT_dd = 36.34 * pow(model.rhou[k-2]*model.qr[i][k-2], 0.1346) * pow(model.rhou[k-2]/model.rhow[1], -0.5);
+                        rhoVT_uu = model.rhow[k+2] * 1E-2 * (36.34 * pow(1E-3*model.rhow[k+2] * 0.5*(model.qr[i][k+2]+model.qr[i][k+1]), 0.1346) * pow(model.rhow[k+2]/model.rhow[1], -0.5));
+                        rhoVT_dd = model.rhow[k-1] * 1E-2 * (36.34 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
                     #endif
                     G_ik_u += -ALPHA/3. * (PLUS(rhoVT_u) * (model.qr[i][k+1] - model.qr[i][k]) - std::pow(PLUS(rhoVT_u), 0.5)*std::pow(PLUS(rhoVT_d), 0.5)*(model.qr[i][k] - model.qr[i][k-1]) - 
                                            MINUS(rhoVT_u) * (model.qr[i][k+1] - model.qr[i][k]) - std::pow(MINUS(rhoVT_u), 0.5)*std::pow(MINUS(rhoVT_uu), 0.5)*(model.qr[i][k+2] - model.qr[i][k+1]));
@@ -218,8 +218,8 @@ void vvm::Advection_qrVT(vvm &model) {
                     G_ik_u = model.rhow[k+1] * VT_u * (model.qrm[i][k+1] + model.qrm[i][k]);
                     G_ik_d = model.rhow[k] * VT_d * (model.qrm[i][k] + model.qrm[i][k-1]);
                 #else
-                    rhoVT_u = 36.34 * pow(model.rhou[k+1]*model.qrm[i][k+1], 0.1346) * pow(model.rhou[k+1]/model.rhow[1], -0.5);
-                    rhoVT_d = 36.34 * pow(model.rhou[k-1]*model.qrm[i][k-1], 0.1346) * pow(model.rhou[k-1]/model.rhow[1], -0.5);
+                    rhoVT_u = model.rhow[k+1] * 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qrm[i][k+1]+model.qrm[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
+                    rhoVT_d = model.rhow[k] * 1E-2 * (3634 * pow(1E-3*model.rhow[k] * 0.5*(model.qrm[i][k]+model.qrm[i][k-1]), 0.1346) * pow(model.rhow[k]/model.rhow[1], -0.5));
                     G_ik_u = rhoVT_u * (model.qrm[i][k+1] + model.qrm[i][k]);
                     G_ik_d = rhoVT_d * (model.qrm[i][k] + model.qrm[i][k-1]);
                 #endif
@@ -229,8 +229,8 @@ void vvm::Advection_qrVT(vvm &model) {
                         rhoVT_u = model.rhow[k+1] * VT_u;
                         rhoVT_d = model.rhow[k] * VT_d;
                     #else
-                        rhoVT_uu = 36.34 * pow(model.rhou[k+2]*model.qrm[i][k+2], 0.1346) * pow(model.rhou[k+2]/model.rhow[1], -0.5);
-                        rhoVT_dd = 36.34 * pow(model.rhou[k-2]*model.qrm[i][k-2], 0.1346) * pow(model.rhou[k-2]/model.rhow[1], -0.5);
+                        rhoVT_uu = model.rhow[k+2] * 1E-2 * (36.34 * pow(1E-3*model.rhow[k+2] * 0.5*(model.qrm[i][k+2]+model.qrm[i][k+1]), 0.1346) * pow(model.rhow[k+2]/model.rhow[1], -0.5));
+                        rhoVT_dd = model.rhow[k-1] * 1E-2 * (36.34 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qrm[i][k-1]+model.qrm[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
                     #endif
                     G_ik_u += -ALPHA/3. * (PLUS(rhoVT_u) * (model.qrm[i][k+1] - model.qrm[i][k]) - std::pow(PLUS(rhoVT_u), 0.5)*std::pow(PLUS(rhoVT_d), 0.5)*(model.qrm[i][k] - model.qrm[i][k-1]) - 
                                            MINUS(rhoVT_u) * (model.qrm[i][k+1] - model.qrm[i][k]) - std::pow(MINUS(rhoVT_u), 0.5)*std::pow(MINUS(rhoVT_uu), 0.5)*(model.qrm[i][k+2] - model.qrm[i][k+1]));

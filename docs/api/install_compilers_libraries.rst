@@ -22,7 +22,7 @@ Install compiler
 -------------------
 
 - If you already have compilers, you can skip this procedure. But the reason I did it here is because I want to have compilers that I have the permission to change without the root privilege.
-
+- Note that if you want to use CUDA, the compiler version for gcc should be less than gcc-10.
 .. code-block:: shell
 
     wget https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-13.2.0/gcc-13.2.0.tar.gz
@@ -35,7 +35,7 @@ Install compiler
 
     ./contrib/download_prerequisites
 
-    ./configure --prefix=$HOME/gcc13 --enable-languages=c,c++,fortran,go --disable-multilib
+    ./configure --prefix=$HOME/gcc13 --enable-languages=c,c++,fortran --disable-multilib
 
     make -j 60
     make check
@@ -46,21 +46,19 @@ In ``~/.zshrc``
 .. code-block:: shell
 
     ################ In ~/.zshrc or ~/.bashrc ##############
-    export PATH=/path/to/software/gcc9/bin:/path/to/software/gcc9/lib64:$PATH
-    export LD_LIBRARY_PATH=/path/to/software/gcc9/lib/:$LD_LIBRARY_PATH
-    export PATH=$PATH:/install/bin
-    export C_INCLUDE_PATH=$C_INCLUDE_PATH:/install/include
-    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/install/include
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/install/lib64
-    export LIBRARY_PATH=$LIBRARY_PATH:/install/lib
+    export PATH=${HOME}/gcc13/bin:${HOME}/gcc13/lib64:$PATH
+    export LD_LIBRARY_PATH=${HOME}/gcc13/lib/:$LD_LIBRARY_PATH
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/gcc13/lib64
-    export LIBRARY_PATH="$LIBRARY_PATH:$HOME/gcc13/lib64"
+    export PATH="$PATH:$HOME/local/bin"
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/local/lib"
+    export LIBRARY_PATH="$LIBRARY_PATH:$HOME/local/lib"
+    export CPATH="$CPATH:$HOME/local/include"
     #########################################################
 
 Install mpich
 ----------------
-
+- CUDA can also be installed and link to mpich. You should specify it in the ./configure command.
+  
 .. code-block:: shell
 
     wget https://www.mpich.org/static/downloads/4.2.0/mpich-4.2.0.tar.gz
@@ -123,9 +121,9 @@ Install petsc
 
 .. code-block:: shell
 
-    wget ~~~~
+    git clone -b release https://gitlab.com/petsc/petsc.git petsc
     cd ~/petsc
-    ./configure COPTFLAGS="-g -O3" --prefix=${petsc_prefix} --with-cc=mpicc --with-cxx=mpicxx --with-fc=mpifort --download-f2cblaslapack=1 --download-triangle=1
+    ./configure COPTFLAGS="-g -O3" --prefix=${petsc_prefix} --with-openmp=1 --with-cuda=1 --with-cc=mpicc --with-cxx=mpicxx --with-fc=mpifort --download-f2cblaslapack=1 --download-triangle=1
 
 .. code-block:: shell
 

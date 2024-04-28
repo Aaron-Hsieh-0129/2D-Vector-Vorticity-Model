@@ -1,5 +1,6 @@
 #include "Iteration.hpp"
 #include <iomanip>
+#include "Timer.hpp"
 
 vvm::PoissonSolver poissonSolver;
 #if defined(WATER)
@@ -87,7 +88,7 @@ void Iteration::pqr_pt(vvm &model) {
     microphysics.NegativeValueProcess(model.qrp);
 
     for (int i = 1; i <= model.nx-2; i++) {
-        double VT = 36.34 * pow(model.rhou[1]*model.qr[i][1], 0.1346) * pow(model.rhou[1]/model.rhow[1], -0.5);
+        double VT = 1E-2 * (3634 * pow(1E-3*model.rhou[1] * model.qr[i][1], 0.1346) * pow(model.rhou[1]/model.rhow[1], -0.5));
         double rain = -model.rhou[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1];
         if (rain < 0) {
             model.precip[i] = 0.;
@@ -104,6 +105,9 @@ void Iteration::pqr_pt(vvm &model) {
 #endif
 
 void Iteration::TimeMarching(vvm &model) {
+    Timer timer;
+    Timer time_all;
+
     int n = 0;
     double temp = TIMEEND / DT;
     int nmax = (int) temp;
@@ -111,9 +115,10 @@ void Iteration::TimeMarching(vvm &model) {
         poissonSolver.InitPoissonMatrix(model);
     #endif
     while (n < nmax) {
+        time_all.reset();
         std::cout << n << std::endl;
         // output
-        if (n % OUTPUTSTEP == 0 || n == TIMEEND-1) {
+        if (n % OUTPUTSTEP == 0 || n == TIMEEND-1 || n == TIMEEND-2) {
             #if defined(OUTPUTNC)
                 Output::output_nc(n, model);
             #endif
@@ -133,7 +138,11 @@ void Iteration::TimeMarching(vvm &model) {
             #endif
         }
         n++;
-        
+
+        if (n % TIMEROUTPUTSIZE == 0) {
+            Output::output_time_nc(n, model);
+        }
+
         #if defined(TROPICALFORCING)
             if (n * DT <= ADDFORCINGTIME) model.status_for_adding_forcing = true;
             else model.status_for_adding_forcing = false;
@@ -153,6 +162,7 @@ void Iteration::TimeMarching(vvm &model) {
         }
         #endif
 
+        timer.reset();
         pzeta_pt(model);
         pth_pt(model);
         #if defined(WATER)
@@ -163,6 +173,9 @@ void Iteration::TimeMarching(vvm &model) {
                 model.AddForcing(model);
             #endif
         #endif
+        model.t_advection[(n-1)%TIMEROUTPUTSIZE] = timer.elapsed();
+
+        timer.reset();
         #if defined(STREAMFUNCTION)
             poissonSolver.calpsiuw(model);
         #else
@@ -170,8 +183,9 @@ void Iteration::TimeMarching(vvm &model) {
             poissonSolver.cal_w(model);
             poissonSolver.cal_u(model);
         #endif
+        model.t_poisson[(n-1)%TIMEROUTPUTSIZE] = timer.elapsed();
         
-
+        timer.reset();
         #if defined(DIFFUSION)
             model.Diffusion(model.zetam, model.zetap, model);
             model.Diffusion(model.thm, model.thp, model);
@@ -181,6 +195,8 @@ void Iteration::TimeMarching(vvm &model) {
                 model.Diffusion(model.qrm, model.qrp, model);
             #endif
         #endif
+        model.t_diffusion[(n-1)%TIMEROUTPUTSIZE] = timer.elapsed();
+
         model.BoundaryProcess2D_westdown(model.zetap);
         model.BoundaryProcess2D_center(model.thp);
         model.BoundaryProcess2D_westdown(model.w);
@@ -191,6 +207,7 @@ void Iteration::TimeMarching(vvm &model) {
             model.BoundaryProcess2D_center(model.qrp);
         #endif
 
+        timer.reset();
         #if defined(WATER)
             microphysics.autoconversion(model);
             microphysics.accretion(model);
@@ -202,6 +219,7 @@ void Iteration::TimeMarching(vvm &model) {
             microphysics.NegativeValueProcess(model.qcp);
             microphysics.NegativeValueProcess(model.qrp);
         #endif
+        model.t_microphysics[(n-1)%TIMEROUTPUTSIZE] = timer.elapsed();
 
         model.BoundaryProcess2D_westdown(model.zetap);
         model.BoundaryProcess2D_center(model.thp);
@@ -224,7 +242,6 @@ void Iteration::TimeMarching(vvm &model) {
                 #endif
             #endif
         #endif
-
 
         updateMean(model);
 
@@ -252,7 +269,7 @@ void Iteration::TimeMarching(vvm &model) {
                 #endif
             }
         }
-
+        model.t_all[(n-1)%TIMEROUTPUTSIZE] = time_all.elapsed();
     }
     return;
 }
