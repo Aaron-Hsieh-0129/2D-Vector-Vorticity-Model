@@ -6,7 +6,7 @@
 #define TIMEEND (800000.)
 #define TIMEROUTPUTSIZE (10000)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0428/6Q16Q2_diff10_VTcal/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0504/6Q16Q2_diff10_VTcal/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
@@ -32,6 +32,12 @@
 #define RADIATIONCOOLING
 #define LOADFILE
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
+// #define LOADFROMPREVIOUSFILE
+#if defined(LOADFROMPREVIOUSFILE)
+    #define TIMENOW (550001)
+    #define LOADPATH1 "/data/Aaron/2DVVM/full/0501/6Q16Q2_diff10_VTcal/nc/550000.nc"
+    #define LOADPATH2 "/data/Aaron/2DVVM/full/0501/6Q16Q2_diff10_VTcal/nc/550001.nc"
+#endif
 
 // #define VTconst
 

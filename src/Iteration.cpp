@@ -111,6 +111,12 @@ void Iteration::TimeMarching(vvm &model) {
     int n = 0;
     double temp = TIMEEND / DT;
     int nmax = (int) temp;
+
+    #if defined(LOADFROMPREVIOUSFILE)
+        n = TIMENOW;
+        std::cout << "timenow: " << n << std::endl;
+    #endif
+
     #ifndef PETSC
         poissonSolver.InitPoissonMatrix(model);
     #endif
@@ -118,7 +124,7 @@ void Iteration::TimeMarching(vvm &model) {
         time_all.reset();
         std::cout << n << std::endl;
         // output
-        if (n % OUTPUTSTEP == 0 || n == TIMEEND-1 || n == TIMEEND-2) {
+        if (n % OUTPUTSTEP == 0 || n == TIMEEND-1 || n == TIMEEND-2 || n == 550001) {
             #if defined(OUTPUTNC)
                 Output::output_nc(n, model);
             #endif

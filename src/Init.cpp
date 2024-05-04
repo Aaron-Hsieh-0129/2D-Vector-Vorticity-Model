@@ -5,6 +5,10 @@
 #include <iostream>
 #include <petsc.h>
 #include <random>
+#if defined(LOADFROMPREVIOUSFILE)
+    #include <netcdf>
+    using namespace netCDF;
+#endif
 
 void Init::Init1d(vvm &model) {
     #if defined(LOADFILE)
@@ -28,17 +32,17 @@ void Init::Init1d(vvm &model) {
             #else
                 model.qvb[k] = 0.;
             #endif
-            model.tvb[k] = model.thb[k] * (1. + 0.61 * model.qvb[k]);
+            model.thvb[k] = model.thb[k] * (1. + 0.61 * model.qvb[k]);
         }
         model.BoundaryProcess1D_center(model.qvb);
-        model.BoundaryProcess1D_center(model.tvb);
+        model.BoundaryProcess1D_center(model.thvb);
 
         // init pib
         double pisfc = pow((PSURF / P0), Rd / C_p);
         for (int k = 1; k <= model.nz-2; k++) {
-            if (k == 1) model.pib[k] = pisfc - GRAVITY * 0.5 * dz / (C_p * model.tvb[k]);
+            if (k == 1) model.pib[k] = pisfc - GRAVITY * 0.5 * dz / (C_p * model.thvb[k]);
             else {
-                double tvbavg = 0.5*(model.tvb[k] + model.tvb[k-1]);
+                double tvbavg = 0.5*(model.thvb[k] + model.thvb[k-1]);
                 model.pib[k] = model.pib[k-1] - GRAVITY * dz / (C_p * tvbavg);
             }
         }
@@ -49,7 +53,7 @@ void Init::Init1d(vvm &model) {
             #ifdef RHO1
                 model.rhou[k] = 1.;
             #else
-                model.rhou[k] = P0 * pow(model.pib[k], Cv/Rd) / (Rd * model.tvb[k]);
+                model.rhou[k] = P0 * pow(model.pib[k], Cv/Rd) / (Rd * model.thvb[k]);
             #endif
         }
         model.BoundaryProcess1D_center(model.rhou);
@@ -182,6 +186,8 @@ void Init::Init2d(vvm &model) {
 	return;
 }
 
+
+
 double Init::GetTB(int k) {
     double z_top = 12000., T_top = 213., tb_top = 343.;
     double z_t = dz * (k - 0.5);
@@ -214,6 +220,7 @@ double Init::GetQVB(int k) {
 }
 #endif
 
+#if defined(LOADFILE)
 void Init::LoadFile(vvm &model) {
     std::ifstream inputFile;
 
@@ -236,7 +243,7 @@ void Init::LoadFile(vvm &model) {
             model.Q2LS[i] = Q2LS * 6.;
         #endif
 
-        model.tvb[i] = model.thb[i] * (1. + 0.61 * model.qvb[i]);
+        model.thvb[i] = model.thb[i] * (1. + 0.61 * model.qvb[i]);
         model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.thb[i] * model.pib[i] - 273.)) / (model.thb[i] * model.pib[i] - 36.));
         i++;
     }
@@ -247,7 +254,7 @@ void Init::LoadFile(vvm &model) {
     model.BoundaryProcess1D_center(model.pb);
     model.BoundaryProcess1D_center(model.rhou);
     model.BoundaryProcess1D_center(model.rhow);
-    model.BoundaryProcess1D_center(model.tvb);
+    model.BoundaryProcess1D_center(model.thvb);
     model.BoundaryProcess1D_center(model.qvsb);
     model.rhow[NZ-1] = model.rhou[NZ-2];
 
@@ -259,6 +266,110 @@ void Init::LoadFile(vvm &model) {
     model.thb_zeta[NZ-1] = model.thb[NZ-2];
     return;
 }
+#elif defined(LOADFROMPREVIOUSFILE)
+void Init::LoadFromPreviousFile(vvm &model) {
+    std::ifstream inputFile;
+
+    inputFile.open("../input/init.txt");
+    std::string line;
+    std::getline(inputFile, line);
+    std::getline(inputFile, line); // Skip the zero level
+    double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
+
+    int i = 1;
+    while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
+        // model.thb[i] = THBAR;
+        // model.qvb[i] = QVBAR;
+        model.pib[i] = PIBAR;
+        model.pb[i] = PBAR;
+        model.rhou[i] = RHOZ;
+        model.rhow[i] = RHO;
+        #if defined(TROPICALFORCING)
+            model.Q1LS[i] = Q1LS * 6.;
+            model.Q2LS[i] = Q2LS * 6.;
+        #endif
+        i++;
+    }
+
+    model.BoundaryProcess1D_center(model.pib);
+    model.BoundaryProcess1D_center(model.pb);
+    model.BoundaryProcess1D_center(model.rhou);
+    model.BoundaryProcess1D_center(model.rhow);
+    model.rhow[NZ-1] = model.rhou[NZ-2];
+
+    std::string data_m = LOADPATH1;
+    std::string data = LOADPATH2;
+    NcFile df_m(data_m, NcFile::read);
+    NcFile df(data, NcFile::read);
+
+    auto thm_in = df_m.getVar("th");
+    auto th_in = df.getVar("th");
+    auto zetam_in = df_m.getVar("zeta");
+    auto zeta_in = df.getVar("zeta");
+    auto qvm_in = df_m.getVar("qv");
+    auto qv_in = df.getVar("qv");
+    auto qcm_in = df_m.getVar("qc");
+    auto qc_in = df.getVar("qc");
+    auto qrm_in = df_m.getVar("qr");
+    auto qr_in = df.getVar("qr");
+    auto u_in = df.getVar("u");
+    auto w_in = df.getVar("w");
+
+    thm_in.getVar(model.thm);
+    th_in.getVar(model.th);
+    zetam_in.getVar(model.zetam);
+    zeta_in.getVar(model.zeta);
+    qvm_in.getVar(model.qvm);
+    qv_in.getVar(model.qv);
+    qcm_in.getVar(model.qcm);
+    qc_in.getVar(model.qc);
+    qrm_in.getVar(model.qrm);
+    qr_in.getVar(model.qr);
+    u_in.getVar(model.u);
+    w_in.getVar(model.w);
+    
+
+    double tb = 0.;
+    #if defined(WATER)
+        double qvb = 0.;
+    #endif
+    for (int k = 1; k < model.nz-1; k++) {
+        tb = 0.;
+
+        #if defined(WATER)
+            qvb = 0.;
+        #endif
+        
+        for (int i = 1; i < model.nx-1; i++) {
+            tb += model.th[i][k];
+            #if defined(WATER)
+                qvb += model.qv[i][k];
+            #endif
+        }
+        model.thb[k] = tb / (double) (model.nx - 2.);
+        #if defined(WATER)
+            model.qvb[k] = qvb / (double) (model.nx - 2.);
+            model.thvb[k] = model.thb[k] + 0.61 * model.qvb[k];
+        #else
+            model.thvb[k] = model.thb[k];
+        #endif
+        model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.thb[i] * model.pib[i] - 273.)) / (model.thb[i] * model.pib[i] - 36.));
+    }
+    model.BoundaryProcess1D_center(model.thb);
+    model.BoundaryProcess1D_center(model.thvb);
+    #if defined(WATER)
+        model.BoundaryProcess1D_center(model.qvb);
+    #endif
+    model.BoundaryProcess1D_center(model.qvsb);
+
+    for (int k = 1; k < model.nz-1; k++) {
+        model.thb_zeta[k] = 0.5 * (model.thb[k-1] + model.thb[k]);
+    }
+    model.BoundaryProcess1D_center(model.thb_zeta);
+
+    return;
+}
+#endif
 
 #if defined(TROPICALFORCING)
 void Init::RandomPerturbation(vvm &model, int t) {

@@ -3,8 +3,12 @@
 
 vvm model;
 int main(int argc, char **argv) {
-    Init::Init1d(model);
-    Init::Init2d(model);
+    #if defined(LOADFROMPREVIOUSFILE)
+        Init::LoadFromPreviousFile(model);
+    #else
+        Init::Init1d(model);
+        Init::Init2d(model);
+    #endif
     Output::printInit(model);
     Output::create_all_directory();
 

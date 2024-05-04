@@ -40,7 +40,7 @@ public:
     double ubarTopp, ubarTop, ubarTopm;
 
     // 1D variables
-    double thb[NZ], thbm[NZ], thb_zeta[NZ], rhou[NZ], rhow[NZ], pib[NZ], qvb[NZ], qvsb[NZ], tvb[NZ], pb[NZ];
+    double thb[NZ], thbm[NZ], thb_zeta[NZ], rhou[NZ], rhow[NZ], pib[NZ], qvb[NZ], qvsb[NZ], pb[NZ];
     double xi[NX], uxi[NX];
     double thvb[NZ], thvbm[NZ];
 

@@ -35,6 +35,7 @@ void Output::output_nc(int n, vvm &model) {
     NcFile dataFile(ncName, NcFile::replace);
 
     // Create netCDF dimensions
+    NcDim zeroDim = dataFile.addDim("zero", 1);
     NcDim xDim = dataFile.addDim("x", model.nx);
     NcDim zDim = dataFile.addDim("z", model.nz);
     vector<NcDim> xzDim, zNcDim;
@@ -46,11 +47,15 @@ void Output::output_nc(int n, vvm &model) {
     NcVar zetaData = dataFile.addVar("zeta", ncDouble, xzDim);
     NcVar uData = dataFile.addVar("u", ncDouble, xzDim);
     NcVar wData = dataFile.addVar("w", ncDouble, xzDim);
+    NcVar ubartopData = dataFile.addVar("ubarTop", ncDouble, zeroDim);
     
     thData.putVar(model.th);
     zetaData.putVar(model.zeta);
     uData.putVar(model.u);
     wData.putVar(model.w);
+    double tmpubarTop[1];
+    tmpubarTop[0] = model.ubarTopp;
+    ubartopData.putVar(tmpubarTop);
 
     #if defined(WATER)
         NcVar qcData = dataFile.addVar("qc", ncDouble, xzDim);

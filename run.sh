@@ -1,8 +1,6 @@
 #!/bin/bash
 #SBATCH -n 1
 #SBATCH -N 1
-#SBATCH -t 3-00:00
-#SBATCH --mem=2000
 #SBATCH -o myjob.o
 #SBATCH -e myjob.e
 #SBATCH --mail-type=ALL

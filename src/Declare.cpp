@@ -10,7 +10,7 @@ vvm::vvm() {
         thb[k] = thb_zeta[k] = 0.;
         rhou[k] = rhow[k] = 0.;
         pib[k] = 0.;
-        tvb[k] = 0.;
+        thvb[k] = 0.;
         pb[k] = pib[k] = 0.;
         qvb[k] = qvsb[k] = 0.;
         thvb[k] = thvbm[k] = 0.;
