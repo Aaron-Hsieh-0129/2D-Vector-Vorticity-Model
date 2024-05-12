@@ -3,10 +3,10 @@
 #define XRANGE (60000+2*dx)
 #define ZRANGE (20000+2*dz)
 #define DT (1.)
-#define TIMEEND (800000.)
+#define TIMEEND (1500000.)
 #define TIMEROUTPUTSIZE (10000)
 
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0504/6Q16Q2_diff10_VTcal/"
+#define OUTPUTPATH "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/"
 #define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
@@ -14,8 +14,8 @@
 #define PETSC
 // #define AB3 // Don't turn this on. Debugging!!!!!
 #define DIFFUSION
-#define Kx (10.)
-#define Kz (10.)
+#define Kx (200.)
+#define Kz (200.)
 #define POISSONPARAM (0.)
 #define POISSONPARAMU (1E-9)
 
@@ -34,9 +34,9 @@
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)
-    #define TIMENOW (550001)
-    #define LOADPATH1 "/data/Aaron/2DVVM/full/0501/6Q16Q2_diff10_VTcal/nc/550000.nc"
-    #define LOADPATH2 "/data/Aaron/2DVVM/full/0501/6Q16Q2_diff10_VTcal/nc/550001.nc"
+    #define TIMENOW (999999)
+    #define LOADPATH1 "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/nc/999998.nc"
+    #define LOADPATH2 "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/nc/999999.nc"
 #endif
 
 // #define VTconst

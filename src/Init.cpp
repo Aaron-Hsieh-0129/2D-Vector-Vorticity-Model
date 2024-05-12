@@ -314,6 +314,7 @@ void Init::LoadFromPreviousFile(vvm &model) {
     auto qr_in = df.getVar("qr");
     auto u_in = df.getVar("u");
     auto w_in = df.getVar("w");
+    auto ubarm_in = df_m.getVar("ubarTop");
 
     thm_in.getVar(model.thm);
     th_in.getVar(model.th);
@@ -327,6 +328,9 @@ void Init::LoadFromPreviousFile(vvm &model) {
     qr_in.getVar(model.qr);
     u_in.getVar(model.u);
     w_in.getVar(model.w);
+    double tmp[1];
+    ubarm_in.getVar(tmp);
+    model.ubarTopm = tmp[0];
     
 
     double tb = 0.;
