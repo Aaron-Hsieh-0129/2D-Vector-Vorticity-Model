@@ -1,37 +1,24 @@
-#define dx (200)
-#define dz (200)
-#define XRANGE (60000+2*dx)
-#define ZRANGE (20000+2*dz)
-#define DT (1.)
-#define TIMEEND (1500000.)
-#define TIMEROUTPUTSIZE (10000)
-
-#define OUTPUTPATH "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/"
-#define OUTPUTSTEP (10)
 #define OUTPUTNC
 // #define OUTPUTTXT
 
 #define PETSC
 // #define AB3 // Don't turn this on. Debugging!!!!!
-#define DIFFUSION
-#define Kx (200.)
-#define Kz (200.)
-#define POISSONPARAM (0.)
-#define POISSONPARAMU (1E-9)
-
-#ifndef AB3
-    #define TIMEFILTER
+// #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
+#if defined(AB3)
+    #define ALPHA (1.)
+#else
+    #define ALPHA (0.)
 #endif
-#define TIMETS (0.01)
+#define DIFFUSION
+#define TIMEFILTER
 
 // #define DRY
 // #define RHO1
 #define WATER
-#define TROPICALFORCING
-#define ADDFORCINGTIME (1200.)
-#define RADIATIONCOOLING
-#define LOADFILE
-// #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
+// #define TROPICALFORCING
+// #define RADIATIONCOOLING
+// #define LOADFILE
+
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)
     #define TIMENOW (999999)
@@ -40,7 +27,6 @@
 #endif
 
 // #define VTconst
-
 // #define POISSONTEST
 
 // ***********************************************************************************

@@ -5,7 +5,6 @@ graphs
 outputs
 doc
 log.txt
-input
 *.e
 *.o
 compile_flags.txt

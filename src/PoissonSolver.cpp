@@ -213,8 +213,8 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
             if (i % (model.nx-2) == 0) k++;
 
             // Diagonal
-            // v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) * model.rdx2 + POISSONPARAM;
-            v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + POISSONPARAM;
+            // v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) * model.rdx2 + model.POISSONPARAMW;
+            v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + model.POISSONPARAMW;
             j[0] = i;
             MatSetValues(A, 1, &i, 1, j, v, INSERT_VALUES);
 
@@ -265,7 +265,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
             #else
                 idx_i = (i % (model.nx-2)) + 1;
                 // double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.rdx;
-                double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * dx;
+                double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.dx;
                 VecSetValues(b, 1, &i, &bval, INSERT_VALUES);
             #endif
         }
@@ -303,12 +303,12 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
             }
 
             
-            for (int k = 1; k <= NZ-2; k++) {
-                model.w[0][k] = model.w[NX-2][k];
-                model.w[NX-1][k] = model.w[1][k];
+            for (int k = 1; k <= model.nz-2; k++) {
+                model.w[0][k] = model.w[model.nx-2][k];
+                model.w[model.nx-1][k] = model.w[1][k];
             }
-            for (int i = 0; i <= NX-1; i++) {
-                model.w[i][0] = model.w[i][1] = model.w[i][NZ-1] = 0.;
+            for (int i = 0; i <= model.nx-1; i++) {
+                model.w[i][0] = model.w[i][1] = model.w[i][model.nz-1] = 0.;
             }
         #endif
         int iterNum = 0.;
@@ -394,19 +394,19 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         for (int i = 0; i < model.nx-2; i++) {
             if (i == 0) {
                 // v[0] = -2.*model.rdx2 + POISSONPARAMU; v[1] = 1.*model.rdx2; v[2] = 1.*model.rdx2;
-                v[0] = -2. + POISSONPARAMU; v[1] = 1.; v[2] = 1.;
+                v[0] = -2. + model.POISSONPARAMU; v[1] = 1.; v[2] = 1.;
                 j[0] = 0; j[1] = 1; j[2] = (model.nx-2)-1;
                 MatSetValues(G, 1, &i, 3, j, v, INSERT_VALUES);
             }
             else if (i == (model.nx-2)-1) {
                 // v[0] = 1.*model.rdx2; v[1] = 1.*model.rdx2; v[2] = -2.*model.rdx2 + POISSONPARAMU;
-                v[0] = 1.; v[1] = 1.; v[2] = -2. + POISSONPARAMU;
+                v[0] = 1.; v[1] = 1.; v[2] = -2. + model.POISSONPARAMU;
                 j[0] = 0; j[1] = (model.nx-2)-2; j[2] = (model.nx-2)-1;
                 MatSetValues(G, 1, &i, 3, j, v, INSERT_VALUES);
             }
             else {
                 // v[0] = 1.*model.rdx2; v[1] = -2.*model.rdx2 + POISSONPARAMU; v[2] = 1.*model.rdx2;
-                v[0] = 1.; v[1] = -2. + POISSONPARAMU; v[2] = 1.;
+                v[0] = 1.; v[1] = -2. + model.POISSONPARAMU; v[2] = 1.;
                 j[0] = i-1; j[1] = i; j[2] = i+1;
                 MatSetValues(G, 1, &i, 3, j, v, INSERT_VALUES);
             }
@@ -416,7 +416,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
                 VecSetValues(y_ans, 1, &i, &y_ansval, INSERT_VALUES);
             #else
                 // double hval = -(0. - model.rhow[model.nz-2] * model.w[i+1][model.nz-2]) / model.rhou[model.nz-2] * model.rdz;
-                double hval = -(0. - model.rhow[model.nz-2] * model.w[i+1][model.nz-2]) / model.rhou[model.nz-2] * dz;
+                double hval = -(0. - model.rhow[model.nz-2] * model.w[i+1][model.nz-2]) / model.rhou[model.nz-2] * model.dz;
                 VecSetValues(h, 1, &i, &hval, INSERT_VALUES);
             #endif
         }
@@ -513,7 +513,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         for (int k = model.nz-3; k >= 1; k--) {
             // area += ((0.5*(model.rhow[k+2]*model.w[i][k+2] + model.rhow[k+1]*model.w[i][k+1]) - 0.5*(model.rhow[k+2]*model.w[i-1][k+2] + model.rhow[k+1]*model.w[i-1][k+1])) / model.rhou[k+1] * model.rdx - 0.5*(model.rhow[k+2]*model.zetap[i][k+2] + model.rhow[k+1]*model.zetap[i][k+1])) * -dz;
             
-            area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.rhow[k+1]*model.zetap[i][k+1]) * -dz;
+            area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.rhow[k+1]*model.zetap[i][k+1]) * -model.dz;
             // area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.zetap[i][k+1]) * -dz;
             
             /*
@@ -528,7 +528,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
             model.u[i][k] = area + model.u[i][model.nz-2];
         }
     }
-    model.BoundaryProcess2D_center(model.u);
+    model.BoundaryProcess2D_center(model.u, model.nx, model.nz);
     return;
 }
 

@@ -113,11 +113,11 @@ void vvm::Advection_zeta(vvm &model) {
             #endif
         }
     }
-    model.BoundaryProcess2D_westdown(model.zetap);
+    model.BoundaryProcess2D_westdown(model.zetap, model.nx, model.nz);
     return;
 }
 
-void vvm::Advection_thermo(double past[][NZ], double now[][NZ], double future[][NZ], vvm &model) {
+void vvm::Advection_thermo(double **past, double **now, double **future, vvm &model) {
     double F_ik_r = 0., F_ik_l = 0., G_ik_u = 0., G_ik_d = 0.;
     double pvar_px = 0., prhowvar_pz_rho = 0.;
     double pvar_px_m = 0., prhowvar_pz_rho_m = 0.;

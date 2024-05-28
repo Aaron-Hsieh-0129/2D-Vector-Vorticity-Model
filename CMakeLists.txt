@@ -33,6 +33,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 include_directories(
     include
+    /home/Aaron/local/include
     /home/Aaron/local/petsc/include
 )
 
@@ -41,9 +42,10 @@ add_executable(vvm2d ${SRC})
 
 target_link_libraries(vvm2d PkgConfig::PETSC)
 
+find_library(libncPath netcdf "/home/Aaron/local/lib")
 find_library(libncxxPath netcdf_c++4 "/home/Aaron/local/lib")
 find_library(libpetscPath petsc "/home/Aaron/local/petsc/lib")
-target_link_libraries(vvm2d ${libncxxPath} ${petsc})
+target_link_libraries(vvm2d ${libncPath} ${libncxxPath} ${petsc})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

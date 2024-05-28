@@ -11,7 +11,7 @@ void vvm::AddForcing(vvm &model) {
             #ifndef AB3
                 dt = model.d2t;
             #else
-                dt = DT;
+                dt = model.dt;
             #endif
             model.thp[i][k] += dt * model.Q1LS[k];
             if (model.status_for_adding_forcing == true) model.thp[i][k] += dt * model.init_th_forcing[i][k];
@@ -22,8 +22,8 @@ void vvm::AddForcing(vvm &model) {
             model.qvp[i][k] += dt * model.Q2LS[k];
         }
     }
-    model.BoundaryProcess2D_center(model.thp);
-    model.BoundaryProcess2D_center(model.qvp);
+    model.BoundaryProcess2D_center(model.thp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
 }
 #endif
 #endif
