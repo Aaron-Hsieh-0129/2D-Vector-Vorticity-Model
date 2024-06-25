@@ -1,17 +1,27 @@
 #include "Declare.hpp"
-#include <petsc.h>
+#include <omp.h>
+#if defined(PETSC)
+    #include <petscsys.h>
+    #include <petsc.h>
+#endif
 
-// Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string OUTPUTPATH, int OUTPUTSTEP
+// Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
 //        double P0, double PSURF, double ADDFORCINGTIME)
-Config_VVM config(1., 200., 200., 60000, 20000, 1500000., 10000, "/data/Aaron/TMIF/0527/vvm/", 10, 
-              200, 200, 0.01, 1E-9, 0., 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-              1E5, 96500., 1200.);
-vvm model(config);
+
 int main(int argc, char **argv) {
-    vvm::Init init;
+    #if defined(PETSC)
+        PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
+    #endif
+    Config_VVM config(1., 200., 200., 100000, 20000, 10000., 10000, "/data/Aaron/TMIF/0619_test_Bubble/", 1, 
+                    100., 100., 0.01, 1E-9, 0., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    1E5, 96500., -1., 1);
+    vvm model(config);
+    
     #if defined(LOADFROMPREVIOUSFILE)
-        Init::LoadFromPreviousFile(model);
+        vvm::Init::LoadFromPreviousFile(model);
+    #elif defined(LOAD2DINIT)
+        vvm::Init::Load2DInit(model);
     #else
         vvm::Init::Init1d(model);
         vvm::Init::Init2d(model);
@@ -20,7 +30,6 @@ int main(int argc, char **argv) {
     vvm::Output::printInit(model);
     vvm::Output::create_all_directory(model);
 
-    PetscInitialize(&argc, &argv, NULL, NULL);
     #if defined(POISSONTEST)
         vvm::PoissonSolver PoissonSolver;
         PoissonSolver.cal_w(model);
@@ -28,6 +37,9 @@ int main(int argc, char **argv) {
     #else
         vvm::Iteration::TimeMarching(model);
     #endif
-    PetscFinalize();
+
+    #if defined(PETSC)
+        PetscCall(PetscFinalize());
+    #endif
     return 0;
 }

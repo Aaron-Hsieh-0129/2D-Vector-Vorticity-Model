@@ -1,6 +1,4 @@
 #include "Declare.hpp"
-#include <fstream>
-#include <iostream>
 #include <petsc.h>
 #include <random>
 #if defined(LOADFROMPREVIOUSFILE)
@@ -97,7 +95,15 @@ void vvm::Init::Init1d(vvm &model) {
         #else
             model.thvb[k] = model.thvbm[k] = model.thb[k];
         #endif
+
     }
+    
+
+    for (int k = 0; k < model.nz; k++) {
+        model.z[k] = (k-0.5) * model.dz;
+        model.lambda2[k] = 1. / (1. / pow(0.23 * model.dx, 2) + 1. / pow(0.35 * model.z[k], 2));
+    }
+
     return;
 }
 
@@ -123,9 +129,18 @@ void vvm::Init::Init2d(vvm &model) {
         // init th
         for (int i = 1; i <= model.nx-2; i++) {
             for (int k = 1; k <= model.nz-2; k++) {
-                model.th[i][k] = GetTH(i, k, model);
-                model.th[i][k] = model.thb[k] + GetTH(i, k, model);
+                if (model.CASE == 0) model.th[i][k] = model.thb[k];
+                else if (model.CASE == 1) model.th[i][k] = model.thb[k] + GetTH(i, k, model);
+
+                if (model.addforcingtime > 0) {
+                    RandomPerturbation(model, 0);
+                    model.th[i][k] += model.init_th_forcing[i][k];
+                }
+                
                 model.thm[i][k] = model.th[i][k];
+
+                model.u[i][k] = 0.;
+                model.w[i][k] = 0.;
             }
         }
         model.BoundaryProcess2D_center(model.th, model.nx, model.nz);
@@ -136,6 +151,8 @@ void vvm::Init::Init2d(vvm &model) {
             for (int i = 1; i <= model.nx-2; i++) {
                 for (int k = 1; k <= model.nz-2; k++) {
                     model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                    model.qc[i][k] = model.qcp[i][k] = model.qcm[i][k] = 0.;
+                    model.qr[i][k] = model.qrp[i][k] = model.qrm[i][k] = 0.;
                 }
             }
             model.BoundaryProcess2D_center(model.qv, model.nx, model.nz);
@@ -205,7 +222,6 @@ double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
     double delta = 3.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
-    // if (k >= 10 && k <= 20) return 3.;
     else return 0.;
 }
 
@@ -222,7 +238,7 @@ double vvm::Init::GetQVB(int k, int dz) {
 void vvm::Init::LoadFile(vvm &model) {
     std::ifstream inputFile;
 
-    inputFile.open("../input/init.txt");
+    inputFile.open(LOADINITPATH);
     std::string line;
     std::getline(inputFile, line);
     std::getline(inputFile, line); // Skip the zero level
@@ -268,7 +284,7 @@ void vvm::Init::LoadFile(vvm &model) {
 void vvm::Init::LoadFromPreviousFile(vvm &model) {
     std::ifstream inputFile;
 
-    inputFile.open("../input/init.txt");
+    inputFile.open(LOADINITPATH);
     std::string line;
     std::getline(inputFile, line);
     std::getline(inputFile, line); // Skip the zero level
@@ -276,8 +292,8 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
 
     int i = 1;
     while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
-        // model.thb[i] = THBAR;
-        // model.qvb[i] = QVBAR;
+        model.thb[i] = THBAR;
+        model.qvb[i] = QVBAR;
         model.pib[i] = PIBAR;
         model.pb[i] = PBAR;
         model.rhou[i] = RHOZ;
@@ -289,11 +305,11 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
         i++;
     }
 
-    model.BoundaryProcess1D_center(model.pib);
-    model.BoundaryProcess1D_center(model.pb);
-    model.BoundaryProcess1D_center(model.rhou);
-    model.BoundaryProcess1D_center(model.rhow);
-    model.rhow[NZ-1] = model.rhou[NZ-2];
+    model.BoundaryProcess1D_center(model.pib, model.nz);
+    model.BoundaryProcess1D_center(model.pb, model.nz);
+    model.BoundaryProcess1D_center(model.rhou, model.nz);
+    model.BoundaryProcess1D_center(model.rhow, model.nz);
+    model.rhow[model.nz-1] = model.rhou[model.nz-2];
 
     std::string data_m = LOADPATH1;
     std::string data = LOADPATH2;
@@ -314,22 +330,32 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
     auto w_in = df.getVar("w");
     auto ubarm_in = df_m.getVar("ubarTop");
 
-    thm_in.getVar(model.thm);
-    th_in.getVar(model.th);
-    zetam_in.getVar(model.zetam);
-    zeta_in.getVar(model.zeta);
-    qvm_in.getVar(model.qvm);
-    qv_in.getVar(model.qv);
-    qcm_in.getVar(model.qcm);
-    qc_in.getVar(model.qc);
-    qrm_in.getVar(model.qrm);
-    qr_in.getVar(model.qr);
-    u_in.getVar(model.u);
-    w_in.getVar(model.w);
+    thm_in.getVar(model.thmcont);
+    th_in.getVar(model.thcont);
+    zetam_in.getVar(model.zetamcont);
+    zeta_in.getVar(model.zetacont);
+    qvm_in.getVar(model.qvmcont);
+    qv_in.getVar(model.qvcont);
+    qcm_in.getVar(model.qcmcont);
+    qc_in.getVar(model.qccont);
+    qrm_in.getVar(model.qrmcont);
+    qr_in.getVar(model.qrcont);
+    u_in.getVar(model.ucont);
+    w_in.getVar(model.wcont);
     double tmp[1];
     ubarm_in.getVar(tmp);
     model.ubarTopm = tmp[0];
-    
+
+    if (model.CASE == 1) {
+        for (int k = 1; k < model.nz-1; k++) {
+            for (int i = 1; i < model.nx-1; i++) {
+                model.thm[i][k] += vvm::Init::GetTH(i, k, model);
+                model.th[i][k] += vvm::Init::GetTH(i, k, model);
+            }
+        }
+    }
+    vvm::BoundaryProcess2D_center(model.thm, model.nx, model.nz);
+    vvm::BoundaryProcess2D_center(model.th, model.nx, model.nz);
 
     double tb = 0.;
     #if defined(WATER)
@@ -337,7 +363,6 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
     #endif
     for (int k = 1; k < model.nz-1; k++) {
         tb = 0.;
-
         #if defined(WATER)
             qvb = 0.;
         #endif
@@ -355,25 +380,29 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
         #else
             model.thvb[k] = model.thb[k];
         #endif
-        model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.thb[i] * model.pib[i] - 273.)) / (model.thb[i] * model.pib[i] - 36.));
+        model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (model.thb[k] * model.pib[k] - 273.)) / (model.thb[k] * model.pib[k] - 36.));
     }
-    model.BoundaryProcess1D_center(model.thb);
-    model.BoundaryProcess1D_center(model.thvb);
+    model.BoundaryProcess1D_center(model.thb, model.nz);
+    model.BoundaryProcess1D_center(model.thvb, model.nz);
     #if defined(WATER)
-        model.BoundaryProcess1D_center(model.qvb);
+        model.BoundaryProcess1D_center(model.qvb, model.nz);
     #endif
-    model.BoundaryProcess1D_center(model.qvsb);
+    model.BoundaryProcess1D_center(model.qvsb, model.nz);
 
     for (int k = 1; k < model.nz-1; k++) {
         model.thb_zeta[k] = 0.5 * (model.thb[k-1] + model.thb[k]);
     }
-    model.BoundaryProcess1D_center(model.thb_zeta);
+    model.BoundaryProcess1D_center(model.thb_zeta, model.nz);
+
+    #ifndef PETSC
+	    // Assign values to the matrices that solve the Poisson equation for u and w
+        vvm::PoissonSolver::InitPoissonMatrix(model);
+    #endif
 
     return;
 }
 #endif
 
-#if defined(TROPICALFORCING)
 void vvm::Init::RandomPerturbation(vvm &model, int t) {
     std::mt19937 gen(t); // Mersenne Twister engine for random numbers
     std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
@@ -384,10 +413,13 @@ void vvm::Init::RandomPerturbation(vvm &model, int t) {
     double min_range = -1.; // Minimum value of the generated noise
     double max_range = 1.; // Maximum value of the generated noise
 
-    for (int i = 1; i < model.nx-1; i++) {
-        for (int k = 1; k < model.nz-1; k++) {
+    double z = 0;
+
+    for (int k = 1; k < model.nz-1; k++) {
+        z = (k - 0.5) * model.dz;
+        for (int i = 1; i < model.nx-1; i++) {
             // TODO: Change it to physical parameter
-            if (k <= model.nz / 15) {
+            if (z < 200) {
                 double random_noise = 0.;
                 do {
                     random_noise = mean + standard_deviation * distribution(gen);
@@ -402,6 +434,5 @@ void vvm::Init::RandomPerturbation(vvm &model, int t) {
     }
     model.BoundaryProcess2D_center(model.init_th_forcing, model.nx, model.nz);
 }
-#endif
 
 

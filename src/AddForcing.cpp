@@ -1,7 +1,6 @@
 #include "Declare.hpp"
 
 #if defined(WATER)
-#if defined(TROPICALFORCING)
 
 
 void vvm::AddForcing(vvm &model) {
@@ -13,17 +12,16 @@ void vvm::AddForcing(vvm &model) {
             #else
                 dt = model.dt;
             #endif
-            model.thp[i][k] += dt * model.Q1LS[k];
-            if (model.status_for_adding_forcing == true) model.thp[i][k] += dt * model.init_th_forcing[i][k];
+            #if defined(TROPICALFORCING)
+                model.thp[i][k] += dt * model.Q1LS[k];
+                model.qvp[i][k] += dt * model.Q2LS[k];
+            #endif
             #if defined(RADIATIONCOOLING) 
                 model.thp[i][k] += dt * (-2. / 86400.);
             #endif
 
-            model.qvp[i][k] += dt * model.Q2LS[k];
+            if (model.status_for_adding_forcing == true) model.thp[i][k] += dt * model.init_th_forcing[i][k];
         }
     }
-    model.BoundaryProcess2D_center(model.thp, model.nx, model.nz);
-    model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
 }
-#endif
 #endif

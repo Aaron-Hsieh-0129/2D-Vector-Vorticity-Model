@@ -315,12 +315,122 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         double normError = 0.;
         KSPGetIterationNumber(ksp, &iterNum);
         KSPGetResidualNorm(ksp, &normError);
-        std::cout << "Solving w: " << ", Norm of error = " << std::scientific << normError << ", Iterations = " << iterNum << std::endl;
+        printf("Solving w: Norm of error = %1e, Iterations = %d\n", normError, iterNum);
 
         MatDestroy(&A);
         VecDestroy(&b);
         VecDestroy(&x);
         KSPDestroy(&ksp);
+        
+        /*
+        DM da;
+        Vec xx, bb;
+        Mat AA;
+        KSP ksp;
+        PetscLogStage stage;
+        DMDALocalInfo info;
+
+        PetscInt nx = model.nx - 2;
+        PetscInt nz = model.nz - 3;
+        PetscInt m = nx * nz;
+        PetscInt i, j, its;
+
+        PetscFunctionBegin;
+        PetscCallVoid(DMDACreate2d(PETSC_COMM_WORLD, DM_BOUNDARY_PERIODIC, DM_BOUNDARY_NONE, DMDA_STENCIL_STAR, nx, nz, PETSC_DECIDE, PETSC_DECIDE, 1, 1, NULL, NULL, &da));
+        PetscCallVoid(DMSetFromOptions(da));
+        PetscCallVoid(DMSetUp(da));
+
+        PetscCallVoid(DMCreateMatrix(da, &AA));
+        PetscCallVoid(DMCreateGlobalVector(da, &bb));
+        PetscCallVoid(VecDuplicate(bb, &xx));
+
+        // PetscLogStageRegister("Assembly", &stage);
+        // PetscLogStagePush(stage);
+        PetscCallVoid(DMDAGetLocalInfo(da, &info));
+
+        for (j = info.ys; j < info.ys + info.ym; j++) {
+            for (i = info.xs; i < info.xs + info.xm; i++) {
+                MatStencil  row = {0}, col[5] = {{0}};
+                PetscScalar v[5];
+                PetscInt    ncols = 0;
+
+                row.j             = j;
+                row.i             = i;
+                col[ncols].j      = j;
+                col[ncols].i      = i;
+                v[ncols++]        = -(2. + (model.rhow[j+2]/model.rhou[j+2]) + (model.rhow[j+2]/model.rhou[j+1])) + model.POISSONPARAMW;
+                // boundaries 
+                // D left-off
+                if (i > 0) {
+                    col[ncols].j = j;
+                    col[ncols].i = i - 1;
+                    v[ncols++]   = 1.;
+                }
+
+                // D right-off
+                if (i < info.mx - 1) {
+                    col[ncols].j = j;
+                    col[ncols].i = i + 1;
+                    v[ncols++]   = 1.;
+                }
+
+                // D periodic upright
+                if (i % info.mx == 0) {
+                    col[ncols].j = j;
+                    col[ncols].i = i + info.mx - 1;
+                    v[ncols++]   = 1.;
+                }
+
+                // D periodic downleft
+                if (i % info.mx == info.mx - 1) {
+                    col[ncols].j = j;
+                    col[ncols].i = i - info.mx + 1;
+                    v[ncols++]   = 1.;
+                }
+
+                // F
+                if (j > 0) {
+                    col[ncols].j = j - 1;
+                    col[ncols].i = i;
+                    v[ncols++]   = model.rhow[j+2]/model.rhou[j+1];
+                }
+
+                // E
+                if (j < info.my - 1) {
+                    col[ncols].j = j + 1;
+                    col[ncols].i = i;
+                    v[ncols++]   = model.rhow[j+2]/model.rhou[j+2];;
+                }
+                PetscCallVoid(MatSetValuesStencil(AA, 1, &row, ncols, col, v, INSERT_VALUES));
+
+                PetscInt idx   = i + j * info.mx;
+                // printf("idx = %d\n", idx);
+                double bval = model.rhow[j+2]*model.rhow[j+2] * (model.zetap[i+2][j+2] - model.zetap[i+1][j+2]) * model.dx;
+                PetscCallVoid(VecSetValue(bb, idx, bval, INSERT_VALUES));
+            }
+        }
+        PetscCallVoid(MatAssemblyBegin(AA, MAT_FINAL_ASSEMBLY));
+        PetscCallVoid(MatAssemblyEnd(AA, MAT_FINAL_ASSEMBLY));
+
+        PetscCallVoid(VecAssemblyBegin(bb));
+        PetscCallVoid(VecAssemblyEnd(bb));
+        // PetscLogStagePop();
+        
+
+        PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &ksp));
+        PetscCallVoid(KSPSetOperators(ksp, AA, AA));
+        PetscCallVoid(KSPSetFromOptions(ksp));
+        PetscCallVoid(KSPSetTolerances(ksp, 1E-30, 1E-12, 1E2, 10000));
+        PetscCallVoid(KSPSolve(ksp, bb, xx));
+
+        // PetscBool      isEqual;
+        // MatEqual(A, AA, &isEqual);
+        // printf("Is A equal to AA? %d\n", isEqual);
+
+        // PetscBool      isEqual2;
+        // VecEqual(b, bb, &isEqual2);
+        // printf("Is x equal to xx? %d\n", isEqual2);
+        */
     #else
         // eigen solver
         Eigen::VectorXd x((model.nx-2)*(model.nz-3)), b((model.nx-2)*(model.nz-3));
@@ -329,7 +439,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         int count = 0;
         for (int k = 2; k <= model.nz-2; k++) {
             for (int i = 1; i <= model.nx-2; i++) {
-                b(count) = model.rhow[k]*model.rhow[k] * (model.zetap[i+1][k] - model.zetap[i][k]) * dx;
+                b(count) = model.rhow[k]*model.rhow[k] * (model.zetap[i+1][k] - model.zetap[i][k]) * model.dx;
                 count++;
             }
         }
@@ -337,7 +447,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         // Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
         Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
         // Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solver;
-        solver.setTolerance(1e-30);
+        solver.setTolerance(model.tolerance);
         solver.setMaxIterations(10000);
         Eigen::SparseMatrix<double> A = model.A;
         solver.compute(A);
@@ -347,9 +457,8 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         x = solver.solve(b);
         if (solver.info() != Eigen::Success) {
             std::cout << "W Solve Warning!!!!!!!!!!!!" << std::endl;
+            std::cout << "W:  #iterations:     " << solver.iterations() << ", estimated error: " << std::scientific <<  solver.error() << std::endl;
         }
-        std::cout << "W:  #iterations:     " << solver.iterations() << ", estimated error: " << std::scientific <<  solver.error() << std::endl;
-
     
         int cnt = 0;
         for (int k = 2; k <= model.nz-2; k++) {
@@ -358,7 +467,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
                 cnt++;
             }
         }
-        model.BoundaryProcess2D_westdown(model.w);
+        model.BoundaryProcess2D_westdown(model.w, model.nx, model.nz);
     #endif
     return;
 }
@@ -456,7 +565,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         double normError = 0.;
         KSPGetIterationNumber(ksp, &iterNum);
         KSPGetResidualNorm(ksp, &normError);
-        std::cout << "Solving u: " << ", Norm of error = " << std::scientific << normError << ", Iterations = " << iterNum << std::endl;
+        printf("Solving u: Norm of error = %1e, Iterations = %d\n", normError, iterNum);
 
         MatDestroy(&G);
         VecDestroy(&h);
@@ -466,14 +575,14 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         Eigen::VectorXd y(model.nx-2), h(model.nx-2);
         // h
         for (int i = 1; i <= model.nx-2; i++) {
-            h(i-1) = -(0. - model.rhow[model.nz-2] * model.w[i][model.nz-2]) / model.rhou[model.nz-2] * dx;
+            h(i-1) = -(0. - model.rhow[model.nz-2] * model.w[i][model.nz-2]) / model.rhou[model.nz-2] * model.dx;
         }
 
         Eigen::SparseMatrix<double> G = model.G;
         Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solver_xi;
         // Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver_xi;
         // Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver_xi;
-        solver_xi.setTolerance(1e-30);
+        solver_xi.setTolerance(model.tolerance);
         solver_xi.setMaxIterations(10000);
         solver_xi.compute(G);
         if (solver_xi.info() != Eigen::Success) {
@@ -482,8 +591,9 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         y = solver_xi.solve(h);
         if (solver_xi.info() != Eigen::Success) {
             std::cout << "U Solve Warning!!!!!!!!!!!!" << std::endl;
+            std::cout << "U:  #iterations:     " << solver_xi.iterations() << ", estimated error: " << std::scientific <<  solver_xi.error() << std::endl;
         }
-        std::cout << "U:  #iterations:     " << solver_xi.iterations() << ", estimated error: " << std::scientific <<  solver_xi.error() << std::endl;
+        // std::cout << "U:  #iterations:     " << solver_xi.iterations() << ", estimated error: " << std::scientific <<  solver_xi.error() << std::endl;
 
         // xi
         for (int i = 1; i <= model.nx-2; i++) {
@@ -639,7 +749,7 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         if (idx % (model.nx-2) == 0) k++;
 
         // coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1]))*model.rdx2 + POISSONPARAM ));
-        coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + POISSONPARAM ));
+        coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + model.POISSONPARAMW ));
         // coeff.push_back(T(idx, idx, -4.)); // test
 
         // left/right = 1
@@ -719,7 +829,7 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
     for (int i = 0; i <= model.nx-3; i++) {
         // D
         // coeff_xi.push_back(T(i, i, -2.*model.rdx2+POISSONPARAM));
-        coeff_xi.push_back(T(i, i, -2. + POISSONPARAMU));
+        coeff_xi.push_back(T(i, i, -2. + model.POISSONPARAMU));
         // if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.*model.rdx2));
         if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.));
         // if (i != 0) coeff_xi.push_back(T(i, i-1, 1.*model.rdx2));

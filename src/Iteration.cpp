@@ -1,5 +1,4 @@
 #include "Declare.hpp"
-#include <cmath>
 #include "Timer.hpp"
 
 void vvm::Iteration::pzeta_pt(vvm &model) {
@@ -10,7 +9,7 @@ void vvm::Iteration::pzeta_pt(vvm &model) {
 }
 
 void vvm::Iteration::pth_pt(vvm &model) {
-    model.Advection_thermo(model.thm, model.th, model.thp, model);
+    model.Advection_thermo(model.thm, model.th, model.thp, model.dth_advect, model);
     model.BoundaryProcess2D_center(model.thp, model.nx, model.nz);
     return;
 }
@@ -63,7 +62,7 @@ void vvm::Iteration::updateMean(vvm &model) {
 
 #if defined(WATER)
 void vvm::Iteration::pqv_pt(vvm &model) {
-    model.Advection_thermo(model.qvm, model.qv, model.qvp, model);
+    model.Advection_thermo(model.qvm, model.qv, model.qvp, model.dqv_advect, model);
     vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
     model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
 
@@ -71,14 +70,14 @@ void vvm::Iteration::pqv_pt(vvm &model) {
 }
 
 void vvm::Iteration::pqc_pt(vvm &model) {
-    model.Advection_thermo(model.qcm, model.qc, model.qcp, model);
+    model.Advection_thermo(model.qcm, model.qc, model.qcp, model.dqc_advect, model);
     vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
     model.BoundaryProcess2D_center(model.qcp, model.nx, model.nz);
     return;
 }
 
 void vvm::Iteration::pqr_pt(vvm &model) {
-    model.Advection_thermo(model.qrm, model.qr, model.qrp, model);
+    model.Advection_thermo(model.qrm, model.qr, model.qrp, model.dqr_advect, model);
     model.Advection_qrVT(model);
     vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
 
@@ -127,45 +126,37 @@ void vvm::Iteration::TimeMarching(vvm &model) {
     Timer timer;
     Timer time_all;
 
-    int n = 0;
+    model.step = 0;
     double temp = model.TIMEEND / model.dt;
     int nmax = (int) temp;
 
     #if defined(LOADFROMPREVIOUSFILE)
-        n = TIMENOW;
-        std::cout << "timenow: " << n << std::endl;
+        model.step = TIMENOW;
+        std::cout << "timenow: " << model.step << std::endl;
     #endif
 
     #ifndef PETSC
-        poissonSolver.InitPoissonMatrix(model);
+        vvm::PoissonSolver::InitPoissonMatrix(model);
     #endif
-    while (n < nmax) {
+    while (model.step < nmax) {
         time_all.reset();
-        std::cout << n << std::endl;
+        std::cout << model.step << std::endl;
         // output
-        if (n % model.OUTPUTSTEP == 0 || n == model.TIMEEND-1 || n == model.TIMEEND-2 || n == 550001) {
+        if (model.step % model.OUTPUTSTEP == 0 || model.step == model.TIMEEND-1 || model.step == model.TIMEEND-2 || model.step == 550001) {
             #if defined(OUTPUTNC)
-                vvm::Output::output_nc(n, model);
+                vvm::Output::output_nc(model.step, model);
             #endif
             #if defined(OUTPUTTXT)
-                vvm::Output::outputalltxt(n, model);
+                vvm::Output::outputalltxt(model.step, model);
             #endif
         }
-        n++;
+        model.step++;
 
-        if (n % model.TIMEROUTPUTSIZE == 0) {
-            vvm::Output::output_time_nc(n, model);
+        if (model.step % model.TIMEROUTPUTSIZE == 0) {
+            #if defined(OUTPUTNC)
+                vvm::Output::output_time_nc(model.step, model);
+            #endif
         }
-
-        #if defined(TROPICALFORCING)
-            if (n * model.dt <= model.ADDFORCINGTIME) model.status_for_adding_forcing = true;
-            else model.status_for_adding_forcing = false;
-
-            // Generate new random th perturbation for tropical forcing case
-            if (model.status_for_adding_forcing == true) {
-                vvm::Init::RandomPerturbation(model, n);
-            }
-        #endif
 
         #if defined(AB3)
         for (int i = 0; i <= model.nx-1; i++) {
@@ -183,11 +174,17 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             pqv_pt(model);
             pqc_pt(model);
             pqr_pt(model);
-            #if defined(TROPICALFORCING)
-                model.AddForcing(model);
-            #endif
+            if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;
+            else model.status_for_adding_forcing = false;
+
+            // Generate new random th perturbation for tropical forcing case
+            if (model.status_for_adding_forcing == true) {
+                vvm::Init::RandomPerturbation(model, model.step);
+            }
+            model.AddForcing(model);
         #endif
-        model.t_advection[(n-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
+        vvm::BoundaryProcess2D_all(model);
+        model.t_advection[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         timer.reset();
         #if defined(STREAMFUNCTION)
@@ -197,16 +194,16 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::PoissonSolver::cal_w(model);
             vvm::PoissonSolver::cal_u(model);
         #endif
-        model.t_poisson[(n-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
-        
+        model.t_poisson[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
+
         timer.reset();
+        updateMean(model);
         #if defined(DIFFUSION)
             vvm::NumericalProcess::DiffusionAll(model);
+        #else
+            vvm::Turbulence::RKM_RKH(model);
         #endif
-        model.t_diffusion[(n-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
-
-
-        vvm::BoundaryProcess2D_all(model);
+        model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         timer.reset();
         #if defined(WATER)
@@ -220,16 +217,15 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
             vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
         #endif
-        model.t_microphysics[(n-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
-
         vvm::BoundaryProcess2D_all(model);
+        model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         #if defined(TIMEFILTER)
             vvm::NumericalProcess::timeFilterAll(model);
         #endif
 
         vvm::Iteration::nextTimeStep(model);
-        model.t_all[(n-1)%model.TIMEROUTPUTSIZE] = time_all.elapsed();
+        model.t_all[(model.step-1)%model.TIMEROUTPUTSIZE] = time_all.elapsed();
     }
     return;
 }

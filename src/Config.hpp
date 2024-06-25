@@ -1,8 +1,8 @@
-#define OUTPUTNC
-// #define OUTPUTTXT
+// #define OUTPUTNC
+#define OUTPUTTXT
 
-#define PETSC
-// #define AB3 // Don't turn this on. Debugging!!!!!
+// #define PETSC
+#define AB3 // Don't turn this on. Debugging!!!!!
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
 #if defined(AB3)
     #define ALPHA (1.)
@@ -18,15 +18,18 @@
 // #define TROPICALFORCING
 // #define RADIATIONCOOLING
 // #define LOADFILE
+#if defined(LOADFILE)
+    #define LOADINITPATH "/home/Aaron/TMIF_VVM_CSSWM/2DVVM/input/init.txt"
+#endif
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)
-    #define TIMENOW (999999)
-    #define LOADPATH1 "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/nc/999998.nc"
-    #define LOADPATH2 "/data/Aaron/2DVVM/full/0505/6Q16Q2_diff200_VTcal/nc/999999.nc"
+    #define TIMENOW (1)
+    #define LOADINITPATH "/home/Aaron/TMIF_VVM_CSSWM/2DVVM/input/init.txt"
+    #define LOADPATH1 "/data/Aaron/TMIF/0613_test/nc/10000.nc"
+    #define LOADPATH2 "/data/Aaron/TMIF/0613_test/nc/10005.nc"
 #endif
 
-// #define VTconst
 // #define POISSONTEST
 
 // ***********************************************************************************

@@ -2,46 +2,42 @@
 
 double getTHV(int i, int k, vvm &model) {
     #if defined(WATER)
-        return model.th[i][k] + 0.61 * model.qv[i][k];
+        return model.th[i][k] + 0.608 * model.qv[i][k];
     #else
         return model.th[i][k];
     #endif
 }
-
-#if defined(AB3)
-double getTHVm(int i, int k, vvm &model) {
-    #if defined(WATER)
-        return model.th[i][k] + 0.61 * model.qv[i][k];
-    #else
-        return model.th[i][k];
-    #endif
-}
-#endif
 
 void vvm::Bouyancy(vvm &model) {
     double g_rhothvbpthv_px = 0.;
-    double g_rhothvbpthv_px_m = 0.;
-    double thv = 0.;
+    #if defined(WATER)
+        double g_rhopqc_px = 0., g_rhopqr_px = 0.;
+    #endif
+    
     for (int k = 2; k < model.nz-1; k++) {
         for (int i = 1; i < model.nx-1; i++) {
             g_rhothvbpthv_px = model.GRAVITY / model.rhow[k] * 0.5*((getTHV(i, k, model) - getTHV(i-1, k, model))/model.thvb[k] + (getTHV(i, k-1, model) - getTHV(i-1, k-1, model))/model.thvb[k-1]) * model.rdx;
 
             #if defined(AB3)
-                g_rhothvbpthv_px_m = model.GRAVITY / model.rhow[k] * 0.5*((getTHVm(i, k, model) - getTHVm(i-1, k, model))/model.thvbm[k] + (getTHVm(i, k-1, model) - getTHVm(i-1, k-1, model))/model.thvbm[k-1]) * model.rdx;
-                model.zetap[i][k] += (1.5*DT*g_rhothvbpthv_px) - (0.5*DT*g_rhothvbpthv_px_m);
-            #else
-                model.zetap[i][k] += model.d2t * g_rhothvbpthv_px;
+                model.dth_buoyancy[i][k][(model.step+1)%2] = g_rhothvbpthv_px;
+                if (model.step == 0) model.dth_buoyancy[i][k][0] = model.dth_buoyancy[i][k][1];
             #endif
 
             #if defined(WATER)
-                double g_rhopqc_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * model.rdx;
-                double g_rhopqr_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * model.rdx;
+                g_rhopqc_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * model.rdx;
+                g_rhopqr_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * model.rdx;
                 #if defined(AB3)
-                    double g_rhopqc_px_m = model.GRAVITY / model.rhow[k] * (0.5*(model.qcm[i][k] + model.qcm[i][k-1]) - 0.5*(model.qcm[i-1][k] + model.qcm[i-1][k-1])) * model.rdx;
-                    double g_rhopqr_px_m = model.GRAVITY / model.rhow[k] * (0.5*(model.qrm[i][k] + model.qrm[i][k-1]) - 0.5*(model.qrm[i-1][k] + model.qrm[i-1][k-1])) * model.rdx; 
-                    model.zetap[i][k] += 1.5*DT*(- g_rhopqc_px - g_rhopqr_px) - 0.5*DT*(- g_rhopqc_px_m - g_rhopqr_px_m);
-                #else
-                    model.zetap[i][k] += model.d2t * (- g_rhopqc_px - g_rhopqr_px);
+                    model.dth_buoyancy[i][k][(model.step+1)%2] += -g_rhopqc_px - g_rhopqr_px;
+                    if (model.step == 0) model.dth_buoyancy[i][k][0] = model.dth_buoyancy[i][k][1];
+                #endif
+            #endif
+
+            #if defined(AB3)
+                model.zetap[i][k] += (1.5*model.dt*model.dth_buoyancy[i][k][(model.step+1)%2]) - (0.5*model.dt*model.dth_buoyancy[i][k][model.step%2]);
+            #else
+                model.zetap[i][k] += model.d2t * g_rhothvbpthv_px;
+                #if defined(WATER)
+                    model.zetap[i][k] += model.d2t * (-g_rhopqc_px - g_rhopqr_px);
                 #endif
             #endif
         }

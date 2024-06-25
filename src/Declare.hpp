@@ -1,11 +1,20 @@
-#include "Const.hpp"
+#include "Config.hpp"
 #include <string>
 #ifndef PETSC
-    #include "../include/Eigen/Sparse"
+    // #include "../include/Eigen/Sparse"
+    #include <Eigen/Sparse>
 #endif
 
 class Config_VVM {
 public:
+    Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
+           std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double tolerance,
+           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE)
+        : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
+          outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS), POISSONPARAMU(POISSONPARAMU), POISSONPARAMW(POISSONPARAMW), 
+          tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE) {}
+    ~Config_VVM() {}
+
     double dt;
     double dx;
     double dz;
@@ -13,13 +22,14 @@ public:
     int ZRANGE;
     double TIMEEND;
     int TIMEROUTPUTSIZE;
-    std::string OUTPUTPATH; 
+    std::string outputpath; 
     int OUTPUTSTEP;
     double Kx;
     double Kz;
     double TIMETS;
     double POISSONPARAMU;
     double POISSONPARAMW;
+    double tolerance;
     double GRAVITY;
     double Cp;
     double Cv;
@@ -27,15 +37,8 @@ public:
     double Lv;
     double P0;
     double PSURF;
-    double ADDFORCINGTIME;
-
-    Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
-           std::string OUTPUTPATH, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, 
-           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double ADDFORCINGTIME)
-        : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
-          OUTPUTPATH(OUTPUTPATH), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS), POISSONPARAMU(POISSONPARAMU), POISSONPARAMW(POISSONPARAMW), 
-          GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), ADDFORCINGTIME(ADDFORCINGTIME) {}
-    ~Config_VVM() {}
+    double addforcingtime;
+    int CASE;
 };
 
 
@@ -46,21 +49,20 @@ public:
      * Used to initialize the model.
      */
     vvm(const Config_VVM& config)
-        : dt(config.dt), dx(config.dx), dz(config.dz), 
-          XRANGE(config.XRANGE), ZRANGE(config.ZRANGE),
-          TIMEEND(config.TIMEEND), TIMEROUTPUTSIZE(config.TIMEROUTPUTSIZE),
-          OUTPUTPATH(config.OUTPUTPATH), OUTPUTSTEP(config.OUTPUTSTEP), 
-          Kx(config.Kx), Kz(config.Kz), TIMETS(config.TIMETS),
-          POISSONPARAMU(config.POISSONPARAMU), POISSONPARAMW(config.POISSONPARAMW),
-          GRAVITY(config.GRAVITY), Cp(config.Cp), Cv(config.Cv), Rd(config.Rd), Lv(config.Lv),
-          P0(config.P0), PSURF(config.PSURF), ADDFORCINGTIME(config.ADDFORCINGTIME),
-          d2t(2.0 * config.dt),
-          rdx(1.0 / config.dx), r2dx(rdx / 2.0),
-          rdz(1.0 / config.dz), r2dz(rdz / 2.0),
-          rdx2(rdx * rdx), rdz2(rdz * rdz), nx(config.XRANGE/config.dx), nz(config.ZRANGE/config.dz) {
-
+        : rdx(1.0 / config.dx), r2dx(rdx / 2.0), rdz(1.0 / config.dz), 
+          r2dz(rdz / 2.0), rdx2(rdx * rdx),
+          rdz2(rdz * rdz), nx(config.XRANGE/config.dx),
+          nz(config.ZRANGE/config.dz), dt(config.dt), 
+          d2t(2.0 * config.dt), dx(config.dx), dz(config.dz),
+          XRANGE(config.XRANGE), ZRANGE(config.ZRANGE), TIMEEND(config.TIMEEND),
+          TIMEROUTPUTSIZE(config.TIMEROUTPUTSIZE), outputpath(config.outputpath), OUTPUTSTEP(config.OUTPUTSTEP), Kx(config.Kx), Kz(config.Kz),
+          TIMETS(config.TIMETS), POISSONPARAMU(config.POISSONPARAMU), POISSONPARAMW(config.POISSONPARAMW), tolerance(config.tolerance),
+          GRAVITY(config.GRAVITY),
+          Cp(config.Cp), Cv(config.Cv),
+          Rd(config.Rd), Lv(config.Lv),
+          P0(config.P0), PSURF(config.PSURF), addforcingtime(config.addforcingtime), CASE(config.CASE)
+    {
         allocateMemory();
-        initializaArrays();
     }
     ~vvm() {
         printf("Free vvm\n");
@@ -82,91 +84,58 @@ public:
         delete[] uxi;
         delete[] thvb;
         delete[] thvbm;
+        delete[] z;
+        delete[] lambda2;
 
-        // for (int i = 0; i < nx; ++i) {
-        //     delete[] zetap[i];
-        //     delete[] zeta[i];
-        //     delete[] zetam[i];
-        //     delete[] thp[i];
-        //     delete[] th[i];
-        //     delete[] thm[i];
-        //     delete[] u[i];
-        //     delete[] w[i];
-        //     delete[] um[i];
-        //     delete[] wm[i];
-        // }
-        delete[] zetap;
-        delete[] zeta;
-        delete[] zetam;
-        delete[] thp;
-        delete[] th;
-        delete[] thm;
-        delete[] u;
-        delete[] w;
-        delete[] um;
-        delete[] wm;
-
-        delete[] zetapcont;
-        delete[] zetacont;
-        delete[] zetamcont;
-        delete[] thpcont;
-        delete[] thcont;
-        delete[] thmcont;
-        delete[] ucont;
-        delete[] wcont;
-        delete[] umcont;
-        delete[] wmcont;
-
+        deallocate2DContinuousArray(zetap, zetapcont);
+        deallocate2DContinuousArray(zeta, zetacont);
+        deallocate2DContinuousArray(zetam, zetamcont);
+        deallocate2DContinuousArray(thp, thpcont);
+        deallocate2DContinuousArray(th, thcont);
+        deallocate2DContinuousArray(thm, thmcont);
+        deallocate2DContinuousArray(u, ucont);
+        deallocate2DContinuousArray(w, wcont);
+        deallocate2DContinuousArray(um, umcont);
+        deallocate2DContinuousArray(wm, wmcont);
+        deallocate2DContinuousArray(init_th_forcing, init_th_forcingcont);
+        deallocate2DContinuousArray(RKM, RKMcont);
+        deallocate2DContinuousArray(RKH, RKHcont);
+        deallocate2DContinuousArray(U_w, U_wcont);
+        deallocate2DContinuousArray(W_u, W_ucont);
 
         #if defined(STREAMFUNCTION)
-            for (int i = 0; i < nx; ++i) {
-                delete[] psi[i];
-            }
-            delete[] psi;
-            delete[] psicont;
+            deallocate2DContinuousArray(psi, psicont);
         #endif
 
         #if defined(WATER)
-            // for (int i = 0; i < nx; ++i) {
-            //     delete[] qvp[i];
-            //     delete[] qv[i];
-            //     delete[] qvm[i];
-            //     delete[] qcp[i];
-            //     delete[] qc[i];
-            //     delete[] qcm[i];
-            //     delete[] qrp[i];
-            //     delete[] qr[i];
-            //     delete[] qrm[i];
-            //     delete[] evaporation[i];
-            //     delete[] accretion[i];
-            //     delete[] autoconversion[i];
-            // }
-            delete[] qvp;
-            delete[] qv;
-            delete[] qvm;
-            delete[] qcp;
-            delete[] qc;
-            delete[] qcm;
-            delete[] qrp;
-            delete[] qr;
-            delete[] qrm;
-            delete[] evaporation;
-            delete[] accretion;
-            delete[] autoconversion;
             delete[] precip;
 
-            delete[] qvpcont;
-            delete[] qvcont;
-            delete[] qvmcont;
-            delete[] qcpcont;
-            delete[] qccont;
-            delete[] qcmcont;
-            delete[] qrpcont;
-            delete[] qrcont;
-            delete[] qrmcont;
-            delete[] evaporationcont;
-            delete[] accretioncont;
-            delete[] autoconversioncont;
+            deallocate2DContinuousArray(qvp, qvpcont);
+            deallocate2DContinuousArray(qv, qvcont);
+            deallocate2DContinuousArray(qvm, qvmcont);
+            deallocate2DContinuousArray(qcp, qcpcont);
+            deallocate2DContinuousArray(qc, qccont);
+            deallocate2DContinuousArray(qcm, qcmcont);
+            deallocate2DContinuousArray(qrp, qrpcont);
+            deallocate2DContinuousArray(qr, qrcont);
+            deallocate2DContinuousArray(qrm, qrmcont);
+            deallocate2DContinuousArray(evaporation, evaporationcont);
+            deallocate2DContinuousArray(accretion, accretioncont);
+            deallocate2DContinuousArray(autoconversion, autoconversioncont);
+            deallocate2DContinuousArray(condensation, condensationcont);
+        #endif
+
+        #if defined(AB3)
+            deallocate3DContinuousArray(dth_advect, dth_advectcont);
+            deallocate3DContinuousArray(dth_buoyancy, dth_buoyancycont);
+            deallocate3DContinuousArray(dzeta_advect, dzeta_advectcont);
+            
+            #if defined(WATER)
+                deallocate3DContinuousArray(dqv_advect, dqv_advectcont);
+                deallocate3DContinuousArray(dqc_advect, dqc_advectcont);
+                deallocate3DContinuousArray(dqr_advect, dqr_advectcont);
+                deallocate3DContinuousArray(dqr_VT, dqr_VTcont);
+            #endif
         #endif
 
         delete[] t_advection;
@@ -178,10 +147,6 @@ public:
         #if defined(TROPICALFORCING)
             delete[] Q1LS;
             delete[] Q2LS;
-            // for (int i = 0; i < nx; ++i) {
-            //     delete[] init_th_forcing[i];
-            // }
-            delete[] init_th_forcing;
         #endif
     }
 
@@ -206,112 +171,104 @@ public:
         uxi = new double[nx];
         thvb = new double[nz];
         thvbm = new double[nz];
+        z = new double[nz];
+        lambda2 = new double[nz];
         #if defined(TROPICALFORCING)
             Q1LS = new double[nz];
             Q2LS = new double[nz];
-            init_th_forcing = allocate2DArray(nx, nz);
         #endif
 
         // 2D arrays
-        zetap = allocate2DArray(nx, nz);
-        zeta = allocate2DArray(nx, nz);
-        zetam = allocate2DArray(nx, nz);
-        thp = allocate2DArray(nx, nz);
-        th = allocate2DArray(nx, nz);
-        thm = allocate2DArray(nx, nz);
-        u = allocate2DArray(nx, nz);
-        w = allocate2DArray(nx, nz);
-        um = allocate2DArray(nx, nz);
-        wm = allocate2DArray(nx, nz);
-
-        zetapcont = new double[nx*nz];
-        zetacont = new double[nx*nz];
-        zetamcont = new double[nx*nz];
-        thpcont = new double[nx*nz];
-        thcont = new double[nx*nz];
-        thmcont = new double[nx*nz];
-        ucont = new double[nx*nz];
-        wcont = new double[nx*nz];
-        umcont = new double[nx*nz];
-        wmcont = new double[nx*nz];
-
+        zetap = allocate2DContinuousArray(nx, nz, zetapcont);
+        zeta = allocate2DContinuousArray(nx, nz, zetacont);
+        zetam = allocate2DContinuousArray(nx, nz, zetamcont);
+        thp = allocate2DContinuousArray(nx, nz, thpcont);
+        th = allocate2DContinuousArray(nx, nz, thcont);
+        thm = allocate2DContinuousArray(nx, nz, thmcont);
+        u = allocate2DContinuousArray(nx, nz, ucont);
+        w = allocate2DContinuousArray(nx, nz, wcont);
+        um = allocate2DContinuousArray(nx, nz, umcont);
+        wm = allocate2DContinuousArray(nx, nz, wmcont);
+        init_th_forcing = allocate2DContinuousArray(nx, nz, init_th_forcingcont);
+        RKM = allocate2DContinuousArray(nx, nz, RKMcont);
+        RKH = allocate2DContinuousArray(nx, nz, RKHcont);
+        U_w = allocate2DContinuousArray(nx, nz, U_wcont);
+        W_u = allocate2DContinuousArray(nx, nz, W_ucont);
+        
         #if defined(STREAMFUNCTION)
-            psi = allocate2DArray(nx, nz);
-            psicont = new double[nx*nz];
+            psi = allocate2DContinuousArray(nx, nz, psicont);
         #endif
 
-        #if defined(WATER)
-            qvp = allocate2DArray(nx, nz);
-            qv = allocate2DArray(nx, nz);
-            qvm = allocate2DArray(nx, nz);
-            qcp = allocate2DArray(nx, nz);
-            qc = allocate2DArray(nx, nz);
-            qcm = allocate2DArray(nx, nz);
-            qrp = allocate2DArray(nx, nz);
-            qr = allocate2DArray(nx, nz);
-            qrm = allocate2DArray(nx, nz);
-            evaporation = allocate2DArray(nx, nz);
-            accretion = allocate2DArray(nx, nz);
-            autoconversion = allocate2DArray(nx, nz);
-
-            qvpcont = new double[nx*nz];
-            qvcont = new double[nx*nz];
-            qvmcont = new double[nx*nz];
-            qcpcont = new double[nx*nz];
-            qccont = new double[nx*nz];
-            qcmcont = new double[nx*nz];
-            qrpcont = new double[nx*nz];
-            qrcont = new double[nx*nz];
-            qrmcont = new double[nx*nz];
-            evaporationcont = new double[nx*nz];
-            accretioncont = new double[nx*nz];
-            autoconversioncont = new double[nx*nz];
-        #endif
-    }
-
-    void initializaArrays() {
-        for (int i = 0; i < nx; i++) {
-            zetap[i] = &zetapcont[i*nz];
-            zeta[i] = &zetacont[i*nz];
-            zetam[i] = &zetamcont[i*nz];
-            thp[i] = &thpcont[i*nz];
-            th[i] = &thcont[i*nz];
-            thm[i] = &thmcont[i*nz];
-            u[i] = &ucont[i*nz];
-            w[i] = &wcont[i*nz];
-            um[i] = &umcont[i*nz];
-            wm[i] = &wmcont[i*nz];
-            #if defined(STREAMFUNCTION)
-                psi[i] = &psicont[i*nz];
-            #endif
-
-            #if defined(WATER)
-                qvp[i] = &qvpcont[i*nz];
-                qv[i] = &qvcont[i*nz];
-                qvm[i] = &qvmcont[i*nz];
-                qcp[i] = &qcpcont[i*nz];
-                qc[i] = &qccont[i*nz];
-                qcm[i] = &qcmcont[i*nz];
-                qrp[i] = &qrpcont[i*nz];
-                qr[i] = &qrcont[i*nz];
-                qrm[i] = &qrmcont[i*nz];
-                evaporation[i] = &evaporationcont[i*nz];
-                accretion[i] = &accretioncont[i*nz];
-                autoconversion[i] = &autoconversioncont[i*nz];
-            #endif
-        }
         #if defined(WATER)
             precip = new double[nx];
+
+            qvp = allocate2DContinuousArray(nx, nz, qvpcont);
+            qv = allocate2DContinuousArray(nx, nz, qvcont);
+            qvm = allocate2DContinuousArray(nx, nz, qvmcont);
+            qcp = allocate2DContinuousArray(nx, nz, qcpcont);
+            qc = allocate2DContinuousArray(nx, nz, qccont);
+            qcm = allocate2DContinuousArray(nx, nz, qcmcont);
+            qrp = allocate2DContinuousArray(nx, nz, qrpcont);
+            qr = allocate2DContinuousArray(nx, nz, qrcont);
+            qrm = allocate2DContinuousArray(nx, nz, qrmcont);
+            evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
+            accretion = allocate2DContinuousArray(nx, nz, accretioncont);
+            autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
+            condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+        #endif
+
+        #if defined(AB3)
+            dth_advect = allocate3DContinuousArray(nx, nz, 2, dth_advectcont);
+            dth_buoyancy = allocate3DContinuousArray(nx, nz, 2, dth_buoyancycont);
+            dzeta_advect = allocate3DContinuousArray(nx, nz, 2, dzeta_advectcont);
+            #if defined(WATER)
+                dqv_advect = allocate3DContinuousArray(nx, nz, 2, dqv_advectcont);
+                dqc_advect = allocate3DContinuousArray(nx, nz, 2, dqc_advectcont);
+                dqr_advect = allocate3DContinuousArray(nx, nz, 2, dqr_advectcont);
+                dqr_VT = allocate3DContinuousArray(nx, nz, 2, dqr_VTcont);
+            #endif
         #endif
     }
 
-    double** allocate2DArray(int dim1, int dim2) {
-        double** array = new double*[dim1];
-        for (int i = 0; i < dim1; ++i) {
-            array[i] = new double[dim2];
+    static double** allocate2DContinuousArray(int rows, int cols, double*& contMemory) {
+        double** array = new double*[rows];
+        contMemory = new double[rows * cols]; // Allocate continuous memory block
+        for (int i = 0; i < rows; ++i) {
+            array[i] = &contMemory[i * cols]; // Point to segments within continuous block
         }
         return array;
     }
+
+    static void deallocate2DContinuousArray(double** array, double* contMemory) {
+        if (array != nullptr) {
+            delete[] contMemory; // Deallocate the continuous block of memory
+            delete[] array;      // Deallocate the array of pointers
+        }
+    }
+
+    #if defined(AB3)
+    double*** allocate3DContinuousArray(int dim1, int dim2, int dim3, double*& contMemory) {
+        double*** array = new double**[dim1];
+        contMemory = new double[dim1 * dim2 * dim3]; // Allocate continuous memory block
+        for (int i = 0; i < dim1; ++i) {
+            array[i] = new double*[dim2];
+            for (int j = 0; j < dim2; ++j) {
+                array[i][j] = &contMemory[i * dim2 * dim3 + j * dim3]; // Point to segments within continuous block
+            }
+        }
+        return array;
+    }
+
+    void deallocate3DContinuousArray(double*** array, double* contMemory) {
+        if (array != nullptr) {
+            delete[] contMemory; // Deallocate the continuous block of memory
+            for (int i = 0; i < nx; ++i) {
+                delete[] array[i]; // Deallocate the array of pointers
+            }
+            delete[] array;      // Deallocate the array of pointers
+        }
+    }
+    #endif
 
     double rdx;                                               ///< 1 / dx
     double r2dx;                                              ///< 1 / (2dx)
@@ -329,13 +286,14 @@ public:
     int ZRANGE;
     double TIMEEND;
     int TIMEROUTPUTSIZE;
-    std::string OUTPUTPATH;
+    std::string outputpath;
     int OUTPUTSTEP;
     double Kx;
     double Kz;
     double TIMETS;
     double POISSONPARAMU;
     double POISSONPARAMW;
+    double tolerance;
     double GRAVITY;
     double Cp;
     double Cv;
@@ -343,7 +301,9 @@ public:
     double Lv;
     double P0;
     double PSURF;
-    double ADDFORCINGTIME;
+    double addforcingtime;
+    int CASE;
+    int step = 0;
 
     // 0D variables
     double ubarTopp, ubarTop, ubarTopm;
@@ -362,6 +322,8 @@ public:
     double *uxi;
     double *thvb;
     double *thvbm;
+    double *z;
+    double *lambda2;
 
     // 2D variables
     double **zetap;
@@ -374,6 +336,11 @@ public:
     double **w;
     double **um;
     double **wm;
+    double **RKM;
+    double **RKH;
+    double **U_w;
+    double **W_u;
+
 
     double *zetapcont;
     double *zetacont;
@@ -385,6 +352,11 @@ public:
     double *wcont;
     double *umcont;
     double *wmcont;
+    double *init_th_forcingcont;
+    double *RKMcont;
+    double *RKHcont;
+    double *U_wcont;
+    double *W_ucont;
     
     
     #if defined(STREAMFUNCTION)
@@ -404,8 +376,8 @@ public:
         double **evaporation;
         double **accretion;
         double **autoconversion;
+        double **condensation;
         double *precip;
-
         
         double *qvpcont;
         double *qvcont;
@@ -419,7 +391,32 @@ public:
         double *evaporationcont;
         double *accretioncont;
         double *autoconversioncont;
+        double *condensationcont;
     #endif
+
+    // #####################################################################################
+    // Used for AB3. These variables are declared but not initialized if it's not AB3
+    double ***dth_advect;
+    double ***dth_buoyancy;
+    double ***dzeta_advect;
+    
+    double *dth_advectcont;
+    double *dth_buoyancycont;
+    double *dzeta_advectcont;
+
+    #if defined(WATER)
+        double ***dqv_advect;
+        double ***dqc_advect;
+        double ***dqr_advect;
+        double ***dqr_VT;
+
+        double *dqv_advectcont;
+        double *dqc_advectcont;
+        double *dqr_advectcont;
+        double *dqr_VTcont;
+    #endif
+    // #####################################################################################
+
 
     double *t_advection;
     double *t_poisson;
@@ -466,7 +463,8 @@ public:
      * @param future an two dimensional array that the timestep is the future one such as zetap, thp.
      * @param model the vvm object which is the model that will be used to do the diffusion (mainly the wind and the grid info).
      */
-    static void Advection_thermo(double **previous, double **now, double **future, vvm &model);
+    // static void Advection_thermo(double **previous, double **now, double **future, vvm &model);
+    static void Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model);
 
     static void Advection_qrVT(vvm &model);
     // *********************************************************************************
@@ -521,30 +519,28 @@ public:
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
 
-        #if defined(TROPICALFORCING)
-            static void AddForcing(vvm &model);
-        #endif
+        static void AddForcing(vvm &model);
     #endif
 
     // Variables for tropical forcing
+    double** init_th_forcing;
+    bool status_for_adding_forcing = true;
     #if defined(TROPICALFORCING)
         double* Q1LS;
         double* Q2LS;
-        double** init_th_forcing;
-        bool status_for_adding_forcing = false;
     #endif
 
     class Init {
     public:
         static void Init1d(vvm &);
         static void Init2d(vvm &);
+        static void RandomPerturbation(vvm &, int);
         #if defined(LOADFILE)
             static void LoadFile(vvm &);
         #elif defined(LOADFROMPREVIOUSFILE)
             static void LoadFromPreviousFile(vvm &);
-        #endif
-        #if defined(TROPICALFORCING)
-            static void RandomPerturbation(vvm &, int);
+        #elif defined(LOAD2DINIT)
+            static void Load2DInit(vvm &);
         #endif
             
     private:
@@ -560,6 +556,7 @@ public:
     public:
         static void printInit(vvm &);
         static void create_all_directory(vvm &);
+        static void create_directory(std::string);
         #if defined(OUTPUTNC)
             static void output_nc(int, vvm &);
             static void output_time_nc(int, vvm &);
@@ -579,8 +576,6 @@ public:
             static void outputalltxt(int, vvm &);
         #endif
         
-    private:
-        static void create_directory(std::string);
     };
 
 
@@ -597,6 +592,13 @@ public:
         static void updateMean(vvm &);
         static void TimeMarching(vvm &);
         static void nextTimeStep(vvm &);
+    };
+
+    class Turbulence {
+    public:
+        static void RKM_RKH(vvm &);
+        static void Mparam(vvm &model, double **var_now, double **var_future);
+        static void Hparam(vvm &model, double **var_now, double **var_future);
     };
 
 };

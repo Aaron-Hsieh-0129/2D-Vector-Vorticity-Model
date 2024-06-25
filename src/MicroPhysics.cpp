@@ -18,6 +18,7 @@ void vvm::MicroPhysics::condensation(vvm &model) {
             model.qvp[i][k] = model.qvp[i][k] - C;
             model.qcp[i][k] = model.qcp[i][k] + C;
             model.thp[i][k] = model.thp[i][k] + model.Lv / (model.Cp * model.pib[k]) * C;
+            model.condensation[i][k] = C;
         }
     }
     return;
@@ -33,7 +34,7 @@ void vvm::MicroPhysics::autoconversion(vvm & model) {
             double ar = autort * (qcplus - autotr);
             ar = std::max(0., ar);
             #if defined(AB3)
-                double arcrdt = std::min(ar * DT, qcplus);
+                double arcrdt = std::min(ar * model.dt, qcplus);
             #else
                 double arcrdt = std::min(ar * model.d2t, qcplus);
             #endif
@@ -56,7 +57,7 @@ void vvm::MicroPhysics::accretion(vvm &model) {
 
             cr = accrrt * qcplus * (std::pow(qrplus, 0.875));
             #if defined(AB3)
-                arcrdt = std::min(cr*DT, qcplus);
+                arcrdt = std::min(cr*model.dt, qcplus);
             #else
                 arcrdt = std::min(cr*model.d2t, qcplus);
             #endif
@@ -84,9 +85,9 @@ void vvm::MicroPhysics::evaporation(vvm &model) {
             deficit = std::max((1. - qvplus / qvs), 0.);					// saturation dificit (RH < 100%)
             er = coef * deficit * (std::pow(1E-3 * model.rhou[k] * qrplus, 0.525)) / ((5.4E5 + 2.55E6 / (1E-2*model.pb[k] * qvs)) * 1E-3*model.rhou[k]);
             #if defined(AB3)
-                double erdt = std::min(qrplus, std::max(0., er * DT));
+                erdt = std::min(qrplus, std::max(0., er * model.dt));
             #else
-                double erdt = std::min(qrplus, std::max(0., er * model.d2t));
+                erdt = std::min(qrplus, std::max(0., er * model.d2t));
             #endif
             
             if (erdt < 0.) {
