@@ -10,7 +10,7 @@
     #define ALPHA (0.)
 #endif
 #define DIFFUSION
-#define TIMEFILTER
+// #define TIMEFILTER
 
 // #define DRY
 // #define RHO1
