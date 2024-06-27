@@ -125,7 +125,7 @@ public:
             deallocate2DContinuousArray(condensation, condensationcont);
         #endif
 
-        #if defined(AB3)
+        #if defined(AB2)
             deallocate3DContinuousArray(dth_advect, dth_advectcont);
             deallocate3DContinuousArray(dth_buoyancy, dth_buoyancycont);
             deallocate3DContinuousArray(dzeta_advect, dzeta_advectcont);
@@ -217,7 +217,7 @@ public:
             condensation = allocate2DContinuousArray(nx, nz, condensationcont);
         #endif
 
-        #if defined(AB3)
+        #if defined(AB2)
             dth_advect = allocate3DContinuousArray(nx, nz, 2, dth_advectcont);
             dth_buoyancy = allocate3DContinuousArray(nx, nz, 2, dth_buoyancycont);
             dzeta_advect = allocate3DContinuousArray(nx, nz, 2, dzeta_advectcont);
@@ -246,7 +246,7 @@ public:
         }
     }
 
-    #if defined(AB3)
+    #if defined(AB2)
     double*** allocate3DContinuousArray(int dim1, int dim2, int dim3, double*& contMemory) {
         double*** array = new double**[dim1];
         contMemory = new double[dim1 * dim2 * dim3]; // Allocate continuous memory block
@@ -395,7 +395,7 @@ public:
     #endif
 
     // #####################################################################################
-    // Used for AB3. These variables are declared but not initialized if it's not AB3
+    // Used for AB2. These variables are declared but not initialized if it's not AB2
     double ***dth_advect;
     double ***dth_buoyancy;
     double ***dzeta_advect;

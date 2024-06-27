@@ -101,7 +101,7 @@ void vvm::Init::Init1d(vvm &model) {
 
     for (int k = 0; k < model.nz; k++) {
         model.z[k] = (k-0.5) * model.dz;
-        model.lambda2[k] = 1. / (1. / pow(0.23 * model.dx, 2) + 1. / pow(0.35 * model.z[k], 2));
+        model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.35 * model.z[k], 2));
     }
 
     return;
@@ -410,15 +410,14 @@ void vvm::Init::RandomPerturbation(vvm &model, int t) {
     // Parameters for the 2D Gaussian noise array
     double mean = 0.; // Mean of the Gaussian distribution
     double standard_deviation = 1.; // Standard deviation of the Gaussian distribution
-    double min_range = -1.; // Minimum value of the generated noise
-    double max_range = 1.; // Maximum value of the generated noise
+    double min_range = -0.25; // Minimum value of the generated noise
+    double max_range = 0.25; // Maximum value of the generated noise
 
     double z = 0;
 
     for (int k = 1; k < model.nz-1; k++) {
         z = (k - 0.5) * model.dz;
         for (int i = 1; i < model.nx-1; i++) {
-            // TODO: Change it to physical parameter
             if (z < 200) {
                 double random_noise = 0.;
                 do {

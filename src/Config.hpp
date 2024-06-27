@@ -2,15 +2,15 @@
 #define OUTPUTTXT
 
 // #define PETSC
-#define AB3 // Don't turn this on. Debugging!!!!!
+#define AB2 // More stable than Leapfrog (default)
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
-#if defined(AB3)
+#if defined(AB2)
     #define ALPHA (1.)
 #else
     #define ALPHA (0.)
 #endif
 #define DIFFUSION
-// #define TIMEFILTER
+#define TIMEFILTER
 
 // #define DRY
 // #define RHO1
@@ -69,7 +69,7 @@
     The switch for output file in .txt datatype
     \def PETSC
     The switch for Poisson Solver PETSc
-    \def AB3
+    \def AB2
     The switch for Adams-Bashforth Numerical Method
     \def Diffusion
     The switch for the diffusion process

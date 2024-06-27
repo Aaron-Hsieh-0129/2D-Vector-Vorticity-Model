@@ -15,7 +15,7 @@ void vvm::Iteration::pth_pt(vvm &model) {
 }
 
 void vvm::Iteration::updateMean(vvm &model) {
-    #if defined(AB3)
+    #if defined(AB2)
         for (int k = 0; k < model.nz; k++) {
             model.thbm[k] = model.thb[k];
             model.thvbm[k] = model.thvb[k];
@@ -158,7 +158,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             #endif
         }
 
-        #if defined(AB3)
+        #if defined(AB2)
         for (int i = 0; i <= model.nx-1; i++) {
             for (int k = 0; k <= model.nz-1; k++) {
                 model.um[i][k] = model.u[i][k];

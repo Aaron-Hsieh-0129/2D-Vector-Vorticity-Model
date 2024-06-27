@@ -256,7 +256,7 @@
 <codeline lineno="11" refid="Const_8hpp_1a40d8d9faeac7bd5d4cee0beff9e019a5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Lv<sp/>(2500000.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="12" refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NX<sp/>(XRANGE<sp/>/<sp/>dx)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="13" refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NZ<sp/>(ZRANGE<sp/>/<sp/>dz)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(AB3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(AB2)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>ALPHA<sp/>(1.)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="17" refid="Const_8hpp_1af5abd28c44c29b7397c84f1fec4b1d84" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>ALPHA<sp/>(0.)</highlight><highlight class="normal"></highlight></codeline>

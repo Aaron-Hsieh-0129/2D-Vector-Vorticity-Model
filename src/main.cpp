@@ -13,9 +13,10 @@ int main(int argc, char **argv) {
     #if defined(PETSC)
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
     #endif
-    Config_VVM config(5., 200., 200., 100000, 20000, 10000., 10000, "/data/Aaron/TMIF/0619_test_Bubble/", 1, 
-                    100., 100., 0.01, 1E-9, 0., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., 10., 0);
+
+    Config_VVM config(4., 200., 200., 100000, 20000, 40000., 10000, "/data/Aaron/TMIF/0619_test_Bubble/", 1, 
+                    200., 200., 0.01, 1E-9, 0., 1E-20, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    1E5, 96500., 10., 1);
     vvm model(config);
     
     #if defined(LOADFROMPREVIOUSFILE)

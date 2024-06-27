@@ -7,7 +7,7 @@ void vvm::AddForcing(vvm &model) {
     double dt = 0.;
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
-            #ifndef AB3
+            #ifndef AB2
                 dt = model.d2t;
             #else
                 dt = model.dt;

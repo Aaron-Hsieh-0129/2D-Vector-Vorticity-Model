@@ -26,7 +26,12 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
                 model.RKM[i][k] = 0.;
                 model.RKH[i][k] = 0.;
             }
+
+            // Diffusion should be larger than 100
+            model.RKM[i][k] = std::max(model.RKM[i][k], 100.);
+            model.RKH[i][k] = std::max(model.RKH[i][k], 100.);
             
+            // Diffusion should be smaller than 0.8 * dx^2 / dt
             model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * std::pow(model.dx * model.dz, 2) / model.dt);
             model.RKH[i][k] = std::min(model.RKH[i][k], 0.8 * std::pow(model.dx * model.dz, 2) / model.dt);
         }
@@ -45,10 +50,10 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
 void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) {
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
-            var_future[i][k] += 1. / std::pow(model.rhow[k], 2) * model.rdx2 * 
+            var_future[i][k] += 1. / model.rhow[k] * model.rdx2 * 
                                 (model.rhow[k] * 0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (model.rhow[k]*var_now[i+1][k] - model.rhow[k]*var_now[i][k]) - 
                                  model.rhow[k] * 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k]*var_now[i-1][k]))
-                              + 1. / std::pow(model.rhow[k], 2) * model.rdz2 * 
+                              + 1. / model.rhow[k] * model.rdz2 * 
                                 (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (model.rhow[k+1]*var_now[i][k+1] - model.rhow[k]*var_now[i][k]) - 
                                  model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k-1]*var_now[i][k-1]));
         }
@@ -59,10 +64,10 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
 void vvm::Turbulence::Hparam(vvm &model, double **var_now, double **var_future) {
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
-            var_future[i][k] += 1. / std::pow(model.rhou[k], 2) * model.rdx2 *
+            var_future[i][k] += 1. / model.rhou[k] * model.rdx2 *
                                 (model.rhou[k] * 0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (model.rhou[k]*var_now[i+1][k] - model.rhou[k]*var_now[i][k]) - 
                                  model.rhou[k] * 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (model.rhou[k]*var_now[i][k] - model.rhou[k]*var_now[i-1][k]))
-                              + 1. / std::pow(model.rhou[k], 2) * model.rdz2 *
+                              + 1. / model.rhou[k] * model.rdz2 *
                                 (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (model.rhou[k+1]*var_now[i][k+1] - model.rhou[k]*var_now[i][k]) - 
                                  model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (model.rhou[k]*var_now[i][k] - model.rhou[k-1]*var_now[i][k-1]));
         }

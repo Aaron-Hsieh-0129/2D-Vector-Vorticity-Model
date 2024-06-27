@@ -155,7 +155,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   53</span>            qcplus = std::max(0., <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a8fb6dd58f0dae8301f414f4d2fccf60f">qcp</a>[i][k]);</div>
 <div class="line"><span class="lineno">   54</span>            ar = autort * (qcplus - autotr);</div>
 <div class="line"><span class="lineno">   55</span>            ar = std::max(0., ar);</div>
-<div class="line"><span class="lineno">   56</span><span class="preprocessor">            #if defined(AB3)</span></div>
+<div class="line"><span class="lineno">   56</span><span class="preprocessor">            #if defined(AB2)</span></div>
 <div class="line"><span class="lineno">   57</span>                arcrdt = std::min(ar * <a class="code hl_define" href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a>, qcplus);</div>
 <div class="line"><span class="lineno">   58</span><span class="preprocessor">            #else</span></div>
 <div class="line"><span class="lineno">   59</span>                arcrdt = std::min(ar * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a35038a3310f0394ec73c928ff9801f84">d2t</a>, qcplus);</div>
@@ -215,7 +215,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   31</span>            <span class="keywordtype">double</span> qcplus = std::max(0., <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a8fb6dd58f0dae8301f414f4d2fccf60f">qcp</a>[i][k]);</div>
 <div class="line"><span class="lineno">   32</span>            <span class="keywordtype">double</span> ar = autort * (qcplus - autotr);</div>
 <div class="line"><span class="lineno">   33</span>            ar = std::max(0., ar);</div>
-<div class="line"><span class="lineno">   34</span><span class="preprocessor">            #if defined(AB3)</span></div>
+<div class="line"><span class="lineno">   34</span><span class="preprocessor">            #if defined(AB2)</span></div>
 <div class="line"><span class="lineno">   35</span>                <span class="keywordtype">double</span> arcrdt = std::min(ar * <a class="code hl_define" href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a>, qcplus);</div>
 <div class="line"><span class="lineno">   36</span><span class="preprocessor">            #else</span></div>
 <div class="line"><span class="lineno">   37</span>                <span class="keywordtype">double</span> arcrdt = std::min(ar * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a35038a3310f0394ec73c928ff9801f84">d2t</a>, qcplus);</div>
@@ -332,7 +332,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   81</span> </div>
 <div class="line"><span class="lineno">   82</span>            deficit = std::max((1. - qvplus / qvs), 0.);                    <span class="comment">// saturation dificit (RH &lt; 100%)</span></div>
 <div class="line"><span class="lineno">   83</span>            er = coef * deficit * (pow(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a460b941aba46eeaf9d777d93ec472cc1">rhou</a>[k] * qrplus, 0.525)) / ((2.03e4 + 9.584e6 / (<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a81425e3f8b7fb92cd0f32a6a2c9ab575">pb</a>[k] * qvs)) * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a460b941aba46eeaf9d777d93ec472cc1">rhou</a>[k]);</div>
-<div class="line"><span class="lineno">   84</span><span class="preprocessor">            #if defined(AB3)</span></div>
+<div class="line"><span class="lineno">   84</span><span class="preprocessor">            #if defined(AB2)</span></div>
 <div class="line"><span class="lineno">   85</span>                <span class="keywordtype">double</span> erdt = std::min(qrplus, std::max(0., er * <a class="code hl_define" href="Config_8hpp.html#a943f07034774ef1261d62cd0d3d1fec9">DT</a>));</div>
 <div class="line"><span class="lineno">   86</span><span class="preprocessor">            #else</span></div>
 <div class="line"><span class="lineno">   87</span>                <span class="keywordtype">double</span> erdt = std::min(qrplus, std::max(0., er * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#a35038a3310f0394ec73c928ff9801f84">d2t</a>));</div>

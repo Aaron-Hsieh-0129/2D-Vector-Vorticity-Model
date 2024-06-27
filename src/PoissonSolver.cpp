@@ -1,11 +1,14 @@
 #include "Declare.hpp"
+#include "Eigen/src/IterativeLinearSolvers/BasicPreconditioners.h"
+#include "Eigen/src/IterativeLinearSolvers/IncompleteLUT.h"
 #include <ios>
-#include <petsc.h>
-#include <petscksp.h>
-#include <petscvec.h>
 #include <iostream>
-#include <petscviewer.h>
-
+#if defined(PETSC)
+    #include <petsc.h>
+    #include <petscksp.h>
+    #include <petscvec.h>
+    #include <petscviewer.h>
+#endif
 
 #if defined(STREAMFUNCTION)
 void vvm::PoissonSolver::calpsiuw(vvm &model) {
@@ -323,6 +326,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         KSPDestroy(&ksp);
         
         /*
+        // The petsc here is using the DMDA to allocate the matrix so it's intrinsically parallel by petsc
         DM da;
         Vec xx, bb;
         Mat AA;
@@ -445,7 +449,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         }
 
         // Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
-        Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
+        Eigen::BiCGSTAB<Eigen::SparseMatrix<double>, Eigen::IncompleteLUT<double> > solver;
         // Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solver;
         solver.setTolerance(model.tolerance);
         solver.setMaxIterations(10000);
@@ -573,16 +577,26 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
         KSPDestroy(&ksp);
     #else
         Eigen::VectorXd y(model.nx-2), h(model.nx-2);
+
         // h
+        double tmp = 0.;
         for (int i = 1; i <= model.nx-2; i++) {
             h(i-1) = -(0. - model.rhow[model.nz-2] * model.w[i][model.nz-2]) / model.rhou[model.nz-2] * model.dx;
+            tmp += h(i-1);
+        }
+
+        // h = h - \bar{h} => Because it's periodic boundary condition, we need to subtract the average value to confine the solution.
+        tmp /= (model.nx-2);
+        for (int i = 1; i <= model.nx-2; i++) {
+            h(i-1) = h(i-1) - tmp;
         }
 
         Eigen::SparseMatrix<double> G = model.G;
-        Eigen::ConjugateGradient<Eigen::SparseMatrix<double> > solver_xi;
+        Eigen::ConjugateGradient<Eigen::SparseMatrix<double>, Eigen::Lower|Eigen::Upper, Eigen::IdentityPreconditioner> solver_xi;
         // Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver_xi;
         // Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver_xi;
-        solver_xi.setTolerance(model.tolerance);
+        // solver_xi.setTolerance(model.tolerance);
+        solver_xi.setTolerance(1E-12);
         solver_xi.setMaxIterations(10000);
         solver_xi.compute(G);
         if (solver_xi.info() != Eigen::Success) {
@@ -593,7 +607,6 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
             std::cout << "U Solve Warning!!!!!!!!!!!!" << std::endl;
             std::cout << "U:  #iterations:     " << solver_xi.iterations() << ", estimated error: " << std::scientific <<  solver_xi.error() << std::endl;
         }
-        // std::cout << "U:  #iterations:     " << solver_xi.iterations() << ", estimated error: " << std::scientific <<  solver_xi.error() << std::endl;
 
         // xi
         for (int i = 1; i <= model.nx-2; i++) {
@@ -621,20 +634,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
     for (int i = 1; i <= model.nx-2; i++) {
         double area = 0.;
         for (int k = model.nz-3; k >= 1; k--) {
-            // area += ((0.5*(model.rhow[k+2]*model.w[i][k+2] + model.rhow[k+1]*model.w[i][k+1]) - 0.5*(model.rhow[k+2]*model.w[i-1][k+2] + model.rhow[k+1]*model.w[i-1][k+1])) / model.rhou[k+1] * model.rdx - 0.5*(model.rhow[k+2]*model.zetap[i][k+2] + model.rhow[k+1]*model.zetap[i][k+1])) * -dz;
-            
             area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.rhow[k+1]*model.zetap[i][k+1]) * -model.dz;
-            // area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.zetap[i][k+1]) * -dz;
-            
-            /*
-            if (i == model.nz-3 || i == 1) area += ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.rhow[k+1]*model.zetap[i][k+1]) * -dz;
-            else {
-                double fa = ((0.5*(model.w[i][k+2] + model.w[i][k+1]) - 0.5*(model.w[i-1][k+2] + model.w[i-1][k+1])) * model.rdx - 0.5*(model.rhow[k+2]*model.zetap[i][k+2] + model.rhow[k+1]*model.zetap[i][k+1]));
-                double fb = ((0.5*(model.w[i][k+1] + model.w[i][k]) - 0.5*(model.w[i-1][k+1] + model.w[i-1][k])) * model.rdx - 0.5*(model.rhow[k+1]*model.zetap[i][k+1] + model.rhow[k]*model.zetap[i][k]));
-                double f_mid = ((model.w[i][k+1]-model.w[i-1][k+1]) * model.rdx - model.rhow[k+1]*model.zetap[i][k+1]);
-                area += (-dz) / 6. * (fa + 4*f_mid + fb);
-            }
-            */
             model.u[i][k] = area + model.u[i][model.nz-2];
         }
     }
@@ -748,26 +748,16 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         // Height
         if (idx % (model.nx-2) == 0) k++;
 
-        // coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1]))*model.rdx2 + POISSONPARAM ));
         coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + model.POISSONPARAMW ));
-        // coeff.push_back(T(idx, idx, -4.)); // test
 
         // left/right = 1
-        // if (idx % (model.nx-2) != 0) coeff.push_back(T(idx, idx-1, 1.*model.rdx2)); // left
         if (idx % (model.nx-2) != 0) coeff.push_back(T(idx, idx-1, 1.)); // left
-        // if ((idx+1) % (model.nx-2) != 0) coeff.push_back(T(idx, idx+1, 1.*model.rdx2)); // right
         if ((idx+1) % (model.nx-2) != 0) coeff.push_back(T(idx, idx+1, 1.)); // right
-        // if (idx % (model.nx-2) != 0) coeff.push_back(T(idx, idx-1, 1.)); // left_test
-        // if ((idx+1) % (model.nx-2) != 0) coeff.push_back(T(idx, idx+1, 1.)); // right right
 
         // Boundary
         if (idx % (model.nx-2) == 0) {
-            // coeff.push_back(T(idx, idx+(model.nx-3), 1.*model.rdx2));
             coeff.push_back(T(idx, idx+(model.nx-3), 1.));
-            // coeff.push_back(T(idx+(model.nx-3), idx, 1.*model.rdx2));
             coeff.push_back(T(idx+(model.nx-3), idx, 1.));
-            // coeff.push_back(T(idx, idx+(model.nx-3), 1.)); // test
-            // coeff.push_back(T(idx+(model.nx-3), idx, 1.)); // test
         }
     }
     
@@ -777,18 +767,32 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         if (idx % (model.nx-2) == 0) k++;
 
         // E
-        // if (idx < (model.nx-2)*(model.nz-4)) coeff.push_back(T(idx, idx+(model.nx-2), model.rhow[k]/model.rhou[k] * model.rdx2));
         if (idx < (model.nx-2)*(model.nz-4)) coeff.push_back(T(idx, idx+(model.nx-2), model.rhow[k]/model.rhou[k]));
-        // if (idx < (model.nx-2)*(model.nz-3))coeff.push_back(T(idx, idx+(model.nx-2), 1.)); // test
         
         // F
-        // if (idx >= (model.nx-2)) coeff.push_back(T(idx, idx-(model.nx-2), model.rhow[k]/model.rhou[k-1] * model.rdx2));
         if (idx >= (model.nx-2)) coeff.push_back(T(idx, idx-(model.nx-2), model.rhow[k]/model.rhou[k-1]));
-        // if (idx >= (model.nx-2)*2) coeff.push_back(T(idx, idx-(model.nx-2), 1.)); // test
     }
 
     model.A.setFromTriplets(coeff.begin(), coeff.end());
     
+    // ###########################################
+    // For solving u
+    // G: i = 1~model.nx-2
+    // ###########################################
+    std::vector<T> coeff_xi;
+
+    for (int i = 0; i <= model.nx-3; i++) {
+        // D
+        coeff_xi.push_back(T(i, i, -2. + model.POISSONPARAMU));
+        if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.));
+        if (i != 0) coeff_xi.push_back(T(i, i-1, 1.));
+    }
+    // Boundary
+    coeff_xi.push_back(T(0, model.nx-3, 1.));
+    coeff_xi.push_back(T(model.nx-3, 0, 1.));
+    model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
+
+    // Here is testing for the eigen solver
     /*
     // eigen solver
     Eigen::VectorXd x((model.nx-2)*(model.nz-3)), b((model.nx-2)*(model.nz-3)), x_ans((model.nx-2)*(model.nz-3));
@@ -818,29 +822,6 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         std::cout << "W Solve Warning!!!!!!!!!!!!" << std::endl;
     }
     */
-    // std::cout << std::setprecision(5) << model.A << std::endl;
-
-    // ###########################################
-    // For solving u
-    // G: i = 1~model.nx-2
-    // ###########################################
-    std::vector<T> coeff_xi;
-
-    for (int i = 0; i <= model.nx-3; i++) {
-        // D
-        // coeff_xi.push_back(T(i, i, -2.*model.rdx2+POISSONPARAM));
-        coeff_xi.push_back(T(i, i, -2. + model.POISSONPARAMU));
-        // if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.*model.rdx2));
-        if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.));
-        // if (i != 0) coeff_xi.push_back(T(i, i-1, 1.*model.rdx2));
-        if (i != 0) coeff_xi.push_back(T(i, i-1, 1.));
-    }
-    // Boundary
-    // coeff_xi.push_back(T(0, model.nx-3, 1.*model.rdx2));
-    coeff_xi.push_back(T(0, model.nx-3, 1.));
-    // coeff_xi.push_back(T(model.nx-3, 0, 1.*model.rdx2));
-    coeff_xi.push_back(T(model.nx-3, 0, 1.));
-    model.G.setFromTriplets(coeff_xi.begin(), coeff_xi.end());
     
     // std::cout << "#iterations:     " << solver.iterations() << std::endl;
     // std::cout << "estimated error: " << solver.error()      << std::endl;

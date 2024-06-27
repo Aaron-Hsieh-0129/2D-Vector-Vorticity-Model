@@ -13,7 +13,7 @@
 #include <cmath>
 
 // TODO: Arakawa Jacobian for streamfunction
-// TODO: Fix the blow up in AB3.
+// TODO: Fix the blow up in AB2.
 double PLUS(double var) {
     return 0.5 * (var + std::fabs(var));
 }
@@ -32,7 +32,7 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
         for (int i = 1; i <= model.nx-1; i++) {
             flux_u[i][k] = model.rhou[k] * model.u[i][k] * (now[i][k] + now[i-1][k]);
             flux_w[i][k] = model.rhow[k] * model.w[i][k] * (now[i][k] + now[i][k-1]);
-            #if defined(AB3)
+            #if defined(AB2)
                 if (i >= 2 && i <= model.nx-3 && k >= 2 && k <= model.nz-3) {
                     flux_u[i][k] += -ALPHA/3. * 
                                     (model.rhou[k]*PLUS(model.u[i][k]) * (now[i][k] - now[i-1][k])
@@ -58,7 +58,7 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
             prhouvar_px_rho = (flux_u[i+1][k] - flux_u[i][k]) * model.r2dx / model.rhou[k];
             prhowvar_pz_rho = (flux_w[i][k+1] - flux_w[i][k]) * model.r2dz / model.rhou[k];
 
-            #if defined(AB3)
+            #if defined(AB2)
                 dvar[i][k][(model.step+1)%2] = -prhouvar_px_rho - prhowvar_pz_rho;
                 if (model.step == 0) dvar[i][k][0] = dvar[i][k][1];
                 future[i][k] = now[i][k] + 1.5*model.dt*dvar[i][k][(model.step+1)%2] - 0.5*model.dt*dvar[i][k][model.step%2];
@@ -92,7 +92,7 @@ void vvm::Advection_zeta(vvm &model) {
         for (int i = 0; i <= model.nx-2; i++) {
             flux_u[i][k] = model.U_w[i][k] * (model.zeta[i+1][k] + model.zeta[i][k]);
             flux_w[i][k] = model.W_u[i][k] * (model.zeta[i][k+1] + model.zeta[i][k]);
-            #if defined(AB3)
+            #if defined(AB2)
                 if (i >= 2 && i <= model.nx-3 && k >= 2 && k <= model.nz-3) {
                     flux_u[i][k] += -ALPHA/3. * (PLUS(model.U_w[i][k])*(model.zeta[i+1][k]-model.zeta[i][k]) 
                                                     - std::sqrt(PLUS(model.U_w[i][k]) * PLUS(model.U_w[i-1][k]))*(model.zeta[i][k]-model.zeta[i-1][k]) - 
@@ -116,7 +116,7 @@ void vvm::Advection_zeta(vvm &model) {
             prhouzeta_px_rho = (flux_u[i][k] - flux_u[i-1][k]) * model.r2dx / model.rhow[k];
             prhowzeta_pz_rho = (flux_w[i][k] - flux_w[i][k-1]) * model.r2dz / model.rhow[k];
 
-            #if defined(AB3)
+            #if defined(AB2)
                 model.dzeta_advect[i][k][(model.step+1)%2] = -prhouzeta_px_rho - prhowzeta_pz_rho;
                 if (model.step == 0) model.dzeta_advect[i][k][0] = model.dzeta_advect[i][k][1];
                 model.zetap[i][k] = model.zeta[i][k] + 1.5*model.dt*model.dzeta_advect[i][k][(model.step+1)%2] - 0.5*model.dt*model.dzeta_advect[i][k][model.step%2];
@@ -139,7 +139,7 @@ void vvm::Advection_qrVT(vvm &model) {
 
 
     double VT = 0.;
-    #if defined(AB3)
+    #if defined(AB2)
         double VT_u = 0., VT_d = 0.;
     #endif
     for (int k = 1; k <= model.nz-2; k++) {
@@ -147,7 +147,7 @@ void vvm::Advection_qrVT(vvm &model) {
             VT = 1E-2 * (3634 * pow(1E-3*model.rhow[k] * 0.5*(model.qr[i][k]+model.qr[i][k-1]), 0.1346) * pow(model.rhow[k]/model.rhow[1], -0.5));
 
             flux_w[i][k] = model.rhow[k] * VT * (model.qr[i][k] + model.qr[i][k-1]);
-            #if defined(AB3)
+            #if defined(AB2)
                 if (i >= 2 && i <= model.nx-2 && k >= 2 && k <= model.nz-2) {
                     VT_u = 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
                     VT_d = 1E-2 * (3634 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
@@ -168,7 +168,7 @@ void vvm::Advection_qrVT(vvm &model) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhoVTqr_pz_rho = (flux_w[i][k+1] - flux_w[i][k]) * model.r2dz / model.rhou[k];
 
-            #if defined(AB3)
+            #if defined(AB2)
                 model.dqr_VT[i][k][(model.step+1)%2] = prhoVTqr_pz_rho;
                 if (model.step == 0) model.dqr_VT[i][k][0] = model.dqr_VT[i][k][1];
                 model.qrp[i][k] += 1.5*model.dt*model.dqr_VT[i][k][(model.step+1)%2] - 0.5*model.dt*model.dqr_VT[i][k][model.step%2];
