@@ -9,7 +9,7 @@
 #else
     #define ALPHA (0.)
 #endif
-// #define DIFFUSION // Don't turn this off. Debugging!!!!!
+// #define DIFFUSION
 // #define TIMEFILTER
 
 // #define DRY
@@ -47,46 +47,24 @@
 */
 
 /*!
-    \def dx
-    The grid size in x direction (m)
-    \def dz
-    The grid size in z direction (m)
-    \def XRANGE
-    The domain size for this model in x direction (m)
-    \def ZRANGE
-    The domain size for this model in z direction (m)
-    \def dt
-    The integration time step (s)
-    \def TIMEEND
-    The total integration time (s)
-    \def OUTPUTPATH
-    The output file path
-    \def OUTPUTSTEP
-    The time step for output
     \def OUTPUTNC
-    The switch for output file in .nc datatype
+    The switch for output file in .nc datatype. Note that this can't work for openmp so turn it off if you want to use openmp.
     \def OUTPUTTXT
-    The switch for output file in .txt datatype
+    The switch for output file in .txt datatype. This is the default output format.
     \def PETSC
-    The switch for Poisson Solver PETSc
+    The switch for Poisson Solver PETSc. If you want to use Eigen solver (default), turn it off.
     \def AB2
-    The switch for Adams-Bashforth Numerical Method
-    \def Diffusion
-    The switch for the diffusion process
-    \def Kx
-    The diffusion coefficient in x direction
-    \def Kz
-    The diffusion coefficient in z direction
-    \def POISSONPARAM
-    When solving 2D Poisson equation, adding small values to main diagonal to make the matrix solvable.
-    \def POISSONPARAMU
-    When solving 1D Poisson equation, adding small values to main diagonal to make the matrix solvable.
-    \def TIMETS
-    The coefficient for removing the computational mode
+    The switch for Adams-Bashforth Numerical Method. This method is more stable because the spatial discretization is third-order accurate. If you want to use Leapfrog, turn it off. 
+    \def DIFFUSION
+    The switch for the diffusion process.
+    If the flag is turned off, the first-order turbulent closure is used.
+    \def TIMEFILTER
+    The switch for the time filter process.
+    Turn this on if you want to use Leapfrog method. This will filter out the computational mode.
     \def DRY
     Switch for constant potential temperature (300K)
     \def RHO1
-    Switch for constant density profile (1kg/m3)
+    Switch for constant density profile (1kg/m^3)
     \def WATER
     Switch for microphysics (qc, qv, qr) with warm rain scheme
     \def TROPICALFORCING
@@ -95,10 +73,10 @@
     Time (s) for adding random perturbation into model
     \def LOADFILE
     Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test
+    \def LOADFROMPREVIOUSFILE
+    Switch for restarting the model. You can specify the file path (for two time steps) you want to load 
     \def STREAMFUNCTION
-    Solving stream function (Krurger 1988) to get u, w rather than solving them directly (Jung 2008)
-    \def VTconst
-    In the Kessler warm rain scheme, set the terminal velocity to a constant (here is 6) or not. If this is turned off the terminal velocity will be calculated according to an imperical function
+    Solving stream function (Krurger 1988) to get u, w rather than solving them directly (default, Jung 2008)
     \def POISSONTEST
     Switch for testing the Poisson matrix
 */

@@ -8,4 +8,3 @@ The two files are the main configuration files for the model. The `Config` file 
    :maxdepth: 2
 
    header/Config
-   header/Const
