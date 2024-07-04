@@ -1,6 +1,9 @@
 #include "Declare.hpp"
 
 void vvm::NumericalProcess::Diffusion(double **var_in, double **var_out, vvm &model) {
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k < model.nz-1; k++) {
         for (int i = 1; i < model.nx-1; i++) {
             var_out[i][k] += model.d2t * model.Kx * model.rdx2 * (var_in[i+1][k] - 2. * var_in[i][k] + var_in[i-1][k]) + 
@@ -35,7 +38,14 @@ void vvm::NumericalProcess::DiffusionAll(vvm &model) {
     Diffusion(model.zetam, model.zetap, model);
     Diffusion(model.thm, model.thp, model);
     #if defined(WATER)
-        Diffusion(model.qvm, model.qvp, model);
+        // Diffusion(model.qvm, model.qvp, model);
+        #pragma omp parallel for collapse(2)
+        for (int k = 1; k < model.nz-1; k++) {
+            for (int i = 1; i < model.nx-1; i++) {
+                model.qvp[i][k] += model.d2t * 1. * model.rdx2 * (model.qvm[i+1][k] - 2. * model.qvm[i][k] + model.qvm[i-1][k]) + 
+                                   model.d2t * 1. * model.rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
+            }
+        }
         Diffusion(model.qcm, model.qcp, model);
         Diffusion(model.qrm, model.qrp, model);
     #endif

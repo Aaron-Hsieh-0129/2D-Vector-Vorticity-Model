@@ -1,5 +1,7 @@
 #include "Declare.hpp"
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 #if defined(PETSC)
     #include <petscsys.h>
     #include <petsc.h>
@@ -14,9 +16,14 @@ int main(int argc, char **argv) {
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
     #endif
 
+    #ifdef _OPENMP
+    omp_set_num_threads(8);
+    Eigen::setNbThreads(8);
+    #endif
+
     Config_VVM config(4., 200., 200., 100000, 20000, 40000., 10000, "/data/Aaron/TMIF/0619_test_Bubble/", 1, 
-                    200., 200., 0.01, 1E-9, 0., 1E-20, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., 10., 1);
+                    70., 70., 0.01, 0., 0., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    1E5, 96500., 10., 0);
     vvm model(config);
     
     #if defined(LOADFROMPREVIOUSFILE)
@@ -26,6 +33,10 @@ int main(int argc, char **argv) {
     #else
         vvm::Init::Init1d(model);
         vvm::Init::Init2d(model);
+    #endif
+
+    #ifndef PETSC
+        vvm::PoissonSolver::InitPoissonMatrix(model);
     #endif
 
     vvm::Output::printInit(model);

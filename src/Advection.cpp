@@ -28,6 +28,9 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
     double **flux_u = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_ucont);
     double **flux_w = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_wcont);
 
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-1; k++) {
         for (int i = 1; i <= model.nx-1; i++) {
             flux_u[i][k] = model.rhou[k] * model.u[i][k] * (now[i][k] + now[i-1][k]);
@@ -51,8 +54,12 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
     }
     model.BoundaryProcess2D_center(flux_u, model.nx, model.nz);
     model.BoundaryProcess2D_center(flux_w, model.nx, model.nz);
-    for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][1] = flux_w[i][model.nz-1] = 0.;
+    // for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][1] = flux_w[i][model.nz-1] = 0.;
+    for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][model.nz-1] = 0.;
 
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhouvar_px_rho = (flux_u[i+1][k] - flux_u[i][k]) * model.r2dx / model.rhou[k];
@@ -74,6 +81,9 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
 }
 
 void vvm::Advection_zeta(vvm &model) {
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             model.U_w[i][k] = 0.25 * (model.rhou[k] * (model.u[i+1][k]+model.u[i][k]) + model.rhou[k-1] * (model.u[i+1][k-1]+model.u[i][k-1]));
@@ -88,6 +98,9 @@ void vvm::Advection_zeta(vvm &model) {
     double **flux_u = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_ucont);
     double **flux_w = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_wcont);
 
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 0; i <= model.nx-2; i++) {
             flux_u[i][k] = model.U_w[i][k] * (model.zeta[i+1][k] + model.zeta[i][k]);
@@ -111,6 +124,9 @@ void vvm::Advection_zeta(vvm &model) {
     for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][model.nz-1] = 0.;
 
     double prhouzeta_px_rho = 0., prhowzeta_pz_rho = 0.;
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 2; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhouzeta_px_rho = (flux_u[i][k] - flux_u[i-1][k]) * model.r2dx / model.rhow[k];
@@ -142,28 +158,35 @@ void vvm::Advection_qrVT(vvm &model) {
     #if defined(AB2)
         double VT_u = 0., VT_d = 0.;
     #endif
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             VT = 1E-2 * (3634 * pow(1E-3*model.rhow[k] * 0.5*(model.qr[i][k]+model.qr[i][k-1]), 0.1346) * pow(model.rhow[k]/model.rhow[1], -0.5));
 
             flux_w[i][k] = model.rhow[k] * VT * (model.qr[i][k] + model.qr[i][k-1]);
-            #if defined(AB2)
-                if (i >= 2 && i <= model.nx-2 && k >= 2 && k <= model.nz-2) {
-                    VT_u = 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
-                    VT_d = 1E-2 * (3634 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
+            // #if defined(AB2)
+            //     if (i >= 2 && i <= model.nx-2 && k >= 2 && k <= model.nz-2) {
+            //         VT_u = 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
+            //         VT_d = 1E-2 * (3634 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
 
-                    flux_w[i][k] += -ALPHA/3. * 
-                                    (model.rhow[k]*PLUS(VT) * (model.qr[i][k] - model.qr[i][k-1])
-                                        - std::sqrt(model.rhow[k]*PLUS(VT) * model.rhow[k-1]*PLUS(VT_d))*(model.qr[i][k-1] - model.qr[i][k-2])
-                                   - model.rhow[k]*MINU(VT) * (model.qr[i][k] - model.qr[i][k-1])
-                                        - std::sqrt(std::fabs(model.rhow[k]*MINU(VT) * model.rhow[k+1]*MINU(VT_u)))*(model.qr[i][k+1] - model.qr[i][k]));
-                }
-            #endif
+            //         flux_w[i][k] += -ALPHA/3. * 
+            //                         (model.rhow[k]*PLUS(VT) * (model.qr[i][k] - model.qr[i][k-1])
+            //                             - std::sqrt(model.rhow[k]*PLUS(VT) * model.rhow[k-1]*PLUS(VT_d))*(model.qr[i][k-1] - model.qr[i][k-2])
+            //                        - model.rhow[k]*MINU(VT) * (model.qr[i][k] - model.qr[i][k-1])
+            //                             - std::sqrt(std::fabs(model.rhow[k]*MINU(VT) * model.rhow[k+1]*MINU(VT_u)))*(model.qr[i][k+1] - model.qr[i][k]));
+            //     }
+            // #endif
         }
     }
     model.BoundaryProcess2D_center(flux_w, model.nx, model.nz);
-    for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][1] = flux_w[i][model.nz-1] = 0.;
+    // for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][1] = flux_w[i][model.nz-1] = 0.;
+    for (int i = 0; i < model.nx; i++) flux_w[i][0] = flux_w[i][model.nz-1] = 0.;
 
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhoVTqr_pz_rho = (flux_w[i][k+1] - flux_w[i][k]) * model.r2dz / model.rhou[k];

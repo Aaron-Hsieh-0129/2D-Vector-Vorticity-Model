@@ -99,7 +99,7 @@ void vvm::Init::Init1d(vvm &model) {
     }
     
 
-    for (int k = 0; k < model.nz; k++) {
+    for (int k = 1; k < model.nz-1; k++) {
         model.z[k] = (k-0.5) * model.dz;
         model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.35 * model.z[k], 2));
     }
@@ -150,7 +150,7 @@ void vvm::Init::Init2d(vvm &model) {
             // init qv: where th != 0, qv = qvs
             for (int i = 1; i <= model.nx-2; i++) {
                 for (int k = 1; k <= model.nz-2; k++) {
-                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k]*0.95;
                     model.qc[i][k] = model.qcp[i][k] = model.qcm[i][k] = 0.;
                     model.qr[i][k] = model.qrp[i][k] = model.qrm[i][k] = 0.;
                 }
@@ -194,10 +194,6 @@ void vvm::Init::Init2d(vvm &model) {
 	model.ubarTopm /= ((double) (model.nx - 2.));
 	model.ubarTop = model.ubarTopm;
 
-    #ifndef PETSC
-	    // Assign values to the matrices that solve the Poisson equation for u and w
-        vvm::PoissonSolver::InitPoissonMatrix(model);
-    #endif
 	return;
 }
 

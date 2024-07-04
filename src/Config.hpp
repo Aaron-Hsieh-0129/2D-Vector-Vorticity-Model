@@ -1,16 +1,16 @@
-// #define OUTPUTNC
+// #define OUTPUTNC // output in .nc format. This can't work for openmp so turn it off if you want to use openmp
 #define OUTPUTTXT
 
-// #define PETSC
 #define AB2 // More stable than Leapfrog (default)
+// #define PETSC // Using PETSc to solve Poisson equation (default is Eigen solver)
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
 #if defined(AB2)
     #define ALPHA (1.)
 #else
     #define ALPHA (0.)
 #endif
-#define DIFFUSION
-#define TIMEFILTER
+// #define DIFFUSION // Don't turn this off. Debugging!!!!!
+// #define TIMEFILTER
 
 // #define DRY
 // #define RHO1

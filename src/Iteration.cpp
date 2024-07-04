@@ -10,6 +10,13 @@ void vvm::Iteration::pzeta_pt(vvm &model) {
 
 void vvm::Iteration::pth_pt(vvm &model) {
     model.Advection_thermo(model.thm, model.th, model.thp, model.dth_advect, model);
+    // if (model.step > 5000 && model.step < 5100) {
+    //     for (int k = 1; k < model.nz-1; k++) {
+    //         for (int i = 1; i < model.nx-1; i++) {
+    //             model.thp[i][k] -= 0.01;
+    //         }
+    //     }
+    // }
     model.BoundaryProcess2D_center(model.thp, model.nx, model.nz);
     return;
 }
@@ -95,6 +102,9 @@ void vvm::Iteration::pqr_pt(vvm &model) {
 
 void vvm::Iteration::nextTimeStep(vvm &model) {
     updateMean(model);
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int i = 0; i <= model.nx-1; i++) {
         for (int k = 0; k <= model.nz-1; k++) {
             model.zetam[i][k] = model.zeta[i][k];
@@ -135,9 +145,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         std::cout << "timenow: " << model.step << std::endl;
     #endif
 
-    #ifndef PETSC
-        vvm::PoissonSolver::InitPoissonMatrix(model);
-    #endif
     while (model.step < nmax) {
         time_all.reset();
         std::cout << model.step << std::endl;
@@ -157,15 +164,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 vvm::Output::output_time_nc(model.step, model);
             #endif
         }
-
-        #if defined(AB2)
-        for (int i = 0; i <= model.nx-1; i++) {
-            for (int k = 0; k <= model.nz-1; k++) {
-                model.um[i][k] = model.u[i][k];
-                model.wm[i][k] = model.w[i][k];
-            }
-        }
-        #endif
 
         timer.reset();
         pzeta_pt(model);
@@ -194,6 +192,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::PoissonSolver::cal_w(model);
             vvm::PoissonSolver::cal_u(model);
         #endif
+        vvm::BoundaryProcess2D_all(model);
         model.t_poisson[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         timer.reset();
@@ -202,6 +201,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::NumericalProcess::DiffusionAll(model);
         #else
             vvm::Turbulence::RKM_RKH(model);
+            // if (model.step < 200) vvm::NumericalProcess::DiffusionAll(model);
+            // else vvm::Turbulence::RKM_RKH(model);
+            // vvm::Turbulence::RKM_RKH(model);
         #endif
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
@@ -222,6 +224,10 @@ void vvm::Iteration::TimeMarching(vvm &model) {
 
         #if defined(TIMEFILTER)
             vvm::NumericalProcess::timeFilterAll(model);
+        #endif
+
+        #ifdef _OPENMP
+        #pragma omp barrier
         #endif
 
         vvm::Iteration::nextTimeStep(model);

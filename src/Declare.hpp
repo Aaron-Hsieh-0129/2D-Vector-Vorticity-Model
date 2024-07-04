@@ -95,8 +95,6 @@ public:
         deallocate2DContinuousArray(thm, thmcont);
         deallocate2DContinuousArray(u, ucont);
         deallocate2DContinuousArray(w, wcont);
-        deallocate2DContinuousArray(um, umcont);
-        deallocate2DContinuousArray(wm, wmcont);
         deallocate2DContinuousArray(init_th_forcing, init_th_forcingcont);
         deallocate2DContinuousArray(RKM, RKMcont);
         deallocate2DContinuousArray(RKH, RKHcont);
@@ -187,8 +185,6 @@ public:
         thm = allocate2DContinuousArray(nx, nz, thmcont);
         u = allocate2DContinuousArray(nx, nz, ucont);
         w = allocate2DContinuousArray(nx, nz, wcont);
-        um = allocate2DContinuousArray(nx, nz, umcont);
-        wm = allocate2DContinuousArray(nx, nz, wmcont);
         init_th_forcing = allocate2DContinuousArray(nx, nz, init_th_forcingcont);
         RKM = allocate2DContinuousArray(nx, nz, RKMcont);
         RKH = allocate2DContinuousArray(nx, nz, RKHcont);
@@ -334,8 +330,6 @@ public:
     double **thm;
     double **u;
     double **w;
-    double **um;
-    double **wm;
     double **RKM;
     double **RKH;
     double **U_w;
@@ -350,8 +344,6 @@ public:
     double *thmcont;
     double *ucont;
     double *wcont;
-    double *umcont;
-    double *wmcont;
     double *init_th_forcingcont;
     double *RKMcont;
     double *RKHcont;
@@ -489,7 +481,7 @@ public:
         #if defined(STREAMFUNCTION)
             static void calpsiuw(vvm &);
         #else
-            static void cal_w(vvm &);
+            static void cal_w(vvm &, int p = 0, int i = 0, int j = 0);
             static void cal_u(vvm &);
             static void pubarTop_pt(vvm &);
         #endif

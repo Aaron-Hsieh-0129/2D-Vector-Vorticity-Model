@@ -183,7 +183,7 @@ void vvm::PoissonSolver::calpsiuw(vvm &model) {
 #else
 
 
-void vvm::PoissonSolver::cal_w(vvm &model) {
+void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
     #if defined(PETSC) 
         Vec x, b;
         Mat A;
@@ -460,6 +460,7 @@ void vvm::PoissonSolver::cal_w(vvm &model) {
         }
         x = solver.solve(b);
         if (solver.info() != Eigen::Success) {
+            printf("p, i, j = %d, %d, %d\n", p, i, j);
             std::cout << "W Solve Warning!!!!!!!!!!!!" << std::endl;
             std::cout << "W:  #iterations:     " << solver.iterations() << ", estimated error: " << std::scientific <<  solver.error() << std::endl;
         }
@@ -658,6 +659,7 @@ void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
 #endif
 
 #ifndef PETSC
+// Do not call this function more than once. Sometimes it will cause the wrong result.
 void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
     #if defined(STREAMFUNCTION)
         typedef Eigen::Triplet<double> T;

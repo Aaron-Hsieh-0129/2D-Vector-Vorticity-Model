@@ -14,6 +14,9 @@ void vvm::Bouyancy(vvm &model) {
         double g_rhopqc_px = 0., g_rhopqr_px = 0.;
     #endif
     
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 2; k < model.nz-1; k++) {
         for (int i = 1; i < model.nx-1; i++) {
             g_rhothvbpthv_px = model.GRAVITY / model.rhow[k] * 0.5*((getTHV(i, k, model) - getTHV(i-1, k, model))/model.thvb[k] + (getTHV(i, k-1, model) - getTHV(i-1, k-1, model))/model.thvb[k-1]) * model.rdx;

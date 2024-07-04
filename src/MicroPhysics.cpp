@@ -27,6 +27,9 @@ void vvm::MicroPhysics::condensation(vvm &model) {
 // autoconversion of qc to qr
 void vvm::MicroPhysics::autoconversion(vvm & model) {
     double autort = 0.001, autotr = 0.001; // autocon rate [1/sec], autocon threshold [kg/kg]
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
 
@@ -50,6 +53,9 @@ void vvm::MicroPhysics::autoconversion(vvm & model) {
 void vvm::MicroPhysics::accretion(vvm &model) {
     double accrrt = 2.2;
     double qcplus = 0., qrplus = 0., cr = 0., arcrdt = 0.;
+    #ifdef _OPENMP
+    #pragma omp parallel for collapse(2)
+    #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             qcplus = std::max(0., model.qcp[i][k]);
