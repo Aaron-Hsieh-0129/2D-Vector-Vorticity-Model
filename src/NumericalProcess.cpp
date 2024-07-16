@@ -38,14 +38,7 @@ void vvm::NumericalProcess::DiffusionAll(vvm &model) {
     Diffusion(model.zetam, model.zetap, model);
     Diffusion(model.thm, model.thp, model);
     #if defined(WATER)
-        // Diffusion(model.qvm, model.qvp, model);
-        #pragma omp parallel for collapse(2)
-        for (int k = 1; k < model.nz-1; k++) {
-            for (int i = 1; i < model.nx-1; i++) {
-                model.qvp[i][k] += model.d2t * 1. * model.rdx2 * (model.qvm[i+1][k] - 2. * model.qvm[i][k] + model.qvm[i-1][k]) + 
-                                   model.d2t * 1. * model.rdz2 * (model.qvm[i][k+1] - 2. * model.qvm[i][k] + model.qvm[i][k-1]);
-            }
-        }
+        Diffusion(model.qvm, model.qvp, model);
         Diffusion(model.qcm, model.qcp, model);
         Diffusion(model.qrm, model.qrp, model);
     #endif

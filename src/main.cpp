@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
     Eigen::setNbThreads(8);
     #endif
 
-    Config_VVM config(4., 200., 200., 100000, 20000, 40000., 10000, "/data/Aaron/TMIF/0619_test_Bubble/", 1, 
+    Config_VVM config(4., 200., 200., 100000, 20000, 40000., 10000, "/data/Aaron/TMIF/0711_test2_Bubble/", 10, 
                     70., 70., 0.01, 0., 0., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., 10., 0);
+                    1E5, 96500., 10., 1);
     vvm model(config);
     
     #if defined(LOADFROMPREVIOUSFILE)
@@ -43,9 +43,8 @@ int main(int argc, char **argv) {
     vvm::Output::create_all_directory(model);
 
     #if defined(POISSONTEST)
-        vvm::PoissonSolver PoissonSolver;
-        PoissonSolver.cal_w(model);
-        PoissonSolver.cal_u(model);
+        vvm::PoissonSolver::cal_w(model);
+        vvm::PoissonSolver::cal_u(model);
     #else
         vvm::Iteration::TimeMarching(model);
     #endif

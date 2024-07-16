@@ -10,13 +10,6 @@ void vvm::Iteration::pzeta_pt(vvm &model) {
 
 void vvm::Iteration::pth_pt(vvm &model) {
     model.Advection_thermo(model.thm, model.th, model.thp, model.dth_advect, model);
-    // if (model.step > 5000 && model.step < 5100) {
-    //     for (int k = 1; k < model.nz-1; k++) {
-    //         for (int i = 1; i < model.nx-1; i++) {
-    //             model.thp[i][k] -= 0.01;
-    //         }
-    //     }
-    // }
     model.BoundaryProcess2D_center(model.thp, model.nx, model.nz);
     return;
 }

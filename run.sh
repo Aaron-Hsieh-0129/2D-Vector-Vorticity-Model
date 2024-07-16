@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -n 1
+#SBATCH -n 8
 #SBATCH -N 1
 #SBATCH -o myjob.o
 #SBATCH -e myjob.e

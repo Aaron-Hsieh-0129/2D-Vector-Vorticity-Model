@@ -37,8 +37,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             model.RKH[i][k] = std::max(model.RKH[i][k], 1.);
             
             // Diffusion should be smaller than 0.8 * dx^2 / dt
-            model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * std::pow(model.dx * model.dz, 2) / model.dt);
-            model.RKH[i][k] = std::min(model.RKH[i][k], 0.8 * std::pow(model.dx * model.dz, 2) / model.dt);
+            model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * model.dx * model.dz / model.dt);
+            model.RKH[i][k] = std::min(model.RKH[i][k], 0.8 * model.dx * model.dz / model.dt);
         }
     }
     model.BoundaryProcess2D_center(model.RKM, model.nx, model.nz);
@@ -51,8 +51,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
         vvm::Turbulence::Hparam(model, model.qc, model.qcp);
         vvm::Turbulence::Hparam(model, model.qr, model.qrp);
     #endif
-    std::cout << "max RKM: " << *std::max_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " max RKH: " << *std::max_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
-    std::cout << "min RKM: " << *std::min_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " min RKH: " << *std::min_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
+    // std::cout << "max RKM: " << *std::max_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " max RKH: " << *std::max_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
+    // std::cout << "min RKM: " << *std::min_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " min RKH: " << *std::min_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
     return;
 }
 

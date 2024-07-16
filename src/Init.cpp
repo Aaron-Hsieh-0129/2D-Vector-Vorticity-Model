@@ -101,7 +101,7 @@ void vvm::Init::Init1d(vvm &model) {
 
     for (int k = 1; k < model.nz-1; k++) {
         model.z[k] = (k-0.5) * model.dz;
-        model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.35 * model.z[k], 2));
+        model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z[k], 2));
     }
 
     return;
@@ -194,6 +194,16 @@ void vvm::Init::Init2d(vvm &model) {
 	model.ubarTopm /= ((double) (model.nx - 2.));
 	model.ubarTop = model.ubarTopm;
 
+    for (int k = 0; k < model.nz; k++) {
+        for (int i = 0; i < model.nx; i++) {
+            model.zetap[i][k] = 0.;
+            model.thp[i][k] = 0.;
+            model.qvp[i][k] = 0.;
+            model.qcp[i][k] = model.qc[i][k] = model.qcm[i][k] = 0.;
+            model.qrp[i][k] = model.qr[i][k] = model.qrm[i][k] = 0.;
+        }
+    }
+
 	return;
 }
 
@@ -216,7 +226,7 @@ double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
 
 double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
-    double delta = 3.;
+    double delta = 6.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
     else return 0.;
 }
