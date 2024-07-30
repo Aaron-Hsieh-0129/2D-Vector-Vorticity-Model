@@ -750,7 +750,7 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         // Height
         if (idx % (model.nx-2) == 0) k++;
 
-        coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + model.POISSONPARAMW ));
+        coeff.push_back(T(idx, idx, -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) ));
 
         // left/right = 1
         if (idx % (model.nx-2) != 0) coeff.push_back(T(idx, idx-1, 1.)); // left
@@ -785,7 +785,7 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
 
     for (int i = 0; i <= model.nx-3; i++) {
         // D
-        coeff_xi.push_back(T(i, i, -2. + model.POISSONPARAMU));
+        coeff_xi.push_back(T(i, i, -2.));
         if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.));
         if (i != 0) coeff_xi.push_back(T(i, i-1, 1.));
     }
