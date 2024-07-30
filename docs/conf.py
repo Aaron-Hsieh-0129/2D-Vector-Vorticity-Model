@@ -27,7 +27,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.inheritance_diagram',
     'breathe',
-    'sphinx_tabs.tabs'
 ]
 source_suffix = {'.rst': 'restructuredtext', '.md': 'markdown'}
 
