@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -138,11 +139,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Tutorials for Installing C/C++ compiler and libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelDesign.html">Model Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="class/vvm.html">vvm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Init.html">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Iteration.html">Iteration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Output.html">Output</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="header/Config.html">Config</a></li>
 </ul>
 </li>
 </ul>
@@ -350,6 +348,7 @@ mkdir<span class="w"> </span><span class="nv">$HOME</span>/local/lib
 <h2>Install compiler<a class="headerlink" href="#install-compiler" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>If you already have compilers, you can skip this procedure. But the reason I did it here is because I want to have compilers that I have the permission to change without the root privilege.</p></li>
+<li><p>Note that if you want to use CUDA, the compiler version for gcc should be less than gcc-10.</p></li>
 </ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-13.2.0/gcc-13.2.0.tar.gz
 tar<span class="w"> </span>xf<span class="w"> </span>gcc-13.2.0.tar.gz
@@ -361,7 +360,7 @@ mkdir<span class="w"> </span>gcc13
 
 ./contrib/download_prerequisites
 
-./configure<span class="w"> </span>--prefix<span class="o">=</span><span class="nv">$HOME</span>/gcc13<span class="w"> </span>--enable-languages<span class="o">=</span>c,c++,fortran,go<span class="w"> </span>--disable-multilib
+./configure<span class="w"> </span>--prefix<span class="o">=</span><span class="nv">$HOME</span>/gcc13<span class="w"> </span>--enable-languages<span class="o">=</span>c,c++,fortran<span class="w"> </span>--disable-multilib
 
 make<span class="w"> </span>-j<span class="w"> </span><span class="m">60</span>
 make<span class="w"> </span>check
@@ -370,22 +369,22 @@ make<span class="w"> </span>install
 </div>
 <p>In <code class="docutils literal notranslate"><span class="pre">~/.zshrc</span></code></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">################ In ~/.zshrc or ~/.bashrc ##############</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/path/to/software/gcc9/bin:/path/to/software/gcc9/lib64:<span class="nv">$PATH</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/path/to/software/gcc9/lib/:<span class="nv">$LD_LIBRARY_PATH</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/install/bin
-<span class="nb">export</span><span class="w"> </span><span class="nv">C_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$C_INCLUDE_PATH</span>:/install/include
-<span class="nb">export</span><span class="w"> </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$CPLUS_INCLUDE_PATH</span>:/install/include
-<span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:/install/lib64
-<span class="nb">export</span><span class="w"> </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LIBRARY_PATH</span>:/install/lib
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/gcc13/bin:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/gcc13/lib64:<span class="nv">$PATH</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/gcc13/lib/:<span class="nv">$LD_LIBRARY_PATH</span>
 
-<span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:<span class="nv">$HOME</span>/gcc13/lib64
-<span class="nb">export</span><span class="w"> </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LIBRARY_PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/gcc13/lib64&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/local/bin&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/local/lib&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LIBRARY_PATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/local/lib&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">CPATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CPATH</span><span class="s2">:</span><span class="nv">$HOME</span><span class="s2">/local/include&quot;</span>
 <span class="c1">#########################################################</span>
 </pre></div>
 </div>
 </section>
 <section id="install-mpich">
 <h2>Install mpich<a class="headerlink" href="#install-mpich" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>CUDA can also be installed and link to mpich. You should specify it in the ./configure command.</p></li>
+</ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://www.mpich.org/static/downloads/4.2.0/mpich-4.2.0.tar.gz
 tar<span class="w"> </span>xf<span class="w"> </span>mpich-4.2.0.tar.gz
 mkdir<span class="w"> </span>mpich4
@@ -442,9 +441,9 @@ make<span class="w"> </span>install
 </section>
 <section id="install-petsc">
 <h2>Install petsc<a class="headerlink" href="#install-petsc" title="Permalink to this heading">#</a></h2>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>~~~~
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>release<span class="w"> </span>https://gitlab.com/petsc/petsc.git<span class="w"> </span>petsc
 <span class="nb">cd</span><span class="w"> </span>~/petsc
-./configure<span class="w"> </span><span class="nv">COPTFLAGS</span><span class="o">=</span><span class="s2">&quot;-g -O3&quot;</span><span class="w"> </span>--prefix<span class="o">=</span><span class="si">${</span><span class="nv">petsc_prefix</span><span class="si">}</span><span class="w"> </span>--with-cc<span class="o">=</span>mpicc<span class="w"> </span>--with-cxx<span class="o">=</span>mpicxx<span class="w"> </span>--with-fc<span class="o">=</span>mpifort<span class="w"> </span>--download-f2cblaslapack<span class="o">=</span><span class="m">1</span><span class="w"> </span>--download-triangle<span class="o">=</span><span class="m">1</span>
+./configure<span class="w"> </span><span class="nv">COPTFLAGS</span><span class="o">=</span><span class="s2">&quot;-g -O3&quot;</span><span class="w"> </span>--prefix<span class="o">=</span><span class="si">${</span><span class="nv">petsc_prefix</span><span class="si">}</span><span class="w"> </span>--with-openmp<span class="o">=</span><span class="m">1</span><span class="w"> </span>--with-cuda<span class="o">=</span><span class="m">1</span><span class="w"> </span>--with-cc<span class="o">=</span>mpicc<span class="w"> </span>--with-cxx<span class="o">=</span>mpicxx<span class="w"> </span>--with-fc<span class="o">=</span>mpifort<span class="w"> </span>--download-f2cblaslapack<span class="o">=</span><span class="m">1</span><span class="w"> </span>--download-triangle<span class="o">=</span><span class="m">1</span>
 </pre></div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">################ In ~/.zshrc or ~/.bashrc ##############</span>

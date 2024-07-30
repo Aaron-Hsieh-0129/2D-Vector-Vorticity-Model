@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VVM2D: /home/Aaron/2DVVM/full/0402/model/src/Buoyancy.cpp File Reference</title>
+<title>VVM2D: /home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Buoyancy.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -101,14 +100,14 @@ $(function(){initNavTree('Buoyancy_8cpp.html',''); initResizable(); });
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Buoyancy.cpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Buoyancy_8cpp__incl.svg" width="278" height="278"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><!-- SVG 0 --></div>
 </div>
 </div>
 <p><a href="Buoyancy_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8ecf3975b610cb48d26b59dead3553db" id="r_a8ecf3975b610cb48d26b59dead3553db"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ecf3975b610cb48d26b59dead3553db">getTHV</a> (int i, int k, <a class="el" href="classvvm.html">vvm</a> &amp;<a class="el" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>)</td></tr>
+<tr class="memitem:a8ecf3975b610cb48d26b59dead3553db" id="r_a8ecf3975b610cb48d26b59dead3553db"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ecf3975b610cb48d26b59dead3553db">getTHV</a> (int i, int k, <a class="el" href="classvvm.html">vvm</a> &amp;model)</td></tr>
 <tr class="separator:a8ecf3975b610cb48d26b59dead3553db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -139,18 +138,17 @@ Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="Buoyancy_8cpp_source.html#l00003">3</a> of file <a class="el" href="Buoyancy_8cpp_source.html">Buoyancy.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">    3</span>                                        {</div>
 <div class="line"><span class="lineno">    4</span><span class="preprocessor">    #if defined(WATER)</span></div>
-<div class="line"><span class="lineno">    5</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">th</a>[i][k] + 0.61 * <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#abea7eda17bdb83b23d16d901c35c1f96">qv</a>[i][k];</div>
+<div class="line"><span class="lineno">    5</span>        <span class="keywordflow">return</span> model.<a class="code hl_variable" href="classvvm.html#a590abe748fc6d7ee9c24108100db04a9">th</a>[i][k] + 0.608 * model.<a class="code hl_variable" href="classvvm.html#ae463dcd6a3bd5edcb0057346216a2ee9">qv</a>[i][k];</div>
 <div class="line"><span class="lineno">    6</span><span class="preprocessor">    #else</span></div>
-<div class="line"><span class="lineno">    7</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>.<a class="code hl_variable" href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">th</a>[i][k];</div>
+<div class="line"><span class="lineno">    7</span>        <span class="keywordflow">return</span> model.<a class="code hl_variable" href="classvvm.html#a590abe748fc6d7ee9c24108100db04a9">th</a>[i][k];</div>
 <div class="line"><span class="lineno">    8</span><span class="preprocessor">    #endif</span></div>
 <div class="line"><span class="lineno">    9</span>}</div>
-<div class="ttc" id="aclassvvm_html_abea7eda17bdb83b23d16d901c35c1f96"><div class="ttname"><a href="classvvm.html#abea7eda17bdb83b23d16d901c35c1f96">vvm::qv</a></div><div class="ttdeci">double qv[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00057">Declare.hpp:57</a></div></div>
-<div class="ttc" id="aclassvvm_html_add34568af43cf188bec69d61cc9c5bee"><div class="ttname"><a href="classvvm.html#add34568af43cf188bec69d61cc9c5bee">vvm::th</a></div><div class="ttdeci">double th[NX][NZ]</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00049">Declare.hpp:49</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a5e376a387fdce5400f2e8ed865388257"><div class="ttname"><a href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a></div><div class="ttdeci">vvm model</div><div class="ttdef"><b>Definition</b> <a href="main_8cpp_source.html#l00004">main.cpp:4</a></div></div>
+<div class="ttc" id="aclassvvm_html_a590abe748fc6d7ee9c24108100db04a9"><div class="ttname"><a href="classvvm.html#a590abe748fc6d7ee9c24108100db04a9">vvm::th</a></div><div class="ttdeci">double ** th</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00327">Declare.hpp:327</a></div></div>
+<div class="ttc" id="aclassvvm_html_ae463dcd6a3bd5edcb0057346216a2ee9"><div class="ttname"><a href="classvvm.html#ae463dcd6a3bd5edcb0057346216a2ee9">vvm::qv</a></div><div class="ttdeci">double ** qv</div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00358">Declare.hpp:358</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="Buoyancy_8cpp_a8ecf3975b610cb48d26b59dead3553db_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><!-- SVG 1 --></div>
 </div>
 
 </div>

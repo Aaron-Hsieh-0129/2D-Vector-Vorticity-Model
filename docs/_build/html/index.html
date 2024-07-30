@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -139,14 +140,11 @@
 <li class="toctree-l1"><a class="reference internal" href="api/ModelDesign.html">Model Design</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/header/Config.html">Config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/header/Const.html">Const</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/class/config.html">Config_VVM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/class/vvm.html">vvm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Init.html">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Iteration.html">Iteration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Output.html">Output</a></li>
 </ul>
 </li>
 </ul>
@@ -313,12 +311,13 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-dimension Vector Vorticity Model</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">If you cannot solve the netcdf_cxx4 and petsc installation problem.</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Two-dimension Vector Vorticity Model</a></li>
 </ul>
 </li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-for-netcdf-output-and-petsc-solver">Optional for NetCDF output and PETSc Solver</a></li>
 </ul>
 
             </nav>
@@ -357,126 +356,86 @@ document.write(`
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/header.html">Model Parameters Settings</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/header/Config.html">Config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/header/Const.html">Const</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/class.html">Class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/class/config.html">Config_VVM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/class/vvm.html">vvm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Init.html">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Iteration.html">Iteration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/class/Output.html">Output</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<section id="id1">
+<h2>Two-dimension Vector Vorticity Model<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>This is a 2D cloud-resolving model based on the vorticity equation.</p>
+</section>
 </section>
 <section id="prerequisite">
 <h1>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
 <li><p>C++ compiler (higher than C++11)</p></li>
-<li><p>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)</p></li>
-<li><p>PETSc</p></li>
-<li><p>Eigen (this has already be installed in include folder)</p></li>
+<li><p>CMake (higher than 3.0.0) (You can create your own Makefile by translating the CMakefile.txt if you don’t want to use CMake)</p></li>
+<li><p>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx) [optional]</p></li>
+<li><p>PETSc [optional]</p></li>
+<li><p>Eigen (this has already been installed in the include folder) [optional]</p></li>
 </ul>
-<p>The tutorial for installing them can be found in the tutorial section .</p>
-<p>This model will use netcdf-cxx and petsc in default. However:</p>
+<p>The tutorial for installing netcdf-cxx4 and PETSc can be found <a class="reference external" href="./api/install_compilers_libraries.html">here</a></p>
 <ul class="simple">
-<li><p>You can turn off the <cite>OUTPUTNC</cite> and turn on <cite>OUTPUTTXT</cite> in <cite>./src/Config.hpp</cite> to use txt output without installing <cite>netcdf-cxx4</cite>.</p></li>
-<li><p>Turn off <cite>PETSC</cite> in <cite>./src/Config.hpp</cite>, the model will change the Poisson solver package to <cite>Eigen</cite>, which means you don’t need to install PETSc.</p></li>
+<li><p>This model will use txt output and Eigen solver for solving Poisson equation by default. However,
+- You can turn on the <cite>OUTPUTNC</cite> and turn off <cite>OUTPUTTXT</cite> in <cite>./src/Config.hpp</cite> to use netcdf output. Note that netcdf doesn’t support openMP output so if you want to use openMP, don’t turn the <cite>OUTPUTNC</cite> flag on.
+- Turn on <cite>PETSC</cite> in <cite>./src/Config.hpp</cite>, the model will change the Poisson solver package to <cite>PETSc</cite>.</p></li>
 </ul>
 </section>
 <section id="how-to-use">
 <h1>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading">#</a></h1>
 <ol class="arabic">
 <li><p>Clone the project using:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
 </pre></div>
 </div>
 </li>
-<li><p>Install netcdf-cxx, petsc</p>
-<p>It’s a little bit complicated to install libraries for C/C++.</p>
-<p>I will provide a tutorial for installing C/C++ compiler and the libraries in another file in the tutorial section.
-Here, you don’t need to have sudo privilege to install anything.</p>
+<li><p>You can change the model settings by changing the macro flags in the <cite>./src/Config.hpp</cite> and also the configuration object in the <cite>./src/main.cpp</cite>. In general, you only need to modify the configuration in <cite>./src/main.cpp</cite>. But if you want to change the numerical methods or the running cases, you might need to modify the flags in the <cite>./src/Config.hpp</cite>.</p></li>
+<li><p>You are able to run the model by running the command under the project folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sh<span class="w"> </span>run.sh
+</pre></div>
+</div>
+<p>or you can use your own command by referencing the command in <cite>run.sh</cite>.</p>
 </li>
-<li><p>Link the installed libraries</p>
+</ol>
+</section>
+<section id="optional-for-netcdf-output-and-petsc-solver">
+<h1>Optional for NetCDF output and PETSc Solver<a class="headerlink" href="#optional-for-netcdf-output-and-petsc-solver" title="Permalink to this heading">#</a></h1>
+<ol class="arabic">
+<li><p>Install netcdf-cxx, petsc.</p>
+<p>It’s a little bit complicated to install libraries for C/C++. I will provide a tutorial for installing C/C++ compiler and the libraries in another file <a class="reference external" href="./api/install_compilers_libraries.html">here</a>. Here, you don’t need to have sudo privilege to install anything.</p>
+</li>
+<li><p>Link the installed libraries.</p></li>
+</ol>
 <ul>
+<li><p>If you don’t need to use PETSc and netcdf, you might need to turn off the link command in CMakeLists.txt.</p></li>
 <li><p>You need to change the libraries path (netcdf, petsc) to your own path.</p></li>
 <li><p>Change include path in CMakeLists.txt:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span>
 <span class="w">  </span><span class="s">include</span>
-<span class="w">  </span><span class="s">/path/to/your/petsc/include</span>
+<span class="w">  </span><span class="s">&lt;/path/to/your/petsc&gt;/include</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </li>
 <li><p>Change library link path:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_library</span><span class="p">(</span><span class="s">libncxxPath</span><span class="w"> </span><span class="s">netcdf_c++4</span><span class="w"> </span><span class="s2">&quot;/path to your netcdf_c++4/lib&quot;</span><span class="p">)</span>
-<span class="nb">find_library</span><span class="p">(</span><span class="s">libpetscPath</span><span class="w"> </span><span class="s">petsc</span><span class="w"> </span><span class="s2">&quot;/path to your petsc/lib&quot;</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_library</span><span class="p">(</span><span class="s">libncxxPath</span><span class="w"> </span><span class="s">netcdf_c++4</span><span class="w"> </span><span class="s2">&quot;&lt;path to your netcdf_c++4&gt;/lib&quot;</span><span class="p">)</span>
+<span class="nb">find_library</span><span class="p">(</span><span class="s">libpetscPath</span><span class="w"> </span><span class="s">petsc</span><span class="w"> </span><span class="s2">&quot;&lt;path to your petsc&gt;/lib&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
 </ul>
-</li>
-<li><p>You are able to run the model by running the command under the project folder:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sh<span class="w"> </span>run.sh
-</pre></div>
-</div>
-</li>
-<li><p>You can change the model settings by changing the macro flags in the <cite>./src/Config.hpp</cite>.</p></li>
+<ol class="arabic simple" start="3">
+<li><p>Change the flags in <cite>./src/Config.hpp</cite>:</p></li>
 </ol>
-<section id="if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">
-<h2>If you cannot solve the netcdf_cxx4 and petsc installation problem.<a class="headerlink" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem" title="Permalink to this heading">#</a></h2>
-<ol class="arabic">
-<li><p>Turn off the flag <cite>OUTPUTNC</cite> and turn on the flag <cite>OUTPUTTXT</cite> in <cite>./src/Config.hpp</cite>.</p></li>
-<li><p>Turn off the flag <cite>PETSC</cite> in <cite>./src/Config.hpp</cite> and this will in turn make the model use the Eigen C++ Solver.</p></li>
-<li><p>Create a folder called bin under project root by:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>bin
-</pre></div>
-</div>
-</li>
-<li><p>Create a file called Makefile under the project and the content will be the following:</p>
-<div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># CC and CFLAGS are varilables</span>
-<span class="nv">CC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>g++
-<span class="nv">CFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-Wall<span class="w"> </span>-c<span class="w"> </span>-std<span class="o">=</span>c++11
-<span class="c"># -c option ask g++ to compile the source files, but do not link.</span>
-<span class="nv">OPTFLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-O3
-
-<span class="nf">all       </span><span class="o">:</span><span class="w"> </span><span class="n">bin</span>/<span class="n">vvm</span>2<span class="n">d</span>
-<span class="w">   </span>@echo<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span>
-
-<span class="nf">bin/vvm2d </span><span class="o">:</span><span class="w"> </span><span class="n">main</span>.<span class="n">o</span> <span class="n">AddForcing</span>.<span class="n">o</span> <span class="n">Advection</span>.<span class="n">o</span> <span class="n">Boundary</span>.<span class="n">o</span> <span class="n">Boundary</span>.<span class="n">o</span> <span class="n">Declare</span>.<span class="n">o</span> <span class="n">Init</span>.<span class="n">o</span> <span class="n">Iteration</span>.<span class="n">o</span> <span class="n">Output</span>.<span class="n">o</span> <span class="n">MicroPhysics</span>.<span class="n">o</span> <span class="n">NumericalProcess</span>.<span class="n">o</span> <span class="n">PoissonSolver</span>.<span class="n">o</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>main.o<span class="w"> </span>AddForcing.o<span class="w"> </span>Advection.o<span class="w"> </span>Boundary.o<span class="w"> </span>Boundary.o<span class="w"> </span>Declare.o<span class="w"> </span>Init.o<span class="w"> </span>Iteration.o<span class="w"> </span>Output.o<span class="w"> </span>MicroPhysics.o<span class="w"> </span>NumericalProcess.o<span class="w"> </span>PoissonSolver.o<span class="w"> </span>-o<span class="w"> </span>bin/vvm2d
-<span class="nf">main.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">main</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">AddForcing.o      </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">AddForcing</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Advection.o       </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Advection</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Boundary.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Boundary</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Buoyancy.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Boundary</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Declare.o </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Declare</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Init.o            </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Init</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Output.o</span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Output</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">Iteration.o       </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">Iteration</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">MicroPhyscis.o    </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">MicroPhyscis</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">NumericalProcess.o        </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">NumericalProcess</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-<span class="nf">PoissonSolver.o   </span><span class="o">:</span><span class="w"> </span><span class="n">src</span>/<span class="n">NumericalProcess</span>.<span class="n">cpp</span>
-<span class="w">            </span><span class="k">$(</span>CC<span class="k">)</span><span class="w"> </span><span class="k">$(</span>CFLAGS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>OPTFLAGS<span class="k">)</span><span class="w"> </span>$&lt;<span class="w"> </span>-o<span class="w"> </span><span class="nv">$@</span>
-</pre></div>
-</div>
-</li>
-<li><p>Using <cite>make</cite> under project root to compile the project and you will the the execution file at <cite>./bin/vvm2d</cite>.</p></li>
-<li><p>You will be able to use the model’s output by the txt files.</p></li>
-</ol>
-</section>
+<ul class="simple">
+<li><p>Turn on <cite>OUTPUTNC</cite> and turn off <cite>OUTPUTTXT</cite> to use netcdf output.</p></li>
+<li><p>Turn on <cite>PETSC</cite> to use PETSc solver.</p></li>
+</ul>
 </section>
 
 
@@ -515,12 +474,13 @@ Here, you don’t need to have sudo privilege to install anything.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-dimension Vector Vorticity Model</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-cannot-solve-the-netcdf-cxx4-and-petsc-installation-problem">If you cannot solve the netcdf_cxx4 and petsc installation problem.</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Two-dimension Vector Vorticity Model</a></li>
 </ul>
 </li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite">Prerequisite</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to Use</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-for-netcdf-output-and-petsc-solver">Optional for NetCDF output and PETSc Solver</a></li>
 </ul>
 
   </nav></div>

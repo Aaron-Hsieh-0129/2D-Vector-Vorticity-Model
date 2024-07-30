@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Config_VVM &#8212; 2DVVM  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/class/config';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="vvm" href="vvm.html" />
+    <link rel="prev" title="Class" href="../class.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">2DVVM  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModelDesign.html">Model Design</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../header/Config.html">Config</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../class.html">Class</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Config_VVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vvm.html">vvm</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/api/class/config.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Config_VVM</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="config-vvm">
+<h1>Config_VVM<a class="headerlink" href="#config-vvm" title="Permalink to this heading">#</a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv410Config_VVM">
+<span id="_CPPv310Config_VVM"></span><span id="_CPPv210Config_VVM"></span><span id="Config_VVM"></span><span class="target" id="classConfig__VVM"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Config_VVM</span></span></span><a class="headerlink" href="#_CPPv410Config_VVM" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM10Config_VVMEdddiidiNSt6stringEiddddddddddddi">
+<span id="_CPPv3N10Config_VVM10Config_VVMEdddiidiNSt6stringEiddddddddddddi"></span><span id="_CPPv2N10Config_VVM10Config_VVMEdddiidiNSt6stringEiddddddddddddi"></span><span id="Config_VVM::Config_VVM__double.double.double.i.i.double.i.ss.i.double.double.double.double.double.double.double.double.double.double.double.double.i"></span><span class="target" id="classConfig__VVM_1a1121154398a3b9765f64be94c5028275"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Config_VVM</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dt</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dx</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dz</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">XRANGE</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ZRANGE</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">TIMEEND</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">TIMEROUTPUTSIZE</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">outputpath</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">OUTPUTSTEP</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Kx</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Kz</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">TIMETS</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tolerance</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">GRAVITY</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Cp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Cv</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Rd</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Lv</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">P0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">PSURF</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">addforcingtime</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">CASE</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Config_VVM10Config_VVMEdddiidiNSt6stringEiddddddddddddi" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVMD0Ev">
+<span id="_CPPv3N10Config_VVMD0Ev"></span><span id="_CPPv2N10Config_VVMD0Ev"></span><span id="Config_VVM::~Config_VVM"></span><span class="target" id="classConfig__VVM_1a2e7365350d3c712cbc2c12efa6cf0d1a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~Config_VVM</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10Config_VVMD0Ev" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2dtE">
+<span id="_CPPv3N10Config_VVM2dtE"></span><span id="_CPPv2N10Config_VVM2dtE"></span><span id="Config_VVM::dt__double"></span><span class="target" id="classConfig__VVM_1a43447f14f8502d251dd129ab60d8695a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dt</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2dtE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Time step for vvm [s]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2dxE">
+<span id="_CPPv3N10Config_VVM2dxE"></span><span id="_CPPv2N10Config_VVM2dxE"></span><span id="Config_VVM::dx__double"></span><span class="target" id="classConfig__VVM_1ae481baa07edae2432ae995bc17e2672f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dx</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2dxE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Grid size in x-direction [m]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2dzE">
+<span id="_CPPv3N10Config_VVM2dzE"></span><span id="_CPPv2N10Config_VVM2dzE"></span><span id="Config_VVM::dz__double"></span><span class="target" id="classConfig__VVM_1a6e8299c38ef906dd657085ec2fdb19bf"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dz</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2dzE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Grid size in z-direction [m]. It should be the same as dx. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM6XRANGEE">
+<span id="_CPPv3N10Config_VVM6XRANGEE"></span><span id="_CPPv2N10Config_VVM6XRANGEE"></span><span id="Config_VVM::XRANGE__i"></span><span class="target" id="classConfig__VVM_1a4352c176cc9492ff5ddbc05a6a01663e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">XRANGE</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM6XRANGEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Domain size of the model in x-direction [m]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM6ZRANGEE">
+<span id="_CPPv3N10Config_VVM6ZRANGEE"></span><span id="_CPPv2N10Config_VVM6ZRANGEE"></span><span id="Config_VVM::ZRANGE__i"></span><span class="target" id="classConfig__VVM_1a345988bd0920ab2f21bfb6cddc3f46ba"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ZRANGE</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM6ZRANGEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Domain size of the model in z-direction [m]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM7TIMEENDE">
+<span id="_CPPv3N10Config_VVM7TIMEENDE"></span><span id="_CPPv2N10Config_VVM7TIMEENDE"></span><span id="Config_VVM::TIMEEND__double"></span><span class="target" id="classConfig__VVM_1a70aae0ee6b742404c98db39eb9954aa9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIMEEND</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM7TIMEENDE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>End time of the simulation [s]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM15TIMEROUTPUTSIZEE">
+<span id="_CPPv3N10Config_VVM15TIMEROUTPUTSIZEE"></span><span id="_CPPv2N10Config_VVM15TIMEROUTPUTSIZEE"></span><span id="Config_VVM::TIMEROUTPUTSIZE__i"></span><span class="target" id="classConfig__VVM_1a20263dc184ec77e4399b8aa6075abd1e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIMEROUTPUTSIZE</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM15TIMEROUTPUTSIZEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The size of the timer output. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM10outputpathE">
+<span id="_CPPv3N10Config_VVM10outputpathE"></span><span id="_CPPv2N10Config_VVM10outputpathE"></span><span id="Config_VVM::outputpath__ss"></span><span class="target" id="classConfig__VVM_1a288a852cda0423fd4618fe34ef839f75"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">outputpath</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM10outputpathE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The path for the output file. It should be a directory, such as “/data/vvm/”. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM10OUTPUTSTEPE">
+<span id="_CPPv3N10Config_VVM10OUTPUTSTEPE"></span><span id="_CPPv2N10Config_VVM10OUTPUTSTEPE"></span><span id="Config_VVM::OUTPUTSTEP__i"></span><span class="target" id="classConfig__VVM_1a2a6500573c19919cec9efef0393c9e94"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OUTPUTSTEP</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM10OUTPUTSTEPE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The output interval for the output file. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2KxE">
+<span id="_CPPv3N10Config_VVM2KxE"></span><span id="_CPPv2N10Config_VVM2KxE"></span><span id="Config_VVM::Kx__double"></span><span class="target" id="classConfig__VVM_1a2b5df6996c3edcc29df7f22aefff1ef8"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Kx</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2KxE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The eddy diffusion coefficient in x-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2KzE">
+<span id="_CPPv3N10Config_VVM2KzE"></span><span id="_CPPv2N10Config_VVM2KzE"></span><span id="Config_VVM::Kz__double"></span><span class="target" id="classConfig__VVM_1a496e8a846c93e467b9ea4995fbe156ad"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Kz</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2KzE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The eddy diffusion coefficient in z-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM6TIMETSE">
+<span id="_CPPv3N10Config_VVM6TIMETSE"></span><span id="_CPPv2N10Config_VVM6TIMETSE"></span><span id="Config_VVM::TIMETS__double"></span><span class="target" id="classConfig__VVM_1ae14edf7f3f75b4dad6a4690bcaea8993"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIMETS</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM6TIMETSE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The time filter coefficient [s] for Leapfrog. This is activated when TIMEFILTER flag is turned on. Only need to turn on when Leapfrog is used. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM9toleranceE">
+<span id="_CPPv3N10Config_VVM9toleranceE"></span><span id="_CPPv2N10Config_VVM9toleranceE"></span><span id="Config_VVM::tolerance__double"></span><span class="target" id="classConfig__VVM_1ae88624177a37b5b972653bbe098b6cfb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tolerance</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM9toleranceE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The tolerance for the Poisson Solver. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM7GRAVITYE">
+<span id="_CPPv3N10Config_VVM7GRAVITYE"></span><span id="_CPPv2N10Config_VVM7GRAVITYE"></span><span id="Config_VVM::GRAVITY__double"></span><span class="target" id="classConfig__VVM_1ac3160ba8ec5351e9c513d7b7dcff4948"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GRAVITY</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM7GRAVITYE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The gravity acceleration [m/s^2]. It’s 9.80665 m/s^2 for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2CpE">
+<span id="_CPPv3N10Config_VVM2CpE"></span><span id="_CPPv2N10Config_VVM2CpE"></span><span id="Config_VVM::Cp__double"></span><span class="target" id="classConfig__VVM_1a8dc51bcfab9694de3ae4e55a1f7f7146"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Cp</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2CpE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The specific heat capacity at constant pressure [J/kg/K]. It’s 1003.5 J/kg/K for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2CvE">
+<span id="_CPPv3N10Config_VVM2CvE"></span><span id="_CPPv2N10Config_VVM2CvE"></span><span id="Config_VVM::Cv__double"></span><span class="target" id="classConfig__VVM_1a394c04bcbed12c2b5128d8e9062b70e0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Cv</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2CvE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The specific heat capacity at constant volume [J/kg/K]. It’s 716.5 J/kg/K for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2RdE">
+<span id="_CPPv3N10Config_VVM2RdE"></span><span id="_CPPv2N10Config_VVM2RdE"></span><span id="Config_VVM::Rd__double"></span><span class="target" id="classConfig__VVM_1a148f4896d710c636318948f2df3986d7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rd</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2RdE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The gas constant for dry air [J/kg/K]. It’s 287 J/kg/K for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2LvE">
+<span id="_CPPv3N10Config_VVM2LvE"></span><span id="_CPPv2N10Config_VVM2LvE"></span><span id="Config_VVM::Lv__double"></span><span class="target" id="classConfig__VVM_1a0ef3302844642c9a8e83441adb36f422"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Lv</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2LvE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The latent heat of vaporization [J/kg]. It’s 2.5E6 J/kg for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM2P0E">
+<span id="_CPPv3N10Config_VVM2P0E"></span><span id="_CPPv2N10Config_VVM2P0E"></span><span id="Config_VVM::P0__double"></span><span class="target" id="classConfig__VVM_1a112bbd5ac7c7776363c8aa6f804a5016"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">P0</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM2P0E" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The reference pressure [Pa]. It’s 1E5 Pa for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM5PSURFE">
+<span id="_CPPv3N10Config_VVM5PSURFE"></span><span id="_CPPv2N10Config_VVM5PSURFE"></span><span id="Config_VVM::PSURF__double"></span><span class="target" id="classConfig__VVM_1ab80444f4f79135bdb16b3549f502df1e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PSURF</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM5PSURFE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The surface pressure [Pa]. It’s 96500 Pa for default. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM14addforcingtimeE">
+<span id="_CPPv3N10Config_VVM14addforcingtimeE"></span><span id="_CPPv2N10Config_VVM14addforcingtimeE"></span><span id="Config_VVM::addforcingtime__double"></span><span class="target" id="classConfig__VVM_1afa442e5fec6914695e1920a34d67fbea"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addforcingtime</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM14addforcingtimeE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The time for adding the perturbation. The perturbation is used to break the symmetry of the model. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N10Config_VVM4CASEE">
+<span id="_CPPv3N10Config_VVM4CASEE"></span><span id="_CPPv2N10Config_VVM4CASEE"></span><span id="Config_VVM::CASE__i"></span><span class="target" id="classConfig__VVM_1a8ab295143f7d263963f1c60413ec416b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CASE</span></span></span><a class="headerlink" href="#_CPPv4N10Config_VVM4CASEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The case number for the model. It’s used to specify the initial condition and the forcing. If CASE is 0, the initial condition is equal to mean state. If CASE is 1, the initial condition is equal to mean state plus a warm bubble. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../class.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Class</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="vvm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">vvm</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aaron Hsieh
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Aaron Hsieh.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

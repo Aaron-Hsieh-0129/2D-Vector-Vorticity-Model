@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['poissonsolver_0',['PoissonSolver',['../classvvm_1_1PoissonSolver.html',1,'vvm']]]
+  ['numericalprocess_0',['NumericalProcess',['../classvvm_1_1NumericalProcess.html',1,'vvm']]]
 ];

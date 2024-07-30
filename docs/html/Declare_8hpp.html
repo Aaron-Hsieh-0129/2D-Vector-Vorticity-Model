@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VVM2D: /home/Aaron/2DVVM/full/0402/model/src/Declare.hpp File Reference</title>
+<title>VVM2D: /home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -97,42 +96,44 @@ $(function(){initNavTree('Declare_8hpp.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Declare.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>This file is used to declare the class vvm.  
-<a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="Const_8hpp_source.html">Const.hpp</a>&quot;</code><br />
-<code>#include &quot;../include/Eigen/Sparse&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Config_8hpp_source.html">Config.hpp</a>&quot;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;Eigen/Sparse&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Declare.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="Declare_8hpp__incl.svg" width="278" height="203"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><!-- SVG 0 --></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="Declare_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><!-- SVG 1 --></div>
 </div>
 </div>
 <p><a href="Declare_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig__VVM.html">Config_VVM</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm.html">vvm</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1PoissonSolver.html">vvm::PoissonSolver</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1NumericalProcess.html">vvm::NumericalProcess</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1MicroPhysics.html">vvm::MicroPhysics</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1Init.html">vvm::Init</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1Output.html">vvm::Output</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1Iteration.html">vvm::Iteration</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvvm_1_1Turbulence.html">vvm::Turbulence</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file is used to declare the class vvm. </p>
-<dl class="section author"><dt>Author</dt><dd>Aaron Hsieh (<a href="#" onclick="location.href='mai'+'lto:'+'b08'+'20'+'900'+'6@'+'ntu'+'.e'+'du.'+'tw'; return false;">b0820<span class="obfuscator">.nosp@m.</span>9006<span class="obfuscator">.nosp@m.</span>@ntu.<span class="obfuscator">.nosp@m.</span>edu.<span class="obfuscator">.nosp@m.</span>tw</a>) </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2024-03-13</dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2024  </dd></dl>
-
-<p class="definition">Definition in file <a class="el" href="Declare_8hpp_source.html">Declare.hpp</a>.</p>
-</div></div><!-- contents -->
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

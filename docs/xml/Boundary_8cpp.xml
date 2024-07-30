@@ -4,32 +4,31 @@
     <compoundname>Boundary.cpp</compoundname>
     <includes refid="Declare_8hpp" local="yes">Declare.hpp</includes>
     <incdepgraph>
-      <node id="5">
-        <label>../include/Eigen/Sparse</label>
-      </node>
       <node id="1">
-        <label>/home/Aaron/2DVVM/full/0402/model/src/Boundary.cpp</label>
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Boundary.cpp</label>
         <link refid="Boundary_8cpp"/>
         <childnode refid="2" relation="include">
         </childnode>
       </node>
-      <node id="4">
+      <node id="3">
         <label>Config.hpp</label>
         <link refid="Config_8hpp"/>
-      </node>
-      <node id="3">
-        <label>Const.hpp</label>
-        <link refid="Const_8hpp"/>
-        <childnode refid="4" relation="include">
-        </childnode>
       </node>
       <node id="2">
         <label>Declare.hpp</label>
         <link refid="Declare_8hpp"/>
         <childnode refid="3" relation="include">
         </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
         <childnode refid="5" relation="include">
         </childnode>
+      </node>
+      <node id="5">
+        <label>Eigen/Sparse</label>
+      </node>
+      <node id="4">
+        <label>string</label>
       </node>
     </incdepgraph>
     <briefdescription>
@@ -39,35 +38,47 @@
     <programlisting>
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Declare_8hpp" kindref="compound">Declare.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight></codeline>
-<codeline lineno="3" refid="classvvm_1ace6f793034804810c37b0363b70648ed" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1ace6f793034804810c37b0363b70648ed" kindref="member">vvm::BoundaryProcess1D_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>var[])<sp/>{</highlight></codeline>
+<codeline lineno="3" refid="classvvm_1af45deea67718860b5736da7b80a36a98" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1af45deea67718860b5736da7b80a36a98" kindref="member">vvm::BoundaryProcess1D_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>*var,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nz)<sp/>{</highlight></codeline>
 <codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/>var[0]<sp/>=<sp/>var[1];</highlight></codeline>
-<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/>var[<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-1]<sp/>=<sp/>var[<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-2];</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/>var[<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-1]<sp/>=<sp/>var[<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2];</highlight></codeline>
 <codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="7"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
-<codeline lineno="9" refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1a0f7695aeeea1dac87393db3edfc7acd8" kindref="member">vvm::BoundaryProcess2D_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>var[][<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>])<sp/>{</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/><ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
-<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[0][k]<sp/>=<sp/>var[<ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-2][k];</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[<ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-1][k]<sp/>=<sp/>var[1][k];</highlight></codeline>
+<codeline lineno="9" refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">vvm::BoundaryProcess2D_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>**var,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nx,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nz)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/><ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[0][k]<sp/>=<sp/>var[<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-2][k];</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-1][k]<sp/>=<sp/>var[1][k];</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;=<sp/><ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-1;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;=<sp/><ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-1;<sp/>i++)<sp/>{</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[i][0]<sp/>=<sp/>var[i][1];</highlight></codeline>
-<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[i][<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-1]<sp/>=<sp/>var[i][<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-2];</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[i][<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-1]<sp/>=<sp/>var[i][<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2];</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="19"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"></highlight></codeline>
-<codeline lineno="21" refid="classvvm_1a88f21d908dca06f5c725da83a36caf96" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1a88f21d908dca06f5c725da83a36caf96" kindref="member">vvm::BoundaryProcess2D_westdown</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>var[][<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>])<sp/>{</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/><ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[0][k]<sp/>=<sp/>var[<ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-2][k];</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[<ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-1][k]<sp/>=<sp/>var[1][k];</highlight></codeline>
+<codeline lineno="21" refid="classvvm_1ac41a46f58ad272f540b96ad68895f88d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1ac41a46f58ad272f540b96ad68895f88d" kindref="member">vvm::BoundaryProcess2D_westdown</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>**var,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nx,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nz)<sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/><ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[0][k]<sp/>=<sp/>var[<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-2][k];</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-1][k]<sp/>=<sp/>var[1][k];</highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;=<sp/><ref refid="Const_8hpp_1a4a9d32ff035c82119003134767948ebf" kindref="member">NX</ref>-1;<sp/>i++)<sp/>{</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[i][0]<sp/>=<sp/>var[i][1]<sp/>=<sp/>var[i][<ref refid="Const_8hpp_1a693aee47b2103d0a7fcd3a0a0dd4fb57" kindref="member">NZ</ref>-1]<sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;=<sp/><ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-1;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>var[i][0]<sp/>=<sp/>var[i][1]<sp/>=<sp/>var[i][<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-1]<sp/>=<sp/>0.;</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="classvvm_1adc74ab7c911695270801d064f78d8b07" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1adc74ab7c911695270801d064f78d8b07" kindref="member">vvm::BoundaryProcess2D_all</ref>(<ref refid="classvvm" kindref="compound">vvm</ref><sp/>&amp;model)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1ac41a46f58ad272f540b96ad68895f88d" kindref="member">BoundaryProcess2D_westdown</ref>(model.<ref refid="classvvm_1a44e87b0393bbb303fe26c12b4defc572" kindref="member">zetap</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">BoundaryProcess2D_center</ref>(model.<ref refid="classvvm_1ae9b64ac44720501013d0f18fd774474d" kindref="member">thp</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1ac41a46f58ad272f540b96ad68895f88d" kindref="member">BoundaryProcess2D_westdown</ref>(model.<ref refid="classvvm_1a03a120f9647d1b680a8552a1743f47bf" kindref="member">w</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">BoundaryProcess2D_center</ref>(model.<ref refid="classvvm_1a1ac0d1c50fc3935a312b6f667a1c34c0" kindref="member">u</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>defined(WATER)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">BoundaryProcess2D_center</ref>(model.<ref refid="classvvm_1a345c7e128e6c8a81a3949456530a428a" kindref="member">qvp</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">BoundaryProcess2D_center</ref>(model.<ref refid="classvvm_1a4aa22ea3e57d8899527556b2bd7f92fb" kindref="member">qcp</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a26777567d798e7a46a54a9adc5d7242f" kindref="member">BoundaryProcess2D_center</ref>(model.<ref refid="classvvm_1ae82e779827b9d2fac34c37ca944ba2f7" kindref="member">qrp</ref>,<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>,<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/home/Aaron/2DVVM/full/0402/model/src/Boundary.cpp"/>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Boundary.cpp"/>
   </compounddef>
 </doxygen>

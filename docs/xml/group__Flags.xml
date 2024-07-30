@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="group__Flags" kind="group">
+    <compoundname>Flags</compoundname>
+    <title>Flags Documentation</title>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__Flags_1ga5c8946535f3c28e34d9cb0d36eeae8c1" prot="public" static="no">
+        <name>OUTPUTTXT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The flag for output file in .txt datatype. This is the default output format. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" line="2" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__Flags_1ga7b075ea7269754613d8dd343c582ef8c" prot="public" static="no">
+        <name>AB2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The flag for Adams-Bashforth Numerical Method. This method is more stable because the spatial discretization is third-order accurate. If you want to use Leapfrog, turn it off. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" line="4" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__Flags_1ga5c3fbf45abc4ee50d118d87aecfee212" prot="public" static="no">
+        <name>WATER</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>The flag for microphysics (qc, qv, qr) with warm rain scheme. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" line="17" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Config.hpp" bodystart="17" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

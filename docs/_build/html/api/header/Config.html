@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -45,7 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/header/Config';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Const" href="Const.html" />
+    <link rel="next" title="Class" href="../class.html" />
     <link rel="prev" title="Model Parameters Settings" href="../header.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -140,14 +141,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../ModelDesign.html">Model Design</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../header.html">Model Parameters Settings</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Const.html">Const</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../class/config.html">Config_VVM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/vvm.html">vvm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../class/Init.html">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../class/Iteration.html">Iteration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../class/Output.html">Output</a></li>
 </ul>
 </li>
 </ul>
@@ -332,131 +330,21 @@ document.write(`
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
 <dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.dx">
-<span class="target" id="Config_8hpp_1ae1d0d606e7eb860732925d6dbb82f18a"></span><span class="sig-name descname"><span class="n"><span class="pre">dx</span></span></span><a class="headerlink" href="#c.dx" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The grid size in x direction (m) </p>
+<dt class="sig sig-object cpp" id="c.OUTPUTTXT">
+<span class="target" id="Config_8hpp_1a5c8946535f3c28e34d9cb0d36eeae8c1"></span><span class="sig-name descname"><span class="n"><span class="pre">OUTPUTTXT</span></span></span><a class="headerlink" href="#c.OUTPUTTXT" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The flag for output file in .txt datatype. This is the default output format. </p>
 </dd></dl>
 
 <dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.dz">
-<span class="target" id="Config_8hpp_1af96a657aa0277ecc723296cc70efd9f4"></span><span class="sig-name descname"><span class="n"><span class="pre">dz</span></span></span><a class="headerlink" href="#c.dz" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The grid size in z direction (m) </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.XRANGE">
-<span class="target" id="Config_8hpp_1a4332ee01d55412ae2f7d4bc6fc1f5437"></span><span class="sig-name descname"><span class="n"><span class="pre">XRANGE</span></span></span><a class="headerlink" href="#c.XRANGE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The domain size for this model in x direction (m) </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.ZRANGE">
-<span class="target" id="Config_8hpp_1a9d5ee4461c576344cbcb8c68014a9a9d"></span><span class="sig-name descname"><span class="n"><span class="pre">ZRANGE</span></span></span><a class="headerlink" href="#c.ZRANGE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The domain size for this model in z direction (m) </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.DT">
-<span class="target" id="Config_8hpp_1a943f07034774ef1261d62cd0d3d1fec9"></span><span class="sig-name descname"><span class="n"><span class="pre">DT</span></span></span><a class="headerlink" href="#c.DT" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.TIMEEND">
-<span class="target" id="Config_8hpp_1af443c034b375d1a180d41d07423accee"></span><span class="sig-name descname"><span class="n"><span class="pre">TIMEEND</span></span></span><a class="headerlink" href="#c.TIMEEND" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The total integration time (s) </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.OUTPUTPATH">
-<span class="target" id="Config_8hpp_1a92f0c8368faf269de7f26d6a6847642e"></span><span class="sig-name descname"><span class="n"><span class="pre">OUTPUTPATH</span></span></span><a class="headerlink" href="#c.OUTPUTPATH" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The output file path </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.OUTPUTSTEP">
-<span class="target" id="Config_8hpp_1ace0a5490934a8d7bec9ae33f30dee878"></span><span class="sig-name descname"><span class="n"><span class="pre">OUTPUTSTEP</span></span></span><a class="headerlink" href="#c.OUTPUTSTEP" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The time step for output </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.OUTPUTNC">
-<span class="target" id="Config_8hpp_1a964f46a929f9d73c6f926b5aaaab8252"></span><span class="sig-name descname"><span class="n"><span class="pre">OUTPUTNC</span></span></span><a class="headerlink" href="#c.OUTPUTNC" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The switch for output file in .nc datatype </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.PETSC">
-<span class="target" id="Config_8hpp_1afa694325e45cabb6eac9fe8d0b9d8b0d"></span><span class="sig-name descname"><span class="n"><span class="pre">PETSC</span></span></span><a class="headerlink" href="#c.PETSC" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The switch for Poisson Solver PETSc </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.DIFFUSION">
-<span class="target" id="Config_8hpp_1a6752fae1aabe432286905afcfaaa940e"></span><span class="sig-name descname"><span class="n"><span class="pre">DIFFUSION</span></span></span><a class="headerlink" href="#c.DIFFUSION" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.Kx">
-<span class="target" id="Config_8hpp_1a9751a37abbbd9680f3c0cc311573efdf"></span><span class="sig-name descname"><span class="n"><span class="pre">Kx</span></span></span><a class="headerlink" href="#c.Kx" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The diffusion coefficient in x direction </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.Kz">
-<span class="target" id="Config_8hpp_1a800c5dc676cb83c757155caa7d87f84e"></span><span class="sig-name descname"><span class="n"><span class="pre">Kz</span></span></span><a class="headerlink" href="#c.Kz" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The diffusion coefficient in z direction </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.POISSONPARAM">
-<span class="target" id="Config_8hpp_1a6cc99de22fbfffb5c4432738ba6c74f8"></span><span class="sig-name descname"><span class="n"><span class="pre">POISSONPARAM</span></span></span><a class="headerlink" href="#c.POISSONPARAM" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>When solving 2D Poisson equation, adding small values to main diagonal to make the matrix solvable. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.POISSONPARAMU">
-<span class="target" id="Config_8hpp_1ab22842bcdca3b2d9a2c60e78326e45bb"></span><span class="sig-name descname"><span class="n"><span class="pre">POISSONPARAMU</span></span></span><a class="headerlink" href="#c.POISSONPARAMU" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>When solving 1D Poisson equation, adding small values to main diagonal to make the matrix solvable. </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.TIMEFILTER">
-<span class="target" id="Config_8hpp_1a0726a750fb3d9122ed716b5ed67ae926"></span><span class="sig-name descname"><span class="n"><span class="pre">TIMEFILTER</span></span></span><a class="headerlink" href="#c.TIMEFILTER" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.TIMETS">
-<span class="target" id="Config_8hpp_1acdf4e08f4cada9c7bb2693c6b2e4c2e2"></span><span class="sig-name descname"><span class="n"><span class="pre">TIMETS</span></span></span><a class="headerlink" href="#c.TIMETS" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The coefficient for removing the computational mode </p>
+<dt class="sig sig-object cpp" id="c.AB2">
+<span class="target" id="Config_8hpp_1a7b075ea7269754613d8dd343c582ef8c"></span><span class="sig-name descname"><span class="n"><span class="pre">AB2</span></span></span><a class="headerlink" href="#c.AB2" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The flag for Adams-Bashforth Numerical Method. This method is more stable because the spatial discretization is third-order accurate. If you want to use Leapfrog, turn it off. </p>
 </dd></dl>
 
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.WATER">
 <span class="target" id="Config_8hpp_1a5c3fbf45abc4ee50d118d87aecfee212"></span><span class="sig-name descname"><span class="n"><span class="pre">WATER</span></span></span><a class="headerlink" href="#c.WATER" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Switch for microphysics (qc, qv, qr) with warm rain scheme </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.TROPICALFORCING">
-<span class="target" id="Config_8hpp_1ae1a5ef3159a24aad5047859e9bafa707"></span><span class="sig-name descname"><span class="n"><span class="pre">TROPICALFORCING</span></span></span><a class="headerlink" href="#c.TROPICALFORCING" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Switch for tropical forcing test case (With Q1, Q2) </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.ADDFORCINGTIME">
-<span class="target" id="Config_8hpp_1a62c1645b450ad25c7cff262aa9a6a3c3"></span><span class="sig-name descname"><span class="n"><span class="pre">ADDFORCINGTIME</span></span></span><a class="headerlink" href="#c.ADDFORCINGTIME" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Time (s) for adding random perturbation into model </p>
-</dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.RADIATIONCOOLING">
-<span class="target" id="Config_8hpp_1a1c49559a85a9e1c4ad1b58d738ce0a0b"></span><span class="sig-name descname"><span class="n"><span class="pre">RADIATIONCOOLING</span></span></span><a class="headerlink" href="#c.RADIATIONCOOLING" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp macro">
-<dt class="sig sig-object cpp" id="c.LOADFILE">
-<span class="target" id="Config_8hpp_1a5c166d882469baaf48008853944b5956"></span><span class="sig-name descname"><span class="n"><span class="pre">LOADFILE</span></span></span><a class="headerlink" href="#c.LOADFILE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test </p>
+<dd><p>The flag for microphysics (qc, qv, qr) with warm rain scheme. </p>
 </dd></dl>
 
 </div>
@@ -483,11 +371,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="Const.html"
+       href="../class.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Const</p>
+        <p class="prev-next-title">Class</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

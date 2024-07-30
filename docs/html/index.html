@@ -19,7 +19,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -95,12 +94,12 @@ $(function(){initNavTree('index.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Two-dimension Vector Vorticity Model </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__2home_2Aaron_22DVVM_2full_20402_2model_2README"></a> This is a 2D cloud-resolving model based on vorticity equation</p>
+<div class="textblock"><p><a class="anchor" id="md__2home_2Aaron_2TMIF__VVM__CSSWM_22DVVM_2README"></a> This is a 2D cloud-resolving model based on vorticity equation</p>
 <ul>
 <li>Two-dimension Vector Vorticity Model<ul>
 <li>Prerequisite</li>
 <li>How to Use<ul>
-<li>If you cannot solve the netcdf\_cxx4 and petsc installation problem.</li>
+<li>Optional for NetCDF output and PETSc Solver</li>
 </ul>
 </li>
 </ul>
@@ -110,15 +109,16 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 Prerequisite</h1>
 <ul>
 <li>C++ compiler (higher than C++11)</li>
-<li>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)</li>
-<li>PETSc</li>
-<li>Eigen (this has already be installed in include folder)</li>
+<li>CMake (higher than 3.0.0) (You can create your own Makefile by translating the CMakefile.txt if you don't want to use CMake)</li>
+<li>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx) [optional]</li>
+<li>PETSc [optional]</li>
+<li>Eigen (this has already be installed in include folder) [optional]</li>
 </ul>
-<p>The tutorial for installing them can be found here</p>
+<p>The tutorial for installing netcdf-cxx4 and PETSc can be found here</p>
 <ul>
-<li>This model will use netcdf-cxx and petsc in default. However<ul>
-<li>You can turn off the <code>OUTPUTNC</code> and turn on <code>OUTPUTTXT</code> in <code>./src/Config.hpp</code> to use txt output without installing <code>netcdf-cxx4</code>.</li>
-<li>Turn off <code>PETSC</code> in <code>./src/Config.hpp</code>, the model will change the Poisson solver package to <code>Eigen</code>, which means you don't need to install PETSc.</li>
+<li>This model will use txt output and Eigen solver for solving Poisson equation in default. However<ul>
+<li>You can turn on the <code>OUTPUTNC</code> and turn off <code>OUTPUTTXT</code> in <code>./src/Config.hpp</code> to use netcdf output. Note that the netcdf doesn't support openMP output so if you want to use openMP, don't turn the <code>OUTPUTNC</code> flag on.</li>
+<li>Turn on <code>PETSC</code> in <code>./src/Config.hpp</code>, the model will change the Poisson solver package to <code>PETSc</code></li>
 </ul>
 </li>
 </ul>
@@ -128,6 +128,14 @@ How to Use</h1>
 <li><p class="startli">Clone the project using</p>
 <div class="fragment"><div class="line">git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git</div>
 </div><!-- fragment --></li>
+<li>You can change the model settings by changing the macro flags in the <code>./src/Config.hpp</code> and also the configuration object in the <code>./src/main.cpp</code>. In general, you only need to modify the configuration in <code>./src/main.cpp</code>. But if you want to change the numerical methods or the running cases, you might need to modify the flags in the <code>./src/Config.hpp</code></li>
+<li>You are able to run the model by running the command under the project folder</li>
+</ol>
+<div class="fragment"><div class="line">sh run.sh</div>
+</div><!-- fragment --><p>or you can use your own command by referencing the command in <code>run.sh</code></p>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Optional for NetCDF output and PETSc Solver</h2>
+<ol type="1">
 <li><p class="startli">Install netcdf-cxx, petsc</p>
 <p class="startli">It's a little bit complicated to install libraries for C/C++.</p>
 <p class="startli">I will provide a tutorial for installing C/C++ compiler and the libraries in another file here. Here, you don't need to have sudo privilege to install anything.</p>
@@ -135,6 +143,7 @@ How to Use</h1>
 <li>Link the installed libraries</li>
 </ol>
 <ul>
+<li>If you don't need to use PETSc and netcdf, you might need to turn off the link command in CMakeLists.txt.</li>
 <li>You need to change the libraries path (netcdf, petsc) to your own path.</li>
 <li>Change include path in CMakeLists.txt <div class="fragment"><div class="line">include_directories(</div>
 <div class="line">  include</div>
@@ -146,57 +155,12 @@ How to Use</h1>
 </div><!-- fragment --></li>
 </ul>
 <ol type="1">
-<li><p class="startli">You are able to run the model by running the command under the project folder</p>
-<div class="fragment"><div class="line">sh run.sh</div>
-</div><!-- fragment --></li>
-<li>You can change the model settings by changing the macro flags in the <code>./src/Config.hpp</code></li>
+<li>Change the flags in <code>./src/Config.hpp</code>:</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md3"></a>
-If you cannot solve the netcdf_cxx4 and petsc installation problem.</h2>
-<ol type="1">
-<li>Turn off the flag <code>OUTPUTNC</code> and turn on the flag <code>OUTPUTTXT</code> in <code>./src/Config.hpp</code></li>
-<li>Turn off the flag <code>PETSC</code> in <code>./src/Config.hpp</code> and this will in turn make the model use the Eigen C++ Solver</li>
-<li>Create a folder called bin under project root by <code>mkdir bin</code></li>
-<li><p class="startli">Create a file called Makefile under the project and the content will be the following</p>
-<div class="fragment"><div class="line"># CC and CFLAGS are varilables</div>
-<div class="line">CC = g++</div>
-<div class="line">CFLAGS = -Wall -c -std=c++11</div>
-<div class="line"># -c option ask g++ to compile the source files, but do not link.</div>
-<div class="line">OPTFLAGS = -O3</div>
-<div class="line"> </div>
-<div class="line">all  : bin/vvm2d</div>
-<div class="line">    @echo -n &quot;&quot;</div>
-<div class="line"> </div>
-<div class="line">bin/vvm2d    : main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o</div>
-<div class="line">            $(CC) $(OPTFLAGS) main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o -o bin/vvm2d</div>
-<div class="line">main.o       : src/main.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">AddForcing.o : src/AddForcing.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Advection.o  : src/Advection.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Boundary.o   : src/Boundary.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Buoyancy.o   : src/Boundary.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Declare.o    : src/Declare.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Init.o       : src/Init.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Output.o: src/Output.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">Iteration.o  : src/Iteration.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">MicroPhyscis.o   : src/MicroPhyscis.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">NumericalProcess.o   : src/NumericalProcess.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-<div class="line">PoissonSolver.o  : src/NumericalProcess.cpp</div>
-<div class="line">            $(CC) $(CFLAGS) $(OPTFLAGS) $&lt; -o $@</div>
-</div><!-- fragment --></li>
-<li>Using <code>make</code> under project root to compile the project and you will the the execution file at <code>./bin/vvm2d</code> .</li>
-<li>You will be able to use the model's output by the txt files </li>
-</ol>
+<ul>
+<li>Turn on <code>OUTPUTNC</code> and turn off <code>OUTPUTTXT</code> to use netcdf output.</li>
+<li>Turn on <code>PETSC</code> to use PETSc solver. </li>
+</ul>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"/>
 </div><!-- contents -->

@@ -8,37 +8,35 @@
 class Config_VVM {
 public:
     Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
-           std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double tolerance,
+           std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance,
            double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE)
         : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
-          outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS), POISSONPARAMU(POISSONPARAMU), POISSONPARAMW(POISSONPARAMW), 
+          outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS),
           tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE) {}
     ~Config_VVM() {}
 
-    double dt;
-    double dx;
-    double dz;
-    int XRANGE;
-    int ZRANGE;
-    double TIMEEND;
-    int TIMEROUTPUTSIZE;
-    std::string outputpath; 
-    int OUTPUTSTEP;
-    double Kx;
-    double Kz;
-    double TIMETS;
-    double POISSONPARAMU;
-    double POISSONPARAMW;
-    double tolerance;
-    double GRAVITY;
-    double Cp;
-    double Cv;
-    double Rd;
-    double Lv;
-    double P0;
-    double PSURF;
-    double addforcingtime;
-    int CASE;
+    double dt;              ///< Time step for vvm [s].
+    double dx;              ///< Grid size in x-direction [m].
+    double dz;              ///< Grid size in z-direction [m]. It should be the same as dx.
+    int XRANGE;             ///< Domain size of the model in x-direction [m].
+    int ZRANGE;             ///< Domain size of the model in z-direction [m].
+    double TIMEEND;         ///< End time of the simulation [s].
+    int TIMEROUTPUTSIZE;    ///< The size of the timer output.
+    std::string outputpath; ///< The path for the output file. It should be a directory, such as "/data/vvm/".
+    int OUTPUTSTEP;         ///< The output interval for the output file.
+    double Kx;              ///< The eddy diffusion coefficient in x-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure.
+    double Kz;              ///< The eddy diffusion coefficient in z-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure.
+    double TIMETS;          ///< The time filter coefficient [s] for Leapfrog. This is activated when TIMEFILTER flag is turned on. Only need to turn on when Leapfrog is used.
+    double tolerance;       ///< The tolerance for the Poisson Solver.
+    double GRAVITY;         ///< The gravity acceleration [m/s^2]. It's 9.80665 m/s^2 for default.
+    double Cp;              ///< The specific heat capacity at constant pressure [J/kg/K]. It's 1003.5 J/kg/K for default.
+    double Cv;              ///< The specific heat capacity at constant volume [J/kg/K]. It's 716.5 J/kg/K for default.
+    double Rd;              ///< The gas constant for dry air [J/kg/K]. It's 287 J/kg/K for default.
+    double Lv;              ///< The latent heat of vaporization [J/kg]. It's 2.5E6 J/kg for default.
+    double P0;              ///< The reference pressure [Pa]. It's 1E5 Pa for default.
+    double PSURF;           ///< The surface pressure [Pa]. It's 96500 Pa for default.
+    double addforcingtime;  ///< The time for adding the perturbation. The perturbation is used to break the symmetry of the model.
+    int CASE;               ///< The case number for the model. It's used to specify the initial condition and the forcing. If CASE is 0, the initial condition is equal to mean state. If CASE is 1, the initial condition is equal to mean state plus a warm bubble. 
 };
 
 
@@ -56,7 +54,7 @@ public:
           d2t(2.0 * config.dt), dx(config.dx), dz(config.dz),
           XRANGE(config.XRANGE), ZRANGE(config.ZRANGE), TIMEEND(config.TIMEEND),
           TIMEROUTPUTSIZE(config.TIMEROUTPUTSIZE), outputpath(config.outputpath), OUTPUTSTEP(config.OUTPUTSTEP), Kx(config.Kx), Kz(config.Kz),
-          TIMETS(config.TIMETS), POISSONPARAMU(config.POISSONPARAMU), POISSONPARAMW(config.POISSONPARAMW), tolerance(config.tolerance),
+          TIMETS(config.TIMETS), tolerance(config.tolerance),
           GRAVITY(config.GRAVITY),
           Cp(config.Cp), Cv(config.Cv),
           Rd(config.Rd), Lv(config.Lv),
@@ -266,43 +264,43 @@ public:
     }
     #endif
 
-    double rdx;                                               ///< 1 / dx
-    double r2dx;                                              ///< 1 / (2dx)
-    double rdz;                                               ///< 1 / dz
-    double r2dz;                                              ///< 1 / (2dz)
-    double rdx2;                                              ///< 1 / (dx^2)
-    double rdz2;                                              ///< 1 / (dz^2)
-    int nx;                                                   ///< Number of grid points in x direction
-    int nz;                                                   ///< Number of grid points in z direction
-    double dt;
-    double d2t;                                               ///< Integration time step
-    double dx;
-    double dz;
-    int XRANGE;
-    int ZRANGE;
-    double TIMEEND;
-    int TIMEROUTPUTSIZE;
-    std::string outputpath;
-    int OUTPUTSTEP;
-    double Kx;
-    double Kz;
-    double TIMETS;
-    double POISSONPARAMU;
-    double POISSONPARAMW;
-    double tolerance;
-    double GRAVITY;
-    double Cp;
-    double Cv;
-    double Rd;
-    double Lv;
-    double P0;
-    double PSURF;
-    double addforcingtime;
-    int CASE;
-    int step = 0;
+    double rdx;                              ///< 1/dx, calculated from Config_VVM given by users.
+    double r2dx;                             ///< 1 / (2dx), calculated from Config_VVM given by users.
+    double rdz;                              ///< 1 / dz, calculated from Config_VVM given by users.
+    double r2dz;                             ///< 1 / (2dz), calculated from Config_VVM given by users.
+    double rdx2;                             ///< 1 / (dx^2), calculated from Config_VVM given by users.
+    double rdz2;                             ///< 1 / (dz^2), calculated from Config_VVM given by users.
+    int nx;                                  ///< Number of grid points in x direction, calculated from Config_VVM given by users.
+    int nz;                                  ///< Number of grid points in z direction, calculated from Config_VVM given by users.
+    double dt;                               ///< From Config_VVM given by users.
+    double d2t;                              ///< From Config_VVM given by users.
+    double dx;                               ///< From Config_VVM given by users.
+    double dz;                               ///< From Config_VVM given by users.
+    int XRANGE;                              ///< From Config_VVM given by users.
+    int ZRANGE;                              ///< From Config_VVM given by users.
+    double TIMEEND;                          ///< From Config_VVM given by users.
+    int TIMEROUTPUTSIZE;                     ///< From Config_VVM given by users.
+    std::string outputpath;                  ///< From Config_VVM given by users.
+    int OUTPUTSTEP;                          ///< From Config_VVM given by users.
+    double Kx;                               ///< From Config_VVM given by users.
+    double Kz;                               ///< From Config_VVM given by users.
+    double TIMETS;                           ///< From Config_VVM given by users.
+    double tolerance;                        ///< From Config_VVM given by users.
+    double GRAVITY;                          ///< From Config_VVM given by users.
+    double Cp;                               ///< From Config_VVM given by users.
+    double Cv;                               ///< From Config_VVM given by users.
+    double Rd;                               ///< From Config_VVM given by users.
+    double Lv;                               ///< From Config_VVM given by users.
+    double P0;                               ///< From Config_VVM given by users.
+    double PSURF;                            ///< From Config_VVM given by users.
+    double addforcingtime;                   ///< From Config_VVM given by users.
+    int CASE;                                ///< From Config_VVM given by users.
 
     // 0D variables
-    double ubarTopp, ubarTop, ubarTopm;
+    int step = 0;                            ///< The current time step.
+    double ubarTopp;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTop;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTopm;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
 
     // 1D variables
     double *thb;
@@ -436,7 +434,7 @@ public:
      */
     static void BoundaryProcess2D_westdown(double **var, int nx, int nz);
 
-    static void BoundaryProcess2D_all(vvm &);
+    static void BoundaryProcess2D_all(vvm &model);
     // **********************************************************************
 
 
@@ -476,14 +474,14 @@ public:
         #ifndef PETSC
             Eigen::SparseMatrix<double> A;
             Eigen::SparseMatrix<double> G;
-            static void InitPoissonMatrix(vvm &);
+            static void InitPoissonMatrix(vvm &model);
         #endif
         #if defined(STREAMFUNCTION)
-            static void calpsiuw(vvm &);
+            static void calpsiuw(vvm &model);
         #else
             static void cal_w(vvm &, int p = 0, int i = 0, int j = 0);
-            static void cal_u(vvm &);
-            static void pubarTop_pt(vvm &);
+            static void cal_u(vvm &model);
+            static void pubarTop_pt(vvm &model);
         #endif
     };
 
@@ -494,9 +492,9 @@ public:
     class NumericalProcess {
     public:
         static void Diffusion(double **var_in, double **var_out, vvm &model);
-        static void DiffusionAll(vvm &);
+        static void DiffusionAll(vvm &model);
         static void TimeFilter(double **previous, double **now, double **future, vvm &model);
-        static void timeFilterAll(vvm &);
+        static void timeFilterAll(vvm &model);
     };
 
     // *********************************************************************************
@@ -504,10 +502,10 @@ public:
     #if defined(WATER)
     class MicroPhysics {
     public:
-        static void condensation(vvm &); 	// condensation of qc by qv
-        static void autoconversion(vvm &); 	// autoconversion of qc to qr
-        static void accretion(vvm &); 		// accretion of qc by qr
-        static void evaporation(vvm &); 	// evaporation of rain water
+        static void condensation(vvm &model); 	// condensation of qc by qv
+        static void autoconversion(vvm &model); 	// autoconversion of qc to qr
+        static void accretion(vvm &model); 		// accretion of qc by qr
+        static void evaporation(vvm &model); 	// evaporation of rain water
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
 
@@ -524,48 +522,48 @@ public:
 
     class Init {
     public:
-        static void Init1d(vvm &);
-        static void Init2d(vvm &);
-        static void RandomPerturbation(vvm &, int);
+        static void Init1d(vvm &model);
+        static void Init2d(vvm &model);
+        static void RandomPerturbation(vvm &, int seed);
         #if defined(LOADFILE)
-            static void LoadFile(vvm &);
+            static void LoadFile(vvm &model);
         #elif defined(LOADFROMPREVIOUSFILE)
-            static void LoadFromPreviousFile(vvm &);
+            static void LoadFromPreviousFile(vvm &model);
         #elif defined(LOAD2DINIT)
-            static void Load2DInit(vvm &);
+            static void Load2DInit(vvm &model);
         #endif
             
     private:
-        static double GetTB(int i, vvm &);
-        static double GetTHRAD(int i, int k, vvm &);
-        static double GetTH(int, int, vvm &);
+        static double GetTB(int i, vvm &model);
+        static double GetTHRAD(int i, int k, vvm &model);
+        static double GetTH(int i, int k, vvm &model);
         #if defined(WATER)
-            static double GetQVB(int, int dz);
+            static double GetQVB(int k, int dz);
         #endif
     };
 
     class Output {
     public:
-        static void printInit(vvm &);
-        static void create_all_directory(vvm &);
-        static void create_directory(std::string);
+        static void printInit(vvm &model);
+        static void create_all_directory(vvm &model);
+        static void create_directory(std::string path);
         #if defined(OUTPUTNC)
-            static void output_nc(int, vvm &);
-            static void output_time_nc(int, vvm &);
+            static void output_nc(int step, vvm &model);
+            static void output_time_nc(int step, vvm &model);
         #endif
 
         #if defined(OUTPUTTXT)
-            static void output_zeta(int, vvm &);
-            static void output_th(int, vvm &);
-            static void output_u(int, vvm &);
-            static void output_w(int, vvm &);
+            static void output_zeta(int step, vvm &model);
+            static void output_th(int step, vvm &model);
+            static void output_u(int step, vvm &model);
+            static void output_w(int step, vvm &model);
             #if defined(WATER)
-                static void output_qv(int, vvm &);
-                static void output_qc(int, vvm &);
-                static void output_qr(int, vvm &);
-                static void output_precip(int, vvm &);
+                static void output_qv(int step, vvm &model);
+                static void output_qc(int step, vvm &model);
+                static void output_qr(int step, vvm &model);
+                static void output_precip(int step, vvm &model);
             #endif
-            static void outputalltxt(int, vvm &);
+            static void outputalltxt(int step, vvm &model);
         #endif
         
     };
@@ -573,22 +571,22 @@ public:
 
     class Iteration {
     public:
-        static void pzeta_pt(vvm &);
-        static void pth_pt(vvm &);
+        static void pzeta_pt(vvm &model);
+        static void pth_pt(vvm &model);
         #if defined(WATER)
-            static void pqv_pt(vvm &);
-            static void pqc_pt(vvm &);
-            static void pqr_pt(vvm &);
+            static void pqv_pt(vvm &model);
+            static void pqc_pt(vvm &model);
+            static void pqr_pt(vvm &model);
         #endif
 
-        static void updateMean(vvm &);
-        static void TimeMarching(vvm &);
-        static void nextTimeStep(vvm &);
+        static void updateMean(vvm &model);
+        static void TimeMarching(vvm &model);
+        static void nextTimeStep(vvm &model);
     };
 
     class Turbulence {
     public:
-        static void RKM_RKH(vvm &);
+        static void RKM_RKH(vvm &model);
         static void Mparam(vvm &model, double **var_now, double **var_future);
         static void Hparam(vvm &model, double **var_now, double **var_future);
     };

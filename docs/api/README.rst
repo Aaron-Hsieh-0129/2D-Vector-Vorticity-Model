@@ -1,112 +1,72 @@
+Two-dimension Vector Vorticity Model
+====================================
+
+This is a 2D cloud-resolving model based on the vorticity equation.
+
+
 Prerequisite
 ------------
 
 - C++ compiler (higher than C++11)
-- netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)
-- PETSc
-- Eigen (this has already be installed in include folder)
+- CMake (higher than 3.0.0) (You can create your own Makefile by translating the CMakefile.txt if you don't want to use CMake)
+- netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx) [optional]
+- PETSc [optional]
+- Eigen (this has already been installed in the include folder) [optional]
 
-The tutorial for installing them can be found in the tutorial section .
+The tutorial for installing netcdf-cxx4 and PETSc can be found `here <./api/install_compilers_libraries.html>`_
 
-This model will use netcdf-cxx and petsc in default. However:
-
-- You can turn off the `OUTPUTNC` and turn on `OUTPUTTXT` in `./src/Config.hpp` to use txt output without installing `netcdf-cxx4`.
-- Turn off `PETSC` in `./src/Config.hpp`, the model will change the Poisson solver package to `Eigen`, which means you don't need to install PETSc.
+- This model will use txt output and Eigen solver for solving Poisson equation by default. However,
+  - You can turn on the `OUTPUTNC` and turn off `OUTPUTTXT` in `./src/Config.hpp` to use netcdf output. Note that netcdf doesn't support openMP output so if you want to use openMP, don't turn the `OUTPUTNC` flag on.
+  - Turn on `PETSC` in `./src/Config.hpp`, the model will change the Poisson solver package to `PETSc`.
 
 How to Use
 ----------
 
 1. Clone the project using:
 
-   .. code-block:: shell
+   .. code-block:: bash
 
       git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
 
-2. Install netcdf-cxx, petsc
+2. You can change the model settings by changing the macro flags in the `./src/Config.hpp` and also the configuration object in the `./src/main.cpp`. In general, you only need to modify the configuration in `./src/main.cpp`. But if you want to change the numerical methods or the running cases, you might need to modify the flags in the `./src/Config.hpp`.
 
-   It's a little bit complicated to install libraries for C/C++.
+3. You are able to run the model by running the command under the project folder:
 
-   I will provide a tutorial for installing C/C++ compiler and the libraries in another file in the tutorial section.
-   Here, you don't need to have sudo privilege to install anything.
-
-3. Link the installed libraries 
-
-   - You need to change the libraries path (netcdf, petsc) to your own path.
-   - Change include path in CMakeLists.txt:
-
-     .. code-block:: cmake
-
-        include_directories(
-          include
-          /path/to/your/petsc/include 
-        )
-
-   - Change library link path:
-
-     .. code-block:: cmake
-
-        find_library(libncxxPath netcdf_c++4 "/path to your netcdf_c++4/lib")
-        find_library(libpetscPath petsc "/path to your petsc/lib")
-
-4. You are able to run the model by running the command under the project folder:
-
-   .. code-block:: shell
+   .. code-block:: bash
 
       sh run.sh
 
-5. You can change the model settings by changing the macro flags in the `./src/Config.hpp`.
+   or you can use your own command by referencing the command in `run.sh`.
 
-If you cannot solve the netcdf_cxx4 and petsc installation problem.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Optional for NetCDF output and PETSc Solver
+-------------------------------------------
 
-1. Turn off the flag `OUTPUTNC` and turn on the flag `OUTPUTTXT` in `./src/Config.hpp`.
-2. Turn off the flag `PETSC` in `./src/Config.hpp` and this will in turn make the model use the Eigen C++ Solver.
-3. Create a folder called bin under project root by:
+1. Install netcdf-cxx, petsc.
 
-   .. code-block:: shell
+   It's a little bit complicated to install libraries for C/C++. I will provide a tutorial for installing C/C++ compiler and the libraries in another file `here <./api/install_compilers_libraries.html>`_. Here, you don't need to have sudo privilege to install anything.
 
-      mkdir bin
+2. Link the installed libraries.
 
-4. Create a file called Makefile under the project and the content will be the following:
+- If you don't need to use PETSc and netcdf, you might need to turn off the link command in CMakeLists.txt.
+- You need to change the libraries path (netcdf, petsc) to your own path.
+- Change include path in CMakeLists.txt:
 
-   .. code-block:: makefile
+  .. code-block:: cmake
 
-      # CC and CFLAGS are varilables
-      CC = g++
-      CFLAGS = -Wall -c -std=c++11
-      # -c option ask g++ to compile the source files, but do not link.
-      OPTFLAGS = -O3
+    include_directories(
+      include
+      </path/to/your/petsc>/include
+    )
 
-      all	: bin/vvm2d
-         @echo -n ""
+- Change library link path:
 
-      bin/vvm2d	: main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o
-                  $(CC) $(OPTFLAGS) main.o AddForcing.o Advection.o Boundary.o Boundary.o Declare.o Init.o Iteration.o Output.o MicroPhysics.o NumericalProcess.o PoissonSolver.o -o bin/vvm2d
-      main.o 	   	: src/main.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      AddForcing.o	: src/AddForcing.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Advection.o	: src/Advection.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Boundary.o	: src/Boundary.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Buoyancy.o	: src/Boundary.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Declare.o	: src/Declare.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Init.o		: src/Init.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Output.o: src/Output.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      Iteration.o	: src/Iteration.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      MicroPhyscis.o	: src/MicroPhyscis.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      NumericalProcess.o	: src/NumericalProcess.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
-      PoissonSolver.o	: src/NumericalProcess.cpp
-                  $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+  .. code-block:: cmake
 
-5. Using `make` under project root to compile the project and you will the the execution file at `./bin/vvm2d`.
-6. You will be able to use the model's output by the txt files.
+    find_library(libncxxPath netcdf_c++4 "<path to your netcdf_c++4>/lib")
+    find_library(libpetscPath petsc "<path to your petsc>/lib")
 
+
+3. Change the flags in `./src/Config.hpp`:
+
+- Turn on `OUTPUTNC` and turn off `OUTPUTTXT` to use netcdf output.
+- Turn on `PETSC` to use PETSc solver.

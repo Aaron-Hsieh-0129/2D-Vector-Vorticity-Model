@@ -37,13 +37,13 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
             flux_w[i][k] = model.rhow[k] * model.w[i][k] * (now[i][k] + now[i][k-1]);
             #if defined(AB2)
                 if (i >= 2 && i <= model.nx-3 && k >= 2 && k <= model.nz-3) {
-                    flux_u[i][k] += -ALPHA/3. * 
+                    flux_u[i][k] += -1./3. * 
                                     (model.rhou[k]*PLUS(model.u[i][k]) * (now[i][k] - now[i-1][k])
                                         - std::sqrt(model.rhou[k]*PLUS(model.u[i][k]) * model.rhou[k]*PLUS(model.u[i-1][k]))*(now[i-1][k] - now[i-2][k])
                                    - model.rhou[k]*MINU(model.u[i][k]) * (now[i][k] - now[i-1][k])
                                         - std::sqrt(std::fabs(model.rhou[k]*MINU(model.u[i][k]) * model.rhou[k]*MINU(model.u[i+1][k])))*(now[i+1][k] - now[i][k]));
 
-                    flux_w[i][k] += -ALPHA/3. * 
+                    flux_w[i][k] += -1./3. * 
                                     (model.rhow[k]*PLUS(model.w[i][k]) * (now[i][k] - now[i][k-1])
                                         - std::sqrt(model.rhow[k]*PLUS(model.w[i][k]) * model.rhow[k-1]*PLUS(model.w[i][k-1]))*(now[i][k-1] - now[i][k-2])
                                    - model.rhow[k]*MINU(model.w[i][k]) * (now[i][k] - now[i][k-1])
@@ -107,11 +107,11 @@ void vvm::Advection_zeta(vvm &model) {
             flux_w[i][k] = model.W_u[i][k] * (model.zeta[i][k+1] + model.zeta[i][k]);
             #if defined(AB2)
                 if (i >= 2 && i <= model.nx-3 && k >= 2 && k <= model.nz-3) {
-                    flux_u[i][k] += -ALPHA/3. * (PLUS(model.U_w[i][k])*(model.zeta[i+1][k]-model.zeta[i][k]) 
+                    flux_u[i][k] += -1./3. * (PLUS(model.U_w[i][k])*(model.zeta[i+1][k]-model.zeta[i][k]) 
                                                     - std::sqrt(PLUS(model.U_w[i][k]) * PLUS(model.U_w[i-1][k]))*(model.zeta[i][k]-model.zeta[i-1][k]) - 
                                                  MINU(model.U_w[i][k])*(model.zeta[i+1][k]-model.zeta[i][k]) 
                                                     - std::sqrt(std::fabs(MINU(model.U_w[i][k]) * MINU(model.U_w[i+1][k])))*(model.zeta[i+2][k]-model.zeta[i+1][k]));
-                    flux_w[i][k] += -ALPHA/3. * (PLUS(model.W_u[i][k])*(model.zeta[i][k+1]-model.zeta[i][k]) 
+                    flux_w[i][k] += -1./3. * (PLUS(model.W_u[i][k])*(model.zeta[i][k+1]-model.zeta[i][k]) 
                                                     - std::sqrt(PLUS(model.W_u[i][k]) * PLUS(model.W_u[i][k-1]))*(model.zeta[i][k]-model.zeta[i][k-1]) - 
                                                  MINU(model.W_u[i][k])*(model.zeta[i][k+1]-model.zeta[i][k]) 
                                                     - std::sqrt(std::fabs(MINU(model.W_u[i][k]) * MINU(model.W_u[i][k+1])))*(model.zeta[i][k+2]-model.zeta[i][k+1]));
@@ -171,7 +171,7 @@ void vvm::Advection_qrVT(vvm &model) {
             //         VT_u = 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
             //         VT_d = 1E-2 * (3634 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
 
-            //         flux_w[i][k] += -ALPHA/3. * 
+            //         flux_w[i][k] += -1./3. * 
             //                         (model.rhow[k]*PLUS(VT) * (model.qr[i][k] - model.qr[i][k-1])
             //                             - std::sqrt(model.rhow[k]*PLUS(VT) * model.rhow[k-1]*PLUS(VT_d))*(model.qr[i][k-1] - model.qr[i][k-2])
             //                        - model.rhow[k]*MINU(VT) * (model.qr[i][k] - model.qr[i][k-1])

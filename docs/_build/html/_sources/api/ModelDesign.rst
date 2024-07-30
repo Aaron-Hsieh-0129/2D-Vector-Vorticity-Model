@@ -67,7 +67,7 @@ Boundary Condition
 Discretization of the Governing Equation Set
 --------------------------------------------
 
-Advection for thermo-related variables
+Advection for Thermo-related Variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Here presents the discretization for variables such as :math:`\theta,\ q_v,\ q_c,\ q_r`.
 
@@ -81,7 +81,7 @@ Here presents the discretization for variables such as :math:`\theta,\ q_v,\ q_c
    F_u &= w_{i,k+1}(q_{i,k+1} - q_{i,k}),\ F_d = w_{i,k}(q_{i,k} - q_{i,k-1})
 
 
-Advection for vorticity
+Advection for Vorticity
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The reason why we need to process the advection for vorticity seperately is due to the conservation of enstrophy.
 According to Arakawa (1966), the enstrophy needs to be conserved to do the long-term integration. 
@@ -97,6 +97,7 @@ Here, the J6 Arakawa jacobian is adopted to conserve the enstrophy following the
    F_r &= U_{i,k}(\zeta_{i+1,k} - \zeta_{i,k}),\ F_l = U_{i-1,k}(\zeta_{i,k} - \zeta_{i-1,k})\\
    F_u &= W_{i,k}(\zeta_{i,k+1} - \zeta_{i,k}),\ F_d = W_{i,k-1}(\zeta_{i,k} - \zeta_{i,k-1})\\
    U_{i,k} &= 0.25 \times (\overline{\rho}_k(u_{i+1,k} + u_{i,k}) + \overline{\rho}_{k-1}(u_{i+1,k-1} + u_{u,k-1}) )
+
 
 Solving 2D Poisson equation to diagnize :math:`w`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

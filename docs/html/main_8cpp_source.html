@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VVM2D: /home/Aaron/2DVVM/full/0402/model/src/main.cpp Source File</title>
+<title>VVM2D: /home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/main.cpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,6 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -100,41 +99,76 @@ $(function(){initNavTree('main_8cpp_source.html',''); initResizable(); });
   <div class="headertitle"><div class="title">main.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="main_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="Iteration_8hpp.html">Iteration.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &lt;petsc.h&gt;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">    4</a></span><a class="code hl_class" href="classvvm.html">vvm</a> <a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>;</div>
-<div class="foldopen" id="foldopen00005" data-start="{" data-end="}">
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">    5</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) {</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <a class="code hl_function" href="classInit.html#a4b373a923fb486df695e82608ff081c4">Init::Init1d</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <a class="code hl_function" href="classInit.html#a622540f0e2606ee86b781a8eb8f5a67c">Init::Init2d</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <a class="code hl_function" href="classOutput.html#ac9377ae1019ac4ee88877197685d19fe">Output::printInit</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <a class="code hl_function" href="classOutput.html#a4a0eecfc03693584192bc8e78c2f872b">Output::create_all_directory</a>();</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    PetscInitialize(&amp;argc, &amp;argv, NULL, NULL);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">    #if defined(POISSONTEST)</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <a class="code hl_class" href="classvvm_1_1PoissonSolver.html">vvm::PoissonSolver</a> PoissonSolver;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        PoissonSolver.<a class="code hl_function" href="classvvm_1_1PoissonSolver.html#a03f3af096f7aa1861ee6512f41b5298f">cal_w</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        PoissonSolver.<a class="code hl_function" href="classvvm_1_1PoissonSolver.html#a741f59b97f794a79a15fd919b3b2501e">cal_u</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    #else</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_function" href="classIteration.html#ae341a02edb030229055de37fd518ac89">Iteration::TimeMarching</a>(<a class="code hl_variable" href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a>);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    PetscFinalize();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+<a href="main_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="Declare_8hpp.html">Declare.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifdef _OPENMP</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;omp.h&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#if defined(PETSC)</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">    #include &lt;petscsys.h&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">    #include &lt;petsc.h&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">//        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">//        double P0, double PSURF, double ADDFORCINGTIME)</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">   14</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">    #if defined(PETSC)</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        PetscCall(PetscInitialize(&amp;argc, &amp;argv, NULL, NULL));</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #ifdef _OPENMP</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    omp_set_num_threads(8);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    Eigen::setNbThreads(8);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <a class="code hl_class" href="classConfig__VVM.html">Config_VVM</a> config(4., 200., 200., 100000, 20000, 40000., 10000, <span class="stringliteral">&quot;/data/Aaron/TMIF/0711_test2_Bubble/&quot;</span>, 10, </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                    70., 70., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                    1E5, 96500., 10., 1);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_class" href="classvvm.html">vvm</a> model(config);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">    #if defined(LOADFROMPREVIOUSFILE)</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        vvm::Init::LoadFromPreviousFile(model);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">    #elif defined(LOAD2DINIT)</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        vvm::Init::Load2DInit(model);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">    #else</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <a class="code hl_function" href="classvvm_1_1Init.html#a92147477c152b4b288dec6bb08168980">vvm::Init::Init1d</a>(model);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <a class="code hl_function" href="classvvm_1_1Init.html#aa47a05958ff2bd5eddd57d64f4cd7711">vvm::Init::Init2d</a>(model);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">    #ifndef PETSC</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_function" href="classvvm_1_1PoissonSolver.html#a5347fcfa9397d38496f70077a3ca8fed">vvm::PoissonSolver::InitPoissonMatrix</a>(model);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_function" href="classvvm_1_1Output.html#a331915125669cff07bc8fb2d6f3640df">vvm::Output::printInit</a>(model);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_function" href="classvvm_1_1Output.html#ab92886c8eb037ae04f2201b6daf76364">vvm::Output::create_all_directory</a>(model);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">    #if defined(POISSONTEST)</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <a class="code hl_function" href="classvvm_1_1PoissonSolver.html#ab342116991ca90ab52360e23009c67f3">vvm::PoissonSolver::cal_w</a>(model);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_function" href="classvvm_1_1PoissonSolver.html#ad9cd3bfdd88142ba11cba49029a564ae">vvm::PoissonSolver::cal_u</a>(model);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">    #else</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_function" href="classvvm_1_1Iteration.html#aad30e493dc2f262d8349e7832828a4db">vvm::Iteration::TimeMarching</a>(model);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">    #if defined(PETSC)</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        PetscCall(PetscFinalize());</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
 </div>
-<div class="ttc" id="aIteration_8hpp_html"><div class="ttname"><a href="Iteration_8hpp.html">Iteration.hpp</a></div></div>
-<div class="ttc" id="aclassInit_html_a4b373a923fb486df695e82608ff081c4"><div class="ttname"><a href="classInit.html#a4b373a923fb486df695e82608ff081c4">Init::Init1d</a></div><div class="ttdeci">static void Init1d(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00009">Init.cpp:9</a></div></div>
-<div class="ttc" id="aclassInit_html_a622540f0e2606ee86b781a8eb8f5a67c"><div class="ttname"><a href="classInit.html#a622540f0e2606ee86b781a8eb8f5a67c">Init::Init2d</a></div><div class="ttdeci">static void Init2d(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00102">Init.cpp:102</a></div></div>
-<div class="ttc" id="aclassIteration_html_ae341a02edb030229055de37fd518ac89"><div class="ttname"><a href="classIteration.html#ae341a02edb030229055de37fd518ac89">Iteration::TimeMarching</a></div><div class="ttdeci">static void TimeMarching(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="Iteration_8cpp_source.html#l00106">Iteration.cpp:106</a></div></div>
-<div class="ttc" id="aclassOutput_html_a4a0eecfc03693584192bc8e78c2f872b"><div class="ttname"><a href="classOutput.html#a4a0eecfc03693584192bc8e78c2f872b">Output::create_all_directory</a></div><div class="ttdeci">static void create_all_directory()</div><div class="ttdef"><b>Definition</b> <a href="Output_8cpp_source.html#l00101">Output.cpp:101</a></div></div>
-<div class="ttc" id="aclassOutput_html_ac9377ae1019ac4ee88877197685d19fe"><div class="ttname"><a href="classOutput.html#ac9377ae1019ac4ee88877197685d19fe">Output::printInit</a></div><div class="ttdeci">static void printInit(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="Output_8cpp_source.html#l00008">Output.cpp:8</a></div></div>
-<div class="ttc" id="aclassvvm_1_1PoissonSolver_html"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html">vvm::PoissonSolver</a></div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00115">Declare.hpp:115</a></div></div>
-<div class="ttc" id="aclassvvm_1_1PoissonSolver_html_a03f3af096f7aa1861ee6512f41b5298f"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html#a03f3af096f7aa1861ee6512f41b5298f">vvm::PoissonSolver::cal_w</a></div><div class="ttdeci">static void cal_w(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="PoissonSolver_8cpp_source.html#l00183">PoissonSolver.cpp:183</a></div></div>
-<div class="ttc" id="aclassvvm_1_1PoissonSolver_html_a741f59b97f794a79a15fd919b3b2501e"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html#a741f59b97f794a79a15fd919b3b2501e">vvm::PoissonSolver::cal_u</a></div><div class="ttdeci">static void cal_u(vvm &amp;)</div><div class="ttdef"><b>Definition</b> <a href="PoissonSolver_8cpp_source.html#l00366">PoissonSolver.cpp:366</a></div></div>
-<div class="ttc" id="aclassvvm_html"><div class="ttname"><a href="classvvm.html">vvm</a></div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00022">Declare.hpp:22</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition</b> <a href="#l00005">main.cpp:5</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a5e376a387fdce5400f2e8ed865388257"><div class="ttname"><a href="main_8cpp.html#a5e376a387fdce5400f2e8ed865388257">model</a></div><div class="ttdeci">vvm model</div><div class="ttdef"><b>Definition</b> <a href="#l00004">main.cpp:4</a></div></div>
+<div class="ttc" id="aDeclare_8hpp_html"><div class="ttname"><a href="Declare_8hpp.html">Declare.hpp</a></div></div>
+<div class="ttc" id="aclassConfig__VVM_html"><div class="ttname"><a href="classConfig__VVM.html">Config_VVM</a></div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00008">Declare.hpp:8</a></div></div>
+<div class="ttc" id="aclassvvm_1_1Init_html_a92147477c152b4b288dec6bb08168980"><div class="ttname"><a href="classvvm_1_1Init.html#a92147477c152b4b288dec6bb08168980">vvm::Init::Init1d</a></div><div class="ttdeci">static void Init1d(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00009">Init.cpp:9</a></div></div>
+<div class="ttc" id="aclassvvm_1_1Init_html_aa47a05958ff2bd5eddd57d64f4cd7711"><div class="ttname"><a href="classvvm_1_1Init.html#aa47a05958ff2bd5eddd57d64f4cd7711">vvm::Init::Init2d</a></div><div class="ttdeci">static void Init2d(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="Init_8cpp_source.html#l00110">Init.cpp:110</a></div></div>
+<div class="ttc" id="aclassvvm_1_1Iteration_html_aad30e493dc2f262d8349e7832828a4db"><div class="ttname"><a href="classvvm_1_1Iteration.html#aad30e493dc2f262d8349e7832828a4db">vvm::Iteration::TimeMarching</a></div><div class="ttdeci">static void TimeMarching(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="Iteration_8cpp_source.html#l00128">Iteration.cpp:128</a></div></div>
+<div class="ttc" id="aclassvvm_1_1Output_html_a331915125669cff07bc8fb2d6f3640df"><div class="ttname"><a href="classvvm_1_1Output.html#a331915125669cff07bc8fb2d6f3640df">vvm::Output::printInit</a></div><div class="ttdeci">static void printInit(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="Output_8cpp_source.html#l00008">Output.cpp:8</a></div></div>
+<div class="ttc" id="aclassvvm_1_1Output_html_ab92886c8eb037ae04f2201b6daf76364"><div class="ttname"><a href="classvvm_1_1Output.html#ab92886c8eb037ae04f2201b6daf76364">vvm::Output::create_all_directory</a></div><div class="ttdeci">static void create_all_directory(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="Output_8cpp_source.html#l00139">Output.cpp:139</a></div></div>
+<div class="ttc" id="aclassvvm_1_1PoissonSolver_html_a5347fcfa9397d38496f70077a3ca8fed"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html#a5347fcfa9397d38496f70077a3ca8fed">vvm::PoissonSolver::InitPoissonMatrix</a></div><div class="ttdeci">static void InitPoissonMatrix(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="PoissonSolver_8cpp_source.html#l00663">PoissonSolver.cpp:663</a></div></div>
+<div class="ttc" id="aclassvvm_1_1PoissonSolver_html_ab342116991ca90ab52360e23009c67f3"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html#ab342116991ca90ab52360e23009c67f3">vvm::PoissonSolver::cal_w</a></div><div class="ttdeci">static void cal_w(vvm &amp;, int p=0, int i=0, int j=0)</div><div class="ttdef"><b>Definition</b> <a href="PoissonSolver_8cpp_source.html#l00186">PoissonSolver.cpp:186</a></div></div>
+<div class="ttc" id="aclassvvm_1_1PoissonSolver_html_ad9cd3bfdd88142ba11cba49029a564ae"><div class="ttname"><a href="classvvm_1_1PoissonSolver.html#ad9cd3bfdd88142ba11cba49029a564ae">vvm::PoissonSolver::cal_u</a></div><div class="ttdeci">static void cal_u(vvm &amp;model)</div><div class="ttdef"><b>Definition</b> <a href="PoissonSolver_8cpp_source.html#l00480">PoissonSolver.cpp:480</a></div></div>
+<div class="ttc" id="aclassvvm_html"><div class="ttname"><a href="classvvm.html">vvm</a></div><div class="ttdef"><b>Definition</b> <a href="Declare_8hpp_source.html#l00043">Declare.hpp:43</a></div></div>
+<div class="ttc" id="amain_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="main_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition</b> <a href="#l00014">main.cpp:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

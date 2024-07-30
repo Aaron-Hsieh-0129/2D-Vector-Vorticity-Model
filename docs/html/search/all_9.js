@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['loadfile_0',['LoadFile',['../classInit.html#a18f209b227e2b6894dcd45969eec4339',1,'Init']]],
-  ['loadfile_1',['LOADFILE',['../Config_8hpp.html#a5c166d882469baaf48008853944b5956',1,'Config.hpp']]],
-  ['lv_2',['Lv',['../Const_8hpp.html#a40d8d9faeac7bd5d4cee0beff9e019a5',1,'Const.hpp']]]
+  ['kx_0',['Kx',['../classConfig__VVM.html#a2b5df6996c3edcc29df7f22aefff1ef8',1,'Config_VVM::Kx'],['../classvvm.html#a652a7cadfc1cf72ba05ed34e92aaf435',1,'vvm::Kx']]],
+  ['kz_1',['Kz',['../classConfig__VVM.html#a496e8a846c93e467b9ea4995fbe156ad',1,'Config_VVM::Kz'],['../classvvm.html#ac3c38d0e519213fb06b0993dd2873e4b',1,'vvm::Kz']]]
 ];

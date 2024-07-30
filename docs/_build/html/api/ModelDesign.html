@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -46,7 +47,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/ModelDesign';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Class" href="class.html" />
+    <link rel="next" title="Model Parameters Settings" href="header.html" />
     <link rel="prev" title="Tutorials for Installing C/C++ compiler and libraries" href="install_compilers_libraries.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -139,11 +140,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Model Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="class/vvm.html">vvm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Init.html">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Iteration.html">Iteration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/Output.html">Output</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="header/Config.html">Config</a></li>
 </ul>
 </li>
 </ul>
@@ -314,8 +312,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for thermo-related variables</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for vorticity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for Thermo-related Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for Vorticity</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
 </ul>
@@ -408,7 +406,7 @@ document.write(`
 <section id="discretization-of-the-governing-equation-set">
 <h2>Discretization of the Governing Equation Set<a class="headerlink" href="#discretization-of-the-governing-equation-set" title="Permalink to this heading">#</a></h2>
 <section id="advection-for-thermo-related-variables">
-<h3>Advection for thermo-related variables<a class="headerlink" href="#advection-for-thermo-related-variables" title="Permalink to this heading">#</a></h3>
+<h3>Advection for Thermo-related Variables<a class="headerlink" href="#advection-for-thermo-related-variables" title="Permalink to this heading">#</a></h3>
 <p>Here presents the discretization for variables such as <span class="math notranslate nohighlight">\(\theta,\ q_v,\ q_c,\ q_r\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d)\]</div>
@@ -417,7 +415,7 @@ document.write(`
 F_u &amp;= w_{i,k+1}(q_{i,k+1} - q_{i,k}),\ F_d = w_{i,k}(q_{i,k} - q_{i,k-1})\end{split}\]</div>
 </section>
 <section id="advection-for-vorticity">
-<h3>Advection for vorticity<a class="headerlink" href="#advection-for-vorticity" title="Permalink to this heading">#</a></h3>
+<h3>Advection for Vorticity<a class="headerlink" href="#advection-for-vorticity" title="Permalink to this heading">#</a></h3>
 <p>The reason why we need to process the advection for vorticity seperately is due to the conservation of enstrophy.
 According to Arakawa (1966), the enstrophy needs to be conserved to do the long-term integration.
 Here, the J6 Arakawa jacobian is adopted to conserve the enstrophy following the techinical report in Jung (2005) for 3DVVM.</p>
@@ -598,11 +596,11 @@ G =
       </div>
     </a>
     <a class="right-next"
-       href="class.html"
+       href="header.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Class</p>
+        <p class="prev-next-title">Model Parameters Settings</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -626,8 +624,8 @@ G =
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for thermo-related variables</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for vorticity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for Thermo-related Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for Vorticity</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
 </ul>

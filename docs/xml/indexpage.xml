@@ -6,12 +6,12 @@
     <briefdescription>
     </briefdescription>
     <detaileddescription>
-<para><anchor id="index_1md__2home_2Aaron_22DVVM_2full_20402_2model_2README"/> This is a 2D cloud-resolving model based on vorticity equation</para>
+<para><anchor id="index_1md__2home_2Aaron_2TMIF__VVM__CSSWM_22DVVM_2README"/> This is a 2D cloud-resolving model based on vorticity equation</para>
 <para><itemizedlist>
 <listitem><para>Two-dimension Vector Vorticity Model<itemizedlist>
 <listitem><para>Prerequisite</para>
 </listitem><listitem><para>How to Use<itemizedlist>
-<listitem><para>If you cannot solve the netcdf\_cxx4 and petsc installation problem.</para>
+<listitem><para>Optional for NetCDF output and PETSc Solver</para>
 </listitem></itemizedlist>
 </para>
 </listitem></itemizedlist>
@@ -21,16 +21,17 @@
 <sect1 id="index_1autotoc_md1">
 <title>Prerequisite</title><para><itemizedlist>
 <listitem><para>C++ compiler (higher than C++11)</para>
-</listitem><listitem><para>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx)</para>
-</listitem><listitem><para>PETSc</para>
-</listitem><listitem><para>Eigen (this has already be installed in include folder)</para>
+</listitem><listitem><para>CMake (higher than 3.0.0) (You can create your own Makefile by translating the CMakefile.txt if you don&apos;t want to use CMake)</para>
+</listitem><listitem><para>netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx) [optional]</para>
+</listitem><listitem><para>PETSc [optional]</para>
+</listitem><listitem><para>Eigen (this has already be installed in include folder) [optional]</para>
 </listitem></itemizedlist>
 </para>
-<para>The tutorial for installing them can be found here</para>
+<para>The tutorial for installing netcdf-cxx4 and PETSc can be found here</para>
 <para><itemizedlist>
-<listitem><para>This model will use netcdf-cxx and petsc in default. However<itemizedlist>
-<listitem><para>You can turn off the <computeroutput>OUTPUTNC</computeroutput> and turn on <computeroutput>OUTPUTTXT</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput> to use txt output without installing <computeroutput>netcdf-cxx4</computeroutput>.</para>
-</listitem><listitem><para>Turn off <computeroutput>PETSC</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput>, the model will change the Poisson solver package to <computeroutput>Eigen</computeroutput>, which means you don&apos;t need to install PETSc.</para>
+<listitem><para>This model will use txt output and Eigen solver for solving Poisson equation in default. However<itemizedlist>
+<listitem><para>You can turn on the <computeroutput>OUTPUTNC</computeroutput> and turn off <computeroutput>OUTPUTTXT</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput> to use netcdf output. Note that the netcdf doesn&apos;t support openMP output so if you want to use openMP, don&apos;t turn the <computeroutput>OUTPUTNC</computeroutput> flag on.</para>
+</listitem><listitem><para>Turn on <computeroutput>PETSC</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput>, the model will change the Poisson solver package to <computeroutput>PETSc</computeroutput></para>
 </listitem></itemizedlist>
 </para>
 </listitem></itemizedlist>
@@ -41,13 +42,23 @@
 <listitem><para>Clone the project using</para>
 <para><programlisting><codeline><highlight class="normal">git<sp/>clone<sp/>https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>Install netcdf-cxx, petsc</para>
+</listitem><listitem><para>You can change the model settings by changing the macro flags in the <computeroutput>./src/Config.hpp</computeroutput> and also the configuration object in the <computeroutput>./src/main.cpp</computeroutput>. In general, you only need to modify the configuration in <computeroutput>./src/main.cpp</computeroutput>. But if you want to change the numerical methods or the running cases, you might need to modify the flags in the <computeroutput>./src/Config.hpp</computeroutput></para>
+</listitem><listitem><para>You are able to run the model by running the command under the project folder</para>
+</listitem></orderedlist>
+</para>
+<para><programlisting><codeline><highlight class="normal">sh<sp/>run.sh</highlight></codeline>
+</programlisting></para>
+<para>or you can use your own command by referencing the command in <computeroutput>run.sh</computeroutput></para>
+<sect2 id="index_1autotoc_md3">
+<title>Optional for NetCDF output and PETSc Solver</title><para><orderedlist>
+<listitem><para>Install netcdf-cxx, petsc</para>
 <para>It&apos;s a little bit complicated to install libraries for C/C++.</para>
 <para>I will provide a tutorial for installing C/C++ compiler and the libraries in another file here. Here, you don&apos;t need to have sudo privilege to install anything.</para>
 </listitem><listitem><para>Link the installed libraries</para>
 </listitem></orderedlist>
 <itemizedlist>
-<listitem><para>You need to change the libraries path (netcdf, petsc) to your own path.</para>
+<listitem><para>If you don&apos;t need to use PETSc and netcdf, you might need to turn off the link command in CMakeLists.txt.</para>
+</listitem><listitem><para>You need to change the libraries path (netcdf, petsc) to your own path.</para>
 </listitem><listitem><para>Change include path in CMakeLists.txt <programlisting filename=".CMake"><codeline><highlight class="normal">include_directories(</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>include</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>&lt;/path/to/your/petsc&gt;/include</highlight></codeline>
@@ -58,61 +69,16 @@
 </programlisting></para>
 </listitem></itemizedlist>
 <orderedlist>
-<listitem><para>You are able to run the model by running the command under the project folder</para>
-<para><programlisting><codeline><highlight class="normal">sh<sp/>run.sh</highlight></codeline>
-</programlisting></para>
-</listitem><listitem><para>You can change the model settings by changing the macro flags in the <computeroutput>./src/Config.hpp</computeroutput></para>
+<listitem><para>Change the flags in <computeroutput>./src/Config.hpp</computeroutput>:</para>
 </listitem></orderedlist>
-</para>
-<sect2 id="index_1autotoc_md3">
-<title>If you cannot solve the netcdf_cxx4 and petsc installation problem.</title><para><orderedlist>
-<listitem><para>Turn off the flag <computeroutput>OUTPUTNC</computeroutput> and turn on the flag <computeroutput>OUTPUTTXT</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput></para>
-</listitem><listitem><para>Turn off the flag <computeroutput>PETSC</computeroutput> in <computeroutput>./src/Config.hpp</computeroutput> and this will in turn make the model use the Eigen C++ Solver</para>
-</listitem><listitem><para>Create a folder called bin under project root by <computeroutput>mkdir bin</computeroutput></para>
-</listitem><listitem><para>Create a file called Makefile under the project and the content will be the following</para>
-<para><programlisting filename=".Makefile"><codeline><highlight class="normal">#<sp/>CC<sp/>and<sp/>CFLAGS<sp/>are<sp/>varilables</highlight></codeline>
-<codeline><highlight class="normal">CC<sp/>=<sp/>g++</highlight></codeline>
-<codeline><highlight class="normal">CFLAGS<sp/>=<sp/>-Wall<sp/>-c<sp/>-std=c++11</highlight></codeline>
-<codeline><highlight class="normal">#<sp/>-c<sp/>option<sp/>ask<sp/>g++<sp/>to<sp/>compile<sp/>the<sp/>source<sp/>files,<sp/>but<sp/>do<sp/>not<sp/>link.</highlight></codeline>
-<codeline><highlight class="normal">OPTFLAGS<sp/>=<sp/>-O3</highlight></codeline>
-<codeline></codeline>
-<codeline><highlight class="normal">all<sp/><sp/>:<sp/>bin/vvm2d</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>@echo<sp/>-n<sp/>&quot;&quot;</highlight></codeline>
-<codeline></codeline>
-<codeline><highlight class="normal">bin/vvm2d<sp/><sp/><sp/><sp/>:<sp/>main.o<sp/>AddForcing.o<sp/>Advection.o<sp/>Boundary.o<sp/>Boundary.o<sp/>Declare.o<sp/>Init.o<sp/>Iteration.o<sp/>Output.o<sp/>MicroPhysics.o<sp/>NumericalProcess.o<sp/>PoissonSolver.o</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(OPTFLAGS)<sp/>main.o<sp/>AddForcing.o<sp/>Advection.o<sp/>Boundary.o<sp/>Boundary.o<sp/>Declare.o<sp/>Init.o<sp/>Iteration.o<sp/>Output.o<sp/>MicroPhysics.o<sp/>NumericalProcess.o<sp/>PoissonSolver.o<sp/>-o<sp/>bin/vvm2d</highlight></codeline>
-<codeline><highlight class="normal">main.o<sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>src/main.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">AddForcing.o<sp/>:<sp/>src/AddForcing.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Advection.o<sp/><sp/>:<sp/>src/Advection.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Boundary.o<sp/><sp/><sp/>:<sp/>src/Boundary.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Buoyancy.o<sp/><sp/><sp/>:<sp/>src/Boundary.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Declare.o<sp/><sp/><sp/><sp/>:<sp/>src/Declare.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Init.o<sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>src/Init.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Output.o:<sp/>src/Output.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">Iteration.o<sp/><sp/>:<sp/>src/Iteration.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">MicroPhyscis.o<sp/><sp/><sp/>:<sp/>src/MicroPhyscis.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">NumericalProcess.o<sp/><sp/><sp/>:<sp/>src/NumericalProcess.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-<codeline><highlight class="normal">PoissonSolver.o<sp/><sp/>:<sp/>src/NumericalProcess.cpp</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>$(CC)<sp/>$(CFLAGS)<sp/>$(OPTFLAGS)<sp/>$&lt;<sp/>-o<sp/>$@</highlight></codeline>
-</programlisting></para>
-</listitem><listitem><para>Using <computeroutput>make</computeroutput> under project root to compile the project and you will the the execution file at <computeroutput>./bin/vvm2d</computeroutput> .</para>
-</listitem><listitem><para>You will be able to use the model&apos;s output by the txt files </para>
-</listitem></orderedlist>
+<itemizedlist>
+<listitem><para>Turn on <computeroutput>OUTPUTNC</computeroutput> and turn off <computeroutput>OUTPUTTXT</computeroutput> to use netcdf output.</para>
+</listitem><listitem><para>Turn on <computeroutput>PETSC</computeroutput> to use PETSc solver. </para>
+</listitem></itemizedlist>
 </para>
 </sect2>
 </sect1>
     </detaileddescription>
-    <location file="/home/Aaron/2DVVM/full/0402/model/README.md"/>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/README.md"/>
   </compounddef>
 </doxygen>

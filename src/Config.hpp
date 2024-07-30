@@ -1,14 +1,9 @@
-// #define OUTPUTNC // output in .nc format. This can't work for openmp so turn it off if you want to use openmp
+// #define OUTPUTNC
 #define OUTPUTTXT
 
-#define AB2 // More stable than Leapfrog (default)
-// #define PETSC // Using PETSc to solve Poisson equation (default is Eigen solver)
+#define AB2
+// #define PETSC
 // #define STREAMFUNCTION // Don't turn this on. Debugging!!!!!
-#if defined(AB2)
-    #define ALPHA (1.)
-#else
-    #define ALPHA (0.)
-#endif
 // #define DIFFUSION
 // #define TIMEFILTER
 
@@ -30,8 +25,6 @@
     #define LOADPATH2 "/data/Aaron/TMIF/0613_test/nc/10005.nc"
 #endif
 
-// #define POISSONTEST
-
 // ***********************************************************************************
 // Documentation Part
 /**
@@ -46,38 +39,80 @@
  * 
 */
 
-/*!
-    \def OUTPUTNC
-    The switch for output file in .nc datatype. Note that this can't work for openmp so turn it off if you want to use openmp.
-    \def OUTPUTTXT
-    The switch for output file in .txt datatype. This is the default output format.
-    \def PETSC
-    The switch for Poisson Solver PETSc. If you want to use Eigen solver (default), turn it off.
-    \def AB2
-    The switch for Adams-Bashforth Numerical Method. This method is more stable because the spatial discretization is third-order accurate. If you want to use Leapfrog, turn it off. 
-    \def DIFFUSION
-    The switch for the diffusion process.
-    If the flag is turned off, the first-order turbulent closure is used.
-    \def TIMEFILTER
-    The switch for the time filter process.
-    Turn this on if you want to use Leapfrog method. This will filter out the computational mode.
-    \def DRY
-    Switch for constant potential temperature (300K)
-    \def RHO1
-    Switch for constant density profile (1kg/m^3)
-    \def WATER
-    Switch for microphysics (qc, qv, qr) with warm rain scheme
-    \def TROPICALFORCING
-    Switch for tropical forcing test case (With Q1, Q2)
-    \def ADDFORCINGTIME
-    Time (s) for adding random perturbation into model
-    \def LOADFILE
-    Switch for Loading file for tropical forcing. Turn it on when you use tropical forcing test
-    \def LOADFROMPREVIOUSFILE
-    Switch for restarting the model. You can specify the file path (for two time steps) you want to load 
-    \def STREAMFUNCTION
-    Solving stream function (Krurger 1988) to get u, w rather than solving them directly (default, Jung 2008)
-    \def POISSONTEST
-    Switch for testing the Poisson matrix
-*/
+
+/** 
+ * \def OUTPUTNC
+ * The flag for output file in .nc datatype. Note that this can't work for openmp so turn it off if you want to use openmp.
+ */
+
+/** 
+ * \def OUTPUTTXT
+ * The flag for output file in .txt datatype. This is the default output format.
+ */
+
+/** 
+ * \def PETSC
+ * The flag for Poisson Solver PETSc. If you want to use Eigen solver (default), turn it off.
+ */
+
+/** 
+ * \def AB2
+ * The flag for Adams-Bashforth Numerical Method. This method is more stable because the spatial discretization is third-order accurate. If you want to use Leapfrog, turn it off. 
+ */
+
+/** 
+ * \def DIFFUSION
+ * The flag for the diffusion process. If the flag is turned off, the first-order turbulent closure is used.
+ */
+
+/** 
+ * \def TIMEFILTER
+ * The flag for the time filter process. Turn this on if you want to use the Leapfrog method. This will filter out the computational mode.
+ */
+
+/** 
+ * \def DRY
+ * The flag for constant potential temperature (300K).
+ */
+
+/** 
+ * \def RHO1
+ * The flag for constant density profile (1kg/m^3).
+ */
+
+/** 
+ * \def WATER
+ * The flag for microphysics (qc, qv, qr) with warm rain scheme.
+ */
+
+/** 
+ * \def TROPICALFORCING
+ * The flag for tropical forcing test case (With Q1, Q2).
+ */
+
+/** 
+ * \def ADDFORCINGTIME
+ * Time (s) for adding random perturbation into the model.
+ */
+
+/** 
+ * \def LOADFILE
+ * The flag for Loading file for tropical forcing case. Turn it on when you use tropical forcing test.
+ */
+
+/** 
+ * \def LOADFROMPREVIOUSFILE
+ * The flag for restarting the model. You can specify the file path (for two time steps) you want to load.
+ */
+
+/** 
+ * \def STREAMFUNCTION
+ * Solving stream function (Kruger 1988) to get u, w rather than solving them directly (default, Jung 2008).
+ */
+
+/** 
+ * \def POISSONTEST
+ * The flag for testing the Poisson matrix.
+ */
+
 // ***********************************************************************************
