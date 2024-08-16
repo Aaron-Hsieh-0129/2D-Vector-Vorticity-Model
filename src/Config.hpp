@@ -7,9 +7,9 @@
 // #define DIFFUSION
 // #define TIMEFILTER
 
-#define DRY
-#define RHO1
-// #define WATER
+// #define DRY
+// #define RHO1
+#define WATER
 // #define TROPICALFORCING
 // #define RADIATIONCOOLING
 // #define LOADFILE
