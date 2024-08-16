@@ -198,9 +198,11 @@ void vvm::Init::Init2d(vvm &model) {
         for (int i = 0; i < model.nx; i++) {
             model.zetap[i][k] = 0.;
             model.thp[i][k] = 0.;
-            model.qvp[i][k] = 0.;
-            model.qcp[i][k] = model.qc[i][k] = model.qcm[i][k] = 0.;
-            model.qrp[i][k] = model.qr[i][k] = model.qrm[i][k] = 0.;
+            #if defined(WATER)
+                model.qvp[i][k] = 0.;
+                model.qcp[i][k] = model.qc[i][k] = model.qcm[i][k] = 0.;
+                model.qrp[i][k] = model.qr[i][k] = model.qrm[i][k] = 0.;
+            #endif
         }
     }
 

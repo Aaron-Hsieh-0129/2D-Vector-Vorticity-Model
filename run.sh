@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH -n 8
+#SBATCH -n 2
 #SBATCH -N 1
-#SBATCH -o myjob.o
-#SBATCH -e myjob.e
+#SBATCH -o Water.o
+#SBATCH -e Water.e
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=b08209006@ntu.edu.tw
 
