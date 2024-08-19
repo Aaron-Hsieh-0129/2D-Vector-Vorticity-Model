@@ -303,16 +303,16 @@ public:
     double ubarTopm;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
 
     // 1D variables
-    double *thb;
-    double *thbm;
-    double *thb_zeta;
-    double *rhou;
-    double *rhow;
-    double *pib;
-    double *qvb;
-    double *qvsb;
-    double *pb;
-    double *xi;
+    double *thb;                              ///< Horizontal mean potential temperature profile.
+    double *thbm;                             ///< Horizontal mean potential temperature profile for previous step.
+    double *thb_zeta;                         ///< Horizontal mean potential temperature profile at grid upper edge.
+    double *rhou;                             ///< Horizontal mean density profile at grid center.
+    double *rhow;                             ///< Horizontal mean density profile at grid upper edge.
+    double *pib;                              ///< Horizontal mean non-dimensional height profile at grid center.
+    double *qvb;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvsb;                             ///< Horizontal mean saturated water vapor profile at grid center.
+    double *pb;                               ///< Horizontal mean pressure profile at grid center.
+    double *xi;                               ///< The velocity potential in x-direction at top boundary grid center.
     double *uxi;
     double *thvb;
     double *thvbm;

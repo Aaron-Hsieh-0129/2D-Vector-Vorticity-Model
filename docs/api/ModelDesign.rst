@@ -4,18 +4,18 @@ Model Design
 Governing Equation Set
 ----------------------
 .. math::
-   \begin{aligned}
-       \frac{\partial \zeta}{\partial t} &= -\left(\frac{\partial (u\zeta)}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho} w\zeta)}{\partial z}\right) + \frac{g}{\rho_0} \frac{\partial (\frac{\theta_v'}{\overline{\theta_v}} - q_c - q_r)}{\partial x} +  K_x \frac{\partial ^2 \zeta}{\partial x^2} + K_z\frac{\partial ^2 \zeta}{\partial z^2} \\
-       \frac{\partial \theta}{\partial t} &= -\left(\frac{\partial u\theta}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho} w\theta}{\partial z}\right) + \frac{L_v}{C_p \overline{\pi}}(C-E)   +  K_x \frac{\partial ^2 \theta}{\partial x^2} + K_z\frac{\partial ^2 \theta}{\partial z^2} \\
-       \frac{\partial q_v}{\partial t} &= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}}\\
-       \frac{\partial q_c}{\partial t} &= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}}\\
-       \frac{\partial q_r}{\partial t} &= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}}\\
-       \bar{\rho}\frac{\partial \zeta}{\partial x} &= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
-       u_{top} &= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x}\\
-       \frac{\partial^2 \chi}{\partial x^2} &= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z}\\
-       \frac{\partial \bar{u}^{xy}}{\partial t} &= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \\
-       u &= \int_{z_{top}}^{z_{bottom}} (\frac{\partial w}{\partial x} - \overline{\rho}\zeta)dz + u_{top} \\
-   \end{aligned}
+   \begin{align}
+       \frac{\partial \zeta}{\partial t} &= -\left(\frac{\partial (u\zeta)}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho} w\zeta)}{\partial z}\right) + \frac{g}{\rho_0} \frac{\partial (\frac{\theta_v'}{\overline{\theta_v}} - q_c - q_r)}{\partial x} +  K_x \frac{\partial ^2 \zeta}{\partial x^2} + K_z\frac{\partial ^2 \zeta}{\partial z^2} \tag{1}\\
+       \frac{\partial \theta}{\partial t} &= -\left(\frac{\partial u\theta}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho} w\theta}{\partial z}\right) + \frac{L_v}{C_p \overline{\pi}}(C-E)   +  K_x \frac{\partial ^2 \theta}{\partial x^2} + K_z\frac{\partial ^2 \theta}{\partial z^2} \tag{2}\\
+       \frac{\partial q_v}{\partial t} &= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}} \tag{3}\\
+       \frac{\partial q_c}{\partial t} &= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}} \tag{4}\\
+       \frac{\partial q_r}{\partial t} &= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}} \tag{5}\\
+       \bar{\rho}\frac{\partial \zeta}{\partial x} &= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right) \tag{6}\\
+       u_{top} &= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x} \tag{7}\\
+       \frac{\partial^2 \chi}{\partial x^2} &= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z} \tag{8}\\
+       \frac{\partial \bar{u}^{xy}}{\partial t} &= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \tag{9}\\
+       u &= \int_{z_{top}}^{z_{bottom}} (\frac{\partial w}{\partial x} - \overline{\rho}\zeta)dz + u_{top} \tag{10}\\
+   \end{align}
 
 How this model works
 --------------------
@@ -73,7 +73,7 @@ Here presents the discretization for variables such as :math:`\theta,\ q_v,\ q_c
 
 .. math::
 
-   \frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) 
+   \frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{11}
 
 .. math::
 
@@ -89,7 +89,7 @@ Here, the J6 Arakawa jacobian is adopted to conserve the enstrophy following the
 
 .. math::
 
-   \frac{\partial \zeta}{\partial t} = -\frac{\partial u\zeta}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}w\zeta}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) 
+   \frac{\partial \zeta}{\partial t} = -\frac{\partial u\zeta}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}w\zeta}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{12}
 
 
 .. math::

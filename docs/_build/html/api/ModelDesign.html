@@ -32,7 +32,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -142,6 +141,11 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Model Design</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="header.html">Model Parameters Settings</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="header/Config.html">Config</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="class.html">Class</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="class/config.html">Config_VVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/vvm.html">vvm</a></li>
 </ul>
 </li>
 </ul>
@@ -334,18 +338,18 @@ document.write(`
 <section id="governing-equation-set">
 <h2>Governing Equation Set<a class="headerlink" href="#governing-equation-set" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{aligned}
-    \frac{\partial \zeta}{\partial t} &amp;= -\left(\frac{\partial (u\zeta)}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho} w\zeta)}{\partial z}\right) + \frac{g}{\rho_0} \frac{\partial (\frac{\theta_v'}{\overline{\theta_v}} - q_c - q_r)}{\partial x} +  K_x \frac{\partial ^2 \zeta}{\partial x^2} + K_z\frac{\partial ^2 \zeta}{\partial z^2} \\
-    \frac{\partial \theta}{\partial t} &amp;= -\left(\frac{\partial u\theta}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho} w\theta}{\partial z}\right) + \frac{L_v}{C_p \overline{\pi}}(C-E)   +  K_x \frac{\partial ^2 \theta}{\partial x^2} + K_z\frac{\partial ^2 \theta}{\partial z^2} \\
-    \frac{\partial q_v}{\partial t} &amp;= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}}\\
-    \frac{\partial q_c}{\partial t} &amp;= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}}\\
-    \frac{\partial q_r}{\partial t} &amp;= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}}\\
-    \bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
-    u_{top} &amp;= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x}\\
-    \frac{\partial^2 \chi}{\partial x^2} &amp;= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z}\\
-    \frac{\partial \bar{u}^{xy}}{\partial t} &amp;= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \\
-    u &amp;= \int_{z_{top}}^{z_{bottom}} (\frac{\partial w}{\partial x} - \overline{\rho}\zeta)dz + u_{top} \\
-\end{aligned}\end{split}\]</div>
+\[\begin{split}\begin{align}
+    \frac{\partial \zeta}{\partial t} &amp;= -\left(\frac{\partial (u\zeta)}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho} w\zeta)}{\partial z}\right) + \frac{g}{\rho_0} \frac{\partial (\frac{\theta_v'}{\overline{\theta_v}} - q_c - q_r)}{\partial x} +  K_x \frac{\partial ^2 \zeta}{\partial x^2} + K_z\frac{\partial ^2 \zeta}{\partial z^2} \tag{1}\\
+    \frac{\partial \theta}{\partial t} &amp;= -\left(\frac{\partial u\theta}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho} w\theta}{\partial z}\right) + \frac{L_v}{C_p \overline{\pi}}(C-E)   +  K_x \frac{\partial ^2 \theta}{\partial x^2} + K_z\frac{\partial ^2 \theta}{\partial z^2} \tag{2}\\
+    \frac{\partial q_v}{\partial t} &amp;= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}} \tag{3}\\
+    \frac{\partial q_c}{\partial t} &amp;= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}} \tag{4}\\
+    \frac{\partial q_r}{\partial t} &amp;= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}} \tag{5}\\
+    \bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right) \tag{6}\\
+    u_{top} &amp;= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x} \tag{7}\\
+    \frac{\partial^2 \chi}{\partial x^2} &amp;= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z} \tag{8}\\
+    \frac{\partial \bar{u}^{xy}}{\partial t} &amp;= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \tag{9}\\
+    u &amp;= \int_{z_{top}}^{z_{bottom}} (\frac{\partial w}{\partial x} - \overline{\rho}\zeta)dz + u_{top} \tag{10}\\
+\end{align}\end{split}\]</div>
 </section>
 <section id="how-this-model-works">
 <h2>How this model works<a class="headerlink" href="#how-this-model-works" title="Permalink to this heading">#</a></h2>
@@ -409,7 +413,7 @@ document.write(`
 <h3>Advection for Thermo-related Variables<a class="headerlink" href="#advection-for-thermo-related-variables" title="Permalink to this heading">#</a></h3>
 <p>Here presents the discretization for variables such as <span class="math notranslate nohighlight">\(\theta,\ q_v,\ q_c,\ q_r\)</span>.</p>
 <div class="math notranslate nohighlight">
-\[\frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d)\]</div>
+\[\frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{11}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}F_r &amp;= u_{i+1,k}(q_{i+1,k} - q_{i,k}),\ F_l = u_{i,k}(q_{i,k} - q_{i-1,k})\\
 F_u &amp;= w_{i,k+1}(q_{i,k+1} - q_{i,k}),\ F_d = w_{i,k}(q_{i,k} - q_{i,k-1})\end{split}\]</div>
@@ -420,7 +424,7 @@ F_u &amp;= w_{i,k+1}(q_{i,k+1} - q_{i,k}),\ F_d = w_{i,k}(q_{i,k} - q_{i,k-1})\e
 According to Arakawa (1966), the enstrophy needs to be conserved to do the long-term integration.
 Here, the J6 Arakawa jacobian is adopted to conserve the enstrophy following the techinical report in Jung (2005) for 3DVVM.</p>
 <div class="math notranslate nohighlight">
-\[\frac{\partial \zeta}{\partial t} = -\frac{\partial u\zeta}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}w\zeta}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d)\]</div>
+\[\frac{\partial \zeta}{\partial t} = -\frac{\partial u\zeta}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}w\zeta}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{12}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}F_r &amp;= U_{i,k}(\zeta_{i+1,k} - \zeta_{i,k}),\ F_l = U_{i-1,k}(\zeta_{i,k} - \zeta_{i-1,k})\\
 F_u &amp;= W_{i,k}(\zeta_{i,k+1} - \zeta_{i,k}),\ F_d = W_{i,k-1}(\zeta_{i,k} - \zeta_{i,k-1})\\

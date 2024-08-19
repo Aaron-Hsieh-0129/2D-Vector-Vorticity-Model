@@ -56,7 +56,7 @@
         <references refid="classvvm_1_1PoissonSolver_1ab342116991ca90ab52360e23009c67f3" compoundref="PoissonSolver_8cpp" startline="186" endline="478">vvm::PoissonSolver::cal_w</references>
         <references refid="classvvm_1_1Output_1ab92886c8eb037ae04f2201b6daf76364" compoundref="Output_8cpp" startline="139" endline="163">vvm::Output::create_all_directory</references>
         <references refid="classvvm_1_1Init_1a92147477c152b4b288dec6bb08168980" compoundref="Init_8cpp" startline="9" endline="108">vvm::Init::Init1d</references>
-        <references refid="classvvm_1_1Init_1aa47a05958ff2bd5eddd57d64f4cd7711" compoundref="Init_8cpp" startline="110" endline="208">vvm::Init::Init2d</references>
+        <references refid="classvvm_1_1Init_1aa47a05958ff2bd5eddd57d64f4cd7711" compoundref="Init_8cpp" startline="110" endline="210">vvm::Init::Init2d</references>
         <references refid="classvvm_1_1PoissonSolver_1a5347fcfa9397d38496f70077a3ca8fed" compoundref="PoissonSolver_8cpp" startline="663" endline="857">vvm::PoissonSolver::InitPoissonMatrix</references>
         <references refid="classvvm_1_1Output_1a331915125669cff07bc8fb2d6f3640df" compoundref="Output_8cpp" startline="8" endline="28">vvm::Output::printInit</references>
         <references refid="classvvm_1_1Iteration_1aad30e493dc2f262d8349e7832828a4db" compoundref="Iteration_8cpp" startline="128" endline="230">vvm::Iteration::TimeMarching</references>
@@ -90,9 +90,9 @@
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>Eigen::setNbThreads(8);</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classConfig__VVM" kindref="compound">Config_VVM</ref><sp/>config(4.,<sp/>200.,<sp/>200.,<sp/>100000,<sp/>20000,<sp/>40000.,<sp/>10000,<sp/></highlight><highlight class="stringliteral">&quot;/data/Aaron/TMIF/0711_test2_Bubble/&quot;</highlight><highlight class="normal">,<sp/>10,<sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classConfig__VVM" kindref="compound">Config_VVM</ref><sp/>config(4.,<sp/>200.,<sp/>200.,<sp/>100000,<sp/>20000,<sp/>40000.,<sp/>10000,<sp/></highlight><highlight class="stringliteral">&quot;/data/Aaron/2DVVM/full/Water/&quot;</highlight><highlight class="normal">,<sp/>10,<sp/></highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>70.,<sp/>70.,<sp/>0.01,<sp/>1E-22,<sp/>9.80665,<sp/>1003.5,<sp/>716.5,<sp/>287.,<sp/>2.5E6,<sp/></highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1E5,<sp/>96500.,<sp/>10.,<sp/>1);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1E5,<sp/>96500.,<sp/>-1.,<sp/>1);</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classvvm" kindref="compound">vvm</ref><sp/>model(config);</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>defined(LOADFROMPREVIOUSFILE)</highlight><highlight class="normal"></highlight></codeline>
