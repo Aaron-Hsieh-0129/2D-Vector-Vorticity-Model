@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -n 2
 #SBATCH -N 1
-#SBATCH -o Water.o
-#SBATCH -e Water.e
+#SBATCH -o log/Water_topDiff.o
+#SBATCH -e log/Water_topDiff.e
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=b08209006@ntu.edu.tw
 

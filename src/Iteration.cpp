@@ -194,9 +194,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::NumericalProcess::DiffusionAll(model);
         #else
             vvm::Turbulence::RKM_RKH(model);
-            // if (model.step < 200) vvm::NumericalProcess::DiffusionAll(model);
-            // else vvm::Turbulence::RKM_RKH(model);
-            // vvm::Turbulence::RKM_RKH(model);
+            // Nudging process to damp the gravity wave
+            vvm::NumericalProcess::Nudge_theta(model);
+            vvm::NumericalProcess::Nudge_zeta(model);
         #endif
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 

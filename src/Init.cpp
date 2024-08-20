@@ -17,9 +17,11 @@ void vvm::Init::Init1d(vvm &model) {
                 model.thb[k] = 300.;
             #else
                 model.thb[k] = GetTB(k, model);
+                model.thb_init[k] = model.thb[k];
             #endif
         }
         model.BoundaryProcess1D_center(model.thb, model.nz);
+        model.BoundaryProcess1D_center(model.thb_init, model.nz);
 
         // init qvb, tvb
         for (int k = 1; k <= model.nz-2; k++) {
@@ -101,8 +103,13 @@ void vvm::Init::Init1d(vvm &model) {
 
     for (int k = 1; k < model.nz-1; k++) {
         model.z[k] = (k-0.5) * model.dz;
+        model.z_zeta[k] = (k-1) * model.dz;
         model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z[k], 2));
     }
+    model.z[0] = model.z[1];
+    model.z[model.nz-1] = model.z[model.nz-2];
+    model.z_zeta[0] = model.z_zeta[1];
+    model.z_zeta[model.nz-1] = model.z_zeta[model.nz-2];
 
     return;
 }

@@ -72,6 +72,7 @@ public:
         delete[] thb;
         delete[] thbm;
         delete[] thb_zeta;
+        delete[] thb_init;
         delete[] rhou;
         delete[] rhow;
         delete[] pib;
@@ -83,6 +84,7 @@ public:
         delete[] thvb;
         delete[] thvbm;
         delete[] z;
+        delete[] z_zeta;
         delete[] lambda2;
 
         deallocate2DContinuousArray(zetap, zetapcont);
@@ -157,6 +159,7 @@ public:
         thb = new double[nz];
         thbm = new double[nz];
         thb_zeta = new double[nz];
+        thb_init = new double[nz];
         rhou = new double[nz];
         rhow = new double[nz];
         pib = new double[nz];
@@ -168,6 +171,7 @@ public:
         thvb = new double[nz];
         thvbm = new double[nz];
         z = new double[nz];
+        z_zeta = new double[nz];
         lambda2 = new double[nz];
         #if defined(TROPICALFORCING)
             Q1LS = new double[nz];
@@ -295,6 +299,7 @@ public:
     double PSURF;                            ///< From Config_VVM given by users.
     double addforcingtime;                   ///< From Config_VVM given by users.
     int CASE;                                ///< From Config_VVM given by users.
+    double CRAD = 1. / 100.;                   ///< From Config_VVM given by users.
 
     // 0D variables
     int step = 0;                            ///< The current time step.
@@ -304,6 +309,7 @@ public:
 
     // 1D variables
     double *thb;                              ///< Horizontal mean potential temperature profile.
+    double *thb_init;                         ///< Initial horizontal mean potential temperature profile.
     double *thbm;                             ///< Horizontal mean potential temperature profile for previous step.
     double *thb_zeta;                         ///< Horizontal mean potential temperature profile at grid upper edge.
     double *rhou;                             ///< Horizontal mean density profile at grid center.
@@ -317,6 +323,7 @@ public:
     double *thvb;
     double *thvbm;
     double *z;
+    double *z_zeta;
     double *lambda2;
 
     // 2D variables
@@ -495,6 +502,8 @@ public:
         static void DiffusionAll(vvm &model);
         static void TimeFilter(double **previous, double **now, double **future, vvm &model);
         static void timeFilterAll(vvm &model);
+        static void Nudge_theta(vvm &model);
+        static void Nudge_zeta(vvm &model);
     };
 
     // *********************************************************************************
