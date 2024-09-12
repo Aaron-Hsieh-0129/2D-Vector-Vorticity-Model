@@ -418,15 +418,13 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
 }
 #endif
 
-void vvm::Init::RandomPerturbation(vvm &model, int t) {
+void vvm::Init::RandomPerturbation(vvm &model, int t, double min_range, double max_range, double standard_deviation) {
     std::mt19937 gen(t); // Mersenne Twister engine for random numbers
+    gen.seed(t);
     std::normal_distribution<> distribution(0.0, 1.0); // Gaussian distribution with mean 0 and standard deviation 1
 
     // Parameters for the 2D Gaussian noise array
     double mean = 0.; // Mean of the Gaussian distribution
-    double standard_deviation = 1.; // Standard deviation of the Gaussian distribution
-    double min_range = -0.25; // Minimum value of the generated noise
-    double max_range = 0.25; // Maximum value of the generated noise
 
     double z = 0;
 

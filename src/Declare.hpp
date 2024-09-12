@@ -533,7 +533,8 @@ public:
     public:
         static void Init1d(vvm &model);
         static void Init2d(vvm &model);
-        static void RandomPerturbation(vvm &, int seed);
+        static void RandomPerturbation(vvm &model, int t, double min_range=-0.25, double max_range=0.25, double standard_deviation=1.);
+        
         #if defined(LOADFILE)
             static void LoadFile(vvm &model);
         #elif defined(LOADFROMPREVIOUSFILE)
