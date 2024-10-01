@@ -35,7 +35,7 @@ void checkErr(int status, int line) {
         exit(EXIT_FAILURE);
     }
 }
-
+#if !defined(OUTPUTNCSAMEFILE)
 void vvm::Output::output_nc(int n, vvm &model) {
     string ncName = model.outputpath + (string) "nc/" + std::to_string(n) + (string) ".nc";
 
@@ -92,6 +92,120 @@ void vvm::Output::output_nc(int n, vvm &model) {
 
     if ((retval = nc_close(ncid))) checkErr(retval, __LINE__);
 }
+#else
+void vvm::Output::output_nc(int n, vvm &model) {
+    #define NC_ERR(e) { printf("NetCDF error: %s\n", nc_strerror(e)); exit(2); }
+    double t = n * model.dt;
+
+    int ncid, t_dimid, x_dimid, z_dimid;
+    int th_id, zeta_id, u_id, w_id, ubarTop_id;
+    #if defined(WATER)
+        int qvid, qcid, qrid, accretionid, autoconversionid, evaporationid, condensationid, precipid;
+    #endif
+
+    int retval;
+    int t_varid = 0.;
+    size_t t_index = 0;
+
+    int file_num =  (n / 10000);
+    std::string file_name = model.outputpath + "nc/"  + std::to_string(file_num) + (string) ".nc";
+
+    if ((retval = nc_open(file_name.c_str(), NC_WRITE, &ncid)) == NC_NOERR) {
+        // File exists, get the dimensions and variable IDs
+        printf("File %s exists. Opening for appending.\n", file_name.c_str());
+
+        // Get variable IDs
+        if ((retval = nc_inq_varid(ncid, "t", &t_varid))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "th", &th_id))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "zeta", &zeta_id))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "u", &u_id))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "w", &w_id))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "ubarTop", &ubarTop_id))) NC_ERR(retval);
+
+        #if defined(WATER)
+            if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "qc", &qcid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "qr", &qrid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "accretion", &accretionid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "autoconversion", &autoconversionid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "evaporation", &evaporationid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "condensation", &condensationid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "precip", &precipid))) NC_ERR(retval);
+        #endif
+
+        // Get the current time index (size of the time dimension)
+        size_t len;
+        if ((retval = nc_inq_dimlen(ncid, t_varid, &len))) NC_ERR(retval);
+        t_index = len;
+    }
+    else {
+        // File doesn't exist, create a new file
+        printf("File %s does not exist. Creating new file.\n", file_name.c_str());
+
+        if ((retval = nc_create(file_name.c_str(), NC_CLOBBER, &ncid))) NC_ERR(retval);
+
+        // Define dimensions
+        if ((retval = nc_def_dim(ncid, "t", NC_UNLIMITED, &t_dimid))) NC_ERR(retval);
+        if ((retval = nc_def_dim(ncid, "x", model.nx, &x_dimid))) NC_ERR(retval);
+        if ((retval = nc_def_dim(ncid, "z", model.nz, &z_dimid))) NC_ERR(retval);
+
+        // Define variables
+        if ((retval = nc_def_var(ncid, "t", NC_DOUBLE, 1, &t_dimid, &t_varid))) NC_ERR(retval);
+        int dimids[3] = {t_dimid, x_dimid, z_dimid};
+        int dimx1d[2] = {t_dimid, x_dimid};
+
+        if ((retval = nc_def_var(ncid, "th", NC_DOUBLE, 3, dimids, &th_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "zeta", NC_DOUBLE, 3, dimids, &zeta_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "u", NC_DOUBLE, 3, dimids, &u_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "w", NC_DOUBLE, 3, dimids, &w_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "ubarTop", NC_DOUBLE, 1, &t_dimid, &ubarTop_id))) NC_ERR(retval);
+
+        #if defined(WATER)
+            if ((retval = nc_def_var(ncid, "qv", NC_DOUBLE, 3, dimids, &qvid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "qc", NC_DOUBLE, 3, dimids, &qcid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "qr", NC_DOUBLE, 3, dimids, &qrid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "accretion", NC_DOUBLE, 3, dimids, &accretionid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "autoconversion", NC_DOUBLE, 3, dimids, &autoconversionid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "evaporation", NC_DOUBLE, 3, dimids, &evaporationid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "condensation", NC_DOUBLE, 3, dimids, &condensationid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "precip", NC_DOUBLE, 2, dimx1d, &precipid))) NC_ERR(retval);
+        #endif
+        // End define mode
+        if ((retval = nc_enddef(ncid))) NC_ERR(retval);
+
+        // new file, starts from 0
+        t_index = 0;
+    }
+
+    if ((retval = nc_put_var1_double(ncid, t_varid, &t_index, &t))) NC_ERR(retval);
+
+    // Write the 2D data for this time step
+    size_t start[3] = {t_index, 0, 0}; // Starting point (time_index, x, y)
+    size_t count[3] = {1, (size_t) model.nx, (size_t) model.nz}; // Write one time slice, all x and y values
+    size_t start_precip[2] = {t_index, 0};
+    size_t count_precip[2] = {1, (size_t) model.nx};
+    if ((retval = nc_put_vara_double(ncid, th_id, start, count, model.thcont))) NC_ERR(retval);
+    if ((retval = nc_put_vara_double(ncid, zeta_id, start, count, model.zetacont))) NC_ERR(retval);
+    if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
+    if ((retval = nc_put_vara_double(ncid, w_id, start, count, model.wcont))) NC_ERR(retval);
+
+    if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
+
+    #if defined(WATER)
+        if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, qcid, start, count, model.qccont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, qrid, start, count, model.qrcont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, accretionid, start, count, model.accretioncont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, autoconversionid, start, count, model.autoconversioncont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, evaporationid, start, count, model.evaporationcont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, condensationid, start, count, model.condensationcont))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.precip))) checkErr(retval, __LINE__);
+    #endif
+
+    // Close the file
+    if ((retval = nc_close(ncid))) NC_ERR(retval);
+}
+#endif
 
 void vvm::Output::output_time_nc(int n, vvm &model) {
     string ncName = model.outputpath + (string) "timer/" + std::to_string(n) + (string) ".nc";

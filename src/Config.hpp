@@ -1,5 +1,6 @@
-// #define OUTPUTNC
-#define OUTPUTTXT
+#define OUTPUTNC
+#define OUTPUTNCSAMEFILE
+// #define OUTPUTTXT
 
 #define AB2
 // #define PETSC
