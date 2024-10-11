@@ -222,10 +222,10 @@ void vvm::Output::output_time_nc(int n, vvm &model) {
     int dimt1d[1] = {t_dimid};
 
     if ((retval = nc_def_var(ncid, "advection", NC_DOUBLE, 1, dimt1d, &advectionid))) checkErr(retval, __LINE__);
-    if ((retval = nc_def_var(ncid, "poisson", NC_DOUBLE, 1, dimt1d, &advectionid))) checkErr(retval, __LINE__);
-    if ((retval = nc_def_var(ncid, "diffusion", NC_DOUBLE, 1, dimt1d, &advectionid))) checkErr(retval, __LINE__);
-    if ((retval = nc_def_var(ncid, "microphysics", NC_DOUBLE, 1, dimt1d, &advectionid))) checkErr(retval, __LINE__);
-    if ((retval = nc_def_var(ncid, "all", NC_DOUBLE, 1, dimt1d, &advectionid))) checkErr(retval, __LINE__);
+    if ((retval = nc_def_var(ncid, "poisson", NC_DOUBLE, 1, dimt1d, &poissonid))) checkErr(retval, __LINE__);
+    if ((retval = nc_def_var(ncid, "diffusion", NC_DOUBLE, 1, dimt1d, &diffusionid))) checkErr(retval, __LINE__);
+    if ((retval = nc_def_var(ncid, "microphysics", NC_DOUBLE, 1, dimt1d, &microphysicsid))) checkErr(retval, __LINE__);
+    if ((retval = nc_def_var(ncid, "all", NC_DOUBLE, 1, dimt1d, &allid))) checkErr(retval, __LINE__);
 
     if ((retval = nc_put_var_double(ncid, advectionid, model.t_advection))) checkErr(retval, __LINE__);
     if ((retval = nc_put_var_double(ncid, poissonid, model.t_poisson))) checkErr(retval, __LINE__);
