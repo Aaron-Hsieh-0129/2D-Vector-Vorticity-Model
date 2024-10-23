@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH -n 2
 #SBATCH -N 1
+#SBATCH --nodelist=node01
 #SBATCH -o log/Water_topDiff.o
 #SBATCH -e log/Water_topDiff.e
 #SBATCH --mail-type=ALL

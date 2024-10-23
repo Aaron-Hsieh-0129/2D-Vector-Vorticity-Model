@@ -1,5 +1,6 @@
 #define OUTPUTNC
 #define OUTPUTNCSAMEFILE
+// #define OUTPUTMICROPHYSICS
 // #define OUTPUTTXT
 
 #define AB2

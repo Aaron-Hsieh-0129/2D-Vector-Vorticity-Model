@@ -1,6 +1,8 @@
 #include "Declare.hpp"
-#include <petsc.h>
 #include <random>
+#if defined(PETSC)
+    #include <petsc.h>
+#endif
 #if defined(LOADFROMPREVIOUSFILE)
     #include <netcdf>
     using namespace netCDF;
