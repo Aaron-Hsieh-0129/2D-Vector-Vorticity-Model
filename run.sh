@@ -2,8 +2,8 @@
 #SBATCH -n 2
 #SBATCH -N 1
 #SBATCH --nodelist=node01
-#SBATCH -o log/Water_topDiff.o
-#SBATCH -e log/Water_topDiff.e
+#SBATCH -o log/NoCouple.o
+#SBATCH -e log/NoCouple.e
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=b08209006@ntu.edu.tw
 

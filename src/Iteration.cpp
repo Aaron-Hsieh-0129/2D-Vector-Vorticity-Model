@@ -170,7 +170,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
 
             // Generate new random th perturbation for tropical forcing case
             if (model.status_for_adding_forcing == true) {
-                vvm::Init::RandomPerturbation(model, model.step);
+                vvm::Init::RandomPerturbation(model, model.step+0, -0.001, 0.001, 1.);
             }
             model.AddForcing(model);
         #endif
