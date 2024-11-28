@@ -143,20 +143,35 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         std::cout << model.step << std::endl;
         // output
         if (model.step % model.OUTPUTSTEP == 0 || model.step == model.TIMEEND-1 || model.step == model.TIMEEND-2 || model.step == 550001) {
-            #if defined(OUTPUTNC)
-                vvm::Output::output_nc(model.step, model);
+            #if defined(_OPENMP)
+            #pragma omp critical
+            {
             #endif
-            #if defined(OUTPUTTXT)
-                vvm::Output::outputalltxt(model.step, model);
+                #if defined(OUTPUTNC)
+                    vvm::Output::output_nc(model.step, model);
+                #endif
+                #if defined(OUTPUTTXT)
+                    vvm::Output::outputalltxt(model.step, model);
+                #endif
+            #if defined(_OPENMP)
+            }
             #endif
         }
         model.step++;
 
-        if (model.step % model.TIMEROUTPUTSIZE == 0) {
-            #if defined(OUTPUTNC)
-                vvm::Output::output_time_nc(model.step, model);
-            #endif
-        }
+
+        // if (model.step % model.TIMEROUTPUTSIZE == 0) {
+        //     #if defined(_OPENMP)
+        //     #pragma omp critical
+        //     {
+        //     #endif
+        //         #if defined(OUTPUTNC)
+        //             vvm::Output::output_time_nc(model.step, model);
+        //         #endif
+        //     #if defined(_OPENMP)
+        //     }
+        //     #endif
+        // }
 
         timer.reset();
         pzeta_pt(model);

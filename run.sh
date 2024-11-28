@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -n 2
 #SBATCH -N 1
-#SBATCH --nodelist=node01
+#SBATCH --nodelist=mogamd
 #SBATCH -o log/NoCouple.o
 #SBATCH -e log/NoCouple.e
 #SBATCH --mail-type=ALL
