@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     Eigen::setNbThreads(8);
     #endif
 
-    Config_VVM config(3., 200., 200., 100000, 20000, 60000., 10000, "/data/Aaron/2DVVM/NoCouple/", 50, 
+    Config_VVM config(3., 200., 200., 100000, 20000, 60000., 10000, "/data/Aaron/2DVVM/Bubble_correct_kru_3s/", 50, 
                     70., 70., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
                     1E5, 96500., -1., 1);
     vvm model(config);

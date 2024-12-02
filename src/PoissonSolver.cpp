@@ -643,6 +643,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
     return;
 }
 
+// TODO: Need to add diffusion term (eq 3.46)
 void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
     double rhouwUp = 0., rhouwDown = 0.;
     double prhouwb_pz_rhob = 0.;

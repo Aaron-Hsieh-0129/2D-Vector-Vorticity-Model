@@ -82,14 +82,17 @@ void vvm::MicroPhysics::evaporation(vvm &model) {
     double er = 0., erdt = 0.;
     for (int k = 1; k <= model.nz-2; k++) {
         pc = 380. / (std::pow(model.pib[k], model.Cp / model.Rd) * model.P0);	 // coefficient
-        coef = 1.6 + 124.9 * std::pow((1E-3 * model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
         for (int i = 1; i <= model.nx-2; i++) {
             qrplus = std::max(0., model.qrp[i][k]);
             qvplus = std::max(0., model.qvp[i][k]);
             qvs = pc * std::exp(17.27 * (model.pib[k] * model.thp[i][k] - 273.) / (model.pib[k] * model.thp[i][k] - 36.));	// Tetens equation
 
             deficit = std::max((1. - qvplus / qvs), 0.);					// saturation dificit (RH < 100%)
+            coef = 1.6 + 124.9 * std::pow((1E-3 * model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
+	        // coef = 1.6 + 30.39 * std::pow((model.rhou[k] * qrplus), 0.2046);	// ventilation coef.
+
             er = coef * deficit * (std::pow(1E-3 * model.rhou[k] * qrplus, 0.525)) / ((5.4E5 + 2.55E6 / (1E-2*model.pb[k] * qvs)) * 1E-3*model.rhou[k]);
+            // er = coef * deficit * (pow(model.rhou[k] * qrplus, 0.525)) / ((2.03e4 + 9.584e6 / (model.pb[k] * qvs)) * model.rhou[k]);
             #if defined(AB2)
                 erdt = std::min(qrplus, std::max(0., er * model.dt));
             #else

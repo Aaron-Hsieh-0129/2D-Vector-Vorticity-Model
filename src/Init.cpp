@@ -139,7 +139,7 @@ void vvm::Init::Init2d(vvm &model) {
         for (int i = 1; i <= model.nx-2; i++) {
             for (int k = 1; k <= model.nz-2; k++) {
                 if (model.CASE == 0) model.th[i][k] = model.thb[k];
-                else if (model.CASE == 1) model.th[i][k] = model.thb[k] + GetTH(i, k, model);
+                else if (model.CASE == 1 || model.CASE == 2) model.th[i][k] = model.thb[k] + GetTH(i, k, model);
 
                 if (model.addforcingtime > 0) {
                     RandomPerturbation(model, 0);
@@ -169,18 +169,19 @@ void vvm::Init::Init2d(vvm &model) {
         #endif
 
 		// init u
-		#if defined(SHEAR)
-			// From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
-			double umin = -10, umax = 10.;
-			int bubble_center_idx = 2500/dz + 1;
-			for (int i = 1; i <= model.nx-2; i++) {
-				for (int k = 1; k <= model.nz-2; k++) {
-					if (k <= bubble_center_idx) model.u[i][k] = umin - umin / (bubble_center_idx-1) * (k-1);
-					else model.u[i][k] = umax / (model.nz-2 - (bubble_center_idx-1)) * (k-bubble_center_idx+1);
-				}
-			}
-			model.BoundaryProcess2D_center(model.u);
-		#endif
+		if (model.CASE == 2) {
+            // From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
+            double u_tmp = 0.;
+            for (int k = 1; k <= model.nz-2; k++) {
+                double z_u = (k-1) * model.dz;
+                if (z_u <= 2000.) u_tmp = -8. + (8. / 2000.0) * z_u;
+
+                for (int i = 1; i <= model.nx-2; i++) {
+                    model.u[i][k] = u_tmp;
+                }
+            }
+            model.BoundaryProcess2D_center(model.u, model.nx, model.nz);
+        }
 	#endif
 
 	// init zeta
@@ -363,7 +364,7 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
     ubarm_in.getVar(tmp);
     model.ubarTopm = tmp[0];
 
-    if (model.CASE == 1) {
+    if (model.CASE == 1 || model.CASE == 2) {
         for (int k = 1; k < model.nz-1; k++) {
             for (int i = 1; i < model.nx-1; i++) {
                 model.thm[i][k] += vvm::Init::GetTH(i, k, model);
