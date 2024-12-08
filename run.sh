@@ -7,6 +7,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=b08209006@ntu.edu.tw
 
+source /data/Aaron/.bashrc
+
 rm -rf build
 mkdir build
 

@@ -9,8 +9,8 @@ project(VVM2D VERSION 0.1.0)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # Set the C/C++ compiler to gcc/g++
-set(CMAKE_C_COMPILER "/home/Aaron/gcc13/bin/gcc")
-set(CMAKE_CXX_COMPILER "/home/Aaron/gcc13/bin/g++")
+set(CMAKE_C_COMPILER "/data/Aaron/gcc13/bin/gcc")
+set(CMAKE_CXX_COMPILER "/data/Aaron/gcc13/bin/g++")
 
 # Set the C++ standard to C++11
 set(CMAKE_CXX_STANDARD 11)
@@ -66,12 +66,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 # Include directories
 include_directories(
     include
-    /home/Aaron/local/include
+    /data/Aaron/local/include
 )
 
 # Add PETSc include directories if PETSc is enabled
 if(USE_PETSC)
-    include_directories(/home/Aaron/local/petsc/include)
+    include_directories(/data/Aaron/local/petsc/include)
 endif()
 
 # Source files
@@ -83,9 +83,9 @@ if(USE_PETSC)
     target_link_libraries(vvm2d PkgConfig::PETSC)
 endif()
 
-find_library(libncPath netcdf "/home/Aaron/local/lib")
-find_library(libncxxPath netcdf_c++4 "/home/Aaron/local/lib")
-find_library(libpetscPath petsc "/home/Aaron/local/petsc/lib")
+find_library(libncPath netcdf "/data/Aaron/local/lib")
+find_library(libncxxPath netcdf_c++4 "/data/Aaron/local/lib")
+find_library(libpetscPath petsc "/data/Aaron/local/petsc/lib")
 
 # Link PETSc library only if the flag is enabled
 if(USE_PETSC)
