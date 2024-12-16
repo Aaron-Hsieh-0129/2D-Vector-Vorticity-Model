@@ -63,6 +63,16 @@ int main(int argc, char **argv) {
     //         model.thm[i][k] = model.th[i][k];
     //     }
     // }
+
+    // Copy grads ctl file to the output directory
+    std::string source = "../scripts/vvm.ctl";
+    std::string destination = model.outputpath + "nc/vvm.ctl";
+
+    // Construct the command
+    std::string command = "cp " + source + " " + destination;
+
+    // Execute the command
+    system(command.c_str());
     
 
     #if defined(POISSONTEST)
