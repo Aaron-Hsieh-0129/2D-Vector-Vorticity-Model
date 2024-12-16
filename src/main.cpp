@@ -6,7 +6,7 @@
     #include <petscsys.h>
     #include <petsc.h>
 #endif
-#include <fstream>
+#include "ReadConfig.hpp"
 
 // Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
@@ -22,9 +22,21 @@ int main(int argc, char **argv) {
     Eigen::setNbThreads(8);
     #endif
 
-    Config_VVM config(3., 200., 200., 100000, 20000, 90000., 10000, "/data/mog/2DVVM/Bubble_shear_eva/", 50, 
+    std::map<std::string, std::string> configs = vvm_read_config("../vvm_config.txt");
+    std::string vvmoutputpath = configs["VVM_OUTPUTPATH"];
+    double vvm_dt = std::stod(configs["VVM_DT"]);
+    double vvm_dx = std::stod(configs["VVM_DX"]);
+    double vvm_dz = std::stod(configs["VVM_DZ"]);
+    int vvm_xrange = std::stoi(configs["VVM_XRANGE"]);
+    int vvm_zrange = std::stoi(configs["VVM_ZRANGE"]);
+    double vvm_timeend = std::stod(configs["VVM_TIMEEND"]);
+    int vvm_outputstep = std::stoi(configs["VVM_OUTPUTSTEP"]);
+    int vvm_case = std::stoi(configs["VVM_CASE"]);
+
+    Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
                     70., 70., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., -1., 2);
+                    1E5, 96500., -1., vvm_case);
+    
     vvm model(config);
     
     #if defined(LOADFROMPREVIOUSFILE)
@@ -51,6 +63,16 @@ int main(int argc, char **argv) {
     //         model.thm[i][k] = model.th[i][k];
     //     }
     // }
+
+    // Copy grads ctl file to the output directory
+    std::string source = "../scripts/vvm.ctl";
+    std::string destination = model.outputpath + "nc/vvm.ctl";
+
+    // Construct the command
+    std::string command = "cp " + source + " " + destination;
+
+    // Execute the command
+    system(command.c_str());
     
 
     #if defined(POISSONTEST)
