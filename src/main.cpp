@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     #endif
 
     std::map<std::string, std::string> configs = vvm_read_config("../vvm_config.txt");
-    std::string vvmoutputpath = configs["VVM_OUTPUTPATH"];
+    std::string vvmoutputpath = configs["VVM_OUTPUTPATH"] + "/";
     double vvm_dt = std::stod(configs["VVM_DT"]);
     double vvm_dx = std::stod(configs["VVM_DX"]);
     double vvm_dz = std::stod(configs["VVM_DZ"]);
