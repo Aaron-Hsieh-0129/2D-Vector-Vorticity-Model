@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classTimer" kind="class" language="C++" prot="public">
+    <compoundname>Timer</compoundname>
+    <includes refid="Timer_8hpp" local="no">Timer.hpp</includes>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classTimer_1aa40b07f646e4c2920e43745c42ef20b7" prot="private" static="no" mutable="no">
+        <type>std::chrono::time_point&lt; std::chrono::high_resolution_clock &gt;</type>
+        <definition>std::chrono::time_point&lt;std::chrono::high_resolution_clock&gt; Timer::start_time_</definition>
+        <argsstring></argsstring>
+        <name>start_time_</name>
+        <qualifiedname>Timer::start_time_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" line="19" column="29" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classTimer_1a5f16e8da27d2a5a5242dead46de05d97" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Timer::Timer</definition>
+        <argsstring>()</argsstring>
+        <name>Timer</name>
+        <qualifiedname>Timer::Timer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" line="7" column="5" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" bodystart="7" bodyend="7"/>
+      </memberdef>
+      <memberdef kind="function" id="classTimer_1a9020542d73357a4eef512eefaf57524b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Timer::reset</definition>
+        <argsstring>()</argsstring>
+        <name>reset</name>
+        <qualifiedname>Timer::reset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" line="9" column="10" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" bodystart="9" bodyend="11"/>
+        <referencedby refid="classvvm_1_1Iteration_1aad30e493dc2f262d8349e7832828a4db" compoundref="Iteration_8cpp" startline="128" endline="246">vvm::Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classTimer_1a6a89a613c2af9b0d1e5f7e4ba9e46c54" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>double Timer::elapsed</definition>
+        <argsstring>() const</argsstring>
+        <name>elapsed</name>
+        <qualifiedname>Timer::elapsed</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" line="13" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" bodystart="13" bodyend="16"/>
+        <referencedby refid="classvvm_1_1Iteration_1aad30e493dc2f262d8349e7832828a4db" compoundref="Iteration_8cpp" startline="128" endline="246">vvm::Iteration::TimeMarching</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Timer</label>
+        <link refid="classTimer"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" line="5" column="1" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Timer.hpp" bodystart="5" bodyend="20"/>
+    <listofallmembers>
+      <member refid="classTimer_1a6a89a613c2af9b0d1e5f7e4ba9e46c54" prot="public" virt="non-virtual"><scope>Timer</scope><name>elapsed</name></member>
+      <member refid="classTimer_1a9020542d73357a4eef512eefaf57524b" prot="public" virt="non-virtual"><scope>Timer</scope><name>reset</name></member>
+      <member refid="classTimer_1aa40b07f646e4c2920e43745c42ef20b7" prot="private" virt="non-virtual"><scope>Timer</scope><name>start_time_</name></member>
+      <member refid="classTimer_1a5f16e8da27d2a5a5242dead46de05d97" prot="public" virt="non-virtual"><scope>Timer</scope><name>Timer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

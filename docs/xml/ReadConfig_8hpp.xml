@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="ReadConfig_8hpp" kind="file" language="C++">
+    <compoundname>ReadConfig.hpp</compoundname>
+    <includes local="no">string</includes>
+    <includes local="no">map</includes>
+    <includes local="no">fstream</includes>
+    <includes local="no">sstream</includes>
+    <includedby refid="ReadConfig_8cpp" local="yes">/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.cpp</includedby>
+    <includedby refid="main_8cpp" local="yes">/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/main.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.hpp</label>
+        <link refid="ReadConfig_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>fstream</label>
+      </node>
+      <node id="3">
+        <label>map</label>
+      </node>
+      <node id="5">
+        <label>sstream</label>
+      </node>
+      <node id="2">
+        <label>string</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.cpp</label>
+        <link refid="ReadConfig_8cpp"/>
+      </node>
+      <node id="1">
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.hpp</label>
+        <link refid="ReadConfig_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="ReadConfig_8hpp_1a296615d824e22b230a8481fb9d81f044" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::map&lt; std::string, std::string &gt;</type>
+        <definition>std::map&lt; std::string, std::string &gt; vvm_read_config</definition>
+        <argsstring>(const std::string &amp;filename)</argsstring>
+        <name>vvm_read_config</name>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>filename</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.hpp" line="6" column="10" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.cpp" bodystart="3" bodyend="48" declfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.hpp" declline="6" declcolumn="10"/>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="15" endline="90">main</referencedby>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal">std::map&lt;std::string,<sp/>std::string&gt;<sp/><ref refid="ReadConfig_8hpp_1a296615d824e22b230a8481fb9d81f044" kindref="member">vvm_read_config</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>filename);</highlight></codeline>
+    </programlisting>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/ReadConfig.hpp"/>
+  </compounddef>
+</doxygen>

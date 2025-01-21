@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classConfig__VVM" kind="class" language="C++" prot="public">
+    <compoundname>Config_VVM</compoundname>
+    <includes refid="Declare_8hpp" local="no">Declare.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classConfig__VVM_1a43447f14f8502d251dd129ab60d8695a" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::dt</definition>
+        <argsstring></argsstring>
+        <name>dt</name>
+        <qualifiedname>Config_VVM::dt</qualifiedname>
+        <briefdescription>
+<para>Time step for vvm [s]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="18" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1ae481baa07edae2432ae995bc17e2672f" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::dx</definition>
+        <argsstring></argsstring>
+        <name>dx</name>
+        <qualifiedname>Config_VVM::dx</qualifiedname>
+        <briefdescription>
+<para>Grid size in x-direction [m]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="19" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a6e8299c38ef906dd657085ec2fdb19bf" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::dz</definition>
+        <argsstring></argsstring>
+        <name>dz</name>
+        <qualifiedname>Config_VVM::dz</qualifiedname>
+        <briefdescription>
+<para>Grid size in z-direction [m]. It should be the same as dx. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="20" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a4352c176cc9492ff5ddbc05a6a01663e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Config_VVM::XRANGE</definition>
+        <argsstring></argsstring>
+        <name>XRANGE</name>
+        <qualifiedname>Config_VVM::XRANGE</qualifiedname>
+        <briefdescription>
+<para>Domain size of the model in x-direction [m]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="21" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a345988bd0920ab2f21bfb6cddc3f46ba" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Config_VVM::ZRANGE</definition>
+        <argsstring></argsstring>
+        <name>ZRANGE</name>
+        <qualifiedname>Config_VVM::ZRANGE</qualifiedname>
+        <briefdescription>
+<para>Domain size of the model in z-direction [m]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="22" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a70aae0ee6b742404c98db39eb9954aa9" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::TIMEEND</definition>
+        <argsstring></argsstring>
+        <name>TIMEEND</name>
+        <qualifiedname>Config_VVM::TIMEEND</qualifiedname>
+        <briefdescription>
+<para>End time of the simulation [s]. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="23" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a20263dc184ec77e4399b8aa6075abd1e" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Config_VVM::TIMEROUTPUTSIZE</definition>
+        <argsstring></argsstring>
+        <name>TIMEROUTPUTSIZE</name>
+        <qualifiedname>Config_VVM::TIMEROUTPUTSIZE</qualifiedname>
+        <briefdescription>
+<para>The size of the timer output. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="24" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a288a852cda0423fd4618fe34ef839f75" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string Config_VVM::outputpath</definition>
+        <argsstring></argsstring>
+        <name>outputpath</name>
+        <qualifiedname>Config_VVM::outputpath</qualifiedname>
+        <briefdescription>
+<para>The path for the output file. It should be a directory, such as &quot;/data/vvm/&quot;. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="25" column="17" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a2a6500573c19919cec9efef0393c9e94" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Config_VVM::OUTPUTSTEP</definition>
+        <argsstring></argsstring>
+        <name>OUTPUTSTEP</name>
+        <qualifiedname>Config_VVM::OUTPUTSTEP</qualifiedname>
+        <briefdescription>
+<para>The output interval for the output file. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="26" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a2b5df6996c3edcc29df7f22aefff1ef8" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Kx</definition>
+        <argsstring></argsstring>
+        <name>Kx</name>
+        <qualifiedname>Config_VVM::Kx</qualifiedname>
+        <briefdescription>
+<para>The eddy diffusion coefficient in x-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="27" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a496e8a846c93e467b9ea4995fbe156ad" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Kz</definition>
+        <argsstring></argsstring>
+        <name>Kz</name>
+        <qualifiedname>Config_VVM::Kz</qualifiedname>
+        <briefdescription>
+<para>The eddy diffusion coefficient in z-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="28" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1ae14edf7f3f75b4dad6a4690bcaea8993" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::TIMETS</definition>
+        <argsstring></argsstring>
+        <name>TIMETS</name>
+        <qualifiedname>Config_VVM::TIMETS</qualifiedname>
+        <briefdescription>
+<para>The time filter coefficient [s] for Leapfrog. This is activated when TIMEFILTER flag is turned on. Only need to turn on when Leapfrog is used. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="29" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1ae88624177a37b5b972653bbe098b6cfb" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::tolerance</definition>
+        <argsstring></argsstring>
+        <name>tolerance</name>
+        <qualifiedname>Config_VVM::tolerance</qualifiedname>
+        <briefdescription>
+<para>The tolerance for the Poisson Solver. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="30" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1ac3160ba8ec5351e9c513d7b7dcff4948" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::GRAVITY</definition>
+        <argsstring></argsstring>
+        <name>GRAVITY</name>
+        <qualifiedname>Config_VVM::GRAVITY</qualifiedname>
+        <briefdescription>
+<para>The gravity acceleration [m/s^2]. It&apos;s 9.80665 m/s^2 for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="31" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a8dc51bcfab9694de3ae4e55a1f7f7146" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Cp</definition>
+        <argsstring></argsstring>
+        <name>Cp</name>
+        <qualifiedname>Config_VVM::Cp</qualifiedname>
+        <briefdescription>
+<para>The specific heat capacity at constant pressure [J/kg/K]. It&apos;s 1003.5 J/kg/K for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="32" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a394c04bcbed12c2b5128d8e9062b70e0" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Cv</definition>
+        <argsstring></argsstring>
+        <name>Cv</name>
+        <qualifiedname>Config_VVM::Cv</qualifiedname>
+        <briefdescription>
+<para>The specific heat capacity at constant volume [J/kg/K]. It&apos;s 716.5 J/kg/K for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="33" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a148f4896d710c636318948f2df3986d7" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Rd</definition>
+        <argsstring></argsstring>
+        <name>Rd</name>
+        <qualifiedname>Config_VVM::Rd</qualifiedname>
+        <briefdescription>
+<para>The gas constant for dry air [J/kg/K]. It&apos;s 287 J/kg/K for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="34" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a0ef3302844642c9a8e83441adb36f422" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::Lv</definition>
+        <argsstring></argsstring>
+        <name>Lv</name>
+        <qualifiedname>Config_VVM::Lv</qualifiedname>
+        <briefdescription>
+<para>The latent heat of vaporization [J/kg]. It&apos;s 2.5E6 J/kg for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="35" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a112bbd5ac7c7776363c8aa6f804a5016" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::P0</definition>
+        <argsstring></argsstring>
+        <name>P0</name>
+        <qualifiedname>Config_VVM::P0</qualifiedname>
+        <briefdescription>
+<para>The reference pressure [Pa]. It&apos;s 1E5 Pa for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="36" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1ab80444f4f79135bdb16b3549f502df1e" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::PSURF</definition>
+        <argsstring></argsstring>
+        <name>PSURF</name>
+        <qualifiedname>Config_VVM::PSURF</qualifiedname>
+        <briefdescription>
+<para>The surface pressure [Pa]. It&apos;s 96500 Pa for default. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="37" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1afa442e5fec6914695e1920a34d67fbea" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::addforcingtime</definition>
+        <argsstring></argsstring>
+        <name>addforcingtime</name>
+        <qualifiedname>Config_VVM::addforcingtime</qualifiedname>
+        <briefdescription>
+<para>The time for adding the perturbation. The perturbation is used to break the symmetry of the model. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="38" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a8ab295143f7d263963f1c60413ec416b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Config_VVM::CASE</definition>
+        <argsstring></argsstring>
+        <name>CASE</name>
+        <qualifiedname>Config_VVM::CASE</qualifiedname>
+        <briefdescription>
+<para>The case number for the model. It&apos;s used to specify the initial condition and the forcing. If CASE is 0, the initial condition is equal to mean state. If CASE is 1, the initial condition is equal to mean state plus a warm bubble. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="39" column="9" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classConfig__VVM_1a9320abc0f9740e3692713ffdd129bef8" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Config_VVM::mositure_nudge_time</definition>
+        <argsstring></argsstring>
+        <name>mositure_nudge_time</name>
+        <qualifiedname>Config_VVM::mositure_nudge_time</qualifiedname>
+        <briefdescription>
+<para>The time for nudging the moisture. It&apos;s used for nudging the moisture to the mean state. It&apos;s used for nudging the moisture to the mean state. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="40" column="12" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classConfig__VVM_1a917fda65b7c0f77acd27b75864aaa2c4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Config_VVM::Config_VVM</definition>
+        <argsstring>(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance, double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time)</argsstring>
+        <name>Config_VVM</name>
+        <qualifiedname>Config_VVM::Config_VVM</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dx</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dz</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>XRANGE</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ZRANGE</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>TIMEEND</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>TIMEROUTPUTSIZE</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>outputpath</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>OUTPUTSTEP</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Kx</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Kz</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>TIMETS</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>tolerance</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>GRAVITY</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cp</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cv</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Rd</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Lv</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>P0</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>PSURF</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>addforcingtime</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>CASE</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>mositure_nudge_time</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="10" column="5" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="10" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="classConfig__VVM_1a2e7365350d3c712cbc2c12efa6cf0d1a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Config_VVM::~Config_VVM</definition>
+        <argsstring>()</argsstring>
+        <name>~Config_VVM</name>
+        <qualifiedname>Config_VVM::~Config_VVM</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="16" column="5" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="16" bodyend="16"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Config_VVM</label>
+        <link refid="classConfig__VVM"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>+Cp</edgelabel>
+          <edgelabel>+Cv</edgelabel>
+          <edgelabel>+GRAVITY</edgelabel>
+          <edgelabel>+Kx</edgelabel>
+          <edgelabel>+Kz</edgelabel>
+          <edgelabel>+Lv</edgelabel>
+          <edgelabel>+P0</edgelabel>
+          <edgelabel>+PSURF</edgelabel>
+          <edgelabel>+Rd</edgelabel>
+          <edgelabel>+TIMEEND</edgelabel>
+          <edgelabel>...</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>+CASE</edgelabel>
+          <edgelabel>+OUTPUTSTEP</edgelabel>
+          <edgelabel>+TIMEROUTPUTSIZE</edgelabel>
+          <edgelabel>+XRANGE</edgelabel>
+          <edgelabel>+ZRANGE</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>+outputpath</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>double</label>
+      </node>
+      <node id="3">
+        <label>int</label>
+      </node>
+      <node id="4">
+        <label>string</label>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="8" column="1" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="8" bodyend="41"/>
+    <listofallmembers>
+      <member refid="classConfig__VVM_1afa442e5fec6914695e1920a34d67fbea" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>addforcingtime</name></member>
+      <member refid="classConfig__VVM_1a8ab295143f7d263963f1c60413ec416b" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>CASE</name></member>
+      <member refid="classConfig__VVM_1a917fda65b7c0f77acd27b75864aaa2c4" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Config_VVM</name></member>
+      <member refid="classConfig__VVM_1a8dc51bcfab9694de3ae4e55a1f7f7146" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Cp</name></member>
+      <member refid="classConfig__VVM_1a394c04bcbed12c2b5128d8e9062b70e0" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Cv</name></member>
+      <member refid="classConfig__VVM_1a43447f14f8502d251dd129ab60d8695a" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>dt</name></member>
+      <member refid="classConfig__VVM_1ae481baa07edae2432ae995bc17e2672f" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>dx</name></member>
+      <member refid="classConfig__VVM_1a6e8299c38ef906dd657085ec2fdb19bf" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>dz</name></member>
+      <member refid="classConfig__VVM_1ac3160ba8ec5351e9c513d7b7dcff4948" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>GRAVITY</name></member>
+      <member refid="classConfig__VVM_1a2b5df6996c3edcc29df7f22aefff1ef8" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Kx</name></member>
+      <member refid="classConfig__VVM_1a496e8a846c93e467b9ea4995fbe156ad" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Kz</name></member>
+      <member refid="classConfig__VVM_1a0ef3302844642c9a8e83441adb36f422" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Lv</name></member>
+      <member refid="classConfig__VVM_1a9320abc0f9740e3692713ffdd129bef8" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>mositure_nudge_time</name></member>
+      <member refid="classConfig__VVM_1a288a852cda0423fd4618fe34ef839f75" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>outputpath</name></member>
+      <member refid="classConfig__VVM_1a2a6500573c19919cec9efef0393c9e94" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>OUTPUTSTEP</name></member>
+      <member refid="classConfig__VVM_1a112bbd5ac7c7776363c8aa6f804a5016" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>P0</name></member>
+      <member refid="classConfig__VVM_1ab80444f4f79135bdb16b3549f502df1e" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>PSURF</name></member>
+      <member refid="classConfig__VVM_1a148f4896d710c636318948f2df3986d7" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>Rd</name></member>
+      <member refid="classConfig__VVM_1a70aae0ee6b742404c98db39eb9954aa9" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>TIMEEND</name></member>
+      <member refid="classConfig__VVM_1a20263dc184ec77e4399b8aa6075abd1e" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>TIMEROUTPUTSIZE</name></member>
+      <member refid="classConfig__VVM_1ae14edf7f3f75b4dad6a4690bcaea8993" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>TIMETS</name></member>
+      <member refid="classConfig__VVM_1ae88624177a37b5b972653bbe098b6cfb" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>tolerance</name></member>
+      <member refid="classConfig__VVM_1a4352c176cc9492ff5ddbc05a6a01663e" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>XRANGE</name></member>
+      <member refid="classConfig__VVM_1a345988bd0920ab2f21bfb6cddc3f46ba" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>ZRANGE</name></member>
+      <member refid="classConfig__VVM_1a2e7365350d3c712cbc2c12efa6cf0d1a" prot="public" virt="non-virtual"><scope>Config_VVM</scope><name>~Config_VVM</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

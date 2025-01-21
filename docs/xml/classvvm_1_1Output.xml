@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="classvvm_1_1Output" kind="class" language="C++" prot="public">
+    <compoundname>vvm::Output</compoundname>
+    <includes refid="Declare_8hpp" local="no">Declare.hpp</includes>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classvvm_1_1Output_1a331915125669cff07bc8fb2d6f3640df" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::Output::printInit</definition>
+        <argsstring>(vvm &amp;model)</argsstring>
+        <name>printInit</name>
+        <qualifiedname>vvm::Output::printInit</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="564" column="21" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Output.cpp" bodystart="8" bodyend="28"/>
+        <references refid="classvvm_1aa10689462c2d23ff7514d71e1b44f272" compoundref="Declare_8hpp" startline="285">vvm::dz</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="281">vvm::nz</references>
+        <references refid="classvvm_1a04ef9b52415cb1221f6c7d05f334aa72" compoundref="Declare_8hpp" startline="290">vvm::outputpath</references>
+        <references refid="classvvm_1a26af306441d528502bb043bde41c1d4f" compoundref="Declare_8hpp" startline="322">vvm::pib</references>
+        <references refid="classvvm_1a4196b3b03002394826deea7481714e78" compoundref="Declare_8hpp" startline="323">vvm::qvb</references>
+        <references refid="classvvm_1aef52e76881cd361c58834b560f002573" compoundref="Declare_8hpp" startline="325">vvm::qvsb</references>
+        <references refid="classvvm_1af25e3367c5ad1d011c15ff7d774a0abf" compoundref="Declare_8hpp" startline="320">vvm::rhou</references>
+        <references refid="classvvm_1a7edff5662fbdb8df0fe3094a6ab3efb7" compoundref="Declare_8hpp" startline="321">vvm::rhow</references>
+        <references refid="classvvm_1a07e5c32b8b9f7f31ba90c29c6e11adfa" compoundref="Declare_8hpp" startline="316">vvm::thb</references>
+        <references refid="classvvm_1a7521c72c09b92ebed7d84d5ec6cab411" compoundref="Declare_8hpp" startline="319">vvm::thb_zeta</references>
+        <references refid="classvvm_1a70455ffa8f9a2d564947bf7b3bfd3818" compoundref="Declare_8hpp" startline="331">vvm::z</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="15" endline="90">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1Output_1ab92886c8eb037ae04f2201b6daf76364" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::Output::create_all_directory</definition>
+        <argsstring>(vvm &amp;model)</argsstring>
+        <name>create_all_directory</name>
+        <qualifiedname>vvm::Output::create_all_directory</qualifiedname>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="565" column="21" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Output.cpp" bodystart="262" bodyend="286"/>
+        <references refid="classvvm_1a04ef9b52415cb1221f6c7d05f334aa72" compoundref="Declare_8hpp" startline="290">vvm::outputpath</references>
+        <referencedby refid="main_8cpp_1a3c04138a5bfe5d72780bb7e82a18e627" compoundref="main_8cpp" startline="15" endline="90">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1Output_1ab8764acf44928bde7135754db12fd3ec" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::Output::create_directory</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>create_directory</name>
+        <qualifiedname>vvm::Output::create_directory</qualifiedname>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="566" column="21" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Output.cpp" bodystart="251" bodyend="260"/>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1Output_1a10cccdd582fb244e14041255d4b425f4" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::Output::output_nc</definition>
+        <argsstring>(int step, vvm &amp;model)</argsstring>
+        <name>output_nc</name>
+        <qualifiedname>vvm::Output::output_nc</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>step</declname>
+        </param>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="568" column="25" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Output.cpp" bodystart="96" bodyend="216"/>
+        <references refid="classvvm_1a1a707b985656fff372d9b4cf1e660f75" compoundref="Declare_8hpp" startline="395">vvm::accretioncont</references>
+        <references refid="classvvm_1ad0ea2312e3b120cebf4171ead02812f0" compoundref="Declare_8hpp" startline="396">vvm::autoconversioncont</references>
+        <references refid="Output_8cpp_1a5bb516bfaed5e10c9fa0cc84e6e0a58b" compoundref="Output_8cpp" startline="32" endline="37">checkErr</references>
+        <references refid="classvvm_1a6c26d94dd59831d96233d90e28907f10" compoundref="Declare_8hpp" startline="397">vvm::condensationcont</references>
+        <references refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" compoundref="Declare_8hpp" startline="282">vvm::dt</references>
+        <references refid="classvvm_1ae83cfc04df140eb27ea8451952ac4a2c" compoundref="Declare_8hpp" startline="394">vvm::evaporationcont</references>
+        <references refid="Output_8cpp_1a832c30a268f7bb637d6dcaffe8797124">NC_ERR</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="280">vvm::nx</references>
+        <references refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" compoundref="Declare_8hpp" startline="281">vvm::nz</references>
+        <references refid="classvvm_1a04ef9b52415cb1221f6c7d05f334aa72" compoundref="Declare_8hpp" startline="290">vvm::outputpath</references>
+        <references refid="classvvm_1aa6f154abb97ec14856d347f417c7370e" compoundref="Declare_8hpp" startline="383">vvm::precip</references>
+        <references refid="classvvm_1a4771eb942a9133dd15508402f781b87a" compoundref="Declare_8hpp" startline="389">vvm::qccont</references>
+        <references refid="classvvm_1a84aa7b5b7f188e6bc178f08001851cb5" compoundref="Declare_8hpp" startline="392">vvm::qrcont</references>
+        <references refid="classvvm_1a89982cb9081f819ee8664c3a50def862" compoundref="Declare_8hpp" startline="386">vvm::qvcont</references>
+        <references refid="classvvm_1aa65f3d5ec5b627f08c3c5a5294bfa135" compoundref="Declare_8hpp" startline="354">vvm::thcont</references>
+        <references refid="classvvm_1a2494ade44221bcd3aed164d73bf208f4" compoundref="Declare_8hpp" startline="309">vvm::ubarTopp</references>
+        <references refid="classvvm_1a845d10359953759f1135d29e74c7d82d" compoundref="Declare_8hpp" startline="356">vvm::ucont</references>
+        <references refid="classvvm_1a13c2178b5683fa114591410928b8a201" compoundref="Declare_8hpp" startline="357">vvm::wcont</references>
+        <references refid="classvvm_1a6ff8cc62cea6d4823731d1c5b9260074" compoundref="Declare_8hpp" startline="351">vvm::zetacont</references>
+        <referencedby refid="classvvm_1_1Iteration_1aad30e493dc2f262d8349e7832828a4db" compoundref="Iteration_8cpp" startline="128" endline="246">vvm::Iteration::TimeMarching</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classvvm_1_1Output_1a3cd4b5fe35a19265558994198582fecd" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void vvm::Output::output_time_nc</definition>
+        <argsstring>(int step, vvm &amp;model)</argsstring>
+        <name>output_time_nc</name>
+        <qualifiedname>vvm::Output::output_time_nc</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>step</declname>
+        </param>
+        <param>
+          <type><ref refid="classvvm" kindref="compound">vvm</ref> &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="569" column="25" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Output.cpp" bodystart="219" bodyend="247"/>
+        <references refid="Output_8cpp_1a5bb516bfaed5e10c9fa0cc84e6e0a58b" compoundref="Output_8cpp" startline="32" endline="37">checkErr</references>
+        <references refid="classvvm_1a54019773003b18a98f267df45ee230bb" compoundref="Declare_8hpp" startline="280">vvm::nx</references>
+        <references refid="classvvm_1a04ef9b52415cb1221f6c7d05f334aa72" compoundref="Declare_8hpp" startline="290">vvm::outputpath</references>
+        <references refid="classvvm_1a6da8bde9e35cbd4d0242a1db539ff9d3" compoundref="Declare_8hpp" startline="424">vvm::t_advection</references>
+        <references refid="classvvm_1a6cf274889e58c910d0cb79588cb3b03d" compoundref="Declare_8hpp" startline="428">vvm::t_all</references>
+        <references refid="classvvm_1a63eea4124e1ab27f9441360c526fd4e8" compoundref="Declare_8hpp" startline="426">vvm::t_diffusion</references>
+        <references refid="classvvm_1a1f108d23ec3587e532064c2b5221a943" compoundref="Declare_8hpp" startline="427">vvm::t_microphysics</references>
+        <references refid="classvvm_1a92eb62804aa9ea7060962c1aca528c5d" compoundref="Declare_8hpp" startline="425">vvm::t_poisson</references>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>vvm::Output</label>
+        <link refid="classvvm_1_1Output"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" line="562" column="5" bodyfile="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/Declare.hpp" bodystart="562" bodyend="586"/>
+    <listofallmembers>
+      <member refid="classvvm_1_1Output_1ab92886c8eb037ae04f2201b6daf76364" prot="public" virt="non-virtual"><scope>vvm::Output</scope><name>create_all_directory</name></member>
+      <member refid="classvvm_1_1Output_1ab8764acf44928bde7135754db12fd3ec" prot="public" virt="non-virtual"><scope>vvm::Output</scope><name>create_directory</name></member>
+      <member refid="classvvm_1_1Output_1a10cccdd582fb244e14041255d4b425f4" prot="public" virt="non-virtual"><scope>vvm::Output</scope><name>output_nc</name></member>
+      <member refid="classvvm_1_1Output_1a3cd4b5fe35a19265558994198582fecd" prot="public" virt="non-virtual"><scope>vvm::Output</scope><name>output_time_nc</name></member>
+      <member refid="classvvm_1_1Output_1a331915125669cff07bc8fb2d6f3640df" prot="public" virt="non-virtual"><scope>vvm::Output</scope><name>printInit</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

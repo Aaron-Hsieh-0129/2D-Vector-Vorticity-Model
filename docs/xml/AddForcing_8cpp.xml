@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.10.0" xml:lang="en-US">
+  <compounddef id="AddForcing_8cpp" kind="file" language="C++">
+    <compoundname>AddForcing.cpp</compoundname>
+    <includes refid="Declare_8hpp" local="yes">Declare.hpp</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/AddForcing.cpp</label>
+        <link refid="AddForcing_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>Config.hpp</label>
+        <link refid="Config_8hpp"/>
+      </node>
+      <node id="2">
+        <label>Declare.hpp</label>
+        <link refid="Declare_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>Eigen/Sparse</label>
+      </node>
+      <node id="4">
+        <label>string</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="Declare_8hpp" kindref="compound">Declare.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(WATER)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classvvm_1ae95d349fc79929ad9bd5b95e3cd97c0b" kindref="member">vvm::AddForcing</ref>(<ref refid="classvvm" kindref="compound">vvm</ref><sp/>&amp;model)<sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>=<sp/>0.;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>k<sp/>=<sp/>1;<sp/>k<sp/>&lt;=<sp/>model.<ref refid="classvvm_1a1c19d7dc2ab861379c3c69c7e79bd5c8" kindref="member">nz</ref>-2;<sp/>k++)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>1;<sp/>i<sp/>&lt;=<sp/>model.<ref refid="classvvm_1a54019773003b18a98f267df45ee230bb" kindref="member">nx</ref>-2;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#ifndef<sp/>AB2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>=<sp/>model.<ref refid="classvvm_1a35038a3310f0394ec73c928ff9801f84" kindref="member">d2t</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>=<sp/>model.<ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref>;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(TROPICALFORCING)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1ae9b64ac44720501013d0f18fd774474d" kindref="member">thp</ref>[i][k]<sp/>+=<sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>*<sp/>model.Q1LS[k];</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1a345c7e128e6c8a81a3949456530a428a" kindref="member">qvp</ref>[i][k]<sp/>+=<sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>*<sp/>model.Q2LS[k];</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(RADIATIONCOOLING)<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>model.<ref refid="classvvm_1ae9b64ac44720501013d0f18fd774474d" kindref="member">thp</ref>[i][k]<sp/>+=<sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>*<sp/>(-2.<sp/>/<sp/>86400.);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(model.<ref refid="classvvm_1ac062ac68687e7171fd71da3236b2e6a9" kindref="member">status_for_adding_forcing</ref><sp/>==<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">)<sp/>model.<ref refid="classvvm_1ae9b64ac44720501013d0f18fd774474d" kindref="member">thp</ref>[i][k]<sp/>+=<sp/><ref refid="classvvm_1a9f15f33b8d04ec8a3cf7d9c9d9e31f8d" kindref="member">dt</ref><sp/>*<sp/>model.<ref refid="classvvm_1a714970757ba0e39eba63e90160b9baea" kindref="member">init_th_forcing</ref>[i][k];</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/home/Aaron/TMIF_VVM_CSSWM/2DVVM/src/AddForcing.cpp"/>
+  </compounddef>
+</doxygen>
