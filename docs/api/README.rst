@@ -13,7 +13,7 @@ Prerequisite
 - PETSc [optional]
 - Eigen (this has already been installed in the include folder) [optional]
 
-The tutorial for installing netcdf-cxx4 and PETSc can be found `here <./api/install_compilers_libraries.html>`_
+The tutorial for installing netcdf-cxx4 and PETSc can be found `here <./api/install_compilers_libraries.html>`_ (If the link doesn't work, find this in the 2DVVM documentation)
 
 - This model will use txt output and Eigen solver for solving Poisson equation by default. However,
   - You can turn on the `OUTPUTNC` and turn off `OUTPUTTXT` in `./src/Config.hpp` to use netcdf output. Note that netcdf doesn't support openMP output so if you want to use openMP, don't turn the `OUTPUTNC` flag on.
@@ -43,7 +43,7 @@ Optional for NetCDF output and PETSc Solver
 
 1. Install netcdf-cxx, petsc.
 
-   It's a little bit complicated to install libraries for C/C++. I will provide a tutorial for installing C/C++ compiler and the libraries in another file `here <./api/install_compilers_libraries.html>`_. Here, you don't need to have sudo privilege to install anything.
+   It's a little bit complicated to install libraries for C/C++. I will provide a tutorial for installing C/C++ compiler and the libraries in another file `here <./api/install_compilers_libraries.html>`_ (If the link doesn't work, find this in the 2DVVM documentation). Here, you don't need to have sudo privilege to install anything.
 
 2. Link the installed libraries.
 
@@ -70,3 +70,8 @@ Optional for NetCDF output and PETSc Solver
 
 - Turn on `OUTPUTNC` and turn off `OUTPUTTXT` to use netcdf output.
 - Turn on `PETSC` to use PETSc solver.
+
+
+Documentation
+-------------
+https://aaron-hsieh-0129.github.io/2D-Vector-Vorticity-Model/index.html
