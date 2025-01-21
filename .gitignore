@@ -11,3 +11,6 @@ compile_flags.txt
 .cache
 node_modules
 log
+docs/_build
+docs/html
+docs/xml

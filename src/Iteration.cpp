@@ -212,6 +212,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             // Nudging process to damp the gravity wave
             vvm::NumericalProcess::Nudge_theta(model);
             if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
+            vvm::NumericalProcess::Nudge_qv(model);
         #endif
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 

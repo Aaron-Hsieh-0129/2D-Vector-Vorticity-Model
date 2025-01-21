@@ -110,7 +110,7 @@ void vvm::Output::output_nc(int n, vvm &model) {
     int t_varid = 0.;
     size_t t_index = 0;
 
-    int file_num =  (n / 40000);
+    int file_num =  (n / 120000);
     std::string file_name = model.outputpath + "nc/"  + std::to_string(file_num) + (string) ".nc";
 
     if ((retval = nc_open(file_name.c_str(), NC_WRITE, &ncid)) == NC_NOERR) {

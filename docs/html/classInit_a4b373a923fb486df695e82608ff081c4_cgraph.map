@@ -1,8 +1,0 @@
-<map id="Init::Init1d" name="Init::Init1d">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,84,40"/>
-<area shape="rect" id="Node000002" href="$classvvm.html#ace6f793034804810c37b0363b70648ed" title=" " alt="" coords="278,5,454,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,24,264,24,264,29,85,29"/>
-<area shape="rect" id="Node000003" href="$classInit.html#a18f209b227e2b6894dcd45969eec4339" title=" " alt="" coords="132,39,230,65"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,31,119,38,118,43,84,37"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="230,43,264,38,265,43,231,48"/>
-</map>

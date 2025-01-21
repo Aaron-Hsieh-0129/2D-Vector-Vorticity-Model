@@ -9,10 +9,10 @@ class Config_VVM {
 public:
     Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
            std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance,
-           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE)
+           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time)
         : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
           outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS),
-          tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE) {}
+          tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE), mositure_nudge_time(mositure_nudge_time) {}
     ~Config_VVM() {}
 
     double dt;              ///< Time step for vvm [s].
@@ -37,6 +37,7 @@ public:
     double PSURF;           ///< The surface pressure [Pa]. It's 96500 Pa for default.
     double addforcingtime;  ///< The time for adding the perturbation. The perturbation is used to break the symmetry of the model.
     int CASE;               ///< The case number for the model. It's used to specify the initial condition and the forcing. If CASE is 0, the initial condition is equal to mean state. If CASE is 1, the initial condition is equal to mean state plus a warm bubble. 
+    double mositure_nudge_time; ///< The time for nudging the moisture. It's used for nudging the moisture to the mean state. It's used for nudging the moisture to the mean state.
 };
 
 
@@ -58,7 +59,7 @@ public:
           GRAVITY(config.GRAVITY),
           Cp(config.Cp), Cv(config.Cv),
           Rd(config.Rd), Lv(config.Lv),
-          P0(config.P0), PSURF(config.PSURF), addforcingtime(config.addforcingtime), CASE(config.CASE)
+          P0(config.P0), PSURF(config.PSURF), addforcingtime(config.addforcingtime), CASE(config.CASE), moisture_nudge_time(config.mositure_nudge_time)
     {
         allocateMemory();
     }
@@ -77,6 +78,7 @@ public:
         delete[] rhow;
         delete[] pib;
         delete[] qvb;
+        delete[] qvb0;
         delete[] qvsb;
         delete[] pb;
         delete[] xi;
@@ -164,6 +166,7 @@ public:
         rhow = new double[nz];
         pib = new double[nz];
         qvb = new double[nz];
+        qvb0 = new double[nz];
         qvsb = new double[nz];
         pb = new double[nz];
         xi = new double[nx];
@@ -299,13 +302,15 @@ public:
     double PSURF;                            ///< From Config_VVM given by users.
     double addforcingtime;                   ///< From Config_VVM given by users.
     int CASE;                                ///< From Config_VVM given by users.
-    double CRAD = 1. / 100.;                   ///< From Config_VVM given by users.
+    double CRAD = 1. / 3600.;                   ///< From Config_VVM given by users.
 
     // 0D variables
     int step = 0;                            ///< The current time step.
     double ubarTopp;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
     double ubarTop;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
     double ubarTopm;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double moisture_nudge_time = 0.;         ///< The time for nudging the moisture field.
+
 
     // 1D variables
     double *thb;                              ///< Horizontal mean potential temperature profile.
@@ -316,6 +321,7 @@ public:
     double *rhow;                             ///< Horizontal mean density profile at grid upper edge.
     double *pib;                              ///< Horizontal mean non-dimensional height profile at grid center.
     double *qvb;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvb0;                              ///< Horizontal mean water vapor profile at grid center.
     double *qvsb;                             ///< Horizontal mean saturated water vapor profile at grid center.
     double *pb;                               ///< Horizontal mean pressure profile at grid center.
     double *xi;                               ///< The velocity potential in x-direction at top boundary grid center.
@@ -504,6 +510,7 @@ public:
         static void timeFilterAll(vvm &model);
         static void Nudge_theta(vvm &model);
         static void Nudge_zeta(vvm &model);
+        static void Nudge_qv(vvm &model);
     };
 
     // *********************************************************************************

@@ -69,3 +69,14 @@ void vvm::NumericalProcess::Nudge_zeta(vvm &model) {
     }
     return;
 }
+
+void vvm::NumericalProcess::Nudge_qv(vvm &model) {
+    if (model.moisture_nudge_time == 0) return;
+
+    for (int i = 0; i <= model.nx-1; i++) {
+        for (int k = 0; k <= model.nz-1; k++) {
+            model.qvp[i][k] = model.qvp[i][k] + model.dt * (model.qvb0[k] - model.qv[i][k]) / model.moisture_nudge_time;
+        }
+    }
+    return;
+}

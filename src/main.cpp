@@ -32,10 +32,11 @@ int main(int argc, char **argv) {
     double vvm_timeend = std::stod(configs["VVM_TIMEEND"]);
     int vvm_outputstep = std::stoi(configs["VVM_OUTPUTSTEP"]);
     int vvm_case = std::stoi(configs["VVM_CASE"]);
+    double vvm_moisture_nudge_time = std::stod(configs["VVM_MOISTURE_NUDGE_TIME"]);
 
     Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
                     70., 70., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., -1., vvm_case);
+                    1E5, 96500., -1., vvm_case, vvm_moisture_nudge_time);
     
     vvm model(config);
     
@@ -52,8 +53,8 @@ int main(int argc, char **argv) {
         vvm::PoissonSolver::InitPoissonMatrix(model);
     #endif
 
-    vvm::Output::printInit(model);
     vvm::Output::create_all_directory(model);
+    vvm::Output::printInit(model);
 
     // // This initialization is for NGAC3F coupling comparison
     // std::ifstream inputFile("/data/Aaron/TMIF/th0.txt");

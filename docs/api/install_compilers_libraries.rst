@@ -37,7 +37,7 @@ Install compiler
 
     ./configure --prefix=$HOME/gcc13 --enable-languages=c,c++,fortran --disable-multilib
 
-    make -j 60
+    make -j64
     make check
     make install
 
@@ -47,16 +47,15 @@ In ``~/.zshrc``
 
     ################ In ~/.zshrc or ~/.bashrc ##############
     export PATH=${HOME}/gcc13/bin:${HOME}/gcc13/lib64:$PATH
-    export LD_LIBRARY_PATH=${HOME}/gcc13/lib/:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=${HOME}/gcc13/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=${HOME}/gcc13/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=${HOME}/gcc13/lib:$LIBRARY_PATH
+    export LIBRARY_PATH=${HOME}/gcc13/lib64:$LIBRARY_PATH
 
-    export PATH="$PATH:$HOME/local/bin"
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/local/lib"
-    export LIBRARY_PATH="$LIBRARY_PATH:$HOME/local/lib"
-    export CPATH="$CPATH:$HOME/local/include"
     #########################################################
 
-Install mpich
-----------------
+Install mpich (Not necessary)
+------------------------------
 - CUDA can also be installed and link to mpich. You should specify it in the ./configure command.
   
 .. code-block:: shell
@@ -66,12 +65,27 @@ Install mpich
     mkdir mpich4
     cd mpich-4.2.0
     ./configure -prefix=/home/Aaron/mpich4
-    make -j 64
+    make -j64
     make check
     make install
     ################ In ~/.zshrc or ~/.bashrc ##############
     export PATH=/home/Aaron/mpich4/bin:$PATH
     #########################################################
+
+
+Install cmake 
+----------------
+
+.. code-block:: shell
+
+    git clone https://github.com/Kitware/CMake.git
+    cd CMake
+    git checkout tags/v3.29.1
+    ./bootstrap --prefix=$HOME/local
+
+If you encounter some errors that need to resolve by installing some system-level libraries such as openGL or openSSH, you can install cmake from miniconda, pip or install the missing libraries by `sudo apt-get install` from permission of the system administrator.
+Building from source is possible and please refer to the official website for more information.
+
 
 The procedure to install netcdf-cxx
 -------------------------------------
@@ -81,12 +95,17 @@ Install hdf5
 
 .. code-block:: shell
 
-    wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.14.tar.gz
-    tar xf hdf5-1.8.14.tar.gz
-    cd hdf5-1.8.14
+    git clone https://github.com/HDFGroup/hdf5.git
+    cd hdf5
+    git checkout tags/hdf5-1_8_14
     # ./configure --prefix=$HOME/local --enable-fortran --enable-cxx --enable-parallel --enable-unsupported (error for parallel)
-    ./configure --prefix=$HOME/local --enable-fortran --enable-cxx
-    make -j 32
+    
+    # Use this to enable Fortran
+    # ./configure --prefix=$HOME/local --enable-fortran --enable-cxx
+
+    # Use this to enable only C++
+    ./configure --prefix=$HOME/local --enable-cxx
+    make -j32
     make check
     make install
 
@@ -95,28 +114,42 @@ Install netcdf-c
 
 .. code-block:: shell
 
-    wget https://github.com/Unidata/netcdf-c/archive/v4.3.3.1.tar.gz
-    tar xf v4.3.3.1.tar.gz
-    cd netcdf-c-4.3.3.1
+    git clone https://github.com/Unidata/netcdf-c.git
+    cd netcdf-c
+    git checkout tags/v4.3.3.1
     ./configure --prefix=$HOME/local --enable-netcdf-4
     make
     make check
     make install
+
+Noted that if you encounter the error like this `configure: error: Cannot find m4 utility. Install m4 and try again.`
+You can install m4 from this website https://ftp.gnu.org/gnu/m4/
+
+.. code-block:: shell
+
+    wget https://ftp.gnu.org/gnu/m4/m4-1.4.1.tar.gz
+    tar xf m4-1.4.1.tar.gz
+    cd m4-1.4.1
+    ./configure --prefix=$HOME/local
+    make -j16
+    make check
+    make install
+
 
 Install netcdf-cxx
 ~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: shell
 
-    wget https://github.com/Unidata/netcdf-cxx4/archive/v4.2.1.tar.gz
-    tar xf v4.2.1.tar.gz
-    cd netcdf-cxx4-4.2.1
+    git clone https://github.com/Unidata/netcdf-cxx4.git
+    cd netcdf-cxx4
+    git checkout v4.2.1
     ./configure --prefix=$HOME/local
-    make
+    make -j16
     make check
     make install
 
-Install petsc
+Install petsc (Not necessary)
 ----------------
 
 .. code-block:: shell

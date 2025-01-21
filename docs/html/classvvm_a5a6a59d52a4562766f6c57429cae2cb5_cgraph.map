@@ -1,7 +1,0 @@
-<map id="vvm::Advection_qrVT" name="vvm::Advection_qrVT">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,153,57"/>
-<area shape="rect" id="Node000002" href="$Advection_8cpp.html#a8566d63c1693d34aba0fa86f658532a2" title=" " alt="" coords="201,5,266,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,29,187,23,188,29,154,34"/>
-<area shape="rect" id="Node000003" href="$Advection_8cpp.html#ac35c0748e7807333a355cd2b8e5dfef8" title=" " alt="" coords="205,56,262,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,54,192,60,191,65,153,59"/>
-</map>

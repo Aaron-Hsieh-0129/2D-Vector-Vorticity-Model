@@ -1,7 +1,0 @@
-<map id="vvm::Advection_thermo" name="vvm::Advection_thermo">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,166,57"/>
-<area shape="rect" id="Node000002" href="$Advection_8cpp.html#a8566d63c1693d34aba0fa86f658532a2" title=" " alt="" coords="214,5,278,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,29,200,23,201,28,167,34"/>
-<area shape="rect" id="Node000003" href="$Advection_8cpp.html#ac35c0748e7807333a355cd2b8e5dfef8" title=" " alt="" coords="218,56,274,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,54,205,60,204,65,166,59"/>
-</map>
