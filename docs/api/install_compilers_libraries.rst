@@ -51,7 +51,6 @@ In ``~/.zshrc``
     export LD_LIBRARY_PATH=${HOME}/gcc13/lib64:$LD_LIBRARY_PATH
     export LIBRARY_PATH=${HOME}/gcc13/lib:$LIBRARY_PATH
     export LIBRARY_PATH=${HOME}/gcc13/lib64:$LIBRARY_PATH
-
     #########################################################
 
 Install mpich (Not necessary)
@@ -165,19 +164,16 @@ Install petsc (Not necessary)
     unset LD_LIBRARY_PATH
     export LD_LIBRARY_PATH=/home/Aaron/gcc13/lib/
 
-    export PATH=$PATH:/install/bin
-    export C_INCLUDE_PATH=$C_INCLUDE_PATH:/install/include
-    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/install/include
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/install/lib64
-    export LIBRARY_PATH=$LIBRARY_PATH:/install/lib
-
     export PATH="$PATH:$HOME/local/bin"
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/local/lib"
     export LIBRARY_PATH="$LIBRARY_PATH:$HOME/local/lib"
     export CPATH="$CPATH:$HOME/local/include"
 
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/gcc13/lib64"
-    export LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/gcc13/lib64"
+    export PATH=${HOME}/gcc13/bin:${HOME}/gcc13/lib64:$PATH
+    export LD_LIBRARY_PATH=${HOME}/gcc13/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=${HOME}/gcc13/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=${HOME}/gcc13/lib:$LIBRARY_PATH
+    export LIBRARY_PATH=${HOME}/gcc13/lib64:$LIBRARY_PATH
 
     export PATH=/home/Aaron/mpich4/bin:$PATH
 
