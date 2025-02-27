@@ -109,7 +109,8 @@ void vvm::Output::output_nc(int n, vvm &model) {
         #endif
 
         #if defined(P3_MICROPHY)
-            int qncid, qnrid, qniid, qitotid, qirimid, birimid;
+            int qitotid;
+            /* int qncid, qnrid, qniid, qirimid, birimid; */
         #endif
     #endif
 
@@ -147,12 +148,12 @@ void vvm::Output::output_nc(int n, vvm &model) {
             #endif
 
             #if defined(P3_MICROPHY)
-                if ((retval = nc_inq_varid(ncid, "qnc", &qncid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "qnr", &qnrid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "qni", &qniid))) NC_ERR(retval);
+                /* if ((retval = nc_inq_varid(ncid, "qnc", &qncid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "qnr", &qnrid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "qni", &qniid))) NC_ERR(retval); */
                 if ((retval = nc_inq_varid(ncid, "qitot", &qitotid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "qirim", &qirimid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "birim", &birimid))) NC_ERR(retval);
+                /* if ((retval = nc_inq_varid(ncid, "qirim", &qirimid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "birim", &birimid))) NC_ERR(retval); */
             #endif
         #endif
 
@@ -198,12 +199,12 @@ void vvm::Output::output_nc(int n, vvm &model) {
             #endif
 
             #if defined(P3_MICROPHY)
-                if ((retval = nc_def_var(ncid, "qnc", NC_DOUBLE, 3, dimids, &qncid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "qnr", NC_DOUBLE, 3, dimids, &qnrid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "qni", NC_DOUBLE, 3, dimids, &qniid))) NC_ERR(retval);
+                /* if ((retval = nc_def_var(ncid, "qnc", NC_DOUBLE, 3, dimids, &qncid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "qnr", NC_DOUBLE, 3, dimids, &qnrid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "qni", NC_DOUBLE, 3, dimids, &qniid))) NC_ERR(retval); */
                 if ((retval = nc_def_var(ncid, "qitot", NC_DOUBLE, 3, dimids, &qitotid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "qirim", NC_DOUBLE, 3, dimids, &qirimid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "birim", NC_DOUBLE, 3, dimids, &birimid))) NC_ERR(retval);
+                /* if ((retval = nc_def_var(ncid, "qirim", NC_DOUBLE, 3, dimids, &qirimid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "birim", NC_DOUBLE, 3, dimids, &birimid))) NC_ERR(retval); */
             #endif
         #endif
         // End define mode
@@ -242,12 +243,12 @@ void vvm::Output::output_nc(int n, vvm &model) {
         #endif
 
         #if defined(P3_MICROPHY)
-            if ((retval = nc_put_vara_double(ncid, qncid, start, count, model.nccont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, qnrid, start, count, model.nrcont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, qniid, start, count, model.nicont))) checkErr(retval, __LINE__);
+            /* if ((retval = nc_put_vara_double(ncid, qncid, start, count, model.nccont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, qnrid, start, count, model.nrcont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, qniid, start, count, model.nicont))) checkErr(retval, __LINE__); */
             if ((retval = nc_put_vara_double(ncid, qitotid, start, count, model.qitotcont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, qirimid, start, count, model.qirimcont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, birimid, start, count, model.birimcont))) checkErr(retval, __LINE__);
+            /* if ((retval = nc_put_vara_double(ncid, qirimid, start, count, model.qirimcont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, birimid, start, count, model.birimcont))) checkErr(retval, __LINE__); */
         #endif
     #endif
 
