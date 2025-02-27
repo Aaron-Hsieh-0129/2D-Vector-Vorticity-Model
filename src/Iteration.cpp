@@ -367,6 +367,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 model.precip[i] = model.precip_sol[i] + model.precip_liq[i];
             }
 
+            #endif
             /*
             __microphy_p3_MOD_p3_main(
                 model.qcpcont, model.ncpcont, model.qrpcont, model.nrpcont, 
@@ -386,7 +387,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 nullptr, nullptr, nullptr, nullptr, nullptr
             );
             */
-            #endif
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();

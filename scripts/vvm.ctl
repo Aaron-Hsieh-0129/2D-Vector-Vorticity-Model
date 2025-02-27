@@ -18,9 +18,9 @@ qc=>qc 102 t,x,z qc
 qr=>qr 102 t,x,z qr 
 qnc=>qnc 102 t,x,z qnc 
 qnr=>qnr 102 t,x,z qnr 
-qr=>qitot 102 t,x,z qitot 
-qr=>qirim 102 t,x,z qirim
-qr=>qiliq 102 t,x,z qiliq
+qni=>qni 102 t,x,z qni 
+qitot=>qitot 102 t,x,z qitot 
+qirim=>qirim 102 t,x,z qirim
 precip=>precip 1 t,x precip
 ubarTop=>ubarTop 1 t ubarTop
 ENDVARS

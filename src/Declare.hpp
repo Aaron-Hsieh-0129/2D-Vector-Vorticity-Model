@@ -699,11 +699,11 @@ public:
     #if defined(P3_MICROPHY)
     class P3 {
     public:
-        inline static char lookup_file_dir[17] = "../lookup_tables";
+        inline static char *lookup_file_dir = strdup("../lookup_tables");
         inline static int nCat = 1;
         inline static bool trplMomI = false; // 3-element array
         inline static bool liqfrac = false;
-        inline static char model_name[6] = "2DVVM";
+        inline static char *model_name = strdup("2DVVM");
         inline static int stat = 0;
         inline static bool abort_on_err = true;
         inline static bool dowr = true;

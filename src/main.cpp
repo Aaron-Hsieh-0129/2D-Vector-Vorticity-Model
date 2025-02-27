@@ -16,7 +16,7 @@
 extern "C" {
     void __microphy_p3_MOD_p3_init(
         char* lookup_file_dir, int* nCat, bool* trplMomI, bool* liqfrac,
-        char* model, int* stat, bool* abort_on_err, bool* dowr, size_t lookup_file_dir_len
+        char* model, int* stat, bool* abort_on_err, bool* dowr, size_t lookup_file_dir_len, size_t model_name_len
     );
 }
 #endif
@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
     #if defined(P3_MICROPHY)
     __microphy_p3_MOD_p3_init(
         vvm::P3::lookup_file_dir, &vvm::P3::nCat, &vvm::P3::trplMomI, &vvm::P3::liqfrac,
-        vvm::P3::model_name, &vvm::P3::stat, &vvm::P3::abort_on_err, &vvm::P3::dowr, strlen(vvm::P3::lookup_file_dir)
+        vvm::P3::model_name, &vvm::P3::stat, &vvm::P3::abort_on_err, &vvm::P3::dowr, strlen(vvm::P3::lookup_file_dir), strlen(vvm::P3::model_name)
     );
 
     for (int k = 0; k < model.nz; k++) {

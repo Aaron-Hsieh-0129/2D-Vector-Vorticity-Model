@@ -164,6 +164,8 @@
 
 !------------------------------------------------------------------------------------------!
 
+PRINT *, lookup_file_dir
+
  read_path = lookup_file_dir           ! path for lookup tables from official model library
 !read_path = '/MY/LOOKUP_TABLE/PATH'   ! path for lookup tables from specified location
 
