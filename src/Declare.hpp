@@ -108,7 +108,7 @@ public:
         #endif
 
         #if defined(WATER)
-            delete[] precip;
+            
 
             deallocate2DContinuousArray(qvp, qvpcont);
             deallocate2DContinuousArray(qv, qvcont);
@@ -119,10 +119,56 @@ public:
             deallocate2DContinuousArray(qrp, qrpcont);
             deallocate2DContinuousArray(qr, qrcont);
             deallocate2DContinuousArray(qrm, qrmcont);
-            deallocate2DContinuousArray(evaporation, evaporationcont);
-            deallocate2DContinuousArray(accretion, accretioncont);
-            deallocate2DContinuousArray(autoconversion, autoconversioncont);
-            deallocate2DContinuousArray(condensation, condensationcont);
+            #if defined(KESSLER_MICROPHY)
+                delete[] precip;
+
+                deallocate2DContinuousArray(evaporation, evaporationcont);
+                deallocate2DContinuousArray(accretion, accretioncont);
+                deallocate2DContinuousArray(autoconversion, autoconversioncont);
+                deallocate2DContinuousArray(condensation, condensationcont);
+            #endif
+
+            #if defined(P3_MICROPHY)
+                
+                deallocate2DContinuousArray(ncp, ncpcont);
+                deallocate2DContinuousArray(nc, nccont);
+                deallocate2DContinuousArray(ncm, ncmcont);
+                deallocate2DContinuousArray(nrp, nrpcont);
+                deallocate2DContinuousArray(nr, nrcont);
+                deallocate2DContinuousArray(nrm, nrmcont);
+                deallocate2DContinuousArray(qitotp, qitotpcont);
+                deallocate2DContinuousArray(qitot, qitotcont);
+                deallocate2DContinuousArray(qitotm, qitotmcont);
+                deallocate2DContinuousArray(qirimp, qirimpcont);
+                deallocate2DContinuousArray(qirim, qirimcont);
+                deallocate2DContinuousArray(qirimm, qirimmcont);
+                deallocate2DContinuousArray(qiliqp, qiliqpcont);
+                deallocate2DContinuousArray(qiliq, qiliqcont);
+                deallocate2DContinuousArray(qiliqm, qiliqmcont);
+                deallocate2DContinuousArray(nip, nipcont);
+                deallocate2DContinuousArray(ni, nicont);
+                deallocate2DContinuousArray(nim, nimcont);
+                deallocate2DContinuousArray(birimp, birimpcont);
+                deallocate2DContinuousArray(birim, birimcont);
+                deallocate2DContinuousArray(birimm, birimmcont);
+                deallocate2DContinuousArray(diag_ze, diag_zecont);
+                deallocate2DContinuousArray(diag_effc, diag_effccont);
+                deallocate2DContinuousArray(diag_effi, diag_efficont);
+                deallocate2DContinuousArray(diag_vmi, diag_vmicont);
+                deallocate2DContinuousArray(diag_di, diag_dicont);
+                deallocate2DContinuousArray(diag_rhoi, diag_rhoicont);
+                deallocate2DContinuousArray(cldfrac, cldfraccont);
+                deallocate2DContinuousArray(diag_2d, diag_2dcont);
+                deallocate2DContinuousArray(dz_all, dz_allcont);
+                deallocate2DContinuousArray(w_all, w_allcont);
+                deallocate2DContinuousArray(pb_all, pb_allcont);
+                deallocate2DContinuousArray(zi_all, zi_allcont);
+                deallocate2DContinuousArray(ssat_all, ssat_allcont);
+
+                delete[] precip_liq;
+                delete[] precip_sol;
+                delete[] precip;
+            #endif
         #endif
 
         #if defined(AB2)
@@ -135,7 +181,22 @@ public:
                 deallocate3DContinuousArray(dqc_advect, dqc_advectcont);
                 deallocate3DContinuousArray(dqr_advect, dqr_advectcont);
                 deallocate3DContinuousArray(dqr_VT, dqr_VTcont);
+
+                #if defined(P3_MICROPHY)
+                    
+                    deallocate3DContinuousArray(dnc_advect, dnc_advectcont);
+                    deallocate3DContinuousArray(dnr_advect, dnr_advectcont);
+                    deallocate3DContinuousArray(dni_advect, dni_advectcont);
+                    deallocate3DContinuousArray(dqitot_advect, dqitot_advectcont);
+                    deallocate3DContinuousArray(dqirim_advect, dqirim_advectcont);
+                    deallocate3DContinuousArray(dqiliq_advect, dqiliq_advectcont);
+                    deallocate3DContinuousArray(dbirim_advect, dbirim_advectcont);
+                #endif
             #endif
+
+        #endif
+        #if defined(P3_MICROPHY)
+            deallocate3DContinuousArray(diag_3d, diag_3dcont);
         #endif
 
         delete[] t_advection;
@@ -201,7 +262,14 @@ public:
         #endif
 
         #if defined(WATER)
-            precip = new double[nx];
+            #if defined(KESSLER_MICROPHY)
+                precip = new double[nx];
+
+                evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
+                accretion = allocate2DContinuousArray(nx, nz, accretioncont);
+                autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
+                condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+            #endif
 
             qvp = allocate2DContinuousArray(nx, nz, qvpcont);
             qv = allocate2DContinuousArray(nx, nz, qvcont);
@@ -212,10 +280,47 @@ public:
             qrp = allocate2DContinuousArray(nx, nz, qrpcont);
             qr = allocate2DContinuousArray(nx, nz, qrcont);
             qrm = allocate2DContinuousArray(nx, nz, qrmcont);
-            evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
-            accretion = allocate2DContinuousArray(nx, nz, accretioncont);
-            autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
-            condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+
+            #if defined(P3_MICROPHY)
+                ncp = allocate2DContinuousArray(nx, nz, ncpcont);
+                nc = allocate2DContinuousArray(nx, nz, nccont);
+                ncm = allocate2DContinuousArray(nx, nz, ncmcont);
+                nrp = allocate2DContinuousArray(nx, nz, nrpcont);
+                nr = allocate2DContinuousArray(nx, nz, nrcont);
+                nrm = allocate2DContinuousArray(nx, nz, nrmcont);
+                qitotp = allocate2DContinuousArray(nx, nz, qitotpcont);
+                qitot = allocate2DContinuousArray(nx, nz, qitotcont);
+                qitotm = allocate2DContinuousArray(nx, nz, qitotmcont);
+                qirimp = allocate2DContinuousArray(nx, nz, qirimpcont);
+                qirim = allocate2DContinuousArray(nx, nz, qirimcont);
+                qirimm = allocate2DContinuousArray(nx, nz, qirimmcont);
+                qiliqp = allocate2DContinuousArray(nx, nz, qiliqpcont);
+                qiliq = allocate2DContinuousArray(nx, nz, qiliqcont);
+                qiliqm = allocate2DContinuousArray(nx, nz, qiliqmcont);
+                nip = allocate2DContinuousArray(nx, nz, nipcont);
+                ni = allocate2DContinuousArray(nx, nz, nicont);
+                nim = allocate2DContinuousArray(nx, nz, nimcont);
+                birimp = allocate2DContinuousArray(nx, nz, birimpcont);
+                birim = allocate2DContinuousArray(nx, nz, birimcont);
+                birimm = allocate2DContinuousArray(nx, nz, birimmcont);
+                diag_ze = allocate2DContinuousArray(nx, nz, diag_zecont);
+                diag_effc = allocate2DContinuousArray(nx, nz, diag_effccont);
+                diag_effi = allocate2DContinuousArray(nx, nz, diag_efficont);
+                diag_vmi = allocate2DContinuousArray(nx, nz, diag_vmicont);
+                diag_di = allocate2DContinuousArray(nx, nz, diag_dicont);
+                diag_rhoi = allocate2DContinuousArray(nx, nz, diag_rhoicont);
+                cldfrac = allocate2DContinuousArray(nx, nz, cldfraccont);
+                diag_2d = allocate2DContinuousArray(nx, vvm::P3::n_diag_2d, diag_2dcont);
+                dz_all = allocate2DContinuousArray(nx, nz, dz_allcont);
+                w_all = allocate2DContinuousArray(nx, nz, w_allcont);
+                pb_all = allocate2DContinuousArray(nx, nz, pb_allcont);
+                zi_all = allocate2DContinuousArray(nx, nz, zi_allcont);
+                ssat_all = allocate2DContinuousArray(nx, nz, ssat_allcont);
+
+                precip_liq = new double[nx];
+                precip_sol = new double[nx];
+                precip = new double[nx];
+            #endif
         #endif
 
         #if defined(AB2)
@@ -227,6 +332,20 @@ public:
                 dqc_advect = allocate3DContinuousArray(nx, nz, 2, dqc_advectcont);
                 dqr_advect = allocate3DContinuousArray(nx, nz, 2, dqr_advectcont);
                 dqr_VT = allocate3DContinuousArray(nx, nz, 2, dqr_VTcont);
+
+                #if defined(P3_MICROPHY)
+                    dnc_advect = allocate3DContinuousArray(nx, nz, 2, dnc_advectcont);
+                    dnr_advect = allocate3DContinuousArray(nx, nz, 2, dnr_advectcont);
+                    dni_advect = allocate3DContinuousArray(nx, nz, 2, dni_advectcont);
+                    dqitot_advect = allocate3DContinuousArray(nx, nz, 2, dqitot_advectcont);
+                    dqirim_advect = allocate3DContinuousArray(nx, nz, 2, dqirim_advectcont);
+                    dqiliq_advect = allocate3DContinuousArray(nx, nz, 2, dqiliq_advectcont);
+                    dbirim_advect = allocate3DContinuousArray(nx, nz, 2, dbirim_advectcont);
+                #endif
+            #endif
+
+            #if defined(P3_MICROPHY)
+                diag_3d = allocate3DContinuousArray(nx, nz, vvm::P3::n_diag_3d, diag_3dcont);
             #endif
         #endif
     }
@@ -367,34 +486,63 @@ public:
     #endif
 
     #if defined(WATER)
-        double **qvp;
-        double **qv;
-        double **qvm;
-        double **qcp;
-        double **qc;
-        double **qcm;
-        double **qrp;
-        double **qr;
-        double **qrm;
-        double **evaporation;
-        double **accretion;
-        double **autoconversion;
-        double **condensation;
-        double *precip;
-        
-        double *qvpcont;
-        double *qvcont;
-        double *qvmcont;
-        double *qcpcont;
-        double *qccont;
-        double *qcmcont;
-        double *qrpcont;
-        double *qrcont;
-        double *qrmcont;
-        double *evaporationcont;
-        double *accretioncont;
-        double *autoconversioncont;
-        double *condensationcont;
+        double **qvp, **qv, **qvm;
+        double **qcp, **qc, **qcm;
+        double **qrp, **qr, **qrm;
+        #if defined(KESSLER_MICROPHY)
+            double **evaporation;
+            double **accretion;
+            double **autoconversion;
+            double **condensation;
+            double *precip;
+        #endif
+        #if defined(P3_MICROPHY)
+            double **ncp, **nc, **ncm;
+            double **nrp, **nr, **nrm;
+            double **qitotp, **qitot, **qitotm;
+            double **qirimp, **qirim, **qirimm;
+            double **qiliqp, **qiliq, **qiliqm;
+            double **nip, **ni, **nim;
+            double **birimp, **birim, **birimm;
+            double *precip_liq, *precip_sol, *precip;
+            double **diag_ze, **diag_effc, **diag_effi;
+            double **diag_vmi, **diag_di, **diag_rhoi, **cldfrac;
+            double **diag_2d, ***diag_3d;
+            double **dz_all;
+            double **w_all;
+            double **pb_all;
+            double **zi_all;
+            double **ssat_all;
+        #endif
+
+
+        double *qvpcont, *qvcont, *qvmcont;
+        double *qcpcont, *qccont, *qcmcont;
+        double *qrpcont, *qrcont, *qrmcont;
+        #if defined(KESSLER_MICROPHY)
+            double *evaporationcont;
+            double *accretioncont;
+            double *autoconversioncont;
+            double *condensationcont;
+        #endif
+
+        #if defined(P3_MICROPHY)
+            double *ncpcont, *nccont, *ncmcont;
+            double *nrpcont, *nrcont, *nrmcont;
+            double *qitotpcont, *qitotcont, *qitotmcont;
+            double *qirimpcont, *qirimcont, *qirimmcont;
+            double *qiliqpcont, *qiliqcont, *qiliqmcont;
+            double *nipcont, *nicont, *nimcont;
+            double *birimpcont, *birimcont, *birimmcont;
+            double *diag_zecont, *diag_effccont, *diag_efficont;
+            double *diag_vmicont, *diag_dicont, *diag_rhoicont, *cldfraccont;
+            double *diag_2dcont, *diag_3dcont;
+            double *dz_allcont;
+            double *w_allcont;
+            double *pb_allcont;
+            double *zi_allcont;
+            double *ssat_allcont;
+        #endif
     #endif
 
     // #####################################################################################
@@ -417,6 +565,24 @@ public:
         double *dqc_advectcont;
         double *dqr_advectcont;
         double *dqr_VTcont;
+
+        #if defined(P3_MICROPHY)
+            double ***dnc_advect;
+            double ***dnr_advect;
+            double ***dni_advect;
+            double ***dqitot_advect;
+            double ***dqirim_advect;
+            double ***dqiliq_advect;
+            double ***dbirim_advect;
+
+            double *dnc_advectcont;
+            double *dnr_advectcont;
+            double *dni_advectcont;
+            double *dqitot_advectcont;
+            double *dqirim_advectcont;
+            double *dqiliq_advectcont;
+            double *dbirim_advectcont;
+        #endif
     #endif
     // #####################################################################################
 
@@ -516,6 +682,7 @@ public:
     // *********************************************************************************
 
     #if defined(WATER)
+    #if defined(KESSLER_MICROPHY)
     class MicroPhysics {
     public:
         static void condensation(vvm &model); 	// condensation of qc by qv
@@ -524,8 +691,34 @@ public:
         static void evaporation(vvm &model); 	// evaporation of rain water
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
+    #endif
 
         static void AddForcing(vvm &model);
+    #endif
+
+    #if defined(P3_MICROPHY)
+    class P3 {
+    public:
+        inline static char lookup_file_dir[17] = "../lookup_tables";
+        inline static int nCat = 1;
+        inline static bool trplMomI = false; // 3-element array
+        inline static bool liqfrac = false;
+        inline static char model_name[6] = "2DVVM";
+        inline static int stat = 0;
+        inline static bool abort_on_err = true;
+        inline static bool dowr = true;
+
+        inline static int n_diag_2d = 1;
+        inline static int n_diag_3d = 1;
+
+        inline static bool log_predictNc  = false; // 3-element array
+        inline static double scpf_pfrac   = 0.;    // dummy variable (not used), set to 0
+        inline static double scpf_resfact = 0.;    // dummy variable (not used), set to 0
+        inline static double clbfact_dep  = 1.;    // calibration for deposition
+        inline static double clbfact_sub  = 1.;    // calibration for sublimation
+        inline static bool debug_on  = false;
+        inline static bool scpf_on   = false;      // cloud fraction version not used
+    };
     #endif
 
     // Variables for tropical forcing
@@ -594,6 +787,7 @@ public:
             static void pqv_pt(vvm &model);
             static void pqc_pt(vvm &model);
             static void pqr_pt(vvm &model);
+            static void pqmicrophy_pt(vvm &model);
         #endif
 
         static void updateMean(vvm &model);

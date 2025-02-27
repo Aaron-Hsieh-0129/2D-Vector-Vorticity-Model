@@ -12,6 +12,15 @@
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
 //        double P0, double PSURF, double ADDFORCINGTIME)
 
+#if defined(P3_MICROPHY)
+extern "C" {
+    void __microphy_p3_MOD_p3_init(
+        char* lookup_file_dir, int* nCat, bool* trplMomI, bool* liqfrac,
+        char* model, int* stat, bool* abort_on_err, bool* dowr, size_t lookup_file_dir_len
+    );
+}
+#endif
+
 int main(int argc, char **argv) {
     #if defined(PETSC)
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
@@ -55,6 +64,26 @@ int main(int argc, char **argv) {
 
     vvm::Output::create_all_directory(model);
     vvm::Output::printInit(model);
+
+    // p3 initialization
+    #if defined(P3_MICROPHY)
+    __microphy_p3_MOD_p3_init(
+        vvm::P3::lookup_file_dir, &vvm::P3::nCat, &vvm::P3::trplMomI, &vvm::P3::liqfrac,
+        vvm::P3::model_name, &vvm::P3::stat, &vvm::P3::abort_on_err, &vvm::P3::dowr, strlen(vvm::P3::lookup_file_dir)
+    );
+
+    for (int k = 0; k < model.nz; k++) {
+        for (int i = 0; i < model.nx; i++) { 
+            model.dz_all[i][k] = model.dz;
+            model.w_all[i][k] = 0.;
+            model.pb_all[i][k] = model.pb[k];
+            model.zi_all[i][k] = 0.;
+            model.ssat_all[i][k] = 0.;
+        }
+    }
+    #endif
+
+
 
     // // This initialization is for NGAC3F coupling comparison
     // std::ifstream inputFile("/data/Aaron/TMIF/th0.txt");

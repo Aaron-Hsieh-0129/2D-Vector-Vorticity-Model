@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-#if defined(WATER)
+#if defined(KESSLER_MICROPHY)
 void vvm::MicroPhysics::condensation(vvm &model) {
     double qvs = 0., phi = 0., C = 0.;
     for (int k = 1; k <= model.nz-2; k++) {

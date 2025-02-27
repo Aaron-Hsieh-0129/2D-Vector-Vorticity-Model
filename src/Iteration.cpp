@@ -1,6 +1,31 @@
 #include "Declare.hpp"
 #include "Timer.hpp"
 
+#if defined(P3_MICROPHY)
+extern "C" {
+    void __microphy_p3_MOD_p3_main(
+        double* qc, double* nc, double* qr, double* nr, 
+        double* th_old, double* th, double* qv_old, double* qv, 
+        double* dt, double* qitot, double* qirim, double* qiliq, 
+        double* ni, double* birim, double* zi, double* ssat, 
+        double* w, double* p, double* dz, int* itt, 
+        double* precip_liq, double* precip_sol, 
+        int* one, int* ncols, int* one2, int* nz, int* nCat, 
+        double* diag_ze, double* diag_effc, double* diag_effi, 
+        double* diag_vmi, double* diag_di, double* diag_rhoi, 
+        int* n_diag_2d, double* diag_2d, int* n_diag_3d, double* diag_3d, 
+        bool* log_predictNc, char* model, 
+        double* clbfact_dep, double* clbfact_sub, 
+        bool* debug_on, bool* scpf_on, double* scpf_pfrac, 
+        double* scpf_resfact, double* cldfrac, 
+        bool* trplMomI, bool* liqfrac,
+        double* , double*, double*, double*, double*,
+        double* , double*, double*, double*, double*,
+        double* , double*, double*, double*, double*
+    );
+}
+#endif
+
 void vvm::Iteration::pzeta_pt(vvm &model) {
     model.Advection_zeta(model);
     model.Bouyancy(model);
@@ -63,7 +88,9 @@ void vvm::Iteration::updateMean(vvm &model) {
 #if defined(WATER)
 void vvm::Iteration::pqv_pt(vvm &model) {
     model.Advection_thermo(model.qvm, model.qv, model.qvp, model.dqv_advect, model);
+    #if defined(KESSLER_MICROPHY)
     vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
+    #endif
     model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
 
     return;
@@ -71,7 +98,9 @@ void vvm::Iteration::pqv_pt(vvm &model) {
 
 void vvm::Iteration::pqc_pt(vvm &model) {
     model.Advection_thermo(model.qcm, model.qc, model.qcp, model.dqc_advect, model);
+    #if defined(KESSLER_MICROPHY)
     vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
+    #endif
     model.BoundaryProcess2D_center(model.qcp, model.nx, model.nz);
     return;
 }
@@ -79,19 +108,43 @@ void vvm::Iteration::pqc_pt(vvm &model) {
 void vvm::Iteration::pqr_pt(vvm &model) {
     model.Advection_thermo(model.qrm, model.qr, model.qrp, model.dqr_advect, model);
     model.Advection_qrVT(model);
+    #if defined(KESSLER_MICROPHY)
     vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
-
     for (int i = 1; i <= model.nx-2; i++) {
         double VT = 1E-2 * (3634 * std::pow(1E-3*model.rhou[1] * model.qr[i][1], 0.1346) * std::pow(model.rhou[1]/model.rhow[1], -0.5));
         double rain = -model.rhou[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1];
         if (rain < 0) model.precip[i] = 0.;
         else model.precip[i] = rain;
     }
+    #endif
             
     model.BoundaryProcess2D_center(model.qrp, model.nx, model.nz);
     return;
 }
 #endif
+
+void vvm::Iteration::pqmicrophy_pt(vvm &model) {
+    model.Advection_thermo(model.qvm, model.qv, model.qvp, model.dqv_advect, model);
+    model.Advection_thermo(model.qcm, model.qc, model.qcp, model.dqc_advect, model);
+    model.Advection_thermo(model.qrm, model.qr, model.qrp, model.dqr_advect, model);
+    model.Advection_thermo(model.ncm, model.nc, model.ncp, model.dnc_advect, model);
+    model.Advection_thermo(model.nrm, model.nr, model.nrp, model.dnr_advect, model);
+    model.Advection_thermo(model.nim, model.ni, model.nip, model.dni_advect, model);
+    model.Advection_thermo(model.qitotm, model.qitot, model.qitotp, model.dqitot_advect, model);
+    model.Advection_thermo(model.qirimm, model.qirim, model.qirimp, model.dqirim_advect, model);
+    /* model.Advection_thermo(model.qiliqm, model.qiliq, model.qiliqp, model.dqiliq_advect, model); */
+    model.Advection_thermo(model.birimm, model.birim, model.birimp, model.dbirim_advect, model);
+    model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.qcp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.qrp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.ncp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.nrp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.nip, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.qitotp, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.qirimp, model.nx, model.nz);
+    /* model.BoundaryProcess2D_center(model.qiliqp, model.nx, model.nz); */
+    model.BoundaryProcess2D_center(model.birimp, model.nx, model.nz);
+}
 
 void vvm::Iteration::nextTimeStep(vvm &model) {
     updateMean(model);
@@ -118,6 +171,29 @@ void vvm::Iteration::nextTimeStep(vvm &model) {
 
                 model.qrm[i][k] = model.qr[i][k];
                 model.qr[i][k] = model.qrp[i][k];
+
+                #if defined(P3_MICROPHY)
+                    model.ncm[i][k] = model.nc[i][k];
+                    model.nc[i][k] = model.ncp[i][k];
+
+                    model.nrm[i][k] = model.nr[i][k];
+                    model.nr[i][k] = model.nrp[i][k];
+
+                    model.nim[i][k] = model.ni[i][k];
+                    model.ni[i][k] = model.nip[i][k];
+
+                    model.qitotm[i][k] = model.qitot[i][k];
+                    model.qitot[i][k] = model.qitotp[i][k];
+
+                    model.qirimm[i][k] = model.qirim[i][k];
+                    model.qirim[i][k] = model.qirimp[i][k];
+
+                    /* model.qiliqm[i][k] = model.qiliq[i][k]; */
+                    /* model.qiliq[i][k] = model.qiliqp[i][k]; */
+
+                    model.birimm[i][k] = model.birim[i][k];
+                    model.birim[i][k] = model.birimp[i][k];
+                #endif
             #endif
         }
     }
@@ -177,9 +253,11 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         pzeta_pt(model);
         pth_pt(model);
         #if defined(WATER)
-            pqv_pt(model);
-            pqc_pt(model);
-            pqr_pt(model);
+            /* pqv_pt(model); */
+            /* pqc_pt(model); */
+            /* pqr_pt(model); */
+            pqmicrophy_pt(model);
+
             if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;
             else model.status_for_adding_forcing = false;
 
@@ -218,15 +296,97 @@ void vvm::Iteration::TimeMarching(vvm &model) {
 
         timer.reset();
         #if defined(WATER)
-            vvm::MicroPhysics::autoconversion(model);
-            vvm::MicroPhysics::accretion(model);
-            vvm::MicroPhysics::evaporation(model);
-            vvm::MicroPhysics::condensation(model); // saturation adjustment
+            #if defined(KESSLER_MICROPHY)
+                vvm::MicroPhysics::autoconversion(model);
+                vvm::MicroPhysics::accretion(model);
+                vvm::MicroPhysics::evaporation(model);
+                vvm::MicroPhysics::condensation(model); // saturation adjustment
 
-            // It is supposed to not have negative values. But due to numerical process, it might produce some teeny-tiny values.
-            vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
-            vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
-            vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
+                // It is supposed to not have negative values. But due to numerical process, it might produce some teeny-tiny values.
+                vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
+                vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
+                vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
+            #endif
+
+            #if defined(P3_MICROPHY)
+
+            for (int k = 0; k < model.nz; k++) {
+                for (int i = 0; i < model.nx; i++) {
+                    model.qiliqp[i][k] = 0.;
+                }
+            }
+            int one = 1;
+
+            for (int i = 0; i < model.nx; i++) {
+                double *qcp1d = model.qcp[i];
+                double *ncp1d = model.ncp[i];
+                double *qrp1d = model.qrp[i];
+                double *nrp1d = model.nrp[i];
+                double *th1d = model.th[i];
+                double *thp1d = model.thp[i];
+                double *qv1d = model.qv[i];
+                double *qvp1d = model.qvp[i];
+                double *qitotp1d = model.qitotp[i];
+                double *qirimp1d = model.qirimp[i];
+                double *qiliqp1d = model.qiliqp[i];
+                double *nip1d = model.nip[i];
+                double *birimp1d = model.birimp[i];
+                double *zi_all1d = model.zi_all[i];
+                double *ssat_all1d = model.ssat_all[i];
+                double *w_all1d = model.w_all[i];
+                double *pb_all1d = model.pb_all[i];
+                double *dz_all1d = model.dz_all[i];
+                double *precip_liq1d = &model.precip_liq[i];
+                double *precip_sol1d = &model.precip_sol[i];
+                double *diag_ze1d = model.diag_ze[i];
+                double *diag_effc1d = model.diag_effc[i];
+                double *diag_effi1d = model.diag_effi[i];
+                double *diag_vmi1d = model.diag_vmi[i];
+                double *diag_di1d = model.diag_di[i];
+                double *diag_rhoi1d = model.diag_rhoi[i];
+                double *diag_2d1d = model.diag_2d[i];
+                double *diag_3d1d = model.diag_3d[i][0];
+                double *cldfrac1d = model.cldfrac[i];
+                __microphy_p3_MOD_p3_main(
+                    qcp1d, ncp1d, qrp1d, nrp1d, 
+                    th1d, thp1d, qv1d, qvp1d, &model.dt,
+                    qitotp1d, qirimp1d, qiliqp1d, nip1d,
+                    birimp1d, zi_all1d, ssat_all1d, w_all1d, pb_all1d,
+                    dz_all1d, &model.step, precip_liq1d, precip_sol1d, &one, &one, &one, &model.nz, 
+                    &vvm::P3::nCat, diag_ze1d, diag_effc1d, diag_effi1d,
+                    diag_vmi1d, diag_di1d, diag_rhoi1d, 
+                    &vvm::P3::n_diag_2d, diag_2d1d, &vvm::P3::n_diag_3d, diag_3d1d,
+                    &vvm::P3::log_predictNc, vvm::P3::model_name, &vvm::P3::clbfact_dep, 
+                    &vvm::P3::clbfact_sub, &vvm::P3::debug_on, &vvm::P3::scpf_on, 
+                    &vvm::P3::scpf_pfrac, &vvm::P3::scpf_resfact, cldfrac1d, 
+                    &vvm::P3::trplMomI, &vvm::P3::liqfrac, 
+                    nullptr, nullptr, nullptr, nullptr, nullptr,
+                    nullptr, nullptr, nullptr, nullptr, nullptr,
+                    nullptr, nullptr, nullptr, nullptr, nullptr
+                );
+                model.precip[i] = model.precip_sol[i] + model.precip_liq[i];
+            }
+
+            /*
+            __microphy_p3_MOD_p3_main(
+                model.qcpcont, model.ncpcont, model.qrpcont, model.nrpcont, 
+                model.thcont, model.thpcont, model.qvcont, model.qvpcont, &model.dt,
+                model.qitotpcont, model.qirimpcont, model.qiliqpcont, model.nipcont,
+                model.birimpcont, model.zi_allcont, model.ssat_allcont, model.w_allcont, model.pb_allcont,
+                model.dz_allcont, &model.step, model.precip_liq, model.precip_sol, &one, &nxm1, &one, &nzm1, 
+                &vvm::P3::nCat, model.diag_zecont, model.diag_effccont, model.diag_efficont,
+                model.diag_vmicont, model.diag_dicont, model.diag_rhoicont, 
+                &vvm::P3::n_diag_2d, model.diag_2dcont, &vvm::P3::n_diag_3d, model.diag_3dcont,
+                &vvm::P3::log_predictNc, vvm::P3::model_name, &vvm::P3::clbfact_dep, 
+                &vvm::P3::clbfact_sub, &vvm::P3::debug_on, &vvm::P3::scpf_on, 
+                &vvm::P3::scpf_pfrac, &vvm::P3::scpf_resfact, model.cldfraccont, 
+                &vvm::P3::trplMomI, &vvm::P3::liqfrac, 
+                nullptr, nullptr, nullptr, nullptr, nullptr,
+                nullptr, nullptr, nullptr, nullptr, nullptr,
+                nullptr, nullptr, nullptr, nullptr, nullptr
+            );
+            */
+            #endif
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();

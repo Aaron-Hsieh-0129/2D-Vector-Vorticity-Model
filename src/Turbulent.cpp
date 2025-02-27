@@ -50,6 +50,15 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
         vvm::Turbulence::Hparam(model, model.qv, model.qvp);
         vvm::Turbulence::Hparam(model, model.qc, model.qcp);
         vvm::Turbulence::Hparam(model, model.qr, model.qrp);
+        #if defined(P3_MICROPHY)
+            vvm::Turbulence::Hparam(model, model.nc, model.ncp);
+            vvm::Turbulence::Hparam(model, model.nr, model.nrp);
+            vvm::Turbulence::Hparam(model, model.ni, model.nip);
+            vvm::Turbulence::Hparam(model, model.qitot, model.qitotp);
+            vvm::Turbulence::Hparam(model, model.qirim, model.qirimp);
+            // vvm::Turbulence::Hparam(model, model.qiliq, model.qiliqp);
+            vvm::Turbulence::Hparam(model, model.birim, model.birimp);
+        #endif
     #endif
     // std::cout << "max RKM: " << *std::max_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " max RKH: " << *std::max_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
     // std::cout << "min RKM: " << *std::min_element(model.RKMcont, model.RKMcont + model.nx*model.nz) << " min RKH: " << *std::min_element(model.RKHcont, model.RKHcont + model.nx*model.nz) << std::endl;
