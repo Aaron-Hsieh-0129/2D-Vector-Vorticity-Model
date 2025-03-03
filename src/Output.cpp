@@ -219,8 +219,10 @@ void vvm::Output::output_nc(int n, vvm &model) {
     // Write the 2D data for this time step
     size_t start[3] = {t_index, 0, 0}; // Starting point (time_index, x, y)
     size_t count[3] = {1, (size_t) model.nx, (size_t) model.nz}; // Write one time slice, all x and y values
-    size_t start_precip[2] = {t_index, 0};
-    size_t count_precip[2] = {1, (size_t) model.nx};
+    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
+        size_t start_precip[2] = {t_index, 0};
+        size_t count_precip[2] = {1, (size_t) model.nx};
+    #endif
     if ((retval = nc_put_vara_double(ncid, th_id, start, count, model.thcont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, zeta_id, start, count, model.zetacont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
@@ -232,7 +234,11 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);
         if ((retval = nc_put_vara_double(ncid, qcid, start, count, model.qccont))) checkErr(retval, __LINE__);
         if ((retval = nc_put_vara_double(ncid, qrid, start, count, model.qrcont))) checkErr(retval, __LINE__);
-        if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.diag_2dcont))) checkErr(retval, __LINE__);
+        #if defined(KESSLER_MICROPHY)
+           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.precip))) checkErr(retval, __LINE__);
+        #elif defined(P3_MICROPHY)
+           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.diag_2dcont))) checkErr(retval, __LINE__);
+        #endif
         #if defined(KESSLER_MICROPHY)
         #if defined(OUTPUTMICROPHYSICS)
             if ((retval = nc_put_vara_double(ncid, accretionid, start, count, model.accretioncont))) checkErr(retval, __LINE__);

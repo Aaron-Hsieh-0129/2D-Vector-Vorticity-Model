@@ -148,6 +148,7 @@ void vvm::Advection_zeta(vvm &model) {
 }
 
 #if defined(WATER)
+#if defined(KESSLER_MICROPHY)
 void vvm::Advection_qrVT(vvm &model) {
     double prhoVTqr_pz_rho = 0.;
     double *flux_wcont;
@@ -189,3 +190,5 @@ void vvm::Advection_qrVT(vvm &model) {
     return;
 }
 #endif
+#endif
+
