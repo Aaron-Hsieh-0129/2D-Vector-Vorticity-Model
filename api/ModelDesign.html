@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Model Design &#8212; 2DVVM  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/ModelDesign';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Parameters Settings" href="header.html" />
+    <link rel="prev" title="Tutorials for Installing C/C++ compiler and libraries" href="install_compilers_libraries.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">2DVVM  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install_compilers_libraries.html">Tutorials for Installing C/C++ compiler and libraries</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Model Design</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="header.html">Model Parameters Settings</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="header/Config.html">Config</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="class.html">Class</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="class/config.html">Config_VVM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/vvm.html">vvm</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api/ModelDesign.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Model Design</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equation-set">Governing Equation Set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-model-works">How this model works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for Thermo-related Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for Vorticity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="model-design">
+<h1>Model Design<a class="headerlink" href="#model-design" title="Link to this heading">#</a></h1>
+<section id="governing-equation-set">
+<h2>Governing Equation Set<a class="headerlink" href="#governing-equation-set" title="Link to this heading">#</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+    \frac{\partial \zeta}{\partial t} &amp;= -\left(\frac{\partial (u\zeta)}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho} w\zeta)}{\partial z}\right) + \frac{g}{\rho_0} \frac{\partial (\frac{\theta_v'}{\overline{\theta_v}} - q_c - q_r)}{\partial x} +  K_x \frac{\partial ^2 \zeta}{\partial x^2} + K_z\frac{\partial ^2 \zeta}{\partial z^2} \tag{1}\\
+    \frac{\partial \theta}{\partial t} &amp;= -\left(\frac{\partial u\theta}{\partial x} + \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho} w\theta}{\partial z}\right) + \frac{L_v}{C_p \overline{\pi}}(C-E)   +  K_x \frac{\partial ^2 \theta}{\partial x^2} + K_z\frac{\partial ^2 \theta}{\partial z^2} \tag{2}\\
+    \frac{\partial q_v}{\partial t} &amp;= -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} - C + E + K_x\frac{\partial^{2} q_v}{\partial x^{2}} + K_z\frac{\partial^{2} q_v}{\partial z^{2}} \tag{3}\\
+    \frac{\partial q_c}{\partial t} &amp;= -\frac{\partial uq_c}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_c}{\partial z} + C - A - B  +K_x\frac{\partial^{2} q_c}{\partial x^{2}} +  K_z\frac{\partial^{2} q_c}{\partial z^{2}} \tag{4}\\
+    \frac{\partial q_r}{\partial t} &amp;= -\frac{\partial uq_r}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}(w - \vec{V_T})q_r}{\partial z} + A + B - E + K_x\frac{\partial^{2} q_r}{\partial x^{2}} + K_z\frac{\partial^{2} q_r}{\partial z^{2}} \tag{5}\\
+    \bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right) \tag{6}\\
+    u_{top} &amp;= u_{\chi} + \bar{u}^{xy}, u_x = \frac{\partial \chi}{\partial x} \tag{7}\\
+    \frac{\partial^2 \chi}{\partial x^2} &amp;= -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z} \tag{8}\\
+    \frac{\partial \bar{u}^{xy}}{\partial t} &amp;= -\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}\ \overline{uw}^{xy})}{\partial z} \tag{9}\\
+    u &amp;= \int_{z_{top}}^{z_{bottom}} (\frac{\partial w}{\partial x} - \overline{\rho}\zeta)dz + u_{top} \tag{10}\\
+\end{align}\end{split}\]</div>
+</section>
+<section id="how-this-model-works">
+<h2>How this model works<a class="headerlink" href="#how-this-model-works" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Predict <span class="math notranslate nohighlight">\(\zeta,\ \theta,\ q_v,\  q_c,\ q_r\)</span></p></li>
+<li><p>Solving 2D poisson equation to get <span class="math notranslate nohighlight">\(w\)</span>. The detailed process will be shown below.</p></li>
+<li><p>Solving 1D poisson equation for <span class="math notranslate nohighlight">\(\chi\)</span> and integrate from model top to get <span class="math notranslate nohighlight">\(u\)</span> in the domain.</p></li>
+<li><p>Iterate to the next step</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="grid-setting">
+<h2>Grid Setting<a class="headerlink" href="#grid-setting" title="Link to this heading">#</a></h2>
+<img alt="../_images/grid.png" src="../_images/grid.png" />
+</section>
+<section id="boundary-condition">
+<h2>Boundary Condition<a class="headerlink" href="#boundary-condition" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Periodic boundary condition is adopted in x-direction.</p></li>
+<li><p>Rigid boundary condition is given in z-direction.</p></li>
+<li><dl>
+<dt>The boundary condition for <span class="math notranslate nohighlight">\(\zeta,\ \theta,\ q_v,\ q_c,\ q_r\)</span> are given as below:</dt><dd><ul>
+<li><p>For x-direction:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+   \zeta_{i,0} &amp;= \zeta_{i,nz-1};\ \zeta_{i,nz-1} = \zeta_{i,1}\\
+   w_{i,0} &amp;= w_{i,nz-1};\ w_{i,nz-1} = w_{i,1}\\
+   u_{i,0} &amp;= u_{i,nz-1};\ u_{i,nz-1} = u_{i,1}\\
+   \theta_{i,0} &amp;= \theta_{i,nz-1};\ \theta_{i,nz-1} = \theta_{i,1}\\
+   q_{v,i,0} &amp;= q_{v,i,nz-1};\ q_{v,i,nz-1} = q_{v,i,1}\\
+   q_{c,i,0} &amp;= q_{c,i,nz-1};\ q_{c,i,nz-1} = q_{c,i,1}\\
+   q_{r,i,0} &amp;= q_{r,i,nz-1};\ q_{r,i,nz-1} = q_{r,i,1}\\
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+</li>
+<li><p>For z-direction:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+   \zeta_{i,0} &amp;= \zeta_{i,1} = \zeta_{i,nz-1} = 0\\
+   w_{i,0} &amp;= w_{i,1} = w_{i,nz-1} = 0\\
+   u_{i,0} &amp;= u_{i,1}, u_{i,nz-1} = u_{i,nz-2}\\
+   \theta_{i,0} &amp;= \theta_{i,1}, \theta_{i,nz-1} = \theta_{i,nz-2}\\
+   q_{v,i,0} &amp;= q_{v,i,1}, q_{v,i,nz-1} = q_{v,i,nz-2}\\
+   q_{c,i,0} &amp;= q_{c,i,1}, q_{c,i,nz-1} = q_{c,i,nz-2}\\
+   q_{r,i,0} &amp;= q_{r,i,1}, q_{r,i,nz-1} = q_{r,i,nz-2}\\
+\end{aligned}\end{split}\]</div>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="discretization-of-the-governing-equation-set">
+<h2>Discretization of the Governing Equation Set<a class="headerlink" href="#discretization-of-the-governing-equation-set" title="Link to this heading">#</a></h2>
+<section id="advection-for-thermo-related-variables">
+<h3>Advection for Thermo-related Variables<a class="headerlink" href="#advection-for-thermo-related-variables" title="Link to this heading">#</a></h3>
+<p>Here presents the discretization for variables such as <span class="math notranslate nohighlight">\(\theta,\ q_v,\ q_c,\ q_r\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial q}{\partial t} = -\frac{\partial uq_v}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}wq_v}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{11}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}F_r &amp;= u_{i+1,k}(q_{i+1,k} - q_{i,k}),\ F_l = u_{i,k}(q_{i,k} - q_{i-1,k})\\
+F_u &amp;= w_{i,k+1}(q_{i,k+1} - q_{i,k}),\ F_d = w_{i,k}(q_{i,k} - q_{i,k-1})\end{split}\]</div>
+</section>
+<section id="advection-for-vorticity">
+<h3>Advection for Vorticity<a class="headerlink" href="#advection-for-vorticity" title="Link to this heading">#</a></h3>
+<p>The reason why we need to process the advection for vorticity seperately is due to the conservation of enstrophy.
+According to Arakawa (1966), the enstrophy needs to be conserved to do the long-term integration.
+Here, the J6 Arakawa jacobian is adopted to conserve the enstrophy following the techinical report in Jung (2005) for 3DVVM.</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial \zeta}{\partial t} = -\frac{\partial u\zeta}{\partial x} - \frac{1}{\overline{\rho}}\frac{\partial \overline{\rho}w\zeta}{\partial z} = -\frac{1}{dx} (F_r - F_l) - \frac{1}{dz} (F_u - F_d) \tag{12}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}F_r &amp;= U_{i,k}(\zeta_{i+1,k} - \zeta_{i,k}),\ F_l = U_{i-1,k}(\zeta_{i,k} - \zeta_{i-1,k})\\
+F_u &amp;= W_{i,k}(\zeta_{i,k+1} - \zeta_{i,k}),\ F_d = W_{i,k-1}(\zeta_{i,k} - \zeta_{i,k-1})\\
+U_{i,k} &amp;= 0.25 \times (\overline{\rho}_k(u_{i+1,k} + u_{i,k}) + \overline{\rho}_{k-1}(u_{i+1,k-1} + u_{u,k-1}) )\end{split}\]</div>
+</section>
+<section id="solving-2d-poisson-equation-to-diagnize-w">
+<h3>Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span><a class="headerlink" href="#solving-2d-poisson-equation-to-diagnize-w" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}\bar{\rho}\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 w}{\partial x^{2}} + \frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\
+\Rightarrow \overline{\rho}^2\frac{\partial \zeta}{\partial x} &amp;= \frac{\partial^2 \bar{\rho}w}{\partial x^{2}} + \bar{\rho}\frac{\partial}{\partial z}\left(\frac{1}{\overline{\rho}}\frac{\partial (\overline{\rho}w)}{\partial z}\right)\\\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\overline{\rho_{w,k}}^2}{dx}(\zeta_{i+1,k}-\zeta_{i,k}) = &amp;\frac{1}{dx^2}(\overline{\rho_{w,k}}w_{i+1,k} - 2\overline{\rho_{w,k}}w_{i,k} + \overline{\rho_{w,k}}w_{i-1,k})\\ +
+  &amp;\frac{1}{dz^2}(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}}\overline{\rho_{w,k}}w_{i,k+1} - (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) \overline{\rho_{w,k}}w_{i,k} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}\overline{\rho_{w,k-1}}w_{i,k-1}    )\end{split}\]</div>
+<ul class="simple">
+<li><p>The discretization form can be written into matrix form <span class="math notranslate nohighlight">\(A\vec{w} = \vec{b}\)</span>.</p></li>
+<li><p>First, the boundary condition should be given. The periodic boundary is adopted in x-direction and the rigid boundary condition is given in z-direction.</p></li>
+<li><p>Assume there are n grids in x-direction, m grids in z-direction.</p>
+<ul>
+<li><p>For x-direction: <span class="math notranslate nohighlight">\(w_{0,k} = w_{nz-2,k},\ w_{nz-1,k} = w_{1,k}\)</span>.</p></li>
+<li><p>For z-direction: <span class="math notranslate nohighlight">\(w_{i,0} = w_{i,nz-1} = 0\)</span> are boundaries, and <span class="math notranslate nohighlight">\(w_{i,1} = 0\)</span> is physical ground and prescribed to be 0.</p></li>
+</ul>
+</li>
+<li><p>The dimension of A would be <span class="math notranslate nohighlight">\(((nx-2)(nz-3),\ (nx-2)(nz-3))\)</span>, and <span class="math notranslate nohighlight">\(\vec{w},\ \vec{b}\)</span> would be ((nx-2)*(nz-3)).</p>
+<ul>
+<li><p>The size of matrix D, E, and F would be <span class="math notranslate nohighlight">\((nx-2, nz-3)\)</span>.</p></li>
+</ul>
+</li>
+<li><p>In this model, dx = dz. The matrix A can be written as below:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+A =
+\begin{bmatrix}
+        ~D &amp; E &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        F &amp; ~D &amp; E &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        ~0 &amp; F &amp; ~D &amp; E &amp; ~0 &amp; \ldots &amp; ~0 \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+        ~0 &amp; \ldots &amp; ~0 &amp; F &amp; ~D &amp; E &amp; ~0 \\
+        ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; F &amp; ~D &amp; E \\
+        ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; F &amp; ~D
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+D =
+\begin{bmatrix}
+        -2-(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~1 \\
+        1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})&amp; 1 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})&amp; 1 &amp; ~0 &amp; \ldots &amp; ~0 \\
+        \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+        ~0 &amp; \ldots &amp; ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 &amp; ~0 \\
+        ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; -2- (\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}) &amp; 1 \\
+        ~1 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; -2-(\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} + \frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}})
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+E =
+\begin{bmatrix}
+    ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+    \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+    ~0 &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 &amp; ~0 \\
+    ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}} &amp; 0 \\
+    ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k}}}
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+ F =
+ \begin{bmatrix}
+     ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+     \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+     ~0 &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 &amp; ~0 \\
+     ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}} &amp; 0 \\
+     ~0 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 0 &amp; ~\frac{\overline{\rho_{w,k}}}{\overline{\rho_{u,k-1}}}
+ \end{bmatrix}
+ \end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{w} = \begin{bmatrix}
+         w_{1,2} \\
+         w_{2,2} \\
+         \vdots \\
+         w_{nx-2,2} \\
+         w_{1,3} \\
+         w_{2,3} \\
+         \vdots \\
+         w_{nx-2,3} \\
+         \vdots \\
+         w_{1,nz-2} \\
+         w_{2,nz-2} \\
+         \vdots \\
+         w_{nx-2,nz-2} \\
+ \end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{b} = dx\begin{bmatrix}
+         \overline{\rho_{w,2}}^2(\zeta_{2,2}-\zeta_{1,2}) \\
+         \overline{\rho_{w,2}}^2(\zeta_{3,2}-\zeta_{2,2}) \\
+         \vdots \\
+         \overline{\rho_{w,2}}^2(\zeta_{nx-2,2}-\zeta_{nx-3,2}) \\
+         \overline{\rho_{w,3}}^2(\zeta_{2,3}-\zeta_{1,3}) \\
+         \overline{\rho_{w,3}}^2(\zeta_{3,3}-\zeta_{2,3}) \\
+         \vdots \\
+         \overline{\rho_{w,3}}^2(\zeta_{nx-2,3}-\zeta_{nx-3,3}) \\
+         \vdots \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{2,nz-2}-\zeta_{1,nz-2}) \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{3,nz-2}-\zeta_{2,nz-2}) \\
+         \vdots \\
+         \overline{\rho_{w,nz-2}}^2(\zeta_{nx-2,nz-2}-\zeta_{nx-3,nz-2}) \\
+ \end{bmatrix}\end{split}\]</div>
+</section>
+<section id="solving-1d-poisson-equation-to-diagonize-u">
+<h3>Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span><a class="headerlink" href="#solving-1d-poisson-equation-to-diagonize-u" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\frac{\partial^2 \chi}{\partial x^2} = -\frac{1}{\bar{\rho}}\frac{\partial \bar{\rho} w}{\partial z}\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{1}{dx^2}(\chi_{i+1,nz-2}-2\chi_{i,nz-2}+\chi_{i,nz-2}) = -\frac{1}{dz}(\frac{1}{\overline{\rho_{u,nz-2}}}(0 - \overline{\rho_{w,nz-2}} w_{i,nz-2}))\]</div>
+<ul class="simple">
+<li><p>The discretization form can be written into matrix form <span class="math notranslate nohighlight">\(G\vec{\chi} = \vec{h}\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation*}
+G =
+\begin{bmatrix}
+         ~-2 &amp; 1 &amp; ~0 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~1 \\
+         1 &amp; ~-2 &amp; 1 &amp; ~0 &amp; ~0 &amp; \ldots &amp; ~0 \\
+         ~0 &amp; 1 &amp; ~-2 &amp; 1 &amp; ~0 &amp; \ldots &amp; ~0 \\
+         \vdots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \vdots \\
+         ~0 &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2 &amp; 1 &amp; ~0 \\
+         ~0 &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2 &amp; 1 \\
+         ~1 &amp; \ldots &amp; \ldots &amp; \ldots &amp; ~0 &amp; 1 &amp; ~-2
+\end{bmatrix}
+\end{equation*}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{\chi} = \begin{bmatrix}
+         \chi_{1,nz-2} \\
+         \chi_{2,nz-2} \\
+         \vdots \\
+         \chi_{nx-2,nz-2} \\
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{h} = dx\begin{bmatrix}
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{1,nz-2} \\
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{2,nz-2} \\
+         \vdots \\
+         \frac{1}{\overline{\rho_{u,nz-2}}}\overline{\rho_{w,nz-2}}w_{nx-2,nz-2} \\
+\end{bmatrix}\end{split}\]</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="install_compilers_libraries.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorials for Installing C/C++ compiler and libraries</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="header.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Model Parameters Settings</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equation-set">Governing Equation Set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-model-works">How this model works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-setting">Grid Setting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-condition">Boundary Condition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretization-of-the-governing-equation-set">Discretization of the Governing Equation Set</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-thermo-related-variables">Advection for Thermo-related Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advection-for-vorticity">Advection for Vorticity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-2d-poisson-equation-to-diagnize-w">Solving 2D Poisson equation to diagnize <span class="math notranslate nohighlight">\(w\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-1d-poisson-equation-to-diagonize-u">Solving 1D Poisson equation to diagonize <span class="math notranslate nohighlight">\(u\)</span></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aaron Hsieh
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Aaron Hsieh.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
