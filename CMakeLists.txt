@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -8,9 +8,9 @@ project(VVM2D VERSION 0.1.0)
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# Set the C/C++ compiler to gcc/g++
-set(CMAKE_C_COMPILER "/home/Aaron/gcc13/bin/gcc")
-set(CMAKE_CXX_COMPILER "/home/Aaron/gcc13/bin/g++")
+# Set the C/C++ compiler to pgcc/pgc++
+set(CMAKE_C_COMPILER "pgcc")
+set(CMAKE_CXX_COMPILER "pgc++")
 
 # Set the C++ standard to C++11
 set(CMAKE_CXX_STANDARD 11)
@@ -21,6 +21,16 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
+# Add OpenACC flags for GPU support
+option(USE_OPENACC "Enable OpenACC GPU support" ON)  # Enabled by default, can be turned off with -DUSE_OPENACC=OFF
+if(USE_OPENACC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -acc -gpu=ccall -Minfo=accel")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -acc -gpu=ccall -Minfo=accel")
+endif()
+
+# Disable automatic dependency tracking for PGI compilers
+set(CMAKE_C_DEPENDS_USE_COMPILER FALSE)
+set(CMAKE_CXX_DEPENDS_USE_COMPILER FALSE)
 
 # Option to enable or disable PETSc
 option(USE_PETSC "Enable PETSc support" OFF)
@@ -33,7 +43,7 @@ if(USE_PETSC)
     # Remove the lines below if you do not wish to have PETSc determine the compilers
     execute_process(COMMAND pkg-config PETSc --variable=ccompiler COMMAND tr -d '\n' OUTPUT_VARIABLE C_COMPILER)
     SET(CMAKE_C_COMPILER ${C_COMPILER})
-    
+
     execute_process(COMMAND pkg-config PETSc --variable=cxxcompiler COMMAND tr -d '\n' OUTPUT_VARIABLE CXX_COMPILER)
     if (CXX_COMPILER)
         SET(CMAKE_CXX_COMPILER ${CXX_COMPILER})
@@ -50,18 +60,8 @@ if(USE_PETSC)
     pkg_search_module(PETSC REQUIRED IMPORTED_TARGET PETSc)
 endif()
 
-# Enable exporting compile commands
+# Enable exporting compile commands (optional, but may not work fully with PGI)
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
-
-# Find and enable OpenMP if available
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 # Include directories
 include_directories(

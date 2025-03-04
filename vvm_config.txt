@@ -1,4 +1,4 @@
-VVM_OUTPUTPATH=/data/Aaron/2DVVM/Bubble_weak_eva
+VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/Bubble_weak_eva
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
 VVM_DT=3                                            # dt [s]
