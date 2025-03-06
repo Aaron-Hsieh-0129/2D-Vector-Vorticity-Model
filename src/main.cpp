@@ -103,8 +103,6 @@ int main(int argc, char **argv) {
 
     // Execute the command
     system(command.c_str());
-
-    printf("Poisson param: ", model.POISSONPARAM);
     
 
     #if defined(POISSONTEST)
