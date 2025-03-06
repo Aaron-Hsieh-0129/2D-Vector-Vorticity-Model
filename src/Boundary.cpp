@@ -38,5 +38,15 @@ void vvm::BoundaryProcess2D_all(vvm &model) {
         model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.qcp, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.qrp, model.nx, model.nz);
+
+        #if defined(P3_MICROPHY)
+            model.BoundaryProcess2D_center(model.ncp, model.nx, model.nz);
+            model.BoundaryProcess2D_center(model.nrp, model.nx, model.nz);
+            model.BoundaryProcess2D_center(model.nip, model.nx, model.nz);
+            model.BoundaryProcess2D_center(model.qitotp, model.nx, model.nz);
+            model.BoundaryProcess2D_center(model.qirimp, model.nx, model.nz);
+            /* model.BoundaryProcess2D_center(model.qiliqp, model.nx, model.nz); */
+            model.BoundaryProcess2D_center(model.birimp, model.nx, model.nz);
+        #endif
     #endif
 }

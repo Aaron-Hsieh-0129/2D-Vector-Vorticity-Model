@@ -255,6 +255,7 @@ void vvm::Advection_zeta(vvm &model) {
 }
 
 #if defined(WATER)
+#if defined(KESSLER_MICROPHY)
 void vvm::Advection_qrVT(vvm &model) {
     double prhoVTqr_pz_rho = 0.;
     double *flux_wcont;
@@ -262,29 +263,13 @@ void vvm::Advection_qrVT(vvm &model) {
 
 
     double VT = 0.;
-    #if defined(AB2)
-        double VT_u = 0., VT_d = 0.;
-    #endif
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)
     #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             VT = 1E-2 * (3634 * pow(1E-3*model.rhow[k] * 0.5*(model.qr[i][k]+model.qr[i][k-1]), 0.1346) * pow(model.rhow[k]/model.rhow[1], -0.5));
-
             flux_w[i][k] = model.rhow[k] * VT * (model.qr[i][k] + model.qr[i][k-1]);
-            // #if defined(AB2)
-            //     if (i >= 2 && i <= model.nx-2 && k >= 2 && k <= model.nz-2) {
-            //         VT_u = 1E-2 * (3634 * pow(1E-3*model.rhow[k+1] * 0.5*(model.qr[i][k+1]+model.qr[i][k]), 0.1346) * pow(model.rhow[k+1]/model.rhow[1], -0.5));
-            //         VT_d = 1E-2 * (3634 * pow(1E-3*model.rhow[k-1] * 0.5*(model.qr[i][k-1]+model.qr[i][k-2]), 0.1346) * pow(model.rhow[k-1]/model.rhow[1], -0.5));
-
-            //         flux_w[i][k] += -1./3. * 
-            //                         (model.rhow[k]*PLUS(VT) * (model.qr[i][k] - model.qr[i][k-1])
-            //                             - std::sqrt(model.rhow[k]*PLUS(VT) * model.rhow[k-1]*PLUS(VT_d))*(model.qr[i][k-1] - model.qr[i][k-2])
-            //                        - model.rhow[k]*MINU(VT) * (model.qr[i][k] - model.qr[i][k-1])
-            //                             - std::sqrt(std::fabs(model.rhow[k]*MINU(VT) * model.rhow[k+1]*MINU(VT_u)))*(model.qr[i][k+1] - model.qr[i][k]));
-            //     }
-            // #endif
         }
     }
     model.BoundaryProcess2D_center(flux_w, model.nx, model.nz);
@@ -312,3 +297,5 @@ void vvm::Advection_qrVT(vvm &model) {
     return;
 }
 #endif
+#endif
+

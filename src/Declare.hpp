@@ -108,7 +108,7 @@ public:
         #endif
 
         #if defined(WATER)
-            delete[] precip;
+            
 
             deallocate2DContinuousArray(qvp, qvpcont);
             deallocate2DContinuousArray(qv, qvcont);
@@ -119,10 +119,56 @@ public:
             deallocate2DContinuousArray(qrp, qrpcont);
             deallocate2DContinuousArray(qr, qrcont);
             deallocate2DContinuousArray(qrm, qrmcont);
-            deallocate2DContinuousArray(evaporation, evaporationcont);
-            deallocate2DContinuousArray(accretion, accretioncont);
-            deallocate2DContinuousArray(autoconversion, autoconversioncont);
-            deallocate2DContinuousArray(condensation, condensationcont);
+            #if defined(KESSLER_MICROPHY)
+                delete[] precip;
+
+                deallocate2DContinuousArray(evaporation, evaporationcont);
+                deallocate2DContinuousArray(accretion, accretioncont);
+                deallocate2DContinuousArray(autoconversion, autoconversioncont);
+                deallocate2DContinuousArray(condensation, condensationcont);
+            #endif
+
+            #if defined(P3_MICROPHY)
+                
+                deallocate2DContinuousArray(ncp, ncpcont);
+                deallocate2DContinuousArray(nc, nccont);
+                deallocate2DContinuousArray(ncm, ncmcont);
+                deallocate2DContinuousArray(nrp, nrpcont);
+                deallocate2DContinuousArray(nr, nrcont);
+                deallocate2DContinuousArray(nrm, nrmcont);
+                deallocate2DContinuousArray(qitotp, qitotpcont);
+                deallocate2DContinuousArray(qitot, qitotcont);
+                deallocate2DContinuousArray(qitotm, qitotmcont);
+                deallocate2DContinuousArray(qirimp, qirimpcont);
+                deallocate2DContinuousArray(qirim, qirimcont);
+                deallocate2DContinuousArray(qirimm, qirimmcont);
+                deallocate2DContinuousArray(qiliqp, qiliqpcont);
+                deallocate2DContinuousArray(qiliq, qiliqcont);
+                deallocate2DContinuousArray(qiliqm, qiliqmcont);
+                deallocate2DContinuousArray(nip, nipcont);
+                deallocate2DContinuousArray(ni, nicont);
+                deallocate2DContinuousArray(nim, nimcont);
+                deallocate2DContinuousArray(birimp, birimpcont);
+                deallocate2DContinuousArray(birim, birimcont);
+                deallocate2DContinuousArray(birimm, birimmcont);
+                deallocate2DContinuousArray(diag_ze, diag_zecont);
+                deallocate2DContinuousArray(diag_effc, diag_effccont);
+                deallocate2DContinuousArray(diag_effi, diag_efficont);
+                deallocate2DContinuousArray(diag_vmi, diag_vmicont);
+                deallocate2DContinuousArray(diag_di, diag_dicont);
+                deallocate2DContinuousArray(diag_rhoi, diag_rhoicont);
+                deallocate2DContinuousArray(cldfrac, cldfraccont);
+                deallocate2DContinuousArray(diag_2d, diag_2dcont);
+                deallocate2DContinuousArray(dz_all, dz_allcont);
+                deallocate2DContinuousArray(w_all, w_allcont);
+                deallocate2DContinuousArray(pb_all, pb_allcont);
+                deallocate2DContinuousArray(zi_all, zi_allcont);
+                deallocate2DContinuousArray(ssat_all, ssat_allcont);
+
+                delete[] precip_liq;
+                delete[] precip_sol;
+                delete[] precip;
+            #endif
         #endif
 
         #if defined(AB2)
@@ -134,8 +180,24 @@ public:
                 deallocate3DContinuousArray(dqv_advect, dqv_advectcont);
                 deallocate3DContinuousArray(dqc_advect, dqc_advectcont);
                 deallocate3DContinuousArray(dqr_advect, dqr_advectcont);
-                deallocate3DContinuousArray(dqr_VT, dqr_VTcont);
+                #if defined(KESSLER_MICROPHY)
+                    deallocate3DContinuousArray(dqr_VT, dqr_VTcont);
+                #endif
+                #if defined(P3_MICROPHY)
+                    
+                    deallocate3DContinuousArray(dnc_advect, dnc_advectcont);
+                    deallocate3DContinuousArray(dnr_advect, dnr_advectcont);
+                    deallocate3DContinuousArray(dni_advect, dni_advectcont);
+                    deallocate3DContinuousArray(dqitot_advect, dqitot_advectcont);
+                    deallocate3DContinuousArray(dqirim_advect, dqirim_advectcont);
+                    deallocate3DContinuousArray(dqiliq_advect, dqiliq_advectcont);
+                    deallocate3DContinuousArray(dbirim_advect, dbirim_advectcont);
+                #endif
             #endif
+
+        #endif
+        #if defined(P3_MICROPHY)
+            deallocate3DContinuousArray(diag_3d, diag_3dcont);
         #endif
 
         delete[] t_advection;
@@ -151,34 +213,34 @@ public:
     }
 
     void allocateMemory() {
-        t_advection = new double[TIMEROUTPUTSIZE];
-        t_poisson = new double[TIMEROUTPUTSIZE];
-        t_diffusion = new double[TIMEROUTPUTSIZE];
-        t_microphysics = new double[TIMEROUTPUTSIZE];
-        t_all = new double[TIMEROUTPUTSIZE];
+        t_advection = new double[TIMEROUTPUTSIZE]();
+        t_poisson = new double[TIMEROUTPUTSIZE]();
+        t_diffusion = new double[TIMEROUTPUTSIZE]();
+        t_microphysics = new double[TIMEROUTPUTSIZE]();
+        t_all = new double[TIMEROUTPUTSIZE]();
 
         // 1D arrays
-        thb = new double[nz];
-        thbm = new double[nz];
-        thb_zeta = new double[nz];
-        thb_init = new double[nz];
-        rhou = new double[nz];
-        rhow = new double[nz];
-        pib = new double[nz];
-        qvb = new double[nz];
-        qvb0 = new double[nz];
-        qvsb = new double[nz];
-        pb = new double[nz];
-        xi = new double[nx];
-        uxi = new double[nx];
-        thvb = new double[nz];
-        thvbm = new double[nz];
-        z = new double[nz];
-        z_zeta = new double[nz];
-        lambda2 = new double[nz];
+        thb = new double[nz]();
+        thbm = new double[nz]();
+        thb_zeta = new double[nz]();
+        thb_init = new double[nz]();
+        rhou = new double[nz]();
+        rhow = new double[nz]();
+        pib = new double[nz]();
+        qvb = new double[nz]();
+        qvb0 = new double[nz]();
+        qvsb = new double[nz]();
+        pb = new double[nz]();
+        xi = new double[nx]();
+        uxi = new double[nx]();
+        thvb = new double[nz]();
+        thvbm = new double[nz]();
+        z = new double[nz]();
+        z_zeta = new double[nz]();
+        lambda2 = new double[nz]();
         #if defined(TROPICALFORCING)
-            Q1LS = new double[nz];
-            Q2LS = new double[nz];
+            Q1LS = new double[nz]();
+            Q2LS = new double[nz]();
         #endif
 
         // 2D arrays
@@ -201,7 +263,14 @@ public:
         #endif
 
         #if defined(WATER)
-            precip = new double[nx];
+            #if defined(KESSLER_MICROPHY)
+                precip = new double[nx]();
+
+                evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
+                accretion = allocate2DContinuousArray(nx, nz, accretioncont);
+                autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
+                condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+            #endif
 
             qvp = allocate2DContinuousArray(nx, nz, qvpcont);
             qv = allocate2DContinuousArray(nx, nz, qvcont);
@@ -212,10 +281,47 @@ public:
             qrp = allocate2DContinuousArray(nx, nz, qrpcont);
             qr = allocate2DContinuousArray(nx, nz, qrcont);
             qrm = allocate2DContinuousArray(nx, nz, qrmcont);
-            evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
-            accretion = allocate2DContinuousArray(nx, nz, accretioncont);
-            autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
-            condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+
+            #if defined(P3_MICROPHY)
+                ncp = allocate2DContinuousArray(nx, nz, ncpcont);
+                nc = allocate2DContinuousArray(nx, nz, nccont);
+                ncm = allocate2DContinuousArray(nx, nz, ncmcont);
+                nrp = allocate2DContinuousArray(nx, nz, nrpcont);
+                nr = allocate2DContinuousArray(nx, nz, nrcont);
+                nrm = allocate2DContinuousArray(nx, nz, nrmcont);
+                qitotp = allocate2DContinuousArray(nx, nz, qitotpcont);
+                qitot = allocate2DContinuousArray(nx, nz, qitotcont);
+                qitotm = allocate2DContinuousArray(nx, nz, qitotmcont);
+                qirimp = allocate2DContinuousArray(nx, nz, qirimpcont);
+                qirim = allocate2DContinuousArray(nx, nz, qirimcont);
+                qirimm = allocate2DContinuousArray(nx, nz, qirimmcont);
+                qiliqp = allocate2DContinuousArray(nx, nz, qiliqpcont);
+                qiliq = allocate2DContinuousArray(nx, nz, qiliqcont);
+                qiliqm = allocate2DContinuousArray(nx, nz, qiliqmcont);
+                nip = allocate2DContinuousArray(nx, nz, nipcont);
+                ni = allocate2DContinuousArray(nx, nz, nicont);
+                nim = allocate2DContinuousArray(nx, nz, nimcont);
+                birimp = allocate2DContinuousArray(nx, nz, birimpcont);
+                birim = allocate2DContinuousArray(nx, nz, birimcont);
+                birimm = allocate2DContinuousArray(nx, nz, birimmcont);
+                diag_ze = allocate2DContinuousArray(nx, nz, diag_zecont);
+                diag_effc = allocate2DContinuousArray(nx, nz, diag_effccont);
+                diag_effi = allocate2DContinuousArray(nx, nz, diag_efficont);
+                diag_vmi = allocate2DContinuousArray(nx, nz, diag_vmicont);
+                diag_di = allocate2DContinuousArray(nx, nz, diag_dicont);
+                diag_rhoi = allocate2DContinuousArray(nx, nz, diag_rhoicont);
+                cldfrac = allocate2DContinuousArray(nx, nz, cldfraccont);
+                diag_2d = allocate2DContinuousArray(nx, vvm::P3::n_diag_2d, diag_2dcont);
+                dz_all = allocate2DContinuousArray(nx, nz, dz_allcont);
+                w_all = allocate2DContinuousArray(nx, nz, w_allcont);
+                pb_all = allocate2DContinuousArray(nx, nz, pb_allcont);
+                zi_all = allocate2DContinuousArray(nx, nz, zi_allcont);
+                ssat_all = allocate2DContinuousArray(nx, nz, ssat_allcont);
+
+                precip_liq = new double[nx]();
+                precip_sol = new double[nx]();
+                precip = new double[nx]();
+            #endif
         #endif
 
         #if defined(AB2)
@@ -226,14 +332,30 @@ public:
                 dqv_advect = allocate3DContinuousArray(nx, nz, 2, dqv_advectcont);
                 dqc_advect = allocate3DContinuousArray(nx, nz, 2, dqc_advectcont);
                 dqr_advect = allocate3DContinuousArray(nx, nz, 2, dqr_advectcont);
-                dqr_VT = allocate3DContinuousArray(nx, nz, 2, dqr_VTcont);
+                #if defined(KESSLER_MICROPHY)
+                    dqr_VT = allocate3DContinuousArray(nx, nz, 2, dqr_VTcont);
+                #endif
+
+                #if defined(P3_MICROPHY)
+                    dnc_advect = allocate3DContinuousArray(nx, nz, 2, dnc_advectcont);
+                    dnr_advect = allocate3DContinuousArray(nx, nz, 2, dnr_advectcont);
+                    dni_advect = allocate3DContinuousArray(nx, nz, 2, dni_advectcont);
+                    dqitot_advect = allocate3DContinuousArray(nx, nz, 2, dqitot_advectcont);
+                    dqirim_advect = allocate3DContinuousArray(nx, nz, 2, dqirim_advectcont);
+                    dqiliq_advect = allocate3DContinuousArray(nx, nz, 2, dqiliq_advectcont);
+                    dbirim_advect = allocate3DContinuousArray(nx, nz, 2, dbirim_advectcont);
+                #endif
+            #endif
+
+            #if defined(P3_MICROPHY)
+                diag_3d = allocate3DContinuousArray(nx, nz, vvm::P3::n_diag_3d, diag_3dcont);
             #endif
         #endif
     }
 
     static double** allocate2DContinuousArray(int rows, int cols, double*& contMemory) {
-        double** array = new double*[rows];
-        contMemory = new double[rows * cols]; // Allocate continuous memory block
+        double** array = new double*[rows]();
+        contMemory = new double[rows * cols](); // Allocate continuous memory block
         for (int i = 0; i < rows; ++i) {
             array[i] = &contMemory[i * cols]; // Point to segments within continuous block
         }
@@ -249,10 +371,10 @@ public:
 
     #if defined(AB2)
     double*** allocate3DContinuousArray(int dim1, int dim2, int dim3, double*& contMemory) {
-        double*** array = new double**[dim1];
-        contMemory = new double[dim1 * dim2 * dim3]; // Allocate continuous memory block
+        double*** array = new double**[dim1]();
+        contMemory = new double[dim1 * dim2 * dim3](); // Allocate continuous memory block
         for (int i = 0; i < dim1; ++i) {
-            array[i] = new double*[dim2];
+            array[i] = new double*[dim2]();
             for (int j = 0; j < dim2; ++j) {
                 array[i][j] = &contMemory[i * dim2 * dim3 + j * dim3]; // Point to segments within continuous block
             }
@@ -271,95 +393,95 @@ public:
     }
     #endif
 
-    double rdx;                              ///< 1/dx, calculated from Config_VVM given by users.
-    double r2dx;                             ///< 1 / (2dx), calculated from Config_VVM given by users.
-    double rdz;                              ///< 1 / dz, calculated from Config_VVM given by users.
-    double r2dz;                             ///< 1 / (2dz), calculated from Config_VVM given by users.
-    double rdx2;                             ///< 1 / (dx^2), calculated from Config_VVM given by users.
-    double rdz2;                             ///< 1 / (dz^2), calculated from Config_VVM given by users.
-    int nx;                                  ///< Number of grid points in x direction, calculated from Config_VVM given by users.
-    int nz;                                  ///< Number of grid points in z direction, calculated from Config_VVM given by users.
-    double dt;                               ///< From Config_VVM given by users.
-    double d2t;                              ///< From Config_VVM given by users.
-    double dx;                               ///< From Config_VVM given by users.
-    double dz;                               ///< From Config_VVM given by users.
-    int XRANGE;                              ///< From Config_VVM given by users.
-    int ZRANGE;                              ///< From Config_VVM given by users.
-    double TIMEEND;                          ///< From Config_VVM given by users.
-    int TIMEROUTPUTSIZE;                     ///< From Config_VVM given by users.
-    std::string outputpath;                  ///< From Config_VVM given by users.
-    int OUTPUTSTEP;                          ///< From Config_VVM given by users.
-    double Kx;                               ///< From Config_VVM given by users.
-    double Kz;                               ///< From Config_VVM given by users.
-    double TIMETS;                           ///< From Config_VVM given by users.
-    double tolerance;                        ///< From Config_VVM given by users.
-    double GRAVITY;                          ///< From Config_VVM given by users.
-    double Cp;                               ///< From Config_VVM given by users.
-    double Cv;                               ///< From Config_VVM given by users.
-    double Rd;                               ///< From Config_VVM given by users.
-    double Lv;                               ///< From Config_VVM given by users.
-    double P0;                               ///< From Config_VVM given by users.
-    double PSURF;                            ///< From Config_VVM given by users.
-    double addforcingtime;                   ///< From Config_VVM given by users.
-    int CASE;                                ///< From Config_VVM given by users.
+    double rdx = 0;                              ///< 1/dx, calculated from Config_VVM given by users.
+    double r2dx = 0;                             ///< 1 / (2dx), calculated from Config_VVM given by users.
+    double rdz = 0;                              ///< 1 / dz, calculated from Config_VVM given by users.
+    double r2dz = 0;                             ///< 1 / (2dz), calculated from Config_VVM given by users.
+    double rdx2 = 0;                             ///< 1 / (dx^2), calculated from Config_VVM given by users.
+    double rdz2 = 0;                             ///< 1 / (dz^2), calculated from Config_VVM given by users.
+    int nx = 0;                                  ///< Number of grid points in x direction, calculated from Config_VVM given by users.
+    int nz = 0;                                  ///< Number of grid points in z direction, calculated from Config_VVM given by users.
+    double dt = 0;                               ///< From Config_VVM given by users.
+    double d2t = 0;                              ///< From Config_VVM given by users.
+    double dx = 0;                               ///< From Config_VVM given by users.
+    double dz = 0;                               ///< From Config_VVM given by users.
+    int XRANGE = 0;                              ///< From Config_VVM given by users.
+    int ZRANGE = 0;                              ///< From Config_VVM given by users.
+    double TIMEEND = 0;                          ///< From Config_VVM given by users.
+    int TIMEROUTPUTSIZE = 0;                     ///< From Config_VVM given by users.
+    std::string outputpath = "";                  ///< From Config_VVM given by users.
+    int OUTPUTSTEP = 0;                          ///< From Config_VVM given by users.
+    double Kx = 0;                               ///< From Config_VVM given by users.
+    double Kz = 0;                               ///< From Config_VVM given by users.
+    double TIMETS = 0;                           ///< From Config_VVM given by users.
+    double tolerance = 0;                        ///< From Config_VVM given by users.
+    double GRAVITY = 0;                          ///< From Config_VVM given by users.
+    double Cp = 0;                               ///< From Config_VVM given by users.
+    double Cv = 0;                               ///< From Config_VVM given by users.
+    double Rd = 0;                               ///< From Config_VVM given by users.
+    double Lv = 0;                               ///< From Config_VVM given by users.
+    double P0 = 0;                               ///< From Config_VVM given by users.
+    double PSURF = 0;                            ///< From Config_VVM given by users.
+    double addforcingtime = 0;                   ///< From Config_VVM given by users.
+    int CASE = 0;                                ///< From Config_VVM given by users.
     double CRAD = 1. / 3600.;                   ///< From Config_VVM given by users.
 
     // 0D variables
     int step = 0;                            ///< The current time step.
-    double ubarTopp;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
-    double ubarTop;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
-    double ubarTopm;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTopp = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTop = 0;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTopm = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
     double moisture_nudge_time = 0.;         ///< The time for nudging the moisture field.
 
 
     // 1D variables
-    double *thb;                              ///< Horizontal mean potential temperature profile.
-    double *thb_init;                         ///< Initial horizontal mean potential temperature profile.
-    double *thbm;                             ///< Horizontal mean potential temperature profile for previous step.
-    double *thb_zeta;                         ///< Horizontal mean potential temperature profile at grid upper edge.
-    double *rhou;                             ///< Horizontal mean density profile at grid center.
-    double *rhow;                             ///< Horizontal mean density profile at grid upper edge.
-    double *pib;                              ///< Horizontal mean non-dimensional height profile at grid center.
-    double *qvb;                              ///< Horizontal mean water vapor profile at grid center.
-    double *qvb0;                              ///< Horizontal mean water vapor profile at grid center.
-    double *qvsb;                             ///< Horizontal mean saturated water vapor profile at grid center.
-    double *pb;                               ///< Horizontal mean pressure profile at grid center.
-    double *xi;                               ///< The velocity potential in x-direction at top boundary grid center.
-    double *uxi;
-    double *thvb;
-    double *thvbm;
-    double *z;
-    double *z_zeta;
-    double *lambda2;
+    double *thb = nullptr;                              ///< Horizontal mean potential temperature profile.
+    double *thb_init = nullptr;                         ///< Initial horizontal mean potential temperature profile.
+    double *thbm = nullptr;                             ///< Horizontal mean potential temperature profile for previous step.
+    double *thb_zeta = nullptr;                         ///< Horizontal mean potential temperature profile at grid upper edge.
+    double *rhou = nullptr;                             ///< Horizontal mean density profile at grid center.
+    double *rhow = nullptr;                             ///< Horizontal mean density profile at grid upper edge.
+    double *pib = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid center.
+    double *qvb = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvb0 = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvsb = nullptr;                             ///< Horizontal mean saturated water vapor profile at grid center.
+    double *pb = nullptr;                               ///< Horizontal mean pressure profile at grid center.
+    double *xi = nullptr;                               ///< The velocity potential in x-direction at top boundary grid center.
+    double *uxi = nullptr;
+    double *thvb = nullptr;
+    double *thvbm = nullptr;
+    double *z = nullptr;
+    double *z_zeta = nullptr;
+    double *lambda2 = nullptr;
 
     // 2D variables
-    double **zetap;
-    double **zeta;
-    double **zetam;
-    double **thp;
-    double **th;
-    double **thm;
-    double **u;
-    double **w;
-    double **RKM;
-    double **RKH;
-    double **U_w;
-    double **W_u;
+    double **zetap = nullptr;
+    double **zeta = nullptr;
+    double **zetam = nullptr;
+    double **thp = nullptr;
+    double **th = nullptr;
+    double **thm = nullptr;
+    double **u = nullptr;
+    double **w = nullptr;
+    double **RKM = nullptr;
+    double **RKH = nullptr;
+    double **U_w = nullptr;
+    double **W_u = nullptr;
 
 
-    double *zetapcont;
-    double *zetacont;
-    double *zetamcont;
-    double *thpcont;
-    double *thcont;
-    double *thmcont;
-    double *ucont;
-    double *wcont;
-    double *init_th_forcingcont;
-    double *RKMcont;
-    double *RKHcont;
-    double *U_wcont;
-    double *W_ucont;
+    double *zetapcont = nullptr;
+    double *zetacont = nullptr;
+    double *zetamcont = nullptr;
+    double *thpcont = nullptr;
+    double *thcont = nullptr;
+    double *thmcont = nullptr;
+    double *ucont = nullptr;
+    double *wcont = nullptr;
+    double *init_th_forcingcont = nullptr;
+    double *RKMcont = nullptr;
+    double *RKHcont = nullptr;
+    double *U_wcont = nullptr;
+    double *W_ucont = nullptr;
     
     
     #if defined(STREAMFUNCTION)
@@ -367,65 +489,115 @@ public:
     #endif
 
     #if defined(WATER)
-        double **qvp;
-        double **qv;
-        double **qvm;
-        double **qcp;
-        double **qc;
-        double **qcm;
-        double **qrp;
-        double **qr;
-        double **qrm;
-        double **evaporation;
-        double **accretion;
-        double **autoconversion;
-        double **condensation;
-        double *precip;
-        
-        double *qvpcont;
-        double *qvcont;
-        double *qvmcont;
-        double *qcpcont;
-        double *qccont;
-        double *qcmcont;
-        double *qrpcont;
-        double *qrcont;
-        double *qrmcont;
-        double *evaporationcont;
-        double *accretioncont;
-        double *autoconversioncont;
-        double *condensationcont;
+        double **qvp = nullptr, **qv = nullptr, **qvm = nullptr;
+        double **qcp = nullptr, **qc = nullptr, **qcm = nullptr;
+        double **qrp = nullptr, **qr = nullptr, **qrm = nullptr;
+        #if defined(KESSLER_MICROPHY)
+            double **evaporation = nullptr;
+            double **accretion = nullptr;
+            double **autoconversion = nullptr;
+            double **condensation = nullptr;
+            double *precip = nullptr;
+        #endif
+        #if defined(P3_MICROPHY)
+            double **ncp = nullptr, **nc = nullptr, **ncm = nullptr;
+            double **nrp = nullptr, **nr = nullptr, **nrm = nullptr;
+            double **qitotp = nullptr, **qitot = nullptr, **qitotm = nullptr;
+            double **qirimp = nullptr, **qirim = nullptr, **qirimm = nullptr;
+            double **qiliqp = nullptr, **qiliq = nullptr, **qiliqm = nullptr;
+            double **nip = nullptr, **ni = nullptr, **nim = nullptr;
+            double **birimp = nullptr, **birim = nullptr, **birimm = nullptr;
+            double *precip_liq = nullptr, *precip_sol = nullptr, *precip = nullptr;
+            double **diag_ze = nullptr, **diag_effc = nullptr, **diag_effi = nullptr;
+            double **diag_vmi = nullptr, **diag_di = nullptr, **diag_rhoi = nullptr, **cldfrac = nullptr;
+            double **diag_2d = nullptr, ***diag_3d = nullptr;
+            double **dz_all = nullptr;
+            double **w_all = nullptr;
+            double **pb_all = nullptr;
+            double **zi_all = nullptr;
+            double **ssat_all = nullptr;
+        #endif
+
+
+        double *qvpcont, *qvcont, *qvmcont;
+        double *qcpcont, *qccont, *qcmcont;
+        double *qrpcont, *qrcont, *qrmcont;
+        #if defined(KESSLER_MICROPHY)
+            double *evaporationcont = nullptr;
+            double *accretioncont = nullptr;
+            double *autoconversioncont = nullptr;
+            double *condensationcont = nullptr;
+        #endif
+
+        #if defined(P3_MICROPHY)
+            double *ncpcont = nullptr, *nccont = nullptr, *ncmcont = nullptr;
+            double *nrpcont = nullptr, *nrcont = nullptr, *nrmcont = nullptr;
+            double *qitotpcont = nullptr, *qitotcont = nullptr, *qitotmcont = nullptr;
+            double *qirimpcont = nullptr, *qirimcont = nullptr, *qirimmcont = nullptr;
+            double *qiliqpcont = nullptr, *qiliqcont = nullptr, *qiliqmcont = nullptr;
+            double *nipcont = nullptr, *nicont = nullptr, *nimcont = nullptr;
+            double *birimpcont = nullptr, *birimcont = nullptr, *birimmcont = nullptr;
+            double *diag_zecont = nullptr, *diag_effccont = nullptr, *diag_efficont = nullptr;
+            double *diag_vmicont = nullptr, *diag_dicont = nullptr, *diag_rhoicont = nullptr, *cldfraccont = nullptr;
+            double *diag_2dcont = nullptr, *diag_3dcont = nullptr;
+            double *dz_allcont = nullptr;
+            double *w_allcont = nullptr;
+            double *pb_allcont = nullptr;
+            double *zi_allcont = nullptr;
+            double *ssat_allcont = nullptr;
+        #endif
     #endif
 
     // #####################################################################################
     // Used for AB2. These variables are declared but not initialized if it's not AB2
-    double ***dth_advect;
-    double ***dth_buoyancy;
-    double ***dzeta_advect;
+    double ***dth_advect = nullptr;
+    double ***dth_buoyancy = nullptr;
+    double ***dzeta_advect = nullptr;
     
-    double *dth_advectcont;
-    double *dth_buoyancycont;
-    double *dzeta_advectcont;
+    double *dth_advectcont = nullptr;
+    double *dth_buoyancycont = nullptr;
+    double *dzeta_advectcont = nullptr;
 
     #if defined(WATER)
-        double ***dqv_advect;
-        double ***dqc_advect;
-        double ***dqr_advect;
-        double ***dqr_VT;
+        double ***dqv_advect = nullptr;
+        double ***dqc_advect = nullptr;
+        double ***dqr_advect = nullptr;
 
-        double *dqv_advectcont;
-        double *dqc_advectcont;
-        double *dqr_advectcont;
-        double *dqr_VTcont;
+        double *dqv_advectcont = nullptr;
+        double *dqc_advectcont = nullptr;
+        double *dqr_advectcont = nullptr;
+
+        #if defined(KESSLER_MICROPHY)
+            double ***dqr_VT = nullptr;
+            double *dqr_VTcont = nullptr;
+        #endif
+
+        #if defined(P3_MICROPHY)
+            double ***dnc_advect = nullptr;
+            double ***dnr_advect = nullptr;
+            double ***dni_advect = nullptr;
+            double ***dqitot_advect = nullptr;
+            double ***dqirim_advect = nullptr;
+            double ***dqiliq_advect = nullptr;
+            double ***dbirim_advect = nullptr;
+
+            double *dnc_advectcont = nullptr;
+            double *dnr_advectcont = nullptr;
+            double *dni_advectcont = nullptr;
+            double *dqitot_advectcont = nullptr;
+            double *dqirim_advectcont = nullptr;
+            double *dqiliq_advectcont = nullptr;
+            double *dbirim_advectcont = nullptr;
+        #endif
     #endif
     // #####################################################################################
 
 
-    double *t_advection;
-    double *t_poisson;
-    double *t_diffusion;
-    double *t_microphysics;
-    double *t_all;
+    double *t_advection = nullptr;
+    double *t_poisson = nullptr;
+    double *t_diffusion = nullptr;
+    double *t_microphysics = nullptr;
+    double *t_all = nullptr;
 
     // Boundary Process => BoundaryProcess.cpp
     // **********************************************************************
@@ -469,7 +641,9 @@ public:
     // static void Advection_thermo(double **previous, double **now, double **future, vvm &model);
     static void Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model);
 
-    static void Advection_qrVT(vvm &model);
+    #if defined(WATER) && defined(KESSLER_MICROPHY)
+        static void Advection_qrVT(vvm &model);
+    #endif
     // *********************************************************************************
 
     static void Bouyancy(vvm &model);
@@ -516,6 +690,7 @@ public:
     // *********************************************************************************
 
     #if defined(WATER)
+    #if defined(KESSLER_MICROPHY)
     class MicroPhysics {
     public:
         static void condensation(vvm &model); 	// condensation of qc by qv
@@ -524,12 +699,38 @@ public:
         static void evaporation(vvm &model); 	// evaporation of rain water
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
+    #endif
 
         static void AddForcing(vvm &model);
     #endif
 
+    #if defined(P3_MICROPHY)
+    class P3 {
+    public:
+        inline static char *lookup_file_dir = strdup("../lookup_tables");
+        inline static int nCat = 1;
+        inline static bool trplMomI = false; // 3-element array
+        inline static bool liqfrac = false;
+        inline static char *model_name = strdup("2DVVM");
+        inline static int stat = 0;
+        inline static bool abort_on_err = true;
+        inline static bool dowr = true;
+
+        inline static int n_diag_2d = 1;
+        inline static int n_diag_3d = 1;
+
+        inline static bool log_predictNc  = false; // 3-element array
+        inline static double scpf_pfrac   = 0.;    // dummy variable (not used), set to 0
+        inline static double scpf_resfact = 0.;    // dummy variable (not used), set to 0
+        inline static double clbfact_dep  = 1.;    // calibration for deposition
+        inline static double clbfact_sub  = 1.;    // calibration for sublimation
+        inline static bool debug_on  = false;
+        inline static bool scpf_on   = false;      // cloud fraction version not used
+    };
+    #endif
+
     // Variables for tropical forcing
-    double** init_th_forcing;
+    double** init_th_forcing = nullptr;
     bool status_for_adding_forcing = true;
     #if defined(TROPICALFORCING)
         double* Q1LS;
@@ -591,9 +792,14 @@ public:
         static void pzeta_pt(vvm &model);
         static void pth_pt(vvm &model);
         #if defined(WATER)
-            static void pqv_pt(vvm &model);
-            static void pqc_pt(vvm &model);
-            static void pqr_pt(vvm &model);
+            #if defined(KESSLER_MICROPHY)
+                static void pqv_pt(vvm &model);
+                static void pqc_pt(vvm &model);
+                static void pqr_pt(vvm &model);
+            #endif
+            #if defined(P3_MICROPHY)
+                static void pqmicrophy_pt(vvm &model);
+            #endif
         #endif
 
         static void updateMean(vvm &model);

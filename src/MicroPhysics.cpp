@@ -3,6 +3,7 @@
 #include <iostream>
 
 #if defined(WATER)
+#if defined(KESSLER_MICROPHY)
 /*
 void vvm::MicroPhysics::condensation(vvm &model) {
     double qvs = 0., phi = 0., C = 0.;
@@ -193,4 +194,5 @@ void vvm::MicroPhysics::NegativeValueProcess(double **var, int nx, int nz) {
     }
     return;
 }
+#endif
 #endif

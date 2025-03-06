@@ -28,7 +28,7 @@ void vvm::Init::Init1d(vvm &model) {
         // init qvb, tvb
         for (int k = 1; k <= model.nz-2; k++) {
             #if defined(WATER)
-                model.qvb[k] = GetQVB(k, model.dz) * 0.95;
+                model.qvb[k] = GetQVB(k, model.dz);
                 model.qvb0[k] = model.qvb[k];
             #else
                 model.qvb[k] = 0.;
@@ -159,15 +159,33 @@ void vvm::Init::Init2d(vvm &model) {
 
         #if defined(WATER)
             // init qv: where th != 0, qv = qvs
-            for (int i = 1; i <= model.nx-2; i++) {
-                for (int k = 1; k <= model.nz-2; k++) {
-                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+            for (int k = 0; k <= model.nz-1; k++) {
+                for (int i = 0; i <= model.nx-1; i++) {
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
                     model.qc[i][k] = model.qcp[i][k] = model.qcm[i][k] = 0.;
                     model.qr[i][k] = model.qrp[i][k] = model.qrm[i][k] = 0.;
+                    model.dqv_advect[i][k][0] = model.dqv_advect[i][k][1] = 0;
+                    model.dqc_advect[i][k][0] = model.dqc_advect[i][k][1] = 0;
+                    model.dqr_advect[i][k][0] = model.dqr_advect[i][k][1] = 0;
+                    #if defined(P3_MICROPHY)
+                        model.nc[i][k] = model.ncp[i][k] = model.ncm[i][k] = 0.;
+                        model.nr[i][k] = model.nrp[i][k] = model.nrm[i][k] = 0.;
+                        model.ni[i][k] = model.nip[i][k] = model.nim[i][k] = 0.;
+                        model.qitot[i][k] = model.qitotp[i][k] = model.qitotm[i][k] = 0.;
+                        model.qirim[i][k] = model.qirimp[i][k] = model.qirimm[i][k] = 0.;
+                        model.qiliq[i][k] = model.qiliqp[i][k] = model.qiliqm[i][k] = 0.;
+                        model.birim[i][k] = model.birimp[i][k] = model.birimm[i][k] = 0.;
+                        model.dnc_advect[i][k][0] = model.dnc_advect[i][k][1] = 0;
+                        model.dnr_advect[i][k][0] = model.dnr_advect[i][k][1] = 0;
+                        model.dni_advect[i][k][0] = model.dni_advect[i][k][1] = 0;
+                        model.dqitot_advect[i][k][0] = model.dqitot_advect[i][k][1] = 0;
+                        model.dqirim_advect[i][k][0] = model.dqirim_advect[i][k][1] = 0;
+                        model.dqiliq_advect[i][k][0] = model.dqiliq_advect[i][k][1] = 0;
+                        model.dbirim_advect[i][k][0] = model.dbirim_advect[i][k][1] = 0;
+                    #endif
                 }
+                model.qvb0[k] = model.qvb[k]*0.95;
             }
-            model.BoundaryProcess2D_center(model.qv, model.nx, model.nz);
-            model.BoundaryProcess2D_center(model.qvm, model.nx, model.nz);
         #endif
 
 		// init u
@@ -240,7 +258,7 @@ double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
 
 double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
-    double delta = 6.;
+    double delta = 3.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
     else return 0.;
 }

@@ -100,9 +100,17 @@ void vvm::Output::output_nc(int n, vvm &model) {
     int ncid, t_dimid, x_dimid, z_dimid;
     int th_id, zeta_id, u_id, w_id, ubarTop_id;
     #if defined(WATER)
-        int qvid, qcid, qrid, precipid;
+        int qvid, qcid, qrid;
+        int precipid;
+        #if defined(KESSLER_MICROPHY)
         #if defined(OUTPUTMICROPHYSICS)
             int accretionid, autoconversionid, evaporationid, condensationid;
+        #endif
+        #endif
+
+        #if defined(P3_MICROPHY)
+            int qitotid;
+            /* int qncid, qnrid, qniid, qirimid, birimid; */
         #endif
     #endif
 
@@ -110,7 +118,7 @@ void vvm::Output::output_nc(int n, vvm &model) {
     int t_varid = 0.;
     size_t t_index = 0;
 
-    int file_num =  (n / 120000);
+    int file_num =  (n / 1200000);
     std::string file_name = model.outputpath + "nc/"  + std::to_string(file_num) + (string) ".nc";
 
     if ((retval = nc_open(file_name.c_str(), NC_WRITE, &ncid)) == NC_NOERR) {
@@ -129,13 +137,24 @@ void vvm::Output::output_nc(int n, vvm &model) {
             if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
             if ((retval = nc_inq_varid(ncid, "qc", &qcid))) NC_ERR(retval);
             if ((retval = nc_inq_varid(ncid, "qr", &qrid))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "precip", &precipid))) NC_ERR(retval);
+            #if defined(KESSLER_MICROPHY)
             #if defined(OUTPUTMICROPHYSICS)
                 if ((retval = nc_inq_varid(ncid, "accretion", &accretionid))) NC_ERR(retval);
                 if ((retval = nc_inq_varid(ncid, "autoconversion", &autoconversionid))) NC_ERR(retval);
                 if ((retval = nc_inq_varid(ncid, "evaporation", &evaporationid))) NC_ERR(retval);
                 if ((retval = nc_inq_varid(ncid, "condensation", &condensationid))) NC_ERR(retval);
             #endif
-            if ((retval = nc_inq_varid(ncid, "precip", &precipid))) NC_ERR(retval);
+            #endif
+
+            #if defined(P3_MICROPHY)
+                /* if ((retval = nc_inq_varid(ncid, "qnc", &qncid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "qnr", &qnrid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "qni", &qniid))) NC_ERR(retval); */
+                if ((retval = nc_inq_varid(ncid, "qitot", &qitotid))) NC_ERR(retval);
+                /* if ((retval = nc_inq_varid(ncid, "qirim", &qirimid))) NC_ERR(retval); */
+                /* if ((retval = nc_inq_varid(ncid, "birim", &birimid))) NC_ERR(retval); */
+            #endif
         #endif
 
         // Get the current time index (size of the time dimension)
@@ -169,13 +188,24 @@ void vvm::Output::output_nc(int n, vvm &model) {
             if ((retval = nc_def_var(ncid, "qv", NC_DOUBLE, 3, dimids, &qvid))) NC_ERR(retval);
             if ((retval = nc_def_var(ncid, "qc", NC_DOUBLE, 3, dimids, &qcid))) NC_ERR(retval);
             if ((retval = nc_def_var(ncid, "qr", NC_DOUBLE, 3, dimids, &qrid))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "precip", NC_DOUBLE, 2, dimx1d, &precipid))) NC_ERR(retval);
+            #if defined(KESSLER_MICROPHY)
             #if defined(OUTPUTMICROPHYSICS)
                 if ((retval = nc_def_var(ncid, "accretion", NC_DOUBLE, 3, dimids, &accretionid))) NC_ERR(retval);
                 if ((retval = nc_def_var(ncid, "autoconversion", NC_DOUBLE, 3, dimids, &autoconversionid))) NC_ERR(retval);
                 if ((retval = nc_def_var(ncid, "evaporation", NC_DOUBLE, 3, dimids, &evaporationid))) NC_ERR(retval);
                 if ((retval = nc_def_var(ncid, "condensation", NC_DOUBLE, 3, dimids, &condensationid))) NC_ERR(retval);
             #endif
-            if ((retval = nc_def_var(ncid, "precip", NC_DOUBLE, 2, dimx1d, &precipid))) NC_ERR(retval);
+            #endif
+
+            #if defined(P3_MICROPHY)
+                /* if ((retval = nc_def_var(ncid, "qnc", NC_DOUBLE, 3, dimids, &qncid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "qnr", NC_DOUBLE, 3, dimids, &qnrid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "qni", NC_DOUBLE, 3, dimids, &qniid))) NC_ERR(retval); */
+                if ((retval = nc_def_var(ncid, "qitot", NC_DOUBLE, 3, dimids, &qitotid))) NC_ERR(retval);
+                /* if ((retval = nc_def_var(ncid, "qirim", NC_DOUBLE, 3, dimids, &qirimid))) NC_ERR(retval); */
+                /* if ((retval = nc_def_var(ncid, "birim", NC_DOUBLE, 3, dimids, &birimid))) NC_ERR(retval); */
+            #endif
         #endif
         // End define mode
         if ((retval = nc_enddef(ncid))) NC_ERR(retval);
@@ -189,8 +219,10 @@ void vvm::Output::output_nc(int n, vvm &model) {
     // Write the 2D data for this time step
     size_t start[3] = {t_index, 0, 0}; // Starting point (time_index, x, y)
     size_t count[3] = {1, (size_t) model.nx, (size_t) model.nz}; // Write one time slice, all x and y values
-    size_t start_precip[2] = {t_index, 0};
-    size_t count_precip[2] = {1, (size_t) model.nx};
+    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
+        size_t start_precip[2] = {t_index, 0};
+        size_t count_precip[2] = {1, (size_t) model.nx};
+    #endif
     if ((retval = nc_put_vara_double(ncid, th_id, start, count, model.thcont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, zeta_id, start, count, model.zetacont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
@@ -202,13 +234,28 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);
         if ((retval = nc_put_vara_double(ncid, qcid, start, count, model.qccont))) checkErr(retval, __LINE__);
         if ((retval = nc_put_vara_double(ncid, qrid, start, count, model.qrcont))) checkErr(retval, __LINE__);
+        #if defined(KESSLER_MICROPHY)
+           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.precip))) checkErr(retval, __LINE__);
+        #elif defined(P3_MICROPHY)
+           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.diag_2dcont))) checkErr(retval, __LINE__);
+        #endif
+        #if defined(KESSLER_MICROPHY)
         #if defined(OUTPUTMICROPHYSICS)
             if ((retval = nc_put_vara_double(ncid, accretionid, start, count, model.accretioncont))) checkErr(retval, __LINE__);
             if ((retval = nc_put_vara_double(ncid, autoconversionid, start, count, model.autoconversioncont))) checkErr(retval, __LINE__);
             if ((retval = nc_put_vara_double(ncid, evaporationid, start, count, model.evaporationcont))) checkErr(retval, __LINE__);
             if ((retval = nc_put_vara_double(ncid, condensationid, start, count, model.condensationcont))) checkErr(retval, __LINE__);
         #endif
-        if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.precip))) checkErr(retval, __LINE__);
+        #endif
+
+        #if defined(P3_MICROPHY)
+            /* if ((retval = nc_put_vara_double(ncid, qncid, start, count, model.nccont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, qnrid, start, count, model.nrcont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, qniid, start, count, model.nicont))) checkErr(retval, __LINE__); */
+            if ((retval = nc_put_vara_double(ncid, qitotid, start, count, model.qitotcont))) checkErr(retval, __LINE__);
+            /* if ((retval = nc_put_vara_double(ncid, qirimid, start, count, model.qirimcont))) checkErr(retval, __LINE__); */
+            /* if ((retval = nc_put_vara_double(ncid, birimid, start, count, model.birimcont))) checkErr(retval, __LINE__); */
+        #endif
     #endif
 
     // Close the file

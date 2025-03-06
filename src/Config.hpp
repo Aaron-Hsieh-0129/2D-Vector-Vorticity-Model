@@ -12,6 +12,8 @@
 // #define DRY
 // #define RHO1
 #define WATER
+/* #define KESSLER_MICROPHY */
+#define P3_MICROPHY
 // #define TROPICALFORCING
 // #define RADIATIONCOOLING
 // #define LOADFILE
