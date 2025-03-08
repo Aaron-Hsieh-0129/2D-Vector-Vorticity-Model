@@ -4,6 +4,7 @@
     // #include "../include/Eigen/Sparse"
     #include <Eigen/Sparse>
 #endif
+#include <amgx_c.h>
 
 class Config_VVM {
 public:
@@ -454,6 +455,32 @@ public:
     double *z_zeta = nullptr;
     double *lambda2 = nullptr;
 
+    #if defined(GPU_POISSON)
+        int *row_ptr_w = nullptr;
+        int *col_idx_w = nullptr;
+        double *values_w = nullptr;
+        int *row_ptr_u = nullptr;
+        int *col_idx_u = nullptr;
+        double *values_u = nullptr;
+        int nnz_w = 0;
+        int nnz_u = 0;
+        // AMGX members for w (A matrix)
+        AMGX_config_handle cfg_w;
+        AMGX_resources_handle rsc_w;
+        AMGX_matrix_handle A;
+        AMGX_vector_handle b_vec_w, x_vec_w;
+        AMGX_solver_handle solver_w;
+
+        // AMGX members for u (G matrix)
+        AMGX_config_handle cfg_u;
+        AMGX_resources_handle rsc_u;
+        AMGX_matrix_handle G;
+        AMGX_vector_handle h_vec_u, y_vec_u;
+        AMGX_solver_handle solver_u;
+
+        bool initialized = false;
+    #endif
+
     // 2D variables
     double **zetap = nullptr;
     double **zeta = nullptr;
@@ -651,7 +678,7 @@ public:
 
     // Poisson Solver => PoissonSolver.cpp
     // *********************************************************************************
-    #ifndef PETSC
+    #if !defined(PETSC) && !defined(GPU_POISSON) 
         Eigen::SparseMatrix<double> A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
         Eigen::SparseMatrix<double> G = Eigen::SparseMatrix<double>(nx-2, nx-2);
     #endif
@@ -659,9 +686,14 @@ public:
     class PoissonSolver {
     public:
         #ifndef PETSC
-            Eigen::SparseMatrix<double> A;
-            Eigen::SparseMatrix<double> G;
             static void InitPoissonMatrix(vvm &model);
+            #if defined(GPU_POISSON)
+                static void InitAMGX(vvm &model);
+                static void CleanupAMGX(vvm &model);
+            #else
+                Eigen::SparseMatrix<double> A;
+                Eigen::SparseMatrix<double> G;
+            #endif
         #endif
         #if defined(STREAMFUNCTION)
             static void calpsiuw(vvm &model);

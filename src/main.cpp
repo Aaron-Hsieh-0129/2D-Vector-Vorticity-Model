@@ -1,4 +1,5 @@
 #include "Declare.hpp"
+#include <iostream>
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -7,6 +8,7 @@
     #include <petsc.h>
 #endif
 #include "ReadConfig.hpp"
+#include "Timer.hpp"
 
 // Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
@@ -22,6 +24,8 @@ extern "C" {
 #endif
 
 int main(int argc, char **argv) {
+    Timer timer_all;
+    timer_all.reset();
     #if defined(PETSC)
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
     #endif
@@ -58,9 +62,10 @@ int main(int argc, char **argv) {
         vvm::Init::Init2d(model);
     #endif
 
-    #ifndef PETSC
-        vvm::PoissonSolver::InitPoissonMatrix(model);
+    #if defined(GPU_POISSON)
+        vvm::PoissonSolver::InitAMGX(model);
     #endif
+    vvm::PoissonSolver::InitPoissonMatrix(model);
 
     vvm::Output::create_all_directory(model);
     vvm::Output::printInit(model);
@@ -115,5 +120,9 @@ int main(int argc, char **argv) {
     #if defined(PETSC)
         PetscCall(PetscFinalize());
     #endif
+    #if defined(GPU_POISSON)
+        vvm::PoissonSolver::CleanupAMGX(model);
+    #endif
+    std::cout << "Total time: " << timer_all.elapsed() << std::endl;
     return 0;
 }

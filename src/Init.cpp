@@ -431,12 +431,6 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
         model.thb_zeta[k] = 0.5 * (model.thb[k-1] + model.thb[k]);
     }
     model.BoundaryProcess1D_center(model.thb_zeta, model.nz);
-
-    #ifndef PETSC
-	    // Assign values to the matrices that solve the Poisson equation for u and w
-        vvm::PoissonSolver::InitPoissonMatrix(model);
-    #endif
-
     return;
 }
 #endif

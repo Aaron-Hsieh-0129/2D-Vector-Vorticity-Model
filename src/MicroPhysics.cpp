@@ -4,7 +4,6 @@
 
 #if defined(WATER)
 #if defined(KESSLER_MICROPHY)
-/*
 void vvm::MicroPhysics::condensation(vvm &model) {
     double qvs = 0., phi = 0., C = 0.;
     for (int k = 1; k <= model.nz-2; k++) {
@@ -25,63 +24,6 @@ void vvm::MicroPhysics::condensation(vvm &model) {
     }
     return;
 }
-*/
-
-void vvm::MicroPhysics::condensation(vvm &model) {
-    double qvs = 0., phi = 0., C = 0.;
-    /* std::cout << "Entering condensation function\n"; */
-
-    // Verify array pointers and sizes
-    /* std::cout << "nx = " << model.nx << ", nz = " << model.nz << "\n"; */
-    /* std::cout << "pib: " << (model.pib ? "allocated" : "null") << "\n"; */
-    /* std::cout << "thpcont: " << (model.thpcont ? "allocated" : "null") << "\n"; */
-    /* std::cout << "qvpcont: " << (model.qvpcont ? "allocated" : "null") << "\n"; */
-    /* std::cout << "qcpcont: " << (model.qcpcont ? "allocated" : "null") << "\n"; */
-    /* std::cout << "condensationcont: " << (model.condensationcont ? "allocated" : "null") << "\n"; */
-
-    // Local variables to avoid struct access in OpenACC
-    double* pib = model.pib;  // 1D array
-    double* thpcont = model.thpcont;
-    double* qvpcont = model.qvpcont;
-    double* qcpcont = model.qcpcont;
-    double* condensationcont = model.condensationcont;
-    double Cp = model.Cp, Rd = model.Rd, P0 = model.P0, Lv = model.Lv;
-    int nx = model.nx, nz = model.nz;
-
-    #pragma acc data copy(pib[0:nz], \
-                          thpcont[0:nx * nz], \
-                          qvpcont[0:nx * nz], \
-                          qcpcont[0:nx * nz], \
-                          condensationcont[0:nx * nz]) \
-                     copyin(Cp, Rd, P0, Lv)
-    {
-        /* std::cout << "Data region entered\n"; */
-
-        #pragma acc parallel loop collapse(2) private(qvs, phi, C)
-        for (int k = 1; k <= nz-2; k++) {
-            for (int i = 1; i <= nx-2; i++) {
-                double pc = 380. / (std::pow(pib[k], Cp / Rd) * P0);
-                int idx = i * nz + k;
-                qvs = pc * std::exp(17.27 * (pib[k] * thpcont[idx] - 273.) / 
-                                   (pib[k] * thpcont[idx] - 36.));
-                phi = qvs * (17.27 * 237. * Lv) / 
-                      (Cp * std::pow(thpcont[idx] * pib[k] - 36., 2));
-                C = (qvpcont[idx] - qvs) / (1 + phi);
-    
-                if (std::fabs(C) > qcpcont[idx] && C < 0) C = -qcpcont[idx];
-
-                qvpcont[idx] = qvpcont[idx] - C;
-                qcpcont[idx] = qcpcont[idx] + C;
-                thpcont[idx] = thpcont[idx] + Lv / (Cp * pib[k]) * C;
-                condensationcont[idx] = C;
-            }
-        }
-        
-        /* std::cout << "Parallel region completed\n"; */
-    }
-    /* std::cout << "Exiting condensation function\n"; */
-}
-
 
 // autoconversion of qc to qr
 void vvm::MicroPhysics::autoconversion(vvm & model) {

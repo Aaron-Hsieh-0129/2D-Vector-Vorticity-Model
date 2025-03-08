@@ -22,7 +22,6 @@ double MINU(double var) {
     return 0.5 * (var - std::fabs(var));
 }
 
-/*
 void vvm::Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model) {
     double prhouvar_px_rho = 0., prhowvar_pz_rho = 0.;
     double *flux_ucont, *flux_wcont;
@@ -79,111 +78,6 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
     vvm::deallocate2DContinuousArray(flux_u, flux_ucont);
     vvm::deallocate2DContinuousArray(flux_w, flux_wcont);
     return;
-}
-*/
-
-#include <iostream>
-
-void vvm::Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model) {
-    double prhouvar_px_rho = 0., prhowvar_pz_rho = 0.;
-    double *flux_ucont, *flux_wcont;
-    double **flux_u = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_ucont);
-    double **flux_w = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_wcont);
-
-    // Local variables to avoid struct access in OpenACC
-    double* rhou = model.rhou;  // 1D array
-    double* rhow = model.rhow;  // 1D array
-    double* ucont = model.ucont;  // Assuming contiguous version of u
-    double* wcont = model.wcont;  // Assuming contiguous version of w
-    double* pastcont = past[0];   // Assuming past is contiguous
-    double* nowcont = now[0];     // Assuming now is contiguous
-    double* futurecont = future[0];  // Assuming future is contiguous
-    double* dvarcont = dvar[0][0];   // Assuming dvar is contiguous across all dimensions
-    double r2dx = model.r2dx, r2dz = model.r2dz, dt = model.dt, d2t = model.d2t;
-    int nx = model.nx, nz = model.nz, step = model.step;
-
-    #pragma acc data create(flux_ucont[0:nx * nz], flux_wcont[0:nx * nz]) \
-                     copyin(rhou[0:nz], rhow[0:nz], ucont[0:nx * nz], wcont[0:nx * nz], \
-                            pastcont[0:nx * nz], nowcont[0:nx * nz]) \
-                     copy(futurecont[0:nx * nz], dvarcont[0:nx * nz * 2]) \
-                     copyin(r2dx, r2dz, dt, d2t, step)
-    {
-
-        // First loop: Compute fluxes
-        #pragma acc parallel loop collapse(2) private(prhouvar_px_rho, prhowvar_pz_rho)
-        for (int k = 1; k <= nz-1; k++) {
-            for (int i = 1; i <= nx-1; i++) {
-                int idx = i * nz + k;
-                int idx_im1 = (i-1) * nz + k;
-                int idx_km1 = i * nz + (k-1);
-
-                flux_ucont[idx] = rhou[k] * ucont[idx] * (nowcont[idx] + nowcont[idx_im1]);
-                flux_wcont[idx] = rhow[k] * wcont[idx] * (nowcont[idx] + nowcont[idx_km1]);
-
-                #if defined(AB2)
-                if (i >= 2 && i <= nx-3 && k >= 2 && k <= nz-3) {
-                    int idx_im2 = (i-2) * nz + k;
-                    int idx_ip1 = (i+1) * nz + k;
-                    int idx_km2 = i * nz + (k-2);
-                    int idx_kp1 = i * nz + (k+1);
-
-                    double u_plus = (ucont[idx] > 0 ? ucont[idx] : 0.);
-                    double u_minus = (ucont[idx] < 0 ? ucont[idx] : 0.);
-                    double w_plus = (wcont[idx] > 0 ? wcont[idx] : 0.);
-                    double w_minus = (wcont[idx] < 0 ? wcont[idx] : 0.);
-
-                    flux_ucont[idx] += -1./3. * (
-                        rhou[k] * u_plus * (nowcont[idx] - nowcont[idx_im1])
-                        - std::sqrt(rhou[k] * u_plus * rhou[k] * (ucont[idx_im1] > 0 ? ucont[idx_im1] : 0.)) * (nowcont[idx_im1] - nowcont[idx_im2])
-                        - rhou[k] * u_minus * (nowcont[idx] - nowcont[idx_im1])
-                        - std::sqrt(std::fabs(rhou[k] * u_minus * rhou[k] * (ucont[idx_ip1] < 0 ? ucont[idx_ip1] : 0.))) * (nowcont[idx_ip1] - nowcont[idx])
-                    );
-
-                    flux_wcont[idx] += -1./3. * (
-                        rhow[k] * w_plus * (nowcont[idx] - nowcont[idx_km1])
-                        - std::sqrt(rhow[k] * w_plus * rhow[k-1] * (wcont[idx_km1] > 0 ? wcont[idx_km1] : 0.)) * (nowcont[idx_km1] - nowcont[idx_km2])
-                        - rhow[k] * w_minus * (nowcont[idx] - nowcont[idx_km1])
-                        - std::sqrt(std::fabs(rhow[k] * w_minus * rhow[k+1] * (wcont[idx_kp1] < 0 ? wcont[idx_kp1] : 0.))) * (nowcont[idx_kp1] - nowcont[idx])
-                    );
-                }
-                #endif
-            }
-        }
-
-        // Boundary conditions (simplified for GPU)
-        #pragma acc parallel loop
-        for (int i = 0; i < nx; i++) {
-            int idx_bot = i * nz + 0;
-            int idx_top = i * nz + (nz-1);
-            flux_wcont[idx_bot] = 0.;
-            flux_wcont[idx_top] = 0.;
-        }
-
-        // Second loop: Update future and dvar
-        #pragma acc parallel loop collapse(2) private(prhouvar_px_rho, prhowvar_pz_rho)
-        for (int k = 1; k <= nz-2; k++) {
-            for (int i = 1; i <= nx-2; i++) {
-                int idx = i * nz + k;
-                int idx_ip1 = (i+1) * nz + k;
-                int idx_kp1 = i * nz + (k+1);
-
-                prhouvar_px_rho = (flux_ucont[idx_ip1] - flux_ucont[idx]) * r2dx / rhou[k];
-                prhowvar_pz_rho = (flux_wcont[idx_kp1] - flux_wcont[idx]) * r2dz / rhou[k];
-
-                #if defined(AB2)
-                    int dvar_idx = (i * nz + k) * 2 + ((step + 1) % 2);
-                    dvarcont[dvar_idx] = -prhouvar_px_rho - prhowvar_pz_rho;
-                    if (step == 0) dvarcont[(i * nz + k) * 2] = dvarcont[(i * nz + k) * 2 + 1];
-                    futurecont[idx] = nowcont[idx] + 1.5 * dt * dvarcont[dvar_idx] - 0.5 * dt * dvarcont[(i * nz + k) * 2 + (step % 2)];
-                #else
-                    futurecont[idx] = pastcont[idx] + d2t * (-prhouvar_px_rho - prhowvar_pz_rho);
-                #endif
-            }
-        }
-    }
-
-    vvm::deallocate2DContinuousArray(flux_u, flux_ucont);
-    vvm::deallocate2DContinuousArray(flux_w, flux_wcont);
 }
 
 
