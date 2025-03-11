@@ -621,6 +621,14 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
     for (int i = 1; i <= model.nx-2; i++) {
         model.uxi[i] = (model.xi[i] - model.xi[i-1]) * model.rdx;
     }
+    tmp = 0.;
+    for (int i = 1; i < model.nx-1; i++) {
+        tmp += model.uxi[i];
+    }
+    tmp /= (model.nx - 2);
+    for (int i = 1; i <= model.nx - 2; i++) {
+        model.uxi[i] -= tmp;
+    }
     model.uxi[0] = model.uxi[model.nx-2];
     model.uxi[model.nx-1] = model.uxi[1];
 
