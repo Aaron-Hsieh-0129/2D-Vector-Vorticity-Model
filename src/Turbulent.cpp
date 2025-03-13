@@ -15,9 +15,9 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             Rzeta = 0.5*((model.w[i+1][k+1] + model.w[i+1][k]) - (model.w[i-1][k+1] + model.w[i-1][k])) * model.r2dx + 
                     0.5*((model.u[i+1][k+1] + model.u[i][k+1]) - (model.u[i+1][k-1] + model.u[i][k-1])) * model.r2dz;
 
-            Rotat = std::pow((model.u[i+1][k] - model.u[i][k]) * model.rdx, 2) + std::pow((model.w[i][k+1] - model.w[i][k]) * model.rdz, 2);
+            Rotat = std::pow( (model.u[i+1][k] - model.u[i][k]) * model.rdx + (model.w[i][k+1] - model.w[i][k]) * model.rdz, 2);
             
-            Ri = (model.GRAVITY / model.thb[k] * (model.thp[i][k+1] - model.thp[i][k-1]) * model.r2dz) / (std::pow(Rzeta, 2) + 2. * Rotat);
+            Ri = (model.GRAVITY / model.thp[i][k] * (model.thp[i][k+1] - model.thp[i][k-1]) * model.r2dz) / (std::pow(Rzeta, 2) + 2. * Rotat);
 
             if (Ri < 0) {
                 model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * std::sqrt(1. - 16. * Ri);
@@ -33,8 +33,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             }
 
             // Diffusion should be larger than 1
-            model.RKM[i][k] = std::max(model.RKM[i][k], 1.);
-            model.RKH[i][k] = std::max(model.RKH[i][k], 1.);
+            model.RKM[i][k] = std::max(model.RKM[i][k], 10.);
+            model.RKH[i][k] = std::max(model.RKH[i][k], 10.);
             
             // Diffusion should be smaller than 0.8 * dx^2 / dt
             model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * model.dx * model.dz / model.dt);

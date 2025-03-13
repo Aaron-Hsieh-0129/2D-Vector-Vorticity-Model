@@ -10,6 +10,7 @@
     #include <petscviewer.h>
 #endif
 
+#ifndef GPU_POISSON
 #if defined(STREAMFUNCTION)
 void vvm::PoissonSolver::calpsiuw(vvm &model) {
     #if defined(PETSC)
@@ -864,4 +865,5 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
     #endif
     return;
 }
+#endif
 #endif

@@ -20,6 +20,7 @@
 #if defined(LOADFILE)
     #define LOADINITPATH "/home/Aaron/TMIF_VVM_CSSWM/2DVVM/input/init.txt"
 #endif
+#define GPU_POISSON
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)

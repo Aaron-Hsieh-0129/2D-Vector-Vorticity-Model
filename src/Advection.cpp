@@ -80,6 +80,7 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
     return;
 }
 
+
 void vvm::Advection_zeta(vvm &model) {
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)

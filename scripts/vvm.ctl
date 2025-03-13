@@ -3,10 +3,10 @@ DTYPE netcdf
 OPTIONS template
 TITLE NetCDF Data for GrADS
 UNDEF -9999.0
-XDEF 502 LINEAR 0 1   # Update if x-spacing isn’t uniform
+XDEF 102 LINEAR 0 1   # Update if x-spacing isn’t uniform
 YDEF 1 LINEAR 1 1     # Single y-point for 2D model
 ZDEF 102 LINEAR 0 200   # z-spacing or levels
-TDEF 600 LINEAR 00Z31dec1999 2mn # date
+TDEF 6000 LINEAR 00Z31dec1999 2mn # date
 
 VARS 10
 th=>th 102 t,x,z theta 
