@@ -4,7 +4,9 @@
     // #include "../include/Eigen/Sparse"
     #include <Eigen/Sparse>
 #endif
-#include <amgx_c.h>
+#if defined(GPU_POISSON)
+    #include <amgx_c.h>
+#endif
 
 class Config_VVM {
 public:

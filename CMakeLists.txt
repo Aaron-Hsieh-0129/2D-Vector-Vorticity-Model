@@ -8,9 +8,10 @@ project(VVM2D VERSION 0.1.0 LANGUAGES Fortran CXX)
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# Set the C/C++ compiler to nvc++ (NVIDIA HPC SDK)
-set(CMAKE_C_COMPILER "nvc")
-set(CMAKE_CXX_COMPILER "nvc++")
+# Set the C/C++ compiler to gcc/g++ (can be overridden by PETSc if enabled)
+set(CMAKE_C_COMPILER "/home/Aaron/gcc13/bin/gcc")
+set(CMAKE_CXX_COMPILER "/home/Aaron/gcc13/bin/g++")
+set(CMAKE_Fortran_COMPILER "/home/Aaron/gcc13/bin/gfortran")
 
 # Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -20,39 +21,55 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-
-# Add OpenACC flags for GPU support
-option(USE_OPENACC "Enable OpenACC GPU support" ON)
-if(USE_OPENACC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -acc -gpu=ccall -Minfo=accel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -acc -gpu=ccall -Minfo=accel")
-endif()
-
-# Disable automatic dependency tracking for NVIDIA compilers
-set(CMAKE_C_DEPENDS_USE_COMPILER FALSE)
-set(CMAKE_CXX_DEPENDS_USE_COMPILER FALSE)
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fPIC -fdefault-real-8")
 
 # Option to enable or disable PETSc
 option(USE_PETSC "Enable PETSc support" OFF)
 
-# AMGX and CUDA settings
-set(AMGX_INCLUDE_DIR "/home/Aaron/amgx_install/include")
-set(AMGX_LIB_DIR "/home/Aaron/amgx_install/lib")
-set(CUDA_INCLUDE_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.1/cuda/include")
-set(CUDA_LIB_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.1/cuda/lib64")
-set(GCC9_LIB_DIR "/home/Aaron/gcc9/lib64")
-set(GCC9_LIB32_DIR "/home/Aaron/gcc9/lib")  # Added for completeness
+if(USE_PETSC)
+    # Set root location to find PETSc's pkg-config
+    set(PETSC $ENV{PETSC_DIR})
+    set(ENV{PKG_CONFIG_PATH} ${PETSC}/lib/pkgconfig)
+
+    # PETSc determines compilers if available
+    execute_process(COMMAND pkg-config PETSc --variable=ccompiler COMMAND tr -d '\n' OUTPUT_VARIABLE C_COMPILER)
+    if(C_COMPILER)
+        set(CMAKE_C_COMPILER ${C_COMPILER})
+    endif()
+    
+    execute_process(COMMAND pkg-config PETSc --variable=cxxcompiler COMMAND tr -d '\n' OUTPUT_VARIABLE CXX_COMPILER)
+    if(CXX_COMPILER)
+        set(CMAKE_CXX_COMPILER ${CXX_COMPILER})
+    endif()
+
+    execute_process(COMMAND pkg-config PETSc --variable=fcompiler COMMAND tr -d '\n' OUTPUT_VARIABLE FORTRAN_COMPILER)
+    if(FORTRAN_COMPILER)
+        set(CMAKE_Fortran_COMPILER ${FORTRAN_COMPILER})
+    endif()
+
+    # Find PETSc using pkg-config
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(PETSC REQUIRED IMPORTED_TARGET PETSc)
+endif()
+
+# Enable exporting compile commands
+set(CMAKE_EXPORT_COMPILE_COMMANDS True)
+
+# Find and enable OpenMP if available
+# find_package(OpenMP)
+# if(OPENMP_FOUND)
+#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+#     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+# endif()
 
 # Include directories
 include_directories(
     include
     /home/Aaron/local/include
-    ${AMGX_INCLUDE_DIR}
-    ${CUDA_INCLUDE_DIR}
 )
 
-# Add PETSc include directories if enabled
+# Add PETSc include directories if PETSc is enabled
 if(USE_PETSC)
     include_directories(/home/Aaron/local/petsc/include)
 endif()
@@ -69,35 +86,17 @@ add_executable(vvm2d ${SRC})
 find_library(libncPath netcdf "/home/Aaron/local/lib")
 find_library(libncxxPath netcdf_c++4 "/home/Aaron/local/lib")
 find_library(libpetscPath petsc "/home/Aaron/local/petsc/lib")
-find_library(AMGXSH_LIBRARY amgxsh ${AMGX_LIB_DIR})
-find_library(CUDART_LIBRARY cudart ${CUDA_LIB_DIR})
-find_library(GFORTRAN_LIBRARY gfortran "/usr/lib64" HINTS "${GCC9_LIB_DIR}")
-
-# Ensure nvc++ uses GCC 9's libstdc++
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${GCC9_LIB_DIR} -L${GCC9_LIB32_DIR}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${GCC9_LIB_DIR} -L${GCC9_LIB32_DIR}")
 
 # Link libraries to vvm2d
 target_link_libraries(vvm2d PRIVATE 
     p3  # Link the P3 Fortran library
-    ${GFORTRAN_LIBRARY}  # Fortran runtime
+    gfortran  # Fortran runtime
     ${libncPath}
     ${libncxxPath}
-    ${AMGXSH_LIBRARY}  # AMGX shared library
-    ${CUDART_LIBRARY}  # CUDA runtime library
-    stdc++  # Explicitly link libstdc++
-)
-
-# Add runtime library paths (-rpath)
-set_target_properties(vvm2d PROPERTIES
-    LINK_FLAGS "-Wl,-rpath,${GCC9_LIB_DIR} -Wl,-rpath,${GCC9_LIB32_DIR} -Wl,-rpath,${CUDA_LIB_DIR} -Wl,-rpath,${AMGX_LIB_DIR}"
 )
 
 # Link PETSc if enabled
 if(USE_PETSC)
-    set(ENV{PKG_CONFIG_PATH} $ENV{PETSC_DIR}/lib/pkgconfig)
-    find_package(PkgConfig REQUIRED)
-    pkg_search_module(PETSC REQUIRED IMPORTED_TARGET PETSc)
     target_link_libraries(vvm2d PRIVATE 
         PkgConfig::PETSC
         ${libpetscPath}

@@ -1,7 +1,8 @@
 #include "Declare.hpp"
-#include <amgx_c.h>
 #include <iostream>
 #if defined(GPU_POISSON)
+#include <amgx_c.h>
+
 void vvm::PoissonSolver::InitAMGX(vvm &model) {
     AMGX_initialize();
 
