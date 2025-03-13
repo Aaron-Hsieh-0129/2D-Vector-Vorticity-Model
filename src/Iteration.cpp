@@ -267,14 +267,14 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 pqmicrophy_pt(model);
             #endif
 
-            if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;
-            else model.status_for_adding_forcing = false;
+            /*if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;*/
+            /*else model.status_for_adding_forcing = false;*/
 
             // Generate new random th perturbation for tropical forcing case
-            if (model.status_for_adding_forcing == true) {
-                vvm::Init::RandomPerturbation(model, model.step+0, -0.001, 0.001, 1.);
-            }
-            model.AddForcing(model);
+            /*if (model.status_for_adding_forcing == true) {*/
+                /*vvm::Init::RandomPerturbation(model, model.step+0, -0.001, 0.001, 1.);*/
+            /*}*/
+            /*model.AddForcing(model);*/
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_advection[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
@@ -406,25 +406,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 );
             }
             #endif
-            /*
-            __microphy_p3_MOD_p3_main(
-                model.qcpcont, model.ncpcont, model.qrpcont, model.nrpcont, 
-                model.thcont, model.thpcont, model.qvcont, model.qvpcont, &model.dt,
-                model.qitotpcont, model.qirimpcont, model.qiliqpcont, model.nipcont,
-                model.birimpcont, model.zi_allcont, model.ssat_allcont, model.w_allcont, model.pb_allcont,
-                model.dz_allcont, &model.step, model.precip_liq, model.precip_sol, &one, &nxm1, &one, &nzm1, 
-                &vvm::P3::nCat, model.diag_zecont, model.diag_effccont, model.diag_efficont,
-                model.diag_vmicont, model.diag_dicont, model.diag_rhoicont, 
-                &vvm::P3::n_diag_2d, model.diag_2dcont, &vvm::P3::n_diag_3d, model.diag_3dcont,
-                &vvm::P3::log_predictNc, vvm::P3::model_name, &vvm::P3::clbfact_dep, 
-                &vvm::P3::clbfact_sub, &vvm::P3::debug_on, &vvm::P3::scpf_on, 
-                &vvm::P3::scpf_pfrac, &vvm::P3::scpf_resfact, model.cldfraccont, 
-                &vvm::P3::trplMomI, &vvm::P3::liqfrac, 
-                nullptr, nullptr, nullptr, nullptr, nullptr,
-                nullptr, nullptr, nullptr, nullptr, nullptr,
-                nullptr, nullptr, nullptr, nullptr, nullptr
-            );
-            */
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();

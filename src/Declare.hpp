@@ -433,7 +433,7 @@ public:
     double ubarTop = 0;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
     double ubarTopm = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
     double moisture_nudge_time = 0.;         ///< The time for nudging the moisture field.
-
+    double dubarTop_advect[2] = {0,0};
 
     // 1D variables
     double *thb = nullptr;                              ///< Horizontal mean potential temperature profile.
