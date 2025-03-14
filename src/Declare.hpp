@@ -712,10 +712,14 @@ public:
     // *********************************************************************************
     class NumericalProcess {
     public:
-        static void Diffusion(double **var_in, double **var_out, vvm &model);
-        static void DiffusionAll(vvm &model);
-        static void TimeFilter(double **previous, double **now, double **future, vvm &model);
-        static void timeFilterAll(vvm &model);
+        #if defined(DIFFUSION)
+            static void Diffusion(double **var_in, double **var_out, vvm &model);
+            static void DiffusionAll(vvm &model);
+        #endif
+        #if defined(TIMERFILTER)
+            static void TimeFilter(double **previous, double **now, double **future, vvm &model);
+            static void timeFilterAll(vvm &model);
+        #endif
         static void Nudge_theta(vvm &model);
         static void Nudge_zeta(vvm &model);
         static void Nudge_qv(vvm &model);

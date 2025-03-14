@@ -184,7 +184,7 @@ void vvm::Init::Init2d(vvm &model) {
                         model.dbirim_advect[i][k][0] = model.dbirim_advect[i][k][1] = 0;
                     #endif
                 }
-                model.qvb0[k] = model.qvb[k]*1;
+                model.qvb0[k] = model.qvb[k]*0.95;
             }
         #endif
 
