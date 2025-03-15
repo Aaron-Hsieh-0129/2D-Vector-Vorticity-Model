@@ -23,7 +23,7 @@ void vvm::NumericalProcess::timeFilterAll(vvm &model) {
 }
 #endif
 
-#if defined(DIFFUSION)
+#if defined(DIFFUSION_VVM)
 void vvm::NumericalProcess::Diffusion(double **var_in, double **var_out, vvm &model) {
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)

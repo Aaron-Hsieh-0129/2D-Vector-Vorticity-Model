@@ -292,7 +292,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
 
         timer.reset();
         updateMean(model);
-        #if defined(DIFFUSION)
+        #if defined(DIFFUSION_VVM)
             vvm::NumericalProcess::DiffusionAll(model);
         #else
             vvm::Turbulence::RKM_RKH(model);

@@ -712,7 +712,7 @@ public:
     // *********************************************************************************
     class NumericalProcess {
     public:
-        #if defined(DIFFUSION)
+        #if defined(DIFFUSION_VVM)
             static void Diffusion(double **var_in, double **var_out, vvm &model);
             static void DiffusionAll(vvm &model);
         #endif
