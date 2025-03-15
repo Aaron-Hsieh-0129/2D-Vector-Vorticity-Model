@@ -14,13 +14,13 @@
 #define WATER
 /* #define KESSLER_MICROPHY */
 #define P3_MICROPHY
-// #define TROPICALFORCING
-// #define RADIATIONCOOLING
-// #define LOADFILE
+#define TROPICALFORCING
+#define RADIATIONCOOLING
+#define LOADFILE
 #if defined(LOADFILE)
-    #define LOADINITPATH "/home/Aaron/TMIF_VVM_CSSWM/2DVVM/input/init.txt"
+    #define LOADINITPATH "/home/Aaron/NextACC/2DVVM/input/init.txt"
 #endif
-// #define GPU_POISSON
+#define GPU_POISSON
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)

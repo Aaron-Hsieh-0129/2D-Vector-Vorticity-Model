@@ -1,5 +1,8 @@
 #include "Declare.hpp"
 #include <random>
+#if defined(LOADFILE)
+    #include <fstream>
+#endif
 #if defined(PETSC)
     #include <petsc.h>
 #endif
@@ -119,6 +122,37 @@ void vvm::Init::Init1d(vvm &model) {
 }
 
 void vvm::Init::Init2d(vvm &model) {
+    #if defined(WATER)
+        // init qv: where th != 0, qv = qvs
+        for (int k = 0; k <= model.nz-1; k++) {
+            for (int i = 0; i <= model.nx-1; i++) {
+                model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                model.qvp[i][k] = 0.;
+                model.qc[i][k] = model.qcp[i][k] = model.qcm[i][k] = 0.;
+                model.qr[i][k] = model.qrp[i][k] = model.qrm[i][k] = 0.;
+                model.dqv_advect[i][k][0] = model.dqv_advect[i][k][1] = 0;
+                model.dqc_advect[i][k][0] = model.dqc_advect[i][k][1] = 0;
+                model.dqr_advect[i][k][0] = model.dqr_advect[i][k][1] = 0;
+                #if defined(P3_MICROPHY)
+                    model.nc[i][k] = model.ncp[i][k] = model.ncm[i][k] = 0.;
+                    model.nr[i][k] = model.nrp[i][k] = model.nrm[i][k] = 0.;
+                    model.ni[i][k] = model.nip[i][k] = model.nim[i][k] = 0.;
+                    model.qitot[i][k] = model.qitotp[i][k] = model.qitotm[i][k] = 0.;
+                    model.qirim[i][k] = model.qirimp[i][k] = model.qirimm[i][k] = 0.;
+                    model.qiliq[i][k] = model.qiliqp[i][k] = model.qiliqm[i][k] = 0.;
+                    model.birim[i][k] = model.birimp[i][k] = model.birimm[i][k] = 0.;
+                    model.dnc_advect[i][k][0] = model.dnc_advect[i][k][1] = 0;
+                    model.dnr_advect[i][k][0] = model.dnr_advect[i][k][1] = 0;
+                    model.dni_advect[i][k][0] = model.dni_advect[i][k][1] = 0;
+                    model.dqitot_advect[i][k][0] = model.dqitot_advect[i][k][1] = 0;
+                    model.dqirim_advect[i][k][0] = model.dqirim_advect[i][k][1] = 0;
+                    model.dqiliq_advect[i][k][0] = model.dqiliq_advect[i][k][1] = 0;
+                    model.dbirim_advect[i][k][0] = model.dbirim_advect[i][k][1] = 0;
+                #endif
+            }
+            model.qvb0[k] = model.qvb[k];
+        }
+    #endif
 	#if defined(TROPICALFORCING)
 		// Generate random 2D Gaussian noise array within the specified range
 		RandomPerturbation(model, 0);
@@ -157,36 +191,12 @@ void vvm::Init::Init2d(vvm &model) {
         model.BoundaryProcess2D_center(model.th, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.thm, model.nx, model.nz);
 
-        #if defined(WATER)
-            // init qv: where th != 0, qv = qvs
-            for (int k = 0; k <= model.nz-1; k++) {
-                for (int i = 0; i <= model.nx-1; i++) {
-                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
-                    model.qc[i][k] = model.qcp[i][k] = model.qcm[i][k] = 0.;
-                    model.qr[i][k] = model.qrp[i][k] = model.qrm[i][k] = 0.;
-                    model.dqv_advect[i][k][0] = model.dqv_advect[i][k][1] = 0;
-                    model.dqc_advect[i][k][0] = model.dqc_advect[i][k][1] = 0;
-                    model.dqr_advect[i][k][0] = model.dqr_advect[i][k][1] = 0;
-                    #if defined(P3_MICROPHY)
-                        model.nc[i][k] = model.ncp[i][k] = model.ncm[i][k] = 0.;
-                        model.nr[i][k] = model.nrp[i][k] = model.nrm[i][k] = 0.;
-                        model.ni[i][k] = model.nip[i][k] = model.nim[i][k] = 0.;
-                        model.qitot[i][k] = model.qitotp[i][k] = model.qitotm[i][k] = 0.;
-                        model.qirim[i][k] = model.qirimp[i][k] = model.qirimm[i][k] = 0.;
-                        model.qiliq[i][k] = model.qiliqp[i][k] = model.qiliqm[i][k] = 0.;
-                        model.birim[i][k] = model.birimp[i][k] = model.birimm[i][k] = 0.;
-                        model.dnc_advect[i][k][0] = model.dnc_advect[i][k][1] = 0;
-                        model.dnr_advect[i][k][0] = model.dnr_advect[i][k][1] = 0;
-                        model.dni_advect[i][k][0] = model.dni_advect[i][k][1] = 0;
-                        model.dqitot_advect[i][k][0] = model.dqitot_advect[i][k][1] = 0;
-                        model.dqirim_advect[i][k][0] = model.dqirim_advect[i][k][1] = 0;
-                        model.dqiliq_advect[i][k][0] = model.dqiliq_advect[i][k][1] = 0;
-                        model.dbirim_advect[i][k][0] = model.dbirim_advect[i][k][1] = 0;
-                    #endif
-                }
-                model.qvb0[k] = model.qvb[k]*0.95;
+        for (int k = 0; k <= model.nz-1; k++) {
+            for (int i = 0; i <= model.nx-1; i++) {
+                model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
             }
-        #endif
+            model.qvb0[k] = model.qvb[k]*0.95;
+        }
 
 		// init u
 		if (model.CASE == 2) {
@@ -228,14 +238,8 @@ void vvm::Init::Init2d(vvm &model) {
         for (int i = 0; i < model.nx; i++) {
             model.zetap[i][k] = 0.;
             model.thp[i][k] = 0.;
-            #if defined(WATER)
-                model.qvp[i][k] = 0.;
-                model.qcp[i][k] = model.qc[i][k] = model.qcm[i][k] = 0.;
-                model.qrp[i][k] = model.qr[i][k] = model.qrm[i][k] = 0.;
-            #endif
         }
     }
-
 	return;
 }
 
@@ -285,6 +289,7 @@ void vvm::Init::LoadFile(vvm &model) {
     int i = 1;
     while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
         model.thb[i] = THBAR;
+        model.thb_init[i] = model.thb[i];
         model.qvb[i] = QVBAR;
         model.pib[i] = PIBAR;
         model.pb[i] = PBAR;
@@ -301,6 +306,7 @@ void vvm::Init::LoadFile(vvm &model) {
     }
 
     model.BoundaryProcess1D_center(model.thb, model.nz);
+    model.BoundaryProcess1D_center(model.thb_init, model.nz);
     model.BoundaryProcess1D_center(model.qvb, model.nz);
     model.BoundaryProcess1D_center(model.pib, model.nz);
     model.BoundaryProcess1D_center(model.pb, model.nz);

@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 
     Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
                     30., 30., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., -1., vvm_case, vvm_moisture_nudge_time);
+                    1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time);
     
     vvm model(config);
     

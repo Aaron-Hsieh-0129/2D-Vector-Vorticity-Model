@@ -267,14 +267,14 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 pqmicrophy_pt(model);
             #endif
 
-            /*if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;*/
-            /*else model.status_for_adding_forcing = false;*/
+            if (model.step * model.dt <= model.addforcingtime) model.status_for_adding_forcing = true;
+            else model.status_for_adding_forcing = false;
 
             // Generate new random th perturbation for tropical forcing case
-            /*if (model.status_for_adding_forcing == true) {*/
-                /*vvm::Init::RandomPerturbation(model, model.step+0, -0.001, 0.001, 1.);*/
-            /*}*/
-            /*model.AddForcing(model);*/
+            if (model.status_for_adding_forcing == true) {
+                vvm::Init::RandomPerturbation(model, model.step+0, -0.001, 0.001, 1.);
+            }
+            model.AddForcing(model);
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_advection[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
@@ -296,8 +296,8 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::NumericalProcess::DiffusionAll(model);
         #else
             vvm::Turbulence::RKM_RKH(model);
-            // Nudging process to damp the gravity wave
         #endif
+        // Nudging process to damp the gravity wave
         vvm::NumericalProcess::Nudge_theta(model);
         if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
         vvm::NumericalProcess::Nudge_qv(model);
