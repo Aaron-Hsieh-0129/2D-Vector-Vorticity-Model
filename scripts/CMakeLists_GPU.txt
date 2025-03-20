@@ -39,8 +39,8 @@ option(USE_PETSC "Enable PETSc support" OFF)
 # AMGX and CUDA settings
 set(AMGX_INCLUDE_DIR "/home/Aaron/amgx_install/include")
 set(AMGX_LIB_DIR "/home/Aaron/amgx_install/lib")
-set(CUDA_INCLUDE_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.1/cuda/include")
-set(CUDA_LIB_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.1/cuda/lib64")
+set(CUDA_INCLUDE_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.3/cuda/include")
+set(CUDA_LIB_DIR "/home/Aaron/nvhpc/Linux_x86_64/21.3/cuda/lib64")
 set(GCC9_LIB_DIR "/home/Aaron/gcc9/lib64")
 set(GCC9_LIB32_DIR "/home/Aaron/gcc9/lib")  # Added for completeness
 

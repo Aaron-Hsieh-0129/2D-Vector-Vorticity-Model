@@ -19,4 +19,4 @@ export OMP_NUM_THREADS=$omp_threads
 echo $OMP_NUM_THREADS
 
 # cd build/ && cmake ../ && make -j 4 && mpirun -n 1 ./vvm2d -ksp_type gmres
-cd build/ && cmake ../ && make -j 4 && ./vvm2d
+cd build/ && cmake ../ && make -j 8 && ./vvm2d

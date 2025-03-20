@@ -6,6 +6,9 @@
 #endif
 #if defined(GPU_POISSON)
     #include <amgx_c.h>
+    #include <cuda_runtime.h>
+    #include <mpi.h>
+    // #include <cusparse.h>
 #endif
 
 class Config_VVM {
@@ -481,6 +484,14 @@ public:
         AMGX_solver_handle solver_u;
 
         bool initialized = false;
+
+        int *d_row_ptr_w, *d_col_idx_w;
+        double *d_values_w;
+        int *d_row_ptr_u, *d_col_idx_u;
+        double *d_values_u;
+
+        double *d_b_w, *d_x_w; // For cal_w
+        double *d_b_u, *d_x_u; // For cal_u
     #endif
 
     // 2D variables
@@ -687,9 +698,27 @@ public:
 
     class PoissonSolver {
     public:
+        #if defined(GPU_POISSON)
+            inline static int gpu_id = 0;
+            inline static cudaStream_t stream = nullptr;           // Static stream
+            // inline static cusparseHandle_t cusparseHandle = nullptr; // Static cuSPARSE handle
+            inline static bool initialized = false; // Flag to track initialization per process
+            PoissonSolver() {
+                // Set GPU for this instance using the static gpu_id
+                if (cudaSetDevice(gpu_id) != cudaSuccess) {
+                    int rank;
+                    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+                    std::cerr << "Rank " << rank << ": Failed to set GPU " << gpu_id << " for PoissonSolver" << std::endl;
+                    exit(1);
+                }
+            }
+        #endif
+
         #ifndef PETSC
             static void InitPoissonMatrix(vvm &model);
             #if defined(GPU_POISSON)
+                static void Initialize(); // Static initialization
+                static void Finalize();   // Static cleanup
                 static void InitAMGX(vvm &model);
                 static void CleanupAMGX(vvm &model);
             #else

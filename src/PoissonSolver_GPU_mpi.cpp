@@ -1,32 +1,88 @@
-/*
 #include "Declare.hpp"
 #include <iostream>
 #if defined(GPU_POISSON)
 #include <amgx_c.h>
+#include <cuda_runtime.h>
+#include <mpi.h>
 
 void vvm::PoissonSolver::InitAMGX(vvm &model) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    // Set and verify device before AMGX initialization
+    if (cudaSetDevice(gpu_id) != cudaSuccess) {
+        std::cerr << "Rank " << rank << ": Failed to set GPU " << gpu_id << " before AMGX init" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+    int device;
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": Expected GPU " << gpu_id << " but got " << device << " before AMGX init" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+    std::cout << "Rank " << rank << ": Device set to GPU " << device << " before AMGX_initialize" << std::endl;
+
+    // Initialize AMGX
     AMGX_initialize();
 
-    // For w (A matrix)
+    // Immediately check and reset device after AMGX_initialize
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": GPU changed to " << device << " after AMGX_initialize, resetting to " << gpu_id << std::endl;
+        if (cudaSetDevice(gpu_id) != cudaSuccess) {
+            std::cerr << "Rank " << rank << ": Failed to reset GPU to " << gpu_id << " after AMGX_initialize" << std::endl;
+            MPI_Abort(MPI_COMM_WORLD, 1);
+        }
+        cudaGetDevice(&device);
+        std::cout << "Rank " << rank << ": Reset device to GPU " << device << " after AMGX_initialize" << std::endl;
+    }
+
+    // Proceed with AMGX setup
     std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-12, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_w, config_w.c_str());
     AMGX_resources_create_simple(&model.rsc_w, model.cfg_w);
+
+    // Check device after resource creation
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": GPU changed to " << device << " after resource creation for w" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     AMGX_matrix_create(&model.A, model.rsc_w, AMGX_mode_dDDI);
     AMGX_vector_create(&model.b_vec_w, model.rsc_w, AMGX_mode_dDDI);
     AMGX_vector_create(&model.x_vec_w, model.rsc_w, AMGX_mode_dDDI);
     AMGX_solver_create(&model.solver_w, model.rsc_w, AMGX_mode_dDDI, model.cfg_w);
 
-    // For u (G matrix)
     std::string config_u = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"jacobi\", \"solver\": \"JACOBI_L1\"}, \"scope\": \"main\", \"solver\": \"CG\", \"tolerance\": 1e-12, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_u, config_u.c_str());
     AMGX_resources_create_simple(&model.rsc_u, model.cfg_u);
+
+    // Check device after resource creation for u
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": GPU changed to " << device << " after resource creation for u" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     AMGX_matrix_create(&model.G, model.rsc_u, AMGX_mode_dDDI);
     AMGX_vector_create(&model.h_vec_u, model.rsc_u, AMGX_mode_dDDI);
     AMGX_vector_create(&model.y_vec_u, model.rsc_u, AMGX_mode_dDDI);
     AMGX_solver_create(&model.solver_u, model.rsc_u, AMGX_mode_dDDI, model.cfg_u);
+
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": GPU changed to " << device << " after solver creation" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
+    std::cout << "Rank " << rank << ": Initialized AMGX on GPU " << gpu_id << std::endl;
 }
 
 void vvm::PoissonSolver::CleanupAMGX(vvm &model) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
     // Ensure all solver operations are complete by destroying solvers first
     if (model.solver_w) {
         AMGX_solver_destroy(model.solver_w);
@@ -87,9 +143,21 @@ void vvm::PoissonSolver::CleanupAMGX(vvm &model) {
 
     // Finalize AMGX last
     AMGX_finalize();
+
+    std::cout << "Rank " << rank << ": Cleaned up AMGX on GPU " << vvm::PoissonSolver::gpu_id << std::endl;
 }
 
 void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    int device;
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": Expected GPU " << gpu_id << " but got " << device << " in InitPoissonMatrix" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     // For A (w)
     int size_w = (model.nx - 2) * (model.nz - 3);
     int max_nnz_w = 5 * size_w;
@@ -188,19 +256,19 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
 
     AMGX_matrix_upload_all(model.G, size_u, model.nnz_u, 1, 1, model.row_ptr_u, model.col_idx_u, model.values_u, nullptr);
     AMGX_solver_setup(model.solver_u, model.G);
-
-    // Optional: Debug print to verify (remove in production)
-    // std::cout << "AMGX row_ptr_w: ";
-    // for (int i = 0; i <= size_w; i++) std::cout << model.row_ptr_w[i] << " ";
-    // std::cout << "\nAMGX col_idx_w: ";
-    // for (int i = 0; i < nnz_w; i++) std::cout << model.col_idx_w[i] << " ";
-    // std::cout << "\nAMGX values_w: ";
-    // for (int i = 0; i < nnz_w; i++) std::cout << model.values_w[i] << " ";
-    // std::cout << "\n";
 }
 
-// Rest of the functions remain unchanged
 void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    int device;
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": Expected GPU " << gpu_id << " but got " << device << " in cal_w" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     int size = (model.nx - 2) * (model.nz - 3);
     double* b = new double[size]();
     double* x = new double[size]();
@@ -222,10 +290,10 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
     AMGX_SOLVE_STATUS status;
     AMGX_solver_get_status(model.solver_w, &status);
     if (status != AMGX_SOLVE_SUCCESS) {
-        std::cout << "W Solve Warning!!!!!!!!!!!! p, i, j = " << p << ", " << i << ", " << j << "\n";
+        std::cout << "Rank " << rank << ": W Solve Warning!!!!!!!!!!!! p, i, j = " << p << ", " << i << ", " << j << "\n";
         int iterations;
         AMGX_solver_get_iterations_number(model.solver_w, &iterations);
-        std::cout << "W: #iterations: " << iterations << ", residual printed in AMGX stats\n";
+        std::cout << "Rank " << rank << ": W: #iterations: " << iterations << ", residual printed in AMGX stats\n";
     }
 
     int cnt = 0;
@@ -240,9 +308,21 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
     delete[] b;
     delete[] x;
     delete[] initial_guess;
+
+    std::cout << "Rank " << rank << ": Completed cal_w on GPU " << gpu_id << std::endl;
 }
 
 void vvm::PoissonSolver::cal_u(vvm &model) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    int device;
+    cudaGetDevice(&device);
+    if (device != gpu_id) {
+        std::cerr << "Rank " << rank << ": Expected GPU " << gpu_id << " but got " << device << " in cal_u" << std::endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     int size = model.nx - 2;
     double* h = new double[size]();
     double* y = new double[size]();
@@ -266,10 +346,10 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
     AMGX_SOLVE_STATUS status;
     AMGX_solver_get_status(model.solver_u, &status);
     if (status != AMGX_SOLVE_SUCCESS) {
-        std::cout << "U Solve Warning!!!!!!!!!!!!\n";
+        std::cout << "Rank " << rank << ": U Solve Warning!!!!!!!!!!!!\n";
         int iterations;
         AMGX_solver_get_iterations_number(model.solver_u, &iterations);
-        std::cout << "U: #iterations: " << iterations << ", residual printed in AMGX stats\n";
+        std::cout << "Rank " << rank << ": U: #iterations: " << iterations << ", residual printed in AMGX stats\n";
     }
 
     for (int i = 1; i <= model.nx - 2; i++) {
@@ -336,4 +416,3 @@ void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
     return;
 }
 #endif
-*/
