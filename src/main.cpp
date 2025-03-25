@@ -9,6 +9,7 @@
 #endif
 #include "ReadConfig.hpp"
 #include "Timer.hpp"
+#include <mpi.h>
 
 // Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
@@ -24,8 +25,13 @@ extern "C" {
 #endif
 
 int main(int argc, char **argv) {
+    MPI_Init(&argc, &argv);
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
     Timer timer_all;
-    timer_all.reset();
+    if (rank == 0) timer_all.reset();
     #if defined(PETSC)
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
     #endif
@@ -123,6 +129,7 @@ int main(int argc, char **argv) {
     #if defined(GPU_POISSON)
         vvm::PoissonSolver::CleanupAMGX(model);
     #endif
-    std::cout << "Total time: " << timer_all.elapsed() << std::endl;
+    if (rank == 0) std::cout << "Total time: " << timer_all.elapsed() << std::endl;
+    MPI_Finalize();
     return 0;
 }

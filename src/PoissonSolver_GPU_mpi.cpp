@@ -309,7 +309,7 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
     delete[] x;
     delete[] initial_guess;
 
-    std::cout << "Rank " << rank << ": Completed cal_w on GPU " << gpu_id << std::endl;
+    // std::cout << "Rank " << rank << ": Completed cal_w on GPU " << gpu_id << std::endl;
 }
 
 void vvm::PoissonSolver::cal_u(vvm &model) {
