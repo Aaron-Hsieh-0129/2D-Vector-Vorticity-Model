@@ -18,9 +18,11 @@ The following dependencies are required:
 - **nvhpc** 21.3 *(required for GPU usage)* - Installable from the NVIDIA website.
 - **AMGX** 2.4.0 *(required for GPU usage, can be automatically downloaded via CMake)*
 
+--
   .. note::
      If you encounter errors while downloading AMGX, you may need to specify the NVHPC path and library paths manually.
 
+--
   .. warning::
      If you do **not** want to use GPU, ensure that the `GPU_POISSON` flag in `./src/Config.hpp` is **disabled**.
 
