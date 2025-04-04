@@ -18,5 +18,8 @@ fi
 export OMP_NUM_THREADS=$omp_threads
 echo $OMP_NUM_THREADS
 
-# cd build/ && cmake ../ && make -j 4 && mpirun -n 1 ./vvm2d -ksp_type gmres
-cd build/ && cmake ../ && make -j 8 && ./vvm2d
+# CPU only
+cd build/ && cmake ../ && make -j 8 && mpirun -np 1 ./vvm2d
+
+# wiht GPU
+# cd build/ && cmake ../ && make -j 8 && mpirun -np 1 -mca btl_base_warn_component_unused 0 -np 1 -x CUDA_VISIBLE_DEVICES=0 ./vvm2d

@@ -9,7 +9,9 @@
 #endif
 #include "ReadConfig.hpp"
 #include "Timer.hpp"
-#include <mpi.h>
+#if defined(GPU_POISSON)
+    #include <mpi.h>
+#endif
 
 // Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
 //        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
@@ -25,13 +27,15 @@ extern "C" {
 #endif
 
 int main(int argc, char **argv) {
-    MPI_Init(&argc, &argv);
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    #if defined(GPU_POISSON)
+        MPI_Init(&argc, &argv);
+        int rank, size;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        MPI_Comm_size(MPI_COMM_WORLD, &size);
+    #endif
 
     Timer timer_all;
-    if (rank == 0) timer_all.reset();
+    timer_all.reset();
     #if defined(PETSC)
         PetscCall(PetscInitialize(&argc, &argv, NULL, NULL));
     #endif
@@ -128,8 +132,8 @@ int main(int argc, char **argv) {
     #endif
     #if defined(GPU_POISSON)
         vvm::PoissonSolver::CleanupAMGX(model);
+        std::cout << "Total time: " << timer_all.elapsed() << std::endl;
+        MPI_Finalize();
     #endif
-    if (rank == 0) std::cout << "Total time: " << timer_all.elapsed() << std::endl;
-    MPI_Finalize();
     return 0;
 }

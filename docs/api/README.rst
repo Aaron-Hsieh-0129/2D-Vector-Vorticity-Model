@@ -8,16 +8,17 @@ Prerequisite
 ------------
 
 - C++ compiler (higher than C++11)
-- CMake (higher than 3.0.0) (You can create your own Makefile by translating the CMakefile.txt if you don't want to use CMake)
-- netcdf-cxx4 (hdf5, netcdf-c are needed for netcdf-cxx) [optional]
-- PETSc [optional]
-- Eigen (this has already been installed in the include folder) [optional]
+- CMake (higher than 3.18.0)
+- hdf5 1.8.14 (can be automatically downloaded through CMake)
+- netcdf-c 4.3.3.1 (can be automatically downloaded through CMake)
+- netcdf-cxx4 4.2.1 (can be automatically downloaded through CMake)
+- Eigen (this has already been installed in the include folder)
+- PETSc [optional] (PETSc for solving Poisson equation can be used by turn on the flag in `./src/Config.hpp` but in general, Eigen can do it well)
+- nvhpc 21.3 [necessary for GPU usage] (If you want to use GPU to run this model, the nvhpc needs to be installed in nvidia website.)
+- AMGX 2.4.0 [necessary for GPU usage] (can be automatically downloaded through CMake. Noted that if it has error during download, you might need to specify the nvhpc path and library paths)
+If you don't want to use GPU (no nvhpc), please make the the flag for `GPU_POISSON` in `./src/Config.hpp` is not open!!!
 
-The tutorial for installing netcdf-cxx4 and PETSc can be found `here <./api/install_compilers_libraries.html>`_ (If the link doesn't work, find this in the 2DVVM documentation)
-
-- This model will use txt output and Eigen solver for solving Poisson equation by default. However,
-  - You can turn on the `OUTPUTNC` and turn off `OUTPUTTXT` in `./src/Config.hpp` to use netcdf output. Note that netcdf doesn't support openMP output so if you want to use openMP, don't turn the `OUTPUTNC` flag on.
-  - Turn on `PETSC` in `./src/Config.hpp`, the model will change the Poisson solver package to `PETSc`.
+It might takes about 20 minutes to install all the dependencies for the first time running.
 
 How to Use
 ----------
@@ -25,51 +26,31 @@ How to Use
 1. Clone the project using:
 
    .. code-block:: bash
+      git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git 2DVVM
 
-      git clone https://github.com/Aaron-Hsieh-0129/2D-Vector-Vorticity-Model.git
+2. You can change most of the model settings in `./vvm_configs.txt`.
 
-2. You can change the model settings by changing the macro flags in the `./src/Config.hpp` and also the configuration object in the `./src/main.cpp`. In general, you only need to modify the configuration in `./src/main.cpp`. But if you want to change the numerical methods or the running cases, you might need to modify the flags in the `./src/Config.hpp`.
-
-3. You are able to run the model by running the command under the project folder:
+3. If you want to use GPU to solve the model, please remember to install nvhpc. You'll need to specify your nvhpc path and gcc (or other supported compiler) path when using CMake to build.
 
    .. code-block:: bash
+      mkdir build && cd build
+      # e.g. (CPU) cmake -DGCC_HOME=/home/Aaron/gcc9 ..
+      # e.g. (GPU) cmake -DNVHPC_HOME=/home/Aaron/nvhpc/Linux_x86_64/21.3 -DGCC_HOME=/home/Aaron/gcc9 ..
+      cmake -DNVHPC_HOME=/path/to/nvhpc -DGCC_HOME=/path/to/gcc ..
+      make
+      # (CPU) mpirun -np 1 ./vvm2d
+      # (GPU) mpirun -np 1 -mca btl_base_warn_component_unused 0 -np 1 -x CUDA_VISIBLE_DEVICES=0 ./vvm2d
 
-      sh run.sh
-
-   or you can use your own command by referencing the command in `run.sh`.
-
-Optional for NetCDF output and PETSc Solver
--------------------------------------------
-
-1. Install netcdf-cxx, petsc.
-
-   It's a little bit complicated to install libraries for C/C++. I will provide a tutorial for installing C/C++ compiler and the libraries in another file `here <./api/install_compilers_libraries.html>`_ (If the link doesn't work, find this in the 2DVVM documentation). Here, you don't need to have sudo privilege to install anything.
-
-2. Link the installed libraries.
-
-- If you don't need to use PETSc and netcdf, you might need to turn off the link command in CMakeLists.txt.
-- You need to change the libraries path (netcdf, petsc) to your own path.
-- Change include path in CMakeLists.txt:
-
-  .. code-block:: cmake
-
-    include_directories(
-      include
-      </path/to/your/petsc>/include
-    )
-
-- Change library link path:
-
-  .. code-block:: cmake
-
-    find_library(libncxxPath netcdf_c++4 "<path to your netcdf_c++4>/lib")
-    find_library(libpetscPath petsc "<path to your petsc>/lib")
+    > Please choose the correct cmake file from folder `scripts/`. `CMakeLists_CPU.txt` for CPU case and `CMakeLists_GPU.txt` for GPU.
+    > Move the desired one to project root, e.g. `cp scripts/CMakeLists_GPU.txt CMakeLists.txt`. 
+    > The CMake will automatically download the dependencies under `_deps` at the first execution.
+    > Please make sure the GPU_POISSON flag is commented out in `src/Config.hpp` for non-GPU case.
+    > The shell script `run.sh` can be referenced to finish all the process in step 3. 
 
 
-3. Change the flags in `./src/Config.hpp`:
-
-- Turn on `OUTPUTNC` and turn off `OUTPUTTXT` to use netcdf output.
-- Turn on `PETSC` to use PETSc solver.
+Any Problems
+-------------
+- If you encounter any errors when installing the dependencies from cmake, it's recommended to install gcc9.4. There is tutorial for installing gcc in the documentation of 2DVVM.
 
 
 Documentation
