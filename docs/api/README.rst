@@ -18,11 +18,11 @@ The following dependencies are required:
 - **nvhpc** 21.3 *(required for GPU usage)* - Installable from the NVIDIA website.
 - **AMGX** 2.4.0 *(required for GPU usage, can be automatically downloaded via CMake)*
 
-.. note::
-    If you encounter errors while downloading AMGX, you may need to specify the NVHPC path and library paths manually.
+  .. note::
+     If you encounter errors while downloading AMGX, you may need to specify the NVHPC path and library paths manually.
 
-.. warning::
-    If you do **not** want to use GPU, ensure that the `GPU_POISSON` flag in `./src/Config.hpp` is **disabled**.
+  .. warning::
+     If you do **not** want to use GPU, ensure that the `GPU_POISSON` flag in `./src/Config.hpp` is **disabled**.
 
 Installing dependencies for the first time may take approximately **20 minutes**.
 
@@ -56,19 +56,19 @@ How to Use
       # GPU Execution:
       mpirun -np 1 -mca btl_base_warn_component_unused 0 -np 1 -x CUDA_VISIBLE_DEVICES=0 ./vvm2d
 
-.. tip::
-    - Choose the correct CMake file from the `scripts/` directory:
-    - `CMakeLists_CPU.txt` for CPU execution.
-    - `CMakeLists_GPU.txt` for GPU execution.
-    - Copy the appropriate file to the project root:
+   .. tip::
+      - Choose the correct CMake file from the `scripts/` directory:
+        - `CMakeLists_CPU.txt` for CPU execution.
+        - `CMakeLists_GPU.txt` for GPU execution.
+      - Copy the appropriate file to the project root:
 
-    .. code-block:: bash
+        .. code-block:: bash
 
-        cp scripts/CMakeLists_GPU.txt CMakeLists.txt
+           cp scripts/CMakeLists_GPU.txt CMakeLists.txt
 
-    - On first execution, CMake will download dependencies to the `_deps/` directory automatically.
-    - Ensure the `GPU_POISSON` flag is **commented out** in `src/Config.hpp` if using **CPU only**.
-    - You can use the `run.sh` script to automate these steps.
+      - On first execution, CMake will download dependencies to the `_deps/` directory automatically.
+      - Ensure the `GPU_POISSON` flag is **commented out** in `src/Config.hpp` if using **CPU only**.
+      - You can use the `run.sh` script to automate these steps.
 
 Troubleshooting
 ---------------
