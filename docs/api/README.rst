@@ -44,7 +44,7 @@ How to Use
    .. code-block:: bash
 
       mkdir build && cd build
-      # Example (CPU):
+      # Example (CPU): Ensure the `GPU_POISSON` flag is **commented out** in `src/Config.hpp`
       cmake -DGCC_HOME=/home/Aaron/gcc9 ..
       # Example (GPU):
       cmake -DNVHPC_HOME=/home/Aaron/nvhpc/Linux_x86_64/21.3 -DGCC_HOME=/home/Aaron/gcc9 ..
@@ -52,7 +52,7 @@ How to Use
       
       # Running the model:
       # CPU Execution:
-      mpirun -np 1 ./vvm2d
+      ./vvm2d
       # GPU Execution:
       mpirun -np 1 -mca btl_base_warn_component_unused 0 -np 1 -x CUDA_VISIBLE_DEVICES=0 ./vvm2d
 
