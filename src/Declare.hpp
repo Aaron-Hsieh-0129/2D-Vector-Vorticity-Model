@@ -11,14 +11,29 @@
     // #include <cusparse.h>
 #endif
 
+#if defined(RTERRTMGP)
+#include <boost/algorithm/string.hpp>
+#include <chrono>
+#include <iomanip>
+
+#include "../external/rte-rrtmgp-cpp/include_test/Status.h"
+#include "../external/rte-rrtmgp-cpp/include_test/Netcdf_interface.h"
+#include "../external/rte-rrtmgp-cpp/include/Array.h"
+#include "../external/rte-rrtmgp-cpp/include/Aerosol_optics.h"
+#include "../external/rte-rrtmgp-cpp/include_test/Radiation_solver.h"
+#include "../external/rte-rrtmgp-cpp/include/types.h"
+#endif
+
 class Config_VVM {
 public:
     Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
            std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance,
-           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time)
+           double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time, 
+           int year, int month, int day, double hour, double minute, double second, double lon, double lat)
         : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
           outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS),
-          tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE), mositure_nudge_time(mositure_nudge_time) {}
+          tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE), mositure_nudge_time(mositure_nudge_time), 
+          year(year), month(month), day(day), hour(hour), minute(minute), second(second), lon(lon), lat(lat) {}
     ~Config_VVM() {}
 
     double dt;              ///< Time step for vvm [s].
@@ -44,6 +59,14 @@ public:
     double addforcingtime;  ///< The time for adding the perturbation. The perturbation is used to break the symmetry of the model.
     int CASE;               ///< The case number for the model. It's used to specify the initial condition and the forcing. If CASE is 0, the initial condition is equal to mean state. If CASE is 1, the initial condition is equal to mean state plus a warm bubble. 
     double mositure_nudge_time; ///< The time for nudging the moisture. It's used for nudging the moisture to the mean state. It's used for nudging the moisture to the mean state.
+    int year;
+    int month;
+    int day;
+    double hour;
+    double minute;
+    double second;
+    double lon;
+    double lat;
 };
 
 
@@ -65,7 +88,9 @@ public:
           GRAVITY(config.GRAVITY),
           Cp(config.Cp), Cv(config.Cv),
           Rd(config.Rd), Lv(config.Lv),
-          P0(config.P0), PSURF(config.PSURF), addforcingtime(config.addforcingtime), CASE(config.CASE), moisture_nudge_time(config.mositure_nudge_time)
+          P0(config.P0), PSURF(config.PSURF), addforcingtime(config.addforcingtime), CASE(config.CASE), moisture_nudge_time(config.mositure_nudge_time), 
+          year(config.year), month(config.month), day(config.day), hour(config.hour), minute(config.minute), second(config.second), 
+          lon(config.lon), lat(config.lat)
     {
         allocateMemory();
     }
@@ -83,10 +108,12 @@ public:
         delete[] rhou;
         delete[] rhow;
         delete[] pib;
+        delete[] pib_lev;
         delete[] qvb;
         delete[] qvb0;
         delete[] qvsb;
         delete[] pb;
+        delete[] pb_lev;
         delete[] xi;
         delete[] uxi;
         delete[] thvb;
@@ -108,14 +135,16 @@ public:
         deallocate2DContinuousArray(RKH, RKHcont);
         deallocate2DContinuousArray(U_w, U_wcont);
         deallocate2DContinuousArray(W_u, W_ucont);
+        #if defined(RTERRTMGP)
+            deallocate2DContinuousArray(T, Tcont);
+            deallocate2DContinuousArray(radiation_heating_rate, radiation_heating_ratecont);
+        #endif
 
         #if defined(STREAMFUNCTION)
             deallocate2DContinuousArray(psi, psicont);
         #endif
 
         #if defined(WATER)
-            
-
             deallocate2DContinuousArray(qvp, qvpcont);
             deallocate2DContinuousArray(qv, qvcont);
             deallocate2DContinuousArray(qvm, qvmcont);
@@ -233,10 +262,12 @@ public:
         rhou = new double[nz]();
         rhow = new double[nz]();
         pib = new double[nz]();
+        pib_lev = new double[nz+1]();
         qvb = new double[nz]();
         qvb0 = new double[nz]();
         qvsb = new double[nz]();
         pb = new double[nz]();
+        pb_lev = new double[nz+1]();
         xi = new double[nx]();
         uxi = new double[nx]();
         thvb = new double[nz]();
@@ -263,7 +294,12 @@ public:
         RKH = allocate2DContinuousArray(nx, nz, RKHcont);
         U_w = allocate2DContinuousArray(nx, nz, U_wcont);
         W_u = allocate2DContinuousArray(nx, nz, W_ucont);
-        
+        #if defined(RTERRTMGP)
+            T = allocate2DContinuousArray(nx, nz, Tcont);
+            T_lev = allocate2DContinuousArray(nx, nz+1, T_levcont);
+            radiation_heating_rate = allocate2DContinuousArray(nx, nz, radiation_heating_ratecont);
+        #endif        
+
         #if defined(STREAMFUNCTION)
             psi = allocate2DContinuousArray(nx, nz, psicont);
         #endif
@@ -431,6 +467,14 @@ public:
     double addforcingtime = 0;                   ///< From Config_VVM given by users.
     int CASE = 0;                                ///< From Config_VVM given by users.
     double CRAD = 1. / 3600.;                   ///< From Config_VVM given by users.
+    int year = 2025;
+    int month = 3;
+    int day = 20;
+    double hour = 12.;
+    double minute = 0.;
+    double second = 0.;
+    double lon = 0.;
+    double lat = 0.;
 
     // 0D variables
     int step = 0;                            ///< The current time step.
@@ -448,10 +492,12 @@ public:
     double *rhou = nullptr;                             ///< Horizontal mean density profile at grid center.
     double *rhow = nullptr;                             ///< Horizontal mean density profile at grid upper edge.
     double *pib = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid center.
+    double *pib_lev = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid boundary.
     double *qvb = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
     double *qvb0 = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
     double *qvsb = nullptr;                             ///< Horizontal mean saturated water vapor profile at grid center.
     double *pb = nullptr;                               ///< Horizontal mean pressure profile at grid center.
+    double *pb_lev = nullptr;                               ///< Horizontal mean pressure profile at grid boundary.
     double *xi = nullptr;                               ///< The velocity potential in x-direction at top boundary grid center.
     double *uxi = nullptr;
     double *thvb = nullptr;
@@ -507,7 +553,11 @@ public:
     double **RKH = nullptr;
     double **U_w = nullptr;
     double **W_u = nullptr;
-
+    #if defined(RTERRTMGP)
+        double **T = nullptr;
+        double **T_lev = nullptr;
+        double **radiation_heating_rate = nullptr; // K/s
+    #endif
 
     double *zetapcont = nullptr;
     double *zetacont = nullptr;
@@ -522,6 +572,11 @@ public:
     double *RKHcont = nullptr;
     double *U_wcont = nullptr;
     double *W_ucont = nullptr;
+    #if defined(RTERRTMGP)
+        double *Tcont = nullptr;
+        double *T_levcont = nullptr;
+        double *radiation_heating_ratecont = nullptr;
+    #endif
     
     
     #if defined(STREAMFUNCTION)
@@ -880,6 +935,19 @@ public:
         static void Mparam(vvm &model, double **var_now, double **var_future);
         static void Hparam(vvm &model, double **var_now, double **var_future);
     };
+
+    #if defined(RTERRTMGP)
+    class Radiation {
+    public:
+        static void solve_radiation(vvm &model);
+        static bool is_leap_year(int year);
+        static int day_of_year(int year, int month, int day);
+        static double calculate_scaling_factor(int year, int month, int day);
+        static double calculate_cos_zenith(int year, int month, int day, double hour, double minute, double second,
+                                    double longitude, double latitude);
+
+    };
+    #endif
 
 };
 

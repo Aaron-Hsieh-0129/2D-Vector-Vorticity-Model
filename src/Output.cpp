@@ -7,23 +7,33 @@
 using namespace std;
 void vvm::Output::printInit(vvm &model) {
     double z;
-    std::cout << "z             thb        thb_zeta     rhou       rhow       qvb   	 RH      pib" << std::endl;
+    std::cout << "z             Pbar          thb        thb_zeta     rhou       rhow       qvb   	 RH      pib" << std::endl;
     for (int k = 0; k <= model.nz-1;k++){
         z = (double) (k - 0.5) * model.dz ;
-        std::cout << std::fixed << std::setprecision(4) << z << "    " << model.thb[k] << "    " << model.thb_zeta[k] << "    " << model.rhou[k] << "     " 
+        std::cout << std::fixed << std::setprecision(4) << z << "    " << model.pb[k] << "     " << model.thb[k] << "    " << model.thb_zeta[k] << "    " << model.rhou[k] << "     " 
         << model.rhow[k] << "    " << model.qvb[k] * 1000 << "    " << model.qvb[k] / model.qvsb[k] << "    "
         << model.pib[k] << std::endl;
     }
     std::fstream initout;
     string initName = model.outputpath + (string) "init.txt";
     initout.open(initName, std::ios::out);
-    for (int k = 0; k <= model.nz-1; k++) {
+    for (int k = 1; k <= model.nz-2; k++) {
         z = (double) (k - 0.5) * model.dz ;
         initout << z << "    " << model.thb[k] << "    " << model.rhou[k] << "     " 
         << model.rhow[k] << "   	 " << model.qvb[k] << "    " << model.qvsb[k] << "    " << model.qvb[k] / model.qvsb[k] << "    "
-        << model.pib[k] << std::endl;
+        << model.pib[k] << "    " << model.pb[k] << std::endl;
     }
     initout.close();
+
+    std::fstream initout2;
+    string init2Name = model.outputpath + (string) "init2.txt";
+    initout2.open(init2Name, std::ios::out);
+    for (int k = 1; k <= model.nz-1; k++) {
+        z = (double) (k-1) * model.dz;
+        initout2 << z << "      " << model.pb_lev[k] << "     " << model.pib_lev[k] << std::endl;
+    }
+    initout2.close();
+
     return;
 };
 
@@ -99,6 +109,9 @@ void vvm::Output::output_nc(int n, vvm &model) {
 
     int ncid, t_dimid, x_dimid, z_dimid;
     int th_id, zeta_id, u_id, w_id, ubarTop_id;
+    #if defined(RTERRTMGP)
+        int radiation_hating_rate_id;
+    #endif
     #if defined(WATER)
         int qvid, qcid, qrid;
         int precipid;
@@ -132,6 +145,9 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_inq_varid(ncid, "u", &u_id))) NC_ERR(retval);
         if ((retval = nc_inq_varid(ncid, "w", &w_id))) NC_ERR(retval);
         if ((retval = nc_inq_varid(ncid, "ubarTop", &ubarTop_id))) NC_ERR(retval);
+        #if defined(RTERRTMGP)
+            if ((retval = nc_inq_varid(ncid, "radiation_heating_rate", &radiation_hating_rate_id))) NC_ERR(retval);
+        #endif
 
         #if defined(WATER)
             if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
@@ -183,6 +199,9 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_def_var(ncid, "u", NC_DOUBLE, 3, dimids, &u_id))) NC_ERR(retval);
         if ((retval = nc_def_var(ncid, "w", NC_DOUBLE, 3, dimids, &w_id))) NC_ERR(retval);
         if ((retval = nc_def_var(ncid, "ubarTop", NC_DOUBLE, 1, &t_dimid, &ubarTop_id))) NC_ERR(retval);
+        #if defined(RTERRTMGP)
+            if ((retval = nc_def_var(ncid, "radiation_heating_rate", NC_DOUBLE, 3, dimids, &radiation_hating_rate_id))) NC_ERR(retval);
+        #endif
 
         #if defined(WATER)
             if ((retval = nc_def_var(ncid, "qv", NC_DOUBLE, 3, dimids, &qvid))) NC_ERR(retval);
@@ -227,6 +246,9 @@ void vvm::Output::output_nc(int n, vvm &model) {
     if ((retval = nc_put_vara_double(ncid, zeta_id, start, count, model.zetacont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, w_id, start, count, model.wcont))) NC_ERR(retval);
+    #if defined(RTERRTMGP)
+        if ((retval = nc_put_vara_double(ncid, radiation_hating_rate_id, start, count, model.radiation_heating_ratecont))) NC_ERR(retval);
+    #endif
 
     if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
 

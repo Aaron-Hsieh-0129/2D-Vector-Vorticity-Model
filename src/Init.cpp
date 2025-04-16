@@ -32,7 +32,6 @@ void vvm::Init::Init1d(vvm &model) {
         for (int k = 1; k <= model.nz-2; k++) {
             #if defined(WATER)
                 model.qvb[k] = GetQVB(k, model.dz);
-                model.qvb0[k] = model.qvb[k];
             #else
                 model.qvb[k] = 0.;
             #endif
@@ -52,6 +51,14 @@ void vvm::Init::Init1d(vvm &model) {
             }
         }
         model.BoundaryProcess1D_center(model.pib, model.nz);
+        
+        for (int k = 1; k <= model.nz-2; k++) {
+            model.pib_lev[k] = 0.5*(model.pib[k]+model.pib[k-1]);
+        }
+        // extrapolation
+        model.pib_lev[1] = model.pib_lev[2] + (model.pib_lev[2]-model.pib_lev[3]);
+        model.pib_lev[model.nz-1] = model.pib_lev[model.nz-2] - (model.pib_lev[model.nz-3]-model.pib_lev[model.nz-2]);
+        model.BoundaryProcess1D_center(model.pib_lev, model.nz+1);
 
         // init tb_zeta, rhou
         for (int k = 1; k <= model.nz-2; k++) {
@@ -83,6 +90,14 @@ void vvm::Init::Init1d(vvm &model) {
         model.BoundaryProcess1D_center(model.pb, model.nz);
         model.BoundaryProcess1D_center(model.qvsb, model.nz);
 
+        // init pb_lev (nz: model.nz+1)
+        for (int k = 1; k <= model.nz-2; k++) {
+            model.pb_lev[k] = 0.5*(model.pb[k]+model.pb[k-1]);
+        }
+        model.pb_lev[1] = model.PSURF;
+        model.pb_lev[model.nz-1] = model.pb_lev[model.nz-2] - (model.pb_lev[model.nz-3]-model.pb_lev[model.nz-2]); // extrapolation
+        model.BoundaryProcess1D_center(model.pb_lev, model.nz+1);
+
         #if defined(WATER)
             for (int k = 1; k <= model.nz-2; k++) {
                 model.qvb[k] = GetQVB(k, model.dz);
@@ -99,14 +114,13 @@ void vvm::Init::Init1d(vvm &model) {
 
     for (int k = 0; k < model.nz; k++) {
         model.thbm[k] = model.thb[k];
+        model.qvb0[k] = model.qvb[k];
         #if defined(WATER)
             model.thvb[k] = model.thvbm[k] = model.thb[k] + 0.61 * model.qvb[k];
         #else
             model.thvb[k] = model.thvbm[k] = model.thb[k];
         #endif
-
     }
-    
 
     for (int k = 1; k < model.nz-1; k++) {
         model.z[k] = (k-0.5) * model.dz;
@@ -117,7 +131,6 @@ void vvm::Init::Init1d(vvm &model) {
     model.z[model.nz-1] = model.z[model.nz-2];
     model.z_zeta[0] = model.z_zeta[1];
     model.z_zeta[model.nz-1] = model.z_zeta[model.nz-2];
-
     return;
 }
 
@@ -193,9 +206,9 @@ void vvm::Init::Init2d(vvm &model) {
 
         for (int k = 0; k <= model.nz-1; k++) {
             for (int i = 0; i <= model.nx-1; i++) {
-                model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
+                model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
             }
-            model.qvb0[k] = model.qvb[k]*0.95;
+            model.qvb0[k] = model.qvb[k];
         }
 
 		// init u
@@ -316,12 +329,34 @@ void vvm::Init::LoadFile(vvm &model) {
     model.BoundaryProcess1D_center(model.qvsb, model.nz);
     model.rhow[model.nz-1] = model.rhou[model.nz-2];
 
+    // Give pibar by pbar rather than given input
+    for (int k = 0; k < model.nz-1; k++) model.pib[k] = std::pow(model.pb[k]/100000., model.Rd/model.Cp);
+
     for (int k = 1; k <= model.nz-2; k++) {
         model.thb_zeta[k] = 0.5 * (model.thb[k] + model.thb[k-1]);
     }
 	model.thb_zeta[1] = model.thb_zeta[2] - (model.thb_zeta[3] - model.thb_zeta[2]);
     model.BoundaryProcess1D_center(model.thb_zeta, model.nz);
     model.thb_zeta[model.nz-1] = model.thb[model.nz-2];
+
+
+    for (int k = 1; k <= model.nz-2; k++) {
+        model.pib_lev[k] = 0.5*(model.pib[k]+model.pib[k-1]);
+    }
+    // extrapolation
+    model.pib_lev[1] = model.pib_lev[2] + (model.pib_lev[2]-model.pib_lev[3]);
+    model.pib_lev[model.nz-1] = model.pib_lev[model.nz-2]; // Give a small value for top boundary
+    model.BoundaryProcess1D_center(model.pib_lev, model.nz+1);
+
+
+    // init pb_lev (nz: model.nz+1)
+    for (int k = 1; k <= model.nz-2; k++) {
+        model.pb_lev[k] = 0.5*(model.pb[k]+model.pb[k-1]);
+    }
+    // model.pb_lev[model.nz-1] = model.pb_lev[model.nz-2]; // Give a small value for model top
+    model.pb_lev[1] = 100000;
+    model.pb_lev[model.nz-1] = model.pb_lev[model.nz-2] - (model.pb_lev[model.nz-3]-model.pb_lev[model.nz-2]); // extrapolation
+    model.BoundaryProcess1D_center(model.pb_lev, model.nz+1);
     return;
 }
 #elif defined(LOADFROMPREVIOUSFILE)
@@ -420,7 +455,7 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
         model.thb[k] = tb / (double) (model.nx - 2.);
         #if defined(WATER)
             model.qvb[k] = qvb / (double) (model.nx - 2.);
-            model.thvb[k] = model.thb[k] + 0.61 * model.qvb[k];
+            model.thvb[k] = model.thb[k] * (1 + 0.61 * model.qvb[k]);
         #else
             model.thvb[k] = model.thb[k];
         #endif

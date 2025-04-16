@@ -12,15 +12,16 @@
 // #define DRY
 // #define RHO1
 #define WATER
-/* #define KESSLER_MICROPHY */
+// #define KESSLER_MICROPHY
 #define P3_MICROPHY
-// #define TROPICALFORCING
+#define RTERRTMGP
+#define TROPICALFORCING
 // #define RADIATIONCOOLING
-// #define LOADFILE
+#define LOADFILE
 #if defined(LOADFILE)
     #define LOADINITPATH "/home/Aaron/NextACC/2DVVM/input/init.txt"
 #endif
-#define GPU_POISSON
+// #define GPU_POISSON
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)

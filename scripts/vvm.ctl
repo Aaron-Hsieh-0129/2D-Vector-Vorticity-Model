@@ -8,7 +8,7 @@ YDEF 1 LINEAR 1 1     # Single y-point for 2D model
 ZDEF 102 LINEAR 0 200   # z-spacing or levels
 TDEF 6000 LINEAR 00Z31dec1999 2mn # date
 
-VARS 10
+VARS 11
 th=>th 102 t,x,z theta 
 u=>u 102 t,x,z u 
 w=>w 102 t,x,z w 
@@ -19,5 +19,6 @@ qr=>qr 102 t,x,z qr
 qitot=>qitot 102 t,x,z qitot 
 precip=>precip 1 t,x precip
 ubarTop=>ubarTop 1 t ubarTop
+radiation_heating_rate=>rhr 102 t,x,z rhr
 ENDVARS
 

@@ -56,10 +56,20 @@ int main(int argc, char **argv) {
     int vvm_outputstep = std::stoi(configs["VVM_OUTPUTSTEP"]);
     int vvm_case = std::stoi(configs["VVM_CASE"]);
     double vvm_moisture_nudge_time = std::stod(configs["VVM_MOISTURE_NUDGE_TIME"]);
+    int vvm_year = std::stoi(configs["VVM_YEAR"]);
+    int vvm_month = std::stoi(configs["VVM_MONTH"]);
+    int vvm_day = std::stoi(configs["VVM_DAY"]);
+    double vvm_hour = std::stod(configs["VVM_HOUR"]);
+    double vvm_minute = std::stod(configs["VVM_MINUTE"]);
+    double vvm_sec = std::stod(configs["VVM_SECOND"]);
+    double vvm_lon = std::stod(configs["VVM_LON"]);
+    double vvm_lat = std::stod(configs["VVM_LAT"]);
 
     Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
-                    30., 30., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
-                    1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time);
+                    10., 10., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time, 
+                    vvm_year, vvm_month, vvm_day, vvm_hour, vvm_minute, vvm_sec, 
+                    vvm_lon, vvm_lat);
     
     vvm model(config);
     
@@ -97,8 +107,6 @@ int main(int argc, char **argv) {
         }
     }
     #endif
-
-
 
     // // This initialization is for NGAC3F coupling comparison
     // std::ifstream inputFile("/data/Aaron/TMIF/th0.txt");

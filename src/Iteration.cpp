@@ -66,7 +66,7 @@ void vvm::Iteration::updateMean(vvm &model) {
         model.thb[k] = tb / (double) (model.nx - 2.);
         #if defined(WATER)
             model.qvb[k] = qvb / (double) (model.nx - 2.);
-            model.thvb[k] = model.thb[k] + 0.61 * model.qvb[k];
+            model.thvb[k] = model.thb[k] * (1 + 0.608 * model.qvb[k]);
         #else
             model.thvb[k] = model.thb[k];
         #endif
@@ -218,6 +218,12 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         std::cout << "timenow: " << model.step << std::endl;
     #endif
 
+
+    // Radiation scheme call for step 0
+    #if defined(RTERRTMGP)
+        vvm::Radiation::solve_radiation(model);
+    #endif
+
     while (model.step < nmax) {
         time_all.reset();
         std::cout << model.step << std::endl;
@@ -298,9 +304,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::Turbulence::RKM_RKH(model);
         #endif
         // Nudging process to damp the gravity wave
-        vvm::NumericalProcess::Nudge_theta(model);
-        if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
-        vvm::NumericalProcess::Nudge_qv(model);
+        // vvm::NumericalProcess::Nudge_theta(model);
+        // if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
+        // vvm::NumericalProcess::Nudge_qv(model);
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         timer.reset();
@@ -416,6 +422,12 @@ void vvm::Iteration::TimeMarching(vvm &model) {
 
         #ifdef _OPENMP
         #pragma omp barrier
+        #endif
+
+        #if defined(RTERRTMGP)
+            if (model.step % 40 == 0) {
+                vvm::Radiation::solve_radiation(model);
+            }
         #endif
 
         vvm::Iteration::nextTimeStep(model);

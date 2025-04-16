@@ -2,7 +2,7 @@
 
 double getTHV(int i, int k, vvm &model) {
     #if defined(WATER)
-        return model.th[i][k] + 0.608 * model.qv[i][k];
+        return model.th[i][k] * (1 + 0.608 * model.qv[i][k]);
     #else
         return model.th[i][k];
     #endif
@@ -12,6 +12,9 @@ void vvm::Bouyancy(vvm &model) {
     double g_rhothvbpthv_px = 0.;
     #if defined(WATER)
         double g_rhopqc_px = 0., g_rhopqr_px = 0.;
+        #if defined(P3_MICROPHY)
+            double g_rhopqi_px = 0.;
+        #endif
     #endif
     
     #ifdef _OPENMP
@@ -29,8 +32,14 @@ void vvm::Bouyancy(vvm &model) {
             #if defined(WATER)
                 g_rhopqc_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qc[i][k] + model.qc[i][k-1]) - 0.5*(model.qc[i-1][k] + model.qc[i-1][k-1])) * model.rdx;
                 g_rhopqr_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qr[i][k] + model.qr[i][k-1]) - 0.5*(model.qr[i-1][k] + model.qr[i-1][k-1])) * model.rdx;
+                #if defined(P3_MICROPHY)
+                    g_rhopqi_px = model.GRAVITY / model.rhow[k] * (0.5*(model.qitot[i][k] + model.qitot[i][k-1]) - 0.5*(model.qitot[i-1][k] + model.qitot[i-1][k-1])) * model.rdx;
+                #endif
                 #if defined(AB2)
                     model.dth_buoyancy[i][k][(model.step+1)%2] += -g_rhopqc_px - g_rhopqr_px;
+                    #if defined(P3_MICROPHY)
+                        model.dth_buoyancy[i][k][(model.step+1)%2] += -g_rhopqi_px;
+                    #endif
                     if (model.step == 0) model.dth_buoyancy[i][k][0] = model.dth_buoyancy[i][k][1];
                 #endif
             #endif

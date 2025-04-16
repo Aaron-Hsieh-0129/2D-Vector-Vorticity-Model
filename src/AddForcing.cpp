@@ -16,6 +16,8 @@ void vvm::AddForcing(vvm &model) {
                 model.thp[i][k] += dt * model.Q1LS[k];
                 model.qvp[i][k] += dt * model.Q2LS[k];
             #endif
+
+            model.thp[i][k] += dt * model.radiation_heating_rate[i][k] / 86400.; 
             #if defined(RADIATIONCOOLING) 
                 model.thp[i][k] += dt * (-2. / 86400.);
             #endif
