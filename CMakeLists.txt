@@ -91,7 +91,7 @@ set_target_properties(rte_rrtmgp PROPERTIES
 )
 
 # Create the P3 Fortran shared library
-add_library(p3 SHARED src/microphy_p3.f90)
+add_library(p3 SHARED external/P3-microphysics/microphy_p3.f90)
 set_target_properties(p3 PROPERTIES
     OUTPUT_NAME "p3"
     Fortran_PREPROCESS ON

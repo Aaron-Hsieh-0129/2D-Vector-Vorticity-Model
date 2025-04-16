@@ -829,7 +829,7 @@ public:
     #if defined(P3_MICROPHY)
     class P3 {
     public:
-        inline static char *lookup_file_dir = strdup("../lookup_tables");
+        inline static char *lookup_file_dir = strdup("../external/P3-microphysics/lookup_tables");
         inline static int nCat = 1;
         inline static bool trplMomI = false; // 3-element array
         inline static bool liqfrac = false;
