@@ -11,7 +11,7 @@ project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran)
 # Allow user to specify GCC installation path
 set(GCC_HOME "" CACHE STRING "Path to GCC installation")
 if(GCC_HOME STREQUAL "")
-    set(GCC_HOME "/home/Aaron/gcc9" CACHE STRING "Path to GCC installation" FORCE)
+    set(GCC_HOME "/home/Aaron/gcc13" CACHE STRING "Path to GCC installation" FORCE)
 endif()
 set(GCC_LIB_DIR "${GCC_HOME}/lib64")
 set(GCC_LIB32_DIR "${GCC_HOME}/lib")
@@ -51,7 +51,7 @@ else()
 endif()
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall -Wno-unused-function")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")

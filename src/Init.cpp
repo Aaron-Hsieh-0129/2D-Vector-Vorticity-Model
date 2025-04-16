@@ -253,6 +253,15 @@ void vvm::Init::Init2d(vvm &model) {
             model.thp[i][k] = 0.;
         }
     }
+
+    
+    for (int i = 0; i < model.nx; i++) {
+        for (int k = 0; k <= model.nz; k++) {
+            model.pb_lev_all[i][k] = model.pb_lev[k];
+        }
+    }
+
+
 	return;
 }
 

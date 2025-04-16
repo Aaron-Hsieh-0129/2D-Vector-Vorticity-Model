@@ -197,6 +197,7 @@ public:
                 deallocate2DContinuousArray(dz_all, dz_allcont);
                 deallocate2DContinuousArray(w_all, w_allcont);
                 deallocate2DContinuousArray(pb_all, pb_allcont);
+                deallocate2DContinuousArray(pb_lev_all, pb_lev_allcont);
                 deallocate2DContinuousArray(zi_all, zi_allcont);
                 deallocate2DContinuousArray(ssat_all, ssat_allcont);
 
@@ -357,6 +358,7 @@ public:
                 dz_all = allocate2DContinuousArray(nx, nz, dz_allcont);
                 w_all = allocate2DContinuousArray(nx, nz, w_allcont);
                 pb_all = allocate2DContinuousArray(nx, nz, pb_allcont);
+                pb_lev_all = allocate2DContinuousArray(nx, nz+1, pb_lev_allcont);
                 zi_all = allocate2DContinuousArray(nx, nz, zi_allcont);
                 ssat_all = allocate2DContinuousArray(nx, nz, ssat_allcont);
 
@@ -609,6 +611,7 @@ public:
             double **dz_all = nullptr;
             double **w_all = nullptr;
             double **pb_all = nullptr;
+            double **pb_lev_all = nullptr;
             double **zi_all = nullptr;
             double **ssat_all = nullptr;
         #endif
@@ -638,6 +641,7 @@ public:
             double *dz_allcont = nullptr;
             double *w_allcont = nullptr;
             double *pb_allcont = nullptr;
+            double *pb_lev_allcont = nullptr;
             double *zi_allcont = nullptr;
             double *ssat_allcont = nullptr;
         #endif
