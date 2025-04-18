@@ -132,7 +132,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             p_lay({i,k}) = model.pb[k];
             t_lay({i,k}) = model.th[i][k] * model.pib[k];
             o3_lay({i,k}) = std::max(o3_min, g1 * std::pow(model.pb[k]/100., g2) * std::exp(-model.pb[k]/100. / g3) * 1e-6);
-            h2o_lay({i,k}) = model.qv[i][k];
+            h2o_lay({i,k}) = std::max(model.qv[i][k], 0.);
         }
         for (int k = 1; k <= n_lev-1; k++) {
             p_lev({i,k}) = model.pb_lev[k];
@@ -177,7 +177,6 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             rei({i,k}) = std::min(std::max(model.diag_effi[i][k], effimin), effimax); // (m)
         }
     }
-    printf("a1\n");
 
 
     // No aerosol in this run
@@ -308,8 +307,6 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         // Status::print_message("Solving the longwave radiation.");
         printf("Solving the longwave radiation.\n");
 
-        auto time_start = std::chrono::high_resolution_clock::now();
-
         rad_lw.solve(
                 switch_fluxes,
                 switch_cloud_optics,
@@ -388,7 +385,6 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             }
         }
     }
-    printf("test3\n");
 
 
     ////// RUN THE SHORTWAVE SOLVER //////
@@ -464,8 +460,6 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         // Solve the radiation.
         Status::print_message("Solving the shortwave radiation.");
-
-        auto time_start = std::chrono::high_resolution_clock::now();
 
         rad_sw.solve(
                 switch_fluxes,

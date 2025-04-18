@@ -79,11 +79,11 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
             //                      model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k-1]*var_now[i][k-1]));
             
             var_future[i][k] += model.rdx2 * model.dt * 
-                                (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_now[i+1][k] - var_now[i][k]) - 
-                                 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i-1][k]))
-                              + model.rdz2 * model.dt * 
-                                (0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_now[i][k+1] - var_now[i][k]) - 
-                                 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i][k-1]));
+                                (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i+1][k] - var_future[i][k]) - 
+                                 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i-1][k]))
+                              + model.rdz2 * model.dt / model.rhow[k] * 
+                                (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_future[i][k+1] - var_future[i][k]) - 
+                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i][k-1]));
         }
     }
     return;
@@ -103,11 +103,11 @@ void vvm::Turbulence::Hparam(vvm &model, double **var_now, double **var_future) 
             //                      model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (model.rhou[k]*var_now[i][k] - model.rhou[k-1]*var_now[i][k-1]));
 
             var_future[i][k] += model.rdx2 * model.dt * 
-                                (0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (var_now[i+1][k] - var_now[i][k]) - 
-                                 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (var_now[i][k] - var_now[i-1][k]))
-                              + model.rdz2 * model.dt * 
-                                (0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_now[i][k+1] - var_now[i][k]) - 
-                                 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_now[i][k] - var_now[i][k-1]));
+                                (0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (var_future[i+1][k] - var_future[i][k]) - 
+                                 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (var_future[i][k] - var_future[i-1][k]))
+                              + model.rdz2 * model.dt / model.rhou[k] * 
+                                (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_future[i][k+1] - var_future[i][k]) - 
+                                 model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_future[i][k] - var_future[i][k-1]));
         }
     }
     return;

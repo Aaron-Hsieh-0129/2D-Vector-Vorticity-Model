@@ -296,18 +296,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         vvm::BoundaryProcess2D_all(model);
         model.t_poisson[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
-        timer.reset();
-        updateMean(model);
-        #if defined(DIFFUSION_VVM)
-            vvm::NumericalProcess::DiffusionAll(model);
-        #else
-            vvm::Turbulence::RKM_RKH(model);
-        #endif
-        // Nudging process to damp the gravity wave
-        // vvm::NumericalProcess::Nudge_theta(model);
-        // if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
-        // vvm::NumericalProcess::Nudge_qv(model);
-        model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         timer.reset();
         #if defined(WATER)
@@ -377,7 +365,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 birimp1d = model.birimp[i]; 
                 zi_all1d = model.zi_all[i]; 
                 ssat_all1d = model.ssat_all[i]; 
-                w_all1d = model.w_all[i]; 
+                w_all1d = model.w[i]; 
                 pb_all1d = model.pb_all[i];
                 dz_all1d = model.dz_all[i];
                 precip_liq1d = &model.precip_liq[i];
@@ -415,6 +403,19 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         #endif
         vvm::BoundaryProcess2D_all(model);
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
+
+        timer.reset();
+        updateMean(model);
+        #if defined(DIFFUSION_VVM)
+            vvm::NumericalProcess::DiffusionAll(model);
+        #else
+            vvm::Turbulence::RKM_RKH(model);
+        #endif
+        // Nudging process to damp the gravity wave
+        vvm::NumericalProcess::Nudge_theta(model);
+        if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
+        vvm::NumericalProcess::Nudge_qv(model);
+        model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         #if defined(TIMEFILTER)
             vvm::NumericalProcess::timeFilterAll(model);
