@@ -1,4 +1,4 @@
-VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/0417/6Q1Q2_nonudge_RKHMrho/
+VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/6Q1Q2_nonudge_RKHMrho/
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
 VVM_DT=3                                            # dt [s]
