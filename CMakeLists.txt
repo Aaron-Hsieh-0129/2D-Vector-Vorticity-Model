@@ -85,59 +85,85 @@ include_directories(
 )
 
 # ExternalProject for HDF5
-ExternalProject_Add(
-    hdf5_ext
-    URL https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.1/src/hdf5-1.10.1.tar.gz
-    PREFIX ${CMAKE_SOURCE_DIR}/_deps/hdf5
-    CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-cxx --enable-fortran --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER}
-    BUILD_COMMAND make -j${N_CORES}
-    INSTALL_COMMAND make install
-    UPDATE_COMMAND ""
-    BUILD_ALWAYS FALSE
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
+find_library(HDF5_LIB NAMES hdf5 hdf5_serial HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+find_library(HDF5_HL_LIB NAMES hdf5_hl HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT HDF5_LIB OR NOT HDF5_HL_LIB)
+    ExternalProject_Add(
+        hdf5_ext
+        URL https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.1/src/hdf5-1.10.1.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/hdf5
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-cxx --enable-fortran --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER}
+        BUILD_COMMAND make -j${N_CORES}
+        INSTALL_COMMAND make install
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS FALSE
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+else()
+    message(STATUS "HDF5 found: ${HDF5_LIB}")
+    message(STATUS "HDF5 high-level library found: ${HDF5_HL_LIB}")
+endif()
 
 # ExternalProject for NetCDF-C (depends on HDF5)
-ExternalProject_Add(
-    netcdf-c_ext
-    URL https://github.com/Unidata/netcdf-c/archive/v4.3.3.1.tar.gz
-    PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-c
-    CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-netcdf-4 --enable-shared --with-pic --disable-dap CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
-    BUILD_COMMAND make -j${N_CORES}
-    INSTALL_COMMAND make install
-    UPDATE_COMMAND ""
-    BUILD_ALWAYS FALSE
-    DEPENDS hdf5_ext
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
+find_library(NETCDF_LIB NAMES netcdf HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT NETCDF_LIB)
+    ExternalProject_Add(
+        netcdf-c_ext
+        URL https://github.com/Unidata/netcdf-c/archive/v4.3.3.1.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-c
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-netcdf-4 --enable-shared --with-pic --disable-dap CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
+        BUILD_COMMAND make -j${N_CORES}
+        INSTALL_COMMAND make install
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS FALSE
+        DEPENDS hdf5_ext
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+else()
+    message(STATUS "NetCDF-C found in ${DEP_INSTALL_DIR}/lib")
+endif()
 
 # ExternalProject for NetCDF-CXX (depends on NetCDF-C)
-ExternalProject_Add(
-    netcdf-cxx4_ext
-    URL https://github.com/Unidata/netcdf-cxx4/archive/v4.3.0.tar.gz
-    PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-cxx4
-    CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
-    BUILD_COMMAND make -j${N_CORES}
-    INSTALL_COMMAND make install
-    UPDATE_COMMAND ""
-    BUILD_ALWAYS FALSE
-    DEPENDS netcdf-c_ext
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
+find_library(NETCDF_CXX_LIB NAMES netcdf_c++4 HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT NETCDF_CXX_LIB)
+    ExternalProject_Add(
+        netcdf-cxx4_ext
+        URL https://github.com/Unidata/netcdf-cxx4/archive/v4.3.0.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-cxx4
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
+        BUILD_COMMAND make -j${N_CORES}
+        INSTALL_COMMAND make install
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS FALSE
+        DEPENDS netcdf-c_ext
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+else()
+    message(STATUS "NetCDF-C++ found in ${DEP_INSTALL_DIR}/lib")
+endif()
+
 
 # ExternalProject for Boost
-ExternalProject_Add(
-    boost_ext
-    URL https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.gz
-    PREFIX ${CMAKE_SOURCE_DIR}/_deps/boost
-    CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.sh --prefix=${DEP_INSTALL_DIR}
-    BUILD_COMMAND <SOURCE_DIR>/b2 -j${BOOST_BUILD_CORES} install --prefix=${DEP_INSTALL_DIR}
-    BUILD_IN_SOURCE TRUE
-    INSTALL_COMMAND ""
-    UPDATE_COMMAND ""
-    BUILD_ALWAYS FALSE
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
+find_library(BOOST_SYSTEM_LIB NAMES boost_system HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+find_library(BOOST_FILESYSTEM_LIB NAMES boost_filesystem HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT BOOST_SYSTEM_LIB OR NOT BOOST_FILESYSTEM_LIB)
+    ExternalProject_Add(
+        boost_ext
+        URL https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/boost
+        CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.sh --prefix=${DEP_INSTALL_DIR}
+        BUILD_COMMAND <SOURCE_DIR>/b2 -j${BOOST_BUILD_CORES} install --prefix=${DEP_INSTALL_DIR}
+        BUILD_IN_SOURCE TRUE
+        INSTALL_COMMAND ""
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS FALSE
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+else()
+    message(STATUS "Boost found in ${DEP_INSTALL_DIR}/lib")
+    set(Boost_INCLUDE_DIRS ${DEP_INSTALL_DIR}/include)
+    set(Boost_LIBRARIES ${BOOST_SYSTEM_LIB} ${BOOST_FILESYSTEM_LIB})
+endif()
 
 # Add rte-rrtmgp-cpp as a subdirectory
 add_subdirectory(external/rte-rrtmgp-cpp)
@@ -190,7 +216,7 @@ target_link_libraries(vvm2d PRIVATE
 )
 
 # Add dependencies
-add_dependencies(vvm2d hdf5_ext netcdf-c_ext netcdf-cxx4_ext boost_ext)
+# add_dependencies(vvm2d hdf5_ext netcdf-c_ext netcdf-cxx4_ext boost_ext)
 
 # Set runtime library paths (-rpath)
 set_target_properties(vvm2d PROPERTIES

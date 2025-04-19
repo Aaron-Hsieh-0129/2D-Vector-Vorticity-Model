@@ -16,12 +16,12 @@ set(USER_FC_FLAGS "-std=f2003 -fdefault-real-8 -fdefault-double-8 -fPIC -ffixed-
 set(USER_FC_FLAGS_RELEASE "-O3 -DNDEBUG -march=native")
 set(USER_FC_FLAGS_DEBUG "-O0 -g -Wall -Wno-unknown-pragmas")
 
-set(NETCDF_INCLUDE_DIR "/home/Aaron/local/inlcude")
-set(NETCDF_LIB_C       "/home/Aaron/local/lib/libnetcdf.so")
-set(HDF5_LIB_1         "/home/Aaron/local/lib/libhdf5.so")
-set(HDF5_LIB_2         "/home/Aaron/local/lib/libhdf5_hl.so")
-
-set(LIBS ${NETCDF_LIB_C} ${HDF5_LIB_2} ${HDF5_LIB_1} m z curl)
+# set(NETCDF_INCLUDE_DIR "/home/Aaron/local/inlcude")
+# set(NETCDF_LIB_C       "/home/Aaron/local/lib/libnetcdf.so")
+# set(HDF5_LIB_1         "/home/Aaron/local/lib/libhdf5.so")
+# set(HDF5_LIB_2         "/home/Aaron/local/lib/libhdf5_hl.so")
+#
+# set(LIBS ${NETCDF_LIB_C} ${HDF5_LIB_2} ${HDF5_LIB_1} m z curl)
 set(INCLUDE_DIRS ${FFTW_INCLUDE_DIR} ${NETCDF_INCLUDE_DIR})
 
 add_definitions(-DRESTRICTKEYWORD=__restrict__)
