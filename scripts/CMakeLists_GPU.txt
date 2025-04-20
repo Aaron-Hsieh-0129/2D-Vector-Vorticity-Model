@@ -1,11 +1,41 @@
-# Set minimum CMake version
 cmake_minimum_required(VERSION 3.10)
 
-# Ensure NVHPC compilers are used for C/C++
-set(CMAKE_C_COMPILER nvc CACHE STRING "Set C compiler")
-set(CMAKE_CXX_COMPILER nvc++ CACHE STRING "Set C++ compiler")
-# Use gfortran for Fortran
-set(CMAKE_Fortran_COMPILER gfortran CACHE STRING "Set Fortran compiler")
+include(ExternalProject)
+
+# Set policy CMP0135 to NEW to avoid timestamp warnings
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
+# Set default build type to Release if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
+
+# Allow user to specify NVHPC and GCC installation paths
+set(NVHPC_HOME "/home/Aaron/nvhpc/Linux_x86_64/21.3" CACHE STRING "Path to NVHPC installation")
+set(GCC_HOME "/home/Aaron/gcc9" CACHE STRING "Path to GCC installation")
+
+# Set compilers explicitly before project()
+set(CMAKE_C_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicc" CACHE PATH "C compiler" FORCE)
+set(CMAKE_CXX_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicxx" CACHE PATH "C++ compiler" FORCE)
+set(CMAKE_Fortran_COMPILER "${GCC_HOME}/bin/gfortran" CACHE PATH "Fortran compiler" FORCE)
+set(CMAKE_CUDA_COMPILER "${NVHPC_HOME}/compilers/bin/nvcc" CACHE PATH "CUDA compiler" FORCE)
+
+# Define project
+project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran C CUDA)
+
+# Set library and include paths
+set(NVHPC_LIB_DIR "${NVHPC_HOME}/compilers/lib")
+set(CUDA_INCLUDE_DIR "${NVHPC_HOME}/cuda/include")
+set(CUDA_LIB_DIR "${NVHPC_HOME}/cuda/lib64")
+set(GCC_LIB_DIR "${GCC_HOME}/lib64")
+set(GCC_LIB32_DIR "${GCC_HOME}/lib")
+
+# Find MPI
+find_package(MPI REQUIRED)
+include_directories(${MPI_CXX_INCLUDE_DIRS})
 
 # Disable dependency file generation (-MF issue) for NVHPC
 if(CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC")
@@ -13,157 +43,136 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC")
     set(CMAKE_C_DEPENDS "")
     set(CMAKE_DEPFILE_FLAGS_CXX "")
     set(CMAKE_DEPFILE_FLAGS_C "")
+    add_definitions(-DEIGEN_DONT_PARALLELIZE)
 endif()
 
-# Define project after compiler settings
-project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran)
+# Find OpenMP
+find_package(OpenMP REQUIRED)
 
-# Allow user to specify NVHPC and GCC installation paths
-set(NVHPC_HOME "" CACHE STRING "Path to NVHPC installation")
-set(GCC_HOME "" CACHE STRING "Path to GCC installation")
-
-# Set default paths if not provided
-if(NVHPC_HOME STREQUAL "")
-    set(NVHPC_HOME "/home/Aaron/nvhpc/Linux_x86_64/21.3" CACHE STRING "Path to NVHPC installation" FORCE)
-endif()
-if(GCC_HOME STREQUAL "")
-    set(GCC_HOME "/home/Aaron/gcc9" CACHE STRING "Path to GCC installation" FORCE)
-endif()
-
-set(NVHPC_LIB_DIR "${NVHPC_HOME}/compilers/lib")
-set(CUDA_INCLUDE_DIR "${NVHPC_HOME}/cuda/include")
-set(CUDA_LIB_DIR "${NVHPC_HOME}/cuda/lib64")
-set(GCC9_LIB_DIR "${GCC_HOME}/lib64")
-set(GCC9_LIB32_DIR "${GCC_HOME}/lib")
-
-
-# Set default build type to Release if not specified
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-# Set HOME_DIR
-set(HOME_DIR $ENV{HOME})
+# Set C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set where dependencies will be downloaded and installed
 set(DEP_INSTALL_DIR "${CMAKE_SOURCE_DIR}/_deps/install")
 file(MAKE_DIRECTORY ${DEP_INSTALL_DIR})
 
-# Include ExternalProject for dependency management
-include(ExternalProject)
-
-# Get number of available cores
-include(ProcessorCount)
-ProcessorCount(N_CORES)
-if(N_CORES GREATER 1)
-    set(CMAKE_BUILD_PARALLEL_LEVEL ${N_CORES})
-    message(STATUS "Using ${N_CORES} cores for building")
-else()
-    message(STATUS "Using single core for building")
-endif()
-
-# Find MPI (force NVHPC OpenMPI for C/C++)
-find_package(MPI REQUIRED)
-set(CMAKE_C_COMPILER ${NVHPC_HOME}/comm_libs/mpi/bin/mpicc)
-set(CMAKE_CXX_COMPILER ${NVHPC_HOME}/comm_libs/mpi/bin/mpicxx)
-
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall -Wno-unused-function")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall")
+endif()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fPIC -fdefault-real-8")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS}")
 
-# Add OpenACC flags for GPU support
-option(USE_OPENACC "Enable OpenACC GPU support" ON)
-if(USE_OPENACC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -acc -gpu=ccall -Minfo=accel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -acc -gpu=ccall -Minfo=accel")
+# Add OpenMP flags
+if(OpenMP_CXX_FOUND)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+if(OpenMP_Fortran_FOUND)
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_Fortran_FLAGS}")
 endif()
 
 # Set RPATH usage
+set(CMAKE_INSTALL_RPATH "${DEP_INSTALL_DIR}/lib;${GCC9_LIB_DIR};${GCC9_LIB32_DIR};${NVHPC_HOME}/comm_libs/mpi/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+add_definitions(-DRTE_USE_CBOOL)
 
 # Include directories
 include_directories(
     include
     ${DEP_INSTALL_DIR}/include
-    ${MPI_INCLUDE_PATH}
+    ${MPI_CXX_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include
+    ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include_test
+    ${CUDA_INCLUDE_DIR}
 )
 
-# HDF5
+# ExternalProject for HDF5
 find_library(HDF5_LIB NAMES hdf5 hdf5_serial HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
-if(NOT HDF5_LIB)
-    message(STATUS "HDF5 not found in ${DEP_INSTALL_DIR}, installing...")
+find_library(HDF5_HL_LIB NAMES hdf5_hl HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT HDF5_LIB OR NOT HDF5_HL_LIB)
     ExternalProject_Add(
         hdf5_ext
-        URL            https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.14/hdf5-1.14.3/src/hdf5-1.14.3.tar.gz
-        PREFIX         ${CMAKE_SOURCE_DIR}/_deps/hdf5
-        CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env
-            CC=${CMAKE_C_COMPILER}
-            CXX=${CMAKE_CXX_COMPILER}
-            <SOURCE_DIR>/configure
-            --prefix=${DEP_INSTALL_DIR}
-            --enable-cxx
-            --disable-shared
-            --enable-static
-        BUILD_COMMAND  make -j${N_CORES}
+        URL https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.1/src/hdf5-1.10.1.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/hdf5
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-cxx --enable-fortran --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER}
+        BUILD_COMMAND make -j${N_CORES}
         INSTALL_COMMAND make install
         UPDATE_COMMAND ""
-        BUILD_IN_SOURCE 1
-        BUILD_ALWAYS   FALSE
+        BUILD_ALWAYS FALSE
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
-    set(HDF5_NEEDS_INSTALL TRUE)
-    set(HDF5_LIB ${DEP_INSTALL_DIR}/lib)
 else()
-    message(STATUS "HDF5 found in ${DEP_INSTALL_DIR}/lib")
+    message(STATUS "HDF5 found: ${HDF5_LIB}")
+    message(STATUS "HDF5 high-level library found: ${HDF5_HL_LIB}")
 endif()
 
-# NetCDF-C (depends on HDF5)
+# ExternalProject for NetCDF-C (depends on HDF5)
 find_library(NETCDF_LIB NAMES netcdf HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
 if(NOT NETCDF_LIB)
-    message(STATUS "NetCDF-C not found in ${DEP_INSTALL_DIR}, installing...")
     ExternalProject_Add(
         netcdf-c_ext
-        GIT_REPOSITORY https://github.com/Unidata/netcdf-c.git
-        GIT_TAG        v4.9.2
-        GIT_SHALLOW    TRUE
-        PREFIX         ${CMAKE_SOURCE_DIR}/_deps/netcdf-c
-        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER} --disable-dap --disable-byterange --with-hdf5=${DEP_INSTALL_DIR}
-        BUILD_COMMAND  make -j${N_CORES}
+        URL https://github.com/Unidata/netcdf-c/archive/v4.3.3.1.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-c
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-netcdf-4 --enable-shared --with-pic --disable-dap CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} FC=${CMAKE_Fortran_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
+        BUILD_COMMAND make -j${N_CORES}
         INSTALL_COMMAND make install
-        DEPENDS        hdf5_ext
         UPDATE_COMMAND ""
-        BUILD_ALWAYS   FALSE
+        BUILD_ALWAYS FALSE
+        DEPENDS hdf5_ext
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
-    set(NETCDF_C_NEEDS_INSTALL TRUE)
-    set(NETCDF_LIB ${DEP_INSTALL_DIR}/lib)
 else()
     message(STATUS "NetCDF-C found in ${DEP_INSTALL_DIR}/lib")
 endif()
 
-# NetCDF-C++4 (depends on NetCDF-C and HDF5)
-find_library(NETCDF_CXX4_LIB NAMES netcdf_c++4 HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
-if(NOT NETCDF_CXX4_LIB)
-    message(STATUS "NetCDF-C++4 not found in ${DEP_INSTALL_DIR}, installing...")
+# ExternalProject for NetCDF-CXX (depends on NetCDF-C)
+find_library(NETCDF_CXX_LIB NAMES netcdf_c++4 HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT NETCDF_CXX_LIB)
     ExternalProject_Add(
         netcdf-cxx4_ext
-        GIT_REPOSITORY https://github.com/Unidata/netcdf-cxx4.git
-        GIT_TAG        v4.3.1
-        GIT_SHALLOW    TRUE
-        PREFIX         ${CMAKE_SOURCE_DIR}/_deps/netcdf-cxx4
-        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --with-netcdf=${DEP_INSTALL_DIR} CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
-        BUILD_COMMAND  make -j${N_CORES}
+        URL https://github.com/Unidata/netcdf-cxx4/archive/v4.3.0.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/netcdf-cxx4
+        CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --enable-shared --with-pic CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CPPFLAGS=-I${DEP_INSTALL_DIR}/include LDFLAGS=-L${DEP_INSTALL_DIR}/lib
+        BUILD_COMMAND make -j${N_CORES}
         INSTALL_COMMAND make install
-        DEPENDS        netcdf-c_ext hdf5_ext
         UPDATE_COMMAND ""
-        BUILD_ALWAYS   FALSE
+        BUILD_ALWAYS FALSE
+        DEPENDS netcdf-c_ext
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
-    set(NETCDF_CXX4_NEEDS_INSTALL TRUE)
-    set(NETCDF_CXX4_LIB ${DEP_INSTALL_DIR}/lib)
 else()
-    message(STATUS "NetCDF-C++4 found in ${DEP_INSTALL_DIR}/lib")
+    message(STATUS "NetCDF-C++ found in ${DEP_INSTALL_DIR}/lib")
+endif()
+
+
+# ExternalProject for Boost
+find_library(BOOST_SYSTEM_LIB NAMES boost_system HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+find_library(BOOST_FILESYSTEM_LIB NAMES boost_filesystem HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+if(NOT BOOST_SYSTEM_LIB OR NOT BOOST_FILESYSTEM_LIB)
+    ExternalProject_Add(
+        boost_ext
+        URL https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.gz
+        PREFIX ${CMAKE_SOURCE_DIR}/_deps/boost
+        CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.sh --prefix=${DEP_INSTALL_DIR}
+        BUILD_COMMAND <SOURCE_DIR>/b2 -j${BOOST_BUILD_CORES} install --prefix=${DEP_INSTALL_DIR}
+        BUILD_IN_SOURCE TRUE
+        INSTALL_COMMAND ""
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS FALSE
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+else()
+    message(STATUS "Boost found in ${DEP_INSTALL_DIR}/lib")
+    set(Boost_INCLUDE_DIRS ${DEP_INSTALL_DIR}/include)
+    set(Boost_LIBRARIES ${BOOST_SYSTEM_LIB} ${BOOST_FILESYSTEM_LIB})
 endif()
 
 # AMGX (version 2.4.0)
@@ -212,47 +221,23 @@ else()
     message(STATUS "AMGX found in ${CMAKE_SOURCE_DIR}/amgx/src/lib")
 endif()
 
-# Option to enable or disable PETSc
-option(USE_PETSC "Enable PETSc support" OFF)
-if(USE_PETSC)
-    message(STATUS "PETSc support enabled")
-    find_library(PETSC_LIB NAMES petsc HINTS ${DEP_INSTALL_DIR}/lib NO_DEFAULT_PATH)
-    if(NOT PETSC_LIB)
-        message(STATUS "PETSc not found in ${DEP_INSTALL_DIR}, installing...")
-        ExternalProject_Add(
-            petsc_ext
-            GIT_REPOSITORY https://gitlab.com/petsc/petsc.git
-            GIT_TAG        v3.20.5
-            GIT_SHALLOW    TRUE
-            PREFIX         ${CMAKE_SOURCE_DIR}/_deps/petsc
-            CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${DEP_INSTALL_DIR} --with-cc=${CMAKE_C_COMPILER} --with-cxx=${CMAKE_CXX_COMPILER} --with-fc=${CMAKE_Fortran_COMPILER} --with-mpi=1
-            BUILD_COMMAND  make -j${N_CORES}
-            INSTALL_COMMAND make install
-            UPDATE_COMMAND ""
-            BUILD_ALWAYS   FALSE
-        )
-        set(PETSC_NEEDS_INSTALL TRUE)
-        set(PETSC_LIB ${DEP_INSTALL_DIR}/lib/libpetsc.so)
-    else()
-        message(STATUS "PETSc found in ${DEP_INSTALL_DIR}/lib")
-    endif()
-endif()
+# Add rte-rrtmgp-cpp as a subdirectory
+add_subdirectory(external/rte-rrtmgp-cpp)
 
-# CUDA settings
-
-include_directories(
-    include
-    ${MPI_INCLUDE_PATH}
-    ${CUDA_INCLUDE_DIR}
-    ${DEP_INSTALL_DIR}/include
+# Force rte-rrtmgp to use only _deps/install headers
+set_target_properties(rte_rrtmgp PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${DEP_INSTALL_DIR}/include;${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include"
 )
 
 # Create the P3 Fortran shared library
-add_library(p3 SHARED src/microphy_p3.f90)
+add_library(p3 SHARED external/P3-microphysics/microphy_p3.f90)
 set_target_properties(p3 PROPERTIES
     OUTPUT_NAME "p3"
     Fortran_PREPROCESS ON
 )
+if(OpenMP_Fortran_FOUND)
+    target_link_libraries(p3 PRIVATE OpenMP::OpenMP_Fortran)
+endif()
 
 # Source files for VVM2D
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp)
@@ -261,48 +246,41 @@ add_executable(vvm2d ${SRC})
 # Link Fortran library and runtime to the executable
 target_link_libraries(vvm2d PRIVATE p3 gfortran)
 
-# Link MPI libraries (C/C++ only)
-target_link_libraries(vvm2d PRIVATE ${MPI_CXX_LIBRARIES})
+# Link OpenMP libraries
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(vvm2d PRIVATE OpenMP::OpenMP_CXX)
+endif()
 
-# Link libraries
-find_library(libncPath netcdf "${NETCDF_LIB}")
-find_library(libncxxPath netcdf_c++4 "${NETCDF_CXX4_LIB}")
+# Specify expected library paths (will be built by ExternalProject)
+set(HDF5_LIB ${DEP_INSTALL_DIR}/lib/libhdf5.so)
+set(HDF5_CXX_LIB ${DEP_INSTALL_DIR}/lib/libhdf5_cpp.so)
+set(NETCDF_C_LIB ${DEP_INSTALL_DIR}/lib/libnetcdf.so)
+set(NETCDF_CXX_LIB ${DEP_INSTALL_DIR}/lib/libnetcdf_c++4.so)
+set(BOOST_SYSTEM_LIB ${DEP_INSTALL_DIR}/lib/libboost_system.so)
+set(BOOST_FILESYSTEM_LIB ${DEP_INSTALL_DIR}/lib/libboost_filesystem.so)
+
 find_library(cudartPath cudart ${CUDA_LIB_DIR})
-
+# Link libraries
 target_link_libraries(vvm2d PRIVATE
-    ${libncPath}
-    ${libncxxPath}
+    rte_rrtmgp
+    ${HDF5_LIB}
+    ${HDF5_CXX_LIB}
+    ${NETCDF_C_LIB}
+    ${NETCDF_CXX_LIB}
+    ${BOOST_SYSTEM_LIB}
+    ${BOOST_FILESYSTEM_LIB}
     ${AMGXSH_LIBRARY}
     ${cudartPath}
+    ${MPI_CXX_LIBRARIES}  # Use this if MPI::MPI_CXX is unavailable
     stdc++
 )
 
-# Link PETSc if enabled
-if(USE_PETSC)
-    find_library(libpetscPath petsc "${PETSC_LIB}")
-    target_link_libraries(vvm2d PRIVATE libpetscPath)
-endif()
-
-# Add dependencies if needed
-if(HDF5_NEEDS_INSTALL)
-    add_dependencies(vvm2d hdf5_ext)
-endif()
-if(NETCDF_C_NEEDS_INSTALL)
-    add_dependencies(vvm2d netcdf-c_ext)
-endif()
-if(NETCDF_CXX4_NEEDS_INSTALL)
-    add_dependencies(vvm2d netcdf-cxx4_ext)
-endif()
-if(AMGX_NEEDS_INSTALL)
-    add_dependencies(vvm2d amgx_ext)
-endif()
-if(USE_PETSC AND PETSC_NEEDS_INSTALL)
-    add_dependencies(vvm2d petsc_ext)
-endif()
+# Add dependencies
+# add_dependencies(vvm2d hdf5_ext netcdf-c_ext netcdf-cxx4_ext boost_ext)
 
 # Set runtime library paths (-rpath)
 set_target_properties(vvm2d PROPERTIES
-    LINK_FLAGS "-Wl,-rpath,${GCC9_LIB_DIR} -Wl,-rpath,${GCC9_LIB32_DIR} -Wl,-rpath,${CUDA_LIB_DIR} -Wl,-rpath,${DEP_INSTALL_DIR}/lib"
+    LINK_FLAGS "-Wl,-rpath,${DEP_INSTALL_DIR}/lib -Wl,-rpath,${GCC_LIB_DIR} -Wl,-rpath,${GCC_LIB32_DIR}"
 )
 
 # CPack settings
@@ -316,5 +294,7 @@ message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C Compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "  C++ Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "  Fortran Compiler: ${CMAKE_Fortran_COMPILER}")
-message(STATUS "  PETSc support: ${USE_PETSC}")
-message(STATUS "  OpenACC support: ${USE_OPENACC}")
+message(STATUS "  OpenMP support: ${OpenMP_CXX_FOUND}")
+if(OpenMP_CXX_FOUND)
+    message(STATUS "  OpenMP CXX flags: ${OpenMP_CXX_FLAGS}")
+endif()
