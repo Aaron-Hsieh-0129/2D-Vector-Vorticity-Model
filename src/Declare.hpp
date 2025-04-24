@@ -121,6 +121,7 @@ public:
         delete[] z;
         delete[] z_zeta;
         delete[] lambda2;
+        delete[] lambda2_zeta;
         delete[] th_ground;
         delete[] qvs_ground;
         delete[] addflux;
@@ -281,6 +282,7 @@ public:
         z = new double[nz]();
         z_zeta = new double[nz]();
         lambda2 = new double[nz]();
+        lambda2_zeta = new double[nz]();
         #if defined(TROPICALFORCING)
             Q1LS = new double[nz]();
             Q2LS = new double[nz]();
@@ -517,6 +519,7 @@ public:
     double *z = nullptr;
     double *z_zeta = nullptr;
     double *lambda2 = nullptr;
+    double *lambda2_zeta = nullptr;
     double *th_ground = nullptr;
     double *qvs_ground = nullptr;
     double *addflux = nullptr;

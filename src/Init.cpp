@@ -135,11 +135,12 @@ void vvm::Init::Init1d(vvm &model) {
         model.z[k] = (k-0.5) * model.dz;
         model.z_zeta[k] = (k-1) * model.dz;
         model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z[k], 2));
+        model.lambda2_zeta[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z_zeta[k], 2));
     }
-    model.z[0] = model.z[1];
-    model.z[model.nz-1] = model.z[model.nz-2];
-    model.z_zeta[0] = model.z_zeta[1];
-    model.z_zeta[model.nz-1] = model.z_zeta[model.nz-2];
+    model.BoundaryProcess1D_center(model.z, model.nz);
+    model.BoundaryProcess1D_center(model.z_zeta, model.nz);
+    model.BoundaryProcess1D_center(model.lambda2, model.nz);
+    model.BoundaryProcess1D_center(model.lambda2_zeta, model.nz);
 
 
     for (int i = 0; i <= model.nx-1; i++) {

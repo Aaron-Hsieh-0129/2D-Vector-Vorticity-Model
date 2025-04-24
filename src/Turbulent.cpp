@@ -19,8 +19,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
 
             Rzeta_zeta = (model.w[i][k] - model.w[i-1][k]) * model.rdx + (model.u[i][k] - model.u[i][k-1]) * model.rdz;
             Rotat_zeta = std::pow((0.5*(model.u[i+1][k]+model.u[i+1][k-1]) - 0.5*(model.u[i-1][k]+model.u[i-1][k-1])) * model.r2dx, 2) + 
-                         std::pow((0.5*(model.w[i][k+1]+model.w[i-1][k+1]) - 0.5*(model.w[i][k-1]+model.w[i-1][k-1])) * model.rdz, 2);
-            Ri_zeta = (model.GRAVITY / (0.25*(model.thp[i][k]+model.thp[i-1][k]+model.thp[i][k-1]+model.thp[i-1][k-1])) * 
+                         std::pow((0.5*(model.w[i][k+1]+model.w[i-1][k+1]) - 0.5*(model.w[i][k-1]+model.w[i-1][k-1])) * model.r2dz, 2);
+            Ri_zeta = (model.GRAVITY / (0.25*(model.thp[i][k]+model.thp[i-1][k]+model.thp[i][k-1]+model.thp[i-1][k-1])) *
                        (0.5*(model.thp[i][k]+model.thp[i-1][k]) - 0.5*(model.thp[i][k-1]+model.thp[i-1][k-1])) * model.rdz) / (std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta);
             if (Ri < 0) {
                 model.RKH[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * 1.4 * std::sqrt(1. - 40.*Ri);
@@ -32,10 +32,10 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             
 
             if (Ri_zeta < 0.) {
-                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::sqrt(1. - 16. * Ri_zeta);
+                model.RKM[i][k] = model.lambda2_zeta[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::sqrt(1. - 16. * Ri_zeta);
             }
             else if (0. < Ri_zeta && Ri_zeta < 0.25) {
-                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::pow(1. - 4.*Ri_zeta, 4);     
+                model.RKM[i][k] = model.lambda2_zeta[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::pow(1. - 4.*Ri_zeta, 4);     
             }
             else model.RKM[i][k] = 0.;
 
@@ -50,6 +50,9 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
     }
     model.BoundaryProcess2D_center(model.RKM, model.nx, model.nz);
     model.BoundaryProcess2D_center(model.RKH, model.nx, model.nz);
+    for (int k = 0; k < model.nz; k++) {
+        std::cout << "k: " << k << " RKM: " << model.RKM[model.nx-1][k] << ", RKH: " << model.RKH[model.nx-1][k] << std::endl;
+    }
 
     vvm::Turbulence::Mparam(model, model.zeta, model.zetap);
     vvm::Turbulence::Hparam(model, model.th, model.thp);
@@ -89,8 +92,8 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
                                 (0.5 * (model.RKM[i+1][k] + model.RKM[i][k]) * (var_future[i+1][k] - var_future[i][k]) - 
                                  0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_future[i][k] - var_future[i-1][k]))
                               + model.rdz2 * model.dt / model.rhow[k] * 
-                                (model.rhou[k] * 0.5 * (model.RKM[i][k+1] + model.RKM[i][k]) * (var_future[i][k+1] - var_future[i][k]) - 
-                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i][k] - var_future[i][k-1]));
+                                (model.rhow[k] * 0.5 * (model.RKM[i][k+1] + model.RKM[i][k]) * (var_future[i][k+1] - var_future[i][k]) - 
+                                 model.rhow[k-1] * 0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i][k] - var_future[i][k-1]));
         }
     }
     return;

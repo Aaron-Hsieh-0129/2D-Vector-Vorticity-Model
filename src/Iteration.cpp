@@ -409,19 +409,20 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
 
-        model.SurfaceFlux(model);
+        // model.SurfaceFlux(model);
 
         timer.reset();
         updateMean(model);
         #if defined(DIFFUSION_VVM)
             vvm::NumericalProcess::DiffusionAll(model);
         #else
-            vvm::Turbulence::RKM_RKH(model);
+            // vvm::Turbulence::RKM_RKH(model);
         #endif
         // Nudging process to damp the gravity wave
         // vvm::NumericalProcess::Nudge_theta(model);
         // if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
         // vvm::NumericalProcess::Nudge_qv(model);
+        vvm::BoundaryProcess2D_all(model);
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         #if defined(TIMEFILTER)
