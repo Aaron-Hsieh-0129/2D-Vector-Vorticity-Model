@@ -11,6 +11,15 @@
     using namespace netCDF;
 #endif
 
+void generateAddlfxArray(double *array, int size, double variation = 0.1) {
+    std::mt19937 rng(static_cast<unsigned>(time(nullptr))); // Random number generator
+    std::uniform_real_distribution<double> dist(-variation, variation); // Variation range
+
+    for (int i = 0; i < size; ++i) {
+        array[i] = 1.0 + dist(rng); // Mean of 1.0 with random variation
+    }
+    return;
+}
 void vvm::Init::Init1d(vvm &model) {
     #if defined(LOADFILE)
         LoadFile(model);
@@ -131,6 +140,15 @@ void vvm::Init::Init1d(vvm &model) {
     model.z[model.nz-1] = model.z[model.nz-2];
     model.z_zeta[0] = model.z_zeta[1];
     model.z_zeta[model.nz-1] = model.z_zeta[model.nz-2];
+
+
+    for (int i = 0; i <= model.nx-1; i++) {
+        model.th_ground[i] = 303.;
+        double Tc = model.th_ground[i] * model.pib[1];
+        double es = 611.2 * std::exp(17.67 * (Tc-273.15) / (Tc-273.15+243.5));
+        model.qvs_ground[i] = 0.622 * es/ (model.P0 - 0.378 * es);
+    }
+    generateAddlfxArray(model.addflux, model.nx);
     return;
 }
 

@@ -113,28 +113,5 @@ void vvm::MicroPhysics::evaporation(vvm &model) {
     return;
 }
 
-void vvm::MicroPhysics::NegativeValueProcess(double **var, int nx, int nz) {
-    double positive = 0.;
-    double negative = 0.;
-    for (int k = 1; k <= nz-2; k++) {
-        for (int i = 1; i <= nx-2; i++) {
-            if (var[i][k] >= 0.) positive += var[i][k];
-            else {
-                negative += var[i][k];
-                var[i][k] = 0.;
-            }
-        }
-    }
-
-    if (positive == 0. || std::abs(negative) > positive) return;
-
-    double correctionRatio = 1. - std::abs(negative/positive);
-    for (int k = 1; k <= nz-2; k++) {
-        for (int i = 1; i <= nx-2; i++) {
-            if (var[i][k] > 0) var[i][k] = var[i][k] * correctionRatio;
-        }
-    }
-    return;
-}
 #endif
 #endif

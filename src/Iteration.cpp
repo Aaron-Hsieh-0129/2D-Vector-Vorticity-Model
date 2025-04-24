@@ -304,14 +304,18 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                 vvm::MicroPhysics::accretion(model);
                 vvm::MicroPhysics::evaporation(model);
                 vvm::MicroPhysics::condensation(model); // saturation adjustment
-
-                // It is supposed to not have negative values. But due to numerical process, it might produce some teeny-tiny values.
-                vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
-                vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
-                vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
             #endif
+            // It is supposed to not have negative values. But due to numerical process, it might produce some teeny-tiny values.
+            vvm::NumericalProcess::NegativeValueProcess(model.qvp, model.nx, model.nz);
+            vvm::NumericalProcess::NegativeValueProcess(model.qcp, model.nx, model.nz);
+            vvm::NumericalProcess::NegativeValueProcess(model.qrp, model.nx, model.nz);
 
             #if defined(P3_MICROPHY)
+            vvm::NumericalProcess::NegativeValueProcess(model.ncp, model.nx, model.nz);
+            vvm::NumericalProcess::NegativeValueProcess(model.nrp, model.nx, model.nz);
+            vvm::NumericalProcess::NegativeValueProcess(model.qitotp, model.nx, model.nz);
+            vvm::NumericalProcess::NegativeValueProcess(model.nip, model.nx, model.nz);
+
 
             for (int k = 0; k < model.nz; k++) {
                 for (int i = 0; i < model.nx; i++) {
@@ -404,6 +408,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         vvm::BoundaryProcess2D_all(model);
         model.t_microphysics[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
+
+        model.SurfaceFlux(model);
+
         timer.reset();
         updateMean(model);
         #if defined(DIFFUSION_VVM)
@@ -412,9 +419,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::Turbulence::RKM_RKH(model);
         #endif
         // Nudging process to damp the gravity wave
-        vvm::NumericalProcess::Nudge_theta(model);
-        if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
-        vvm::NumericalProcess::Nudge_qv(model);
+        // vvm::NumericalProcess::Nudge_theta(model);
+        // if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
+        // vvm::NumericalProcess::Nudge_qv(model);
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
         #if defined(TIMEFILTER)

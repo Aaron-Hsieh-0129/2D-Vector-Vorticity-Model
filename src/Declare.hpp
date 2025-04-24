@@ -121,6 +121,11 @@ public:
         delete[] z;
         delete[] z_zeta;
         delete[] lambda2;
+        delete[] th_ground;
+        delete[] qvs_ground;
+        delete[] addflux;
+        delete[] heatflux;
+        delete[] waterflux;
 
         deallocate2DContinuousArray(zetap, zetapcont);
         deallocate2DContinuousArray(zeta, zetacont);
@@ -280,6 +285,11 @@ public:
             Q1LS = new double[nz]();
             Q2LS = new double[nz]();
         #endif
+        th_ground = new double[nx]();
+        qvs_ground = new double[nx]();
+        addflux = new double[nx]();
+        heatflux = new double[nx]();
+        waterflux = new double[nx]();
 
         // 2D arrays
         zetap = allocate2DContinuousArray(nx, nz, zetapcont);
@@ -507,6 +517,11 @@ public:
     double *z = nullptr;
     double *z_zeta = nullptr;
     double *lambda2 = nullptr;
+    double *th_ground = nullptr;
+    double *qvs_ground = nullptr;
+    double *addflux = nullptr;
+    double *heatflux = nullptr;
+    double *waterflux = nullptr;
 
     #if defined(GPU_POISSON)
         int *row_ptr_w = nullptr;
@@ -746,6 +761,7 @@ public:
     // *********************************************************************************
 
     static void Bouyancy(vvm &model);
+    static void SurfaceFlux(vvm &model);
 
 
     // Poisson Solver => PoissonSolver.cpp
@@ -811,6 +827,7 @@ public:
         static void Nudge_theta(vvm &model);
         static void Nudge_zeta(vvm &model);
         static void Nudge_qv(vvm &model);
+        static void NegativeValueProcess(double **var, int nx, int nz);
     };
 
     // *********************************************************************************
@@ -823,7 +840,6 @@ public:
         static void autoconversion(vvm &model); 	// autoconversion of qc to qr
         static void accretion(vvm &model); 		// accretion of qc by qr
         static void evaporation(vvm &model); 	// evaporation of rain water
-        static void NegativeValueProcess(double **var, int nx, int nz);
     };
     #endif
 

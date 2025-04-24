@@ -21,7 +21,7 @@
 #if defined(LOADFILE)
     #define LOADINITPATH "/home/Aaron/NextACC/2DVVM/input/init.txt"
 #endif
-// #define GPU_POISSON
+#define GPU_POISSON
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)

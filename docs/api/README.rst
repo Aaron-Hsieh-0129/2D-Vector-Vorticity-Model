@@ -83,3 +83,10 @@ For more details, visit:
 
 `2D Vector Vorticity Model Documentation <https://aaron-hsieh-0129.github.io/2D-Vector-Vorticity-Model/index.html>`_
 
+
+References
+------------
+This model has 2 external dependencies:
+1. P3-microphysics scheme v5.3.10 from https://github.com/P3-microphysics/P3-microphysics.git 
+2. RTE-RRTMGP radiation scheme v0.3.0 from https://github.com/microhh/rte-rrtmgp-cpp 
+

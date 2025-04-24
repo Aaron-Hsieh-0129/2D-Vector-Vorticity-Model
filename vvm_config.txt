@@ -1,12 +1,12 @@
-VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/6Q1Q2_nonudge_RKHMrho/
+VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/6Q1Q2_RKMHcorrectRotRKMzeta_nonudge_10days/
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
 VVM_DT=3                                            # dt [s]
 VVM_DX=200                                          # dx [m]
 VVM_DZ=200                                          # dz [m], it should be the same value as dx
-VVM_TIMEEND=172800                                   # Integration Time [s]
+VVM_TIMEEND=864000                                   # Integration Time [s]
 VVM_OUTPUTSTEP=50                                    # Output frequency
-VVM_CASE=1                                          # Case0: Nothing, Case1: Bubble, Case2: Bubble+wind shear
+VVM_CASE=0                                          # Case0: Nothing, Case1: Bubble, Case2: Bubble+wind shear
 VVM_MOISTURE_NUDGE_TIME=0                           # VVM moisture nudging time scale, if it is 0, the nudge will be closed.
 VVM_YEAR=2025                                       # Simulation start year
 VVM_MONTH=3                                         # Simulation start year

@@ -3,9 +3,9 @@
 #include <iostream>
 
 void vvm::Turbulence::RKM_RKH(vvm &model) {
-    double Rzeta = 0.;
-    double Rotat = 0.;
-    double Ri = 0.;
+    double Rzeta = 0., Rzeta_zeta = 0.;
+    double Rotat = 0., Rotat_zeta = 0.;
+    double Ri = 0., Ri_zeta = 0.;
 
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)
@@ -14,23 +14,30 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
         for (int i = 1; i <= model.nx-2; i++) {
             Rzeta = 0.5*((model.w[i+1][k+1] + model.w[i+1][k]) - (model.w[i-1][k+1] + model.w[i-1][k])) * model.r2dx + 
                     0.5*((model.u[i+1][k+1] + model.u[i][k+1]) - (model.u[i+1][k-1] + model.u[i][k-1])) * model.r2dz;
-
-            Rotat = std::pow( (model.u[i+1][k] - model.u[i][k]) * model.rdx + (model.w[i][k+1] - model.w[i][k]) * model.rdz, 2);
-            
+            Rotat = std::pow((model.u[i+1][k] - model.u[i][k]) * model.rdx, 2) + std::pow((model.w[i][k+1] - model.w[i][k]) * model.rdz, 2);
             Ri = (model.GRAVITY / model.thp[i][k] * (model.thp[i][k+1] - model.thp[i][k-1]) * model.r2dz) / (std::pow(Rzeta, 2) + 2. * Rotat);
 
+            Rzeta_zeta = (model.w[i][k] - model.w[i-1][k]) * model.rdx + (model.u[i][k] - model.u[i][k-1]) * model.rdz;
+            Rotat_zeta = std::pow((0.5*(model.u[i+1][k]+model.u[i+1][k-1]) - 0.5*(model.u[i-1][k]+model.u[i-1][k-1])) * model.r2dx, 2) + 
+                         std::pow((0.5*(model.w[i][k+1]+model.w[i-1][k+1]) - 0.5*(model.w[i][k-1]+model.w[i-1][k-1])) * model.rdz, 2);
+            Ri_zeta = (model.GRAVITY / (0.25*(model.thp[i][k]+model.thp[i-1][k]+model.thp[i][k-1]+model.thp[i-1][k-1])) * 
+                       (0.5*(model.thp[i][k]+model.thp[i-1][k]) - 0.5*(model.thp[i][k-1]+model.thp[i-1][k-1])) * model.rdz) / (std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta);
             if (Ri < 0) {
-                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * std::sqrt(1. - 16. * Ri);
                 model.RKH[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * 1.4 * std::sqrt(1. - 40.*Ri);
             }
             else if (0 < Ri && Ri < 0.25) {
-                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * std::pow(1. - 4.*Ri, 4);
                 model.RKH[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * 1.4 * (1.-1.2*Ri)*std::pow(1.-4.*Ri, 4);
             }
-            else {
-                model.RKM[i][k] = 0.;
-                model.RKH[i][k] = 0.;
+            else model.RKH[i][k] = 0.;
+            
+
+            if (Ri_zeta < 0.) {
+                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::sqrt(1. - 16. * Ri_zeta);
             }
+            else if (0. < Ri_zeta && Ri_zeta < 0.25) {
+                model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta_zeta, 2) + 2. * Rotat_zeta) * std::pow(1. - 4.*Ri_zeta, 4);     
+            }
+            else model.RKM[i][k] = 0.;
 
             // Diffusion should be larger than 1
             model.RKM[i][k] = std::max(model.RKM[i][k], 10.);
@@ -79,11 +86,11 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
             //                      model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k-1]*var_now[i][k-1]));
             
             var_future[i][k] += model.rdx2 * model.dt * 
-                                (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i+1][k] - var_future[i][k]) - 
-                                 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i-1][k]))
+                                (0.5 * (model.RKM[i+1][k] + model.RKM[i][k]) * (var_future[i+1][k] - var_future[i][k]) - 
+                                 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_future[i][k] - var_future[i-1][k]))
                               + model.rdz2 * model.dt / model.rhow[k] * 
-                                (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_future[i][k+1] - var_future[i][k]) - 
-                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i][k-1]));
+                                (model.rhou[k] * 0.5 * (model.RKM[i][k+1] + model.RKM[i][k]) * (var_future[i][k+1] - var_future[i][k]) - 
+                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i][k] - var_future[i][k-1]));
         }
     }
     return;

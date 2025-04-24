@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+include(ExternalProject)
+
 # Set policy CMP0135 to NEW to avoid timestamp warnings
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
@@ -7,24 +9,42 @@ endif()
 
 # Set default build type to Release if not specified
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
+
+
+# Allow user to specify NVHPC and GCC installation paths
+set(NVHPC_HOME "/home/Aaron/nvhpc/Linux_x86_64/21.3" CACHE STRING "Path to NVHPC installation")
+set(GCC_HOME "/home/Aaron/gcc9" CACHE STRING "Path to GCC installation")
+
+# Set compilers explicitly before project()
+set(CMAKE_C_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicc" CACHE PATH "C compiler" FORCE)
+set(CMAKE_CXX_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicxx" CACHE PATH "C++ compiler" FORCE)
+set(CMAKE_Fortran_COMPILER "${GCC_HOME}/bin/gfortran" CACHE PATH "Fortran compiler" FORCE)
+set(CMAKE_CUDA_COMPILER "${NVHPC_HOME}/compilers/bin/nvcc" CACHE PATH "CUDA compiler" FORCE)
 
 # Define project
-project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran)
+project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran C CUDA)
 
-# Allow user to specify GCC installation path
-set(GCC_HOME "" CACHE STRING "Path to GCC installation")
-if(GCC_HOME STREQUAL "")
-    set(GCC_HOME "/home/Aaron/gcc13" CACHE STRING "Path to GCC installation" FORCE)
-endif()
+# Set library and include paths
+set(NVHPC_LIB_DIR "${NVHPC_HOME}/compilers/lib")
+set(CUDA_INCLUDE_DIR "${NVHPC_HOME}/cuda/include")
+set(CUDA_LIB_DIR "${NVHPC_HOME}/cuda/lib64")
 set(GCC_LIB_DIR "${GCC_HOME}/lib64")
 set(GCC_LIB32_DIR "${GCC_HOME}/lib")
 
-# Set GCC compilers
-set(CMAKE_C_COMPILER "${GCC_HOME}/bin/gcc" CACHE STRING "Set C compiler")
-set(CMAKE_CXX_COMPILER "${GCC_HOME}/bin/g++" CACHE STRING "Set C++ compiler")
-set(CMAKE_Fortran_COMPILER "${GCC_HOME}/bin/gfortran" CACHE STRING "Set Fortran compiler")
+# Find MPI
+find_package(MPI REQUIRED)
+include_directories(${MPI_CXX_INCLUDE_DIRS})
+
+# Disable dependency file generation (-MF issue) for NVHPC
+if(CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC")
+    set(CMAKE_CXX_DEPENDS "")
+    set(CMAKE_C_DEPENDS "")
+    set(CMAKE_DEPFILE_FLAGS_CXX "")
+    set(CMAKE_DEPFILE_FLAGS_C "")
+    add_definitions(-DEIGEN_DONT_PARALLELIZE)
+endif()
 
 # Find OpenMP
 find_package(OpenMP REQUIRED)
@@ -37,29 +57,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(DEP_INSTALL_DIR "${CMAKE_SOURCE_DIR}/_deps/install")
 file(MAKE_DIRECTORY ${DEP_INSTALL_DIR})
 
-# Include ExternalProject for dependency management
-include(ExternalProject)
-
-# Get number of available cores
-include(ProcessorCount)
-ProcessorCount(N_CORES)
-if(N_CORES GREATER 1)
-    set(CMAKE_BUILD_PARALLEL_LEVEL ${N_CORES})
-    message(STATUS "Using ${N_CORES} cores for building")
-else()
-    message(STATUS "Using single core for building")
-endif()
-
-# Limit cores for Boost build to avoid issues
-set(BOOST_BUILD_CORES 16)
-
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wno-unused-function")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall -Wno-unused-function")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 ${MPI_CXX_COMPILE_FLAGS} -Wall")
+endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fPIC -fdefault-real-8 -ffree-line-length-0")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp -fPIC -fdefault-real-8")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS}")
 
 # Add OpenMP flags
 if(OpenMP_CXX_FOUND)
@@ -71,7 +79,7 @@ if(OpenMP_Fortran_FOUND)
 endif()
 
 # Set RPATH usage
-set(CMAKE_INSTALL_RPATH "${DEP_INSTALL_DIR}/lib;${GCC_LIB_DIR};${GCC_LIB32_DIR}")
+set(CMAKE_INSTALL_RPATH "${DEP_INSTALL_DIR}/lib;${GCC9_LIB_DIR};${GCC9_LIB32_DIR};${NVHPC_HOME}/comm_libs/mpi/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_definitions(-DRTE_USE_CBOOL)
@@ -80,8 +88,10 @@ add_definitions(-DRTE_USE_CBOOL)
 include_directories(
     include
     ${DEP_INSTALL_DIR}/include
+    ${MPI_CXX_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include_test
+    ${CUDA_INCLUDE_DIR}
 )
 
 # ExternalProject for HDF5
@@ -165,6 +175,52 @@ else()
     set(Boost_LIBRARIES ${BOOST_SYSTEM_LIB} ${BOOST_FILESYSTEM_LIB})
 endif()
 
+# AMGX (version 2.4.0)
+find_library(AMGXSH_LIBRARY NAMES amgxsh HINTS ${CMAKE_SOURCE_DIR}/_deps/install/lib NO_DEFAULT_PATH)
+if(NOT AMGXSH_LIBRARY)
+    message(STATUS "AMGX not found in ${DEP_INSTALL_DIR}, installing...")
+    set(AMGX_NEEDS_INSTALL TRUE)
+    ExternalProject_Add(
+        amgx_ext
+        GIT_REPOSITORY https://github.com/NVIDIA/AMGX.git
+        GIT_TAG        v2.4.0
+        GIT_SHALLOW    TRUE
+        PREFIX         ${CMAKE_SOURCE_DIR}/_deps/amgx
+        PATCH_COMMAND  find <SOURCE_DIR> -type f -name "CMakeLists.txt" -exec sed -i "s/-Wno-terminate//g" {} + &&
+                   find <SOURCE_DIR> -type f -name "*.cmake" -o -name "CMakeLists.txt" -exec sed -i "s/-mp/-fopenmp/g" {} +
+        CMAKE_ARGS     -DCMAKE_CXX_COMPILER=${GCC_HOME}/bin/g++
+                       -DCMAKE_C_COMPILER=${GCC_HOME}/bin/gcc
+                       -DCMAKE_CUDA_COMPILER=${NVHPC_HOME}/compilers/bin/nvcc
+                       -DCMAKE_CUDA_HOST_COMPILER=${GCC_HOME}/bin/g++
+                       -DCUDA_TOOLKIT_ROOT_DIR=${NVHPC_HOME}/cuda/11.2
+                       -DCUDA_INCLUDE_DIRS=${NVHPC_HOME}/cuda/11.2/include
+                       -DCUDA_CUDART_LIBRARY=${NVHPC_HOME}/cuda/11.2/lib64/libcudart.so
+                       -DCUDA_cublas_LIBRARY=${NVHPC_HOME}/math_libs/11.2/lib64/libcublas.so
+                       -DCUDA_cusparse_LIBRARY=${NVHPC_HOME}/math_libs/11.2/lib64/libcusparse.so
+                       -DCUDA_nvToolsExt_LIBRARY=${NVHPC_HOME}/cuda/11.2/lib64/libnvToolsExt.so
+                       -DMPI_C_COMPILER=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/bin/mpicc
+                       -DMPI_CXX_COMPILER=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/bin/mpicxx
+                       -DMPIEXEC=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/bin/mpirun
+                       -DMPI_C_INCLUDE_PATH=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/include
+                       -DMPI_CXX_INCLUDE_PATH=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/include
+                       -DMPI_C_LIBRARIES=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/lib/libmpi.so
+                       -DMPI_CXX_LIBRARIES=${NVHPC_HOME}/comm_libs/openmpi/openmpi-3.1.5/lib/libmpi.so
+                       -DCMAKE_INSTALL_PREFIX=${CMAKE_SOURCE_DIR}/_deps/install
+                       -DCMAKE_CUDA_ARCHITECTURES=60  # Match your GPU (e.g., Pascal)
+                       -DCMAKE_CUDA_FLAGS="-arch=sm_60"  # Enforce compute_60
+                       -DCMAKE_CXX_STANDARD=14  # Explicitly enforce C++14
+                       -DCMAKE_EXE_LINKER_FLAGS="-L${GCC9_LIB_DIR} -Wl,-rpath,${GCC9_LIB_DIR}"
+        BUILD_COMMAND  make -j${N_CORES}
+        INSTALL_COMMAND make install 
+        UPDATE_COMMAND ""
+        BUILD_ALWAYS   FALSE
+    )
+
+    set(AMGXSH_LIBRARY "${DEP_INSTALL_DIR}/lib/libamgxsh.so")
+else()
+    message(STATUS "AMGX found in ${CMAKE_SOURCE_DIR}/amgx/src/lib")
+endif()
+
 # Add rte-rrtmgp-cpp as a subdirectory
 add_subdirectory(external/rte-rrtmgp-cpp)
 
@@ -203,6 +259,7 @@ set(NETCDF_CXX_LIB ${DEP_INSTALL_DIR}/lib/libnetcdf_c++4.so)
 set(BOOST_SYSTEM_LIB ${DEP_INSTALL_DIR}/lib/libboost_system.so)
 set(BOOST_FILESYSTEM_LIB ${DEP_INSTALL_DIR}/lib/libboost_filesystem.so)
 
+find_library(cudartPath cudart ${CUDA_LIB_DIR})
 # Link libraries
 target_link_libraries(vvm2d PRIVATE
     rte_rrtmgp
@@ -212,6 +269,9 @@ target_link_libraries(vvm2d PRIVATE
     ${NETCDF_CXX_LIB}
     ${BOOST_SYSTEM_LIB}
     ${BOOST_FILESYSTEM_LIB}
+    ${AMGXSH_LIBRARY}
+    ${cudartPath}
+    ${MPI_CXX_LIBRARIES}  # Use this if MPI::MPI_CXX is unavailable
     stdc++
 )
 

@@ -109,6 +109,7 @@ void vvm::Output::output_nc(int n, vvm &model) {
 
     int ncid, t_dimid, x_dimid, z_dimid;
     int th_id, zeta_id, u_id, w_id, ubarTop_id;
+    int waterflux_id, heatflux_id;
     #if defined(RTERRTMGP)
         int radiation_hating_rate_id;
     #endif
@@ -148,6 +149,8 @@ void vvm::Output::output_nc(int n, vvm &model) {
         #if defined(RTERRTMGP)
             if ((retval = nc_inq_varid(ncid, "radiation_heating_rate", &radiation_hating_rate_id))) NC_ERR(retval);
         #endif
+        if ((retval = nc_inq_varid(ncid, "heatflux_sfc", &heatflux_id))) NC_ERR(retval);
+        if ((retval = nc_inq_varid(ncid, "waterflux_sfc", &waterflux_id))) NC_ERR(retval);
 
         #if defined(WATER)
             if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
@@ -199,6 +202,8 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_def_var(ncid, "u", NC_DOUBLE, 3, dimids, &u_id))) NC_ERR(retval);
         if ((retval = nc_def_var(ncid, "w", NC_DOUBLE, 3, dimids, &w_id))) NC_ERR(retval);
         if ((retval = nc_def_var(ncid, "ubarTop", NC_DOUBLE, 1, &t_dimid, &ubarTop_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "heatflux_sfc", NC_DOUBLE, 2, dimx1d, &heatflux_id))) NC_ERR(retval);
+        if ((retval = nc_def_var(ncid, "waterflux_sfc", NC_DOUBLE, 2, dimx1d, &waterflux_id))) NC_ERR(retval);
         #if defined(RTERRTMGP)
             if ((retval = nc_def_var(ncid, "radiation_heating_rate", NC_DOUBLE, 3, dimids, &radiation_hating_rate_id))) NC_ERR(retval);
         #endif
@@ -251,6 +256,8 @@ void vvm::Output::output_nc(int n, vvm &model) {
     #endif
 
     if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
+    if ((retval = nc_put_vara_double(ncid, heatflux_id, start_precip, count_precip, model.heatflux))) checkErr(retval, __LINE__);
+    if ((retval = nc_put_vara_double(ncid, waterflux_id, start_precip, count_precip, model.waterflux))) checkErr(retval, __LINE__);
 
     #if defined(WATER)
         if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);

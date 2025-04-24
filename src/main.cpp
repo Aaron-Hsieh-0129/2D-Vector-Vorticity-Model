@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
     double vvm_lat = std::stod(configs["VVM_LAT"]);
 
     Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
-                    10., 10., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    50., 50., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
                     1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time, 
                     vvm_year, vvm_month, vvm_day, vvm_hour, vvm_minute, vvm_sec, 
                     vvm_lon, vvm_lat);
