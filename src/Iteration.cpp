@@ -416,7 +416,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         #if defined(DIFFUSION_VVM)
             vvm::NumericalProcess::DiffusionAll(model);
         #else
-            // vvm::Turbulence::RKM_RKH(model);
+            vvm::Turbulence::RKM_RKH(model);
         #endif
         // Nudging process to damp the gravity wave
         // vvm::NumericalProcess::Nudge_theta(model);
