@@ -33,8 +33,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             }
 
             // Diffusion should be larger than 1
-            model.RKM[i][k] = std::max(model.RKM[i][k], 10.);
-            model.RKH[i][k] = std::max(model.RKH[i][k], 10.);
+            model.RKM[i][k] = std::max(model.RKM[i][k], 1.);
+            model.RKH[i][k] = std::max(model.RKH[i][k], 1.);
             
             // Diffusion should be smaller than 0.8 * dx^2 / dt
             model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * model.dx * model.dz / model.dt);

@@ -109,25 +109,25 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     const Float heat_factor = model.GRAVITY * sec_per_day / model.Cp; 
     
 
-    Array<Float, 2> p_lay({n_col_x, n_lay});
-    Array<Float, 2> t_lay({n_col_x, n_lay});
-    Array<Float, 2> p_lev({n_col_x, n_lev});
-    Array<Float, 2> t_lev({n_col_x, n_lev});
-    Array<Float, 2> h2o_lay({n_col_x, n_lev});
+    Array<Float, 2> p_lay({n_col, n_lay});
+    Array<Float, 2> t_lay({n_col, n_lay});
+    Array<Float, 2> p_lev({n_col, n_lev});
+    Array<Float, 2> t_lev({n_col, n_lev});
+    Array<Float, 2> h2o_lay({n_col, n_lev});
 
     // Not needed in this case
     Array<Float,2> col_dry;
     if (switch_col_dry) {
-        col_dry.set_dims({n_col_x, n_lay});
-        // col_dry = std::move(input_nc.get_variable<Float>("col_dry", {n_lay, n_col_y, n_col_x}));
+        col_dry.set_dims({n_col, n_lay});
+        // col_dry = std::move(input_nc.get_variable<Float>("col_dry", {n_lay, n_col_y, n_col}));
     }
 
     Gas_concs gas_concs;
 
     Float o3_min = 1e-13;
     Float g1 = 3.6478, g2 = 0.83209, g3 = 11.3515;
-    Array<Float, 2> o3_lay({n_col_x, n_lay});
-    for (int i = 1; i <= n_col_x; i++) {
+    Array<Float, 2> o3_lay({n_col, n_lay});
+    for (int i = 1; i <= n_col; i++) {
         for (int k = 1; k <= n_lay; k++) {
             p_lay({i,k}) = model.pb[k];
             t_lay({i,k}) = model.th[i][k] * model.pib[k];
@@ -153,23 +153,23 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     
     // Not need to input
     // gas_concs.set_vmr("co", 306e-9); // no input co
-    // read_and_set_vmr("ccl4"   , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("cfc11"  , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("cfc12"  , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("cfc22"  , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("hfc143a", n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("hfc125" , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("hfc23"  , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("hfc32"  , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("hfc134a", n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("cf4"    , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
-    // read_and_set_vmr("no2"    , n_col_x, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("ccl4"   , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("cfc11"  , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("cfc12"  , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("cfc22"  , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("hfc143a", n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("hfc125" , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("hfc23"  , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("hfc32"  , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("hfc134a", n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("cf4"    , n_col, n_col_y, n_lay, input_nc, gas_concs);
+    // read_and_set_vmr("no2"    , n_col, n_col_y, n_lay, input_nc, gas_concs);
 
-    Array<Float,2> lwp({n_col_x, n_lay});
-    Array<Float,2> iwp({n_col_x, n_lay});
-    Array<Float,2> rel({n_col_x, n_lay});
-    Array<Float,2> rei({n_col_x, n_lay});
-    for (int i = 1; i <= n_col_x; i++) {
+    Array<Float,2> lwp({n_col, n_lay});
+    Array<Float,2> iwp({n_col, n_lay});
+    Array<Float,2> rel({n_col, n_lay});
+    Array<Float,2> rei({n_col, n_lay});
+    for (int i = 1; i <= n_col; i++) {
         for (int k = 1; k <= n_lay; k++) {
             lwp({i,k}) = std::max(model.qc[i][k] * 1e3, 0.) * model.rhou[k] * model.dz; // (g/kg) * (kg/m^3) * (m)
             iwp({i,k}) = std::max(model.qitot[i][k] * 1e3, 0.) * model.rhou[k] * model.dz; // (g/kg) * (kg/m^3) * (m)
@@ -185,19 +185,19 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     // if (switch_aerosol_optics)
     // {
     //     rh.set_dims({n_col, n_lay});
-    //     rh = std::move(input_nc.get_variable<Float>("rh", {n_lay, n_col_y, n_col_x}));
+    //     rh = std::move(input_nc.get_variable<Float>("rh", {n_lay, n_col_y, n_col}));
     //
-    //     read_and_set_aer("aermr01", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr02", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr03", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr04", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr05", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr06", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr07", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr08", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr09", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr10", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
-    //     read_and_set_aer("aermr11", n_col_x, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr01", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr02", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr03", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr04", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr05", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr06", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr07", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr08", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr09", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr10", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
+    //     read_and_set_aer("aermr11", n_col, n_col_y, n_lay, input_nc, aerosol_concs);
     // }
 
 
@@ -207,7 +207,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
      std::string output_nc_name = model.outputpath + "nc/Radiation_" + std::to_string(model.step) + ".nc";
      Netcdf_file output_nc(output_nc_name, Netcdf_mode::Create);
-     output_nc.add_dimension("x", n_col_x);
+     output_nc.add_dimension("x", n_col);
      output_nc.add_dimension("y", n_col_y);
      output_nc.add_dimension("lay", n_lay);
      output_nc.add_dimension("lev", n_lev);
@@ -221,7 +221,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
 
     // Nan check
-    for (int i = 1; i <= n_col_x; i++) {
+    for (int i = 1; i <= n_col; i++) {
         for (int k = 0; k < model.nz; k++) {
             if (std::isnan(model.th[i][k]) || std::isnan(model.qv[i][k]) ||
                 std::isnan(model.qc[i][k]) || std::isnan(model.qitot[i][k]) ||
@@ -238,7 +238,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     }
 
     ////// RUN THE LONGWAVE SOLVER //////
-    Array<Float,2> net_heat_rate({n_col_x, n_lay});
+    Array<Float,2> net_heat_rate({n_col, n_lay});
     if (switch_longwave)
     {
         // Initialize the solver.
@@ -253,10 +253,10 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         const int n_bnd_lw = rad_lw.get_n_bnd();
         const int n_gpt_lw = rad_lw.get_n_gpt();
 
-        Array<Float,2> emis_sfc({n_bnd_lw, n_col_x}); // Start from k = 1 to k = model.nz-2
-        Array<Float,1> t_sfc({n_col_x});
+        Array<Float,2> emis_sfc({n_bnd_lw, n_col}); // Start from k = 1 to k = model.nz-2
+        Array<Float,1> t_sfc({n_col});
 
-        for (int i = 1; i <= n_col_x; i++) {
+        for (int i = 1; i <= n_col; i++) {
             t_sfc({i}) = t_lev({i,1});
             for (int b = 1; b <= n_bnd_lw; b++) {
                 emis_sfc({b,i}) = 0.98;
@@ -273,11 +273,11 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_output_optical)
         {
-            lw_tau        .set_dims({n_col_x, n_lay, n_gpt_lw});
-            lay_source    .set_dims({n_col_x, n_lay, n_gpt_lw});
-            lev_source_inc.set_dims({n_col_x, n_lay, n_gpt_lw});
-            lev_source_dec.set_dims({n_col_x, n_lay, n_gpt_lw});
-            sfc_source    .set_dims({n_col_x, n_gpt_lw});
+            lw_tau        .set_dims({n_col, n_lay, n_gpt_lw});
+            lay_source    .set_dims({n_col, n_lay, n_gpt_lw});
+            lev_source_inc.set_dims({n_col, n_lay, n_gpt_lw});
+            lev_source_dec.set_dims({n_col, n_lay, n_gpt_lw});
+            sfc_source    .set_dims({n_col, n_gpt_lw});
         }
 
         Array<Float,2> lw_flux_up;
@@ -286,9 +286,9 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_fluxes)
         {
-            lw_flux_up .set_dims({n_col_x, n_lev});
-            lw_flux_dn .set_dims({n_col_x, n_lev});
-            lw_flux_net.set_dims({n_col_x, n_lev});
+            lw_flux_up .set_dims({n_col, n_lev});
+            lw_flux_dn .set_dims({n_col, n_lev});
+            lw_flux_net.set_dims({n_col, n_lev});
         }
 
         Array<Float,3> lw_bnd_flux_up;
@@ -297,9 +297,9 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_output_bnd_fluxes)
         {
-            lw_bnd_flux_up .set_dims({n_col_x, n_lev, n_bnd_lw});
-            lw_bnd_flux_dn .set_dims({n_col_x, n_lev, n_bnd_lw});
-            lw_bnd_flux_net.set_dims({n_col_x, n_lev, n_bnd_lw});
+            lw_bnd_flux_up .set_dims({n_col, n_lev, n_bnd_lw});
+            lw_bnd_flux_dn .set_dims({n_col, n_lev, n_bnd_lw});
+            lw_bnd_flux_net.set_dims({n_col, n_lev, n_bnd_lw});
         }
 
 
@@ -376,8 +376,8 @@ void vvm::Radiation::solve_radiation(vvm &model) {
                 nc_lw_bnd_flux_net.insert(lw_bnd_flux_net.v(), {0, 0, 0, 0});
             }
             auto nc_lw_heat     = output_nc.add_variable<Float>("lw_heat_rate"    , {"lay", "y", "x"});
-            Array<Float,2> lw_heat_rate({n_col_x, n_lay});
-            for (int i = 1; i <= n_col_x; i++) {
+            Array<Float,2> lw_heat_rate({n_col, n_lay});
+            for (int i = 1; i <= n_col; i++) {
                 for (int k = 1; k <= n_lay; k++) {
                     lw_heat_rate({i,k}) = heat_factor * (lw_flux_net({i,k+1})-lw_flux_net({i,k})) / (p_lev({i,k})-p_lev({i,k+1}) );
                     net_heat_rate({i,k}) = lw_heat_rate({i,k});
@@ -406,11 +406,11 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         const Float tsi_ref = rad_sw.get_tsi();
         const Float tsi = 340.; // total_solar_irradiance 
 
-        Array<Float,1> mu0({n_col_x});
-        Array<Float,2> sfc_alb_dir({n_bnd_sw, n_col_x});
-        Array<Float,2> sfc_alb_dif({n_bnd_sw, n_col_x});
-        Array<Float,1> tsi_scaling({n_col_x});
-        for (int i = 1; i <= n_col_x; i++) {
+        Array<Float,1> mu0({n_col});
+        Array<Float,2> sfc_alb_dir({n_bnd_sw, n_col});
+        Array<Float,2> sfc_alb_dif({n_bnd_sw, n_col});
+        Array<Float,1> tsi_scaling({n_col});
+        for (int i = 1; i <= n_col; i++) {
             mu0({i}) = calculate_cos_zenith(model.year, model.month, model.day, model.hour, model.minute, model.second, model.lon, model.lat);
             tsi_scaling({i}) = tsi / tsi_ref;
             for (int b = 1; b <= n_bnd_sw; b++) {
@@ -427,10 +427,10 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_output_optical)
         {
-            sw_tau    .set_dims({n_col_x, n_lay, n_gpt_sw});
-            ssa       .set_dims({n_col_x, n_lay, n_gpt_sw});
-            g         .set_dims({n_col_x, n_lay, n_gpt_sw});
-            toa_source.set_dims({n_col_x, n_gpt_sw});
+            sw_tau    .set_dims({n_col, n_lay, n_gpt_sw});
+            ssa       .set_dims({n_col, n_lay, n_gpt_sw});
+            g         .set_dims({n_col, n_lay, n_gpt_sw});
+            toa_source.set_dims({n_col, n_gpt_sw});
         }
         Array<Float,2> sw_flux_up;
         Array<Float,2> sw_flux_dn;
@@ -439,10 +439,10 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_fluxes)
         {
-            sw_flux_up    .set_dims({n_col_x, n_lev});
-            sw_flux_dn    .set_dims({n_col_x, n_lev});
-            sw_flux_dn_dir.set_dims({n_col_x, n_lev});
-            sw_flux_net   .set_dims({n_col_x, n_lev});
+            sw_flux_up    .set_dims({n_col, n_lev});
+            sw_flux_dn    .set_dims({n_col, n_lev});
+            sw_flux_dn_dir.set_dims({n_col, n_lev});
+            sw_flux_net   .set_dims({n_col, n_lev});
         }
 
         Array<Float,3> sw_bnd_flux_up;
@@ -452,10 +452,10 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         if (switch_output_bnd_fluxes)
         {
-            sw_bnd_flux_up    .set_dims({n_col_x, n_lev, n_bnd_sw});
-            sw_bnd_flux_dn    .set_dims({n_col_x, n_lev, n_bnd_sw});
-            sw_bnd_flux_dn_dir.set_dims({n_col_x, n_lev, n_bnd_sw});
-            sw_bnd_flux_net   .set_dims({n_col_x, n_lev, n_bnd_sw});
+            sw_bnd_flux_up    .set_dims({n_col, n_lev, n_bnd_sw});
+            sw_bnd_flux_dn    .set_dims({n_col, n_lev, n_bnd_sw});
+            sw_bnd_flux_dn_dir.set_dims({n_col, n_lev, n_bnd_sw});
+            sw_bnd_flux_net   .set_dims({n_col, n_lev, n_bnd_sw});
         }
 
         // Solve the radiation.
@@ -541,8 +541,8 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
 
             auto nc_sw_heat     = output_nc.add_variable<Float>("sw_heat_rate"    , {"lay", "y", "x"});
-            Array<Float,2> sw_heat_rate({n_col_x, n_lay});
-            for (int i = 1; i <= n_col_x; i++) {
+            Array<Float,2> sw_heat_rate({n_col, n_lay});
+            for (int i = 1; i <= n_col; i++) {
                 for (int k = 1; k <= n_lay; k++) {
                     sw_heat_rate({i,k}) = heat_factor * (sw_flux_net({i,k+1})-sw_flux_net({i,k})) / (p_lev({i,k})-p_lev({i,k+1}) );
                     net_heat_rate({i,k}) += sw_heat_rate({i,k});
@@ -551,7 +551,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         }
     }
 
-    for (int i = 1; i <= n_col_x; ++i) {
+    for (int i = 1; i <= n_col; ++i) {
         for (int k = 1; k < n_lay; ++k) {
             model.radiation_heating_rate[i][k] = net_heat_rate({i,k});
         }

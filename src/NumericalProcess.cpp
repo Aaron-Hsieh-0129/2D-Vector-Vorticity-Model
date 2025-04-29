@@ -59,7 +59,7 @@ void vvm::NumericalProcess::DiffusionAll(vvm &model) {
 
 void vvm::NumericalProcess::Nudge_theta(vvm &model) {
     // Nudge the top layers (larger than 15 km)
-    int k_start = 12000. / model.dz + 1;
+    int k_start = 15000. / model.dz + 1;
     double CGR = 0.;
     for (int k = k_start; k < model.nz-1; k++) {
         CGR = model.CRAD * (model.z[k] - model.z[(model.nz-1)-k_start]) / (model.z[model.nz-1] - model.z[(model.nz-1)-k_start]);
@@ -72,13 +72,39 @@ void vvm::NumericalProcess::Nudge_theta(vvm &model) {
 
 void vvm::NumericalProcess::Nudge_zeta(vvm &model) {
     // Nudge the top layers (larger than 15 km)
-    int k_start = 12000. / model.dz + 1;
+    int k_start = 15000. / model.dz + 1;
     double CGR = 0.;
     for (int k = k_start; k < model.nz-1; k++) {
         /*CGR = model.CRAD * (model.z_zeta[k] - model.z_zeta[(model.nz-1)-k_start]) / (model.z_zeta[model.nz-1] - model.z_zeta[(model.nz-1)-k_start]);*/
-        CGR = (1./360.) * (model.z_zeta[k] - model.z_zeta[(model.nz-1)-k_start]) / (model.z_zeta[model.nz-1] - model.z_zeta[(model.nz-1)-k_start]);
+        CGR = model.CRAD * (model.z_zeta[k] - model.z_zeta[(model.nz-1)-k_start]) / (model.z_zeta[model.nz-1] - model.z_zeta[(model.nz-1)-k_start]);
         for (int i = 1; i < model.nx-1; i++) {
             model.zetap[i][k] -= model.dt * CGR * (model.zetap[i][k]);
+        }
+    }
+    return;
+}
+
+void vvm::NumericalProcess::GravityWaveDamping(vvm &model) {
+    int k_start = 15000. / model.dz + 1;
+    double CGR = 0.;
+    for (int k = k_start; k < model.nz-1; k++) {
+        CGR = model.CRAD * (model.z[k] - model.z[(model.nz-1)-k_start]) / (model.z[model.nz-1] - model.z[(model.nz-1)-k_start]);
+        for (int i = 1; i < model.nx-1; i++) {
+            model.thp[i][k] -= model.dt * CGR * (model.thp[i][k] - model.thb_init[k]);
+            model.zetap[i][k] -= model.dt * CGR * (model.zetap[i][k]);
+            #if defined(WATER)
+                model.qvp[i][k] -= model.dt * CGR * (model.qvp[i][k] - model.qvb0[k]);
+                model.qcp[i][k] -= model.dt * CGR * model.qcp[i][k];
+                model.qrp[i][k] -= model.dt * CGR * model.qrp[i][k];
+                #if defined(P3_MICROPHY)
+                    model.ncp[i][k] -= model.dt * CGR * model.ncp[i][k];
+                    model.nrp[i][k] -= model.dt * CGR * model.nrp[i][k];
+                    model.nip[i][k] -= model.dt * CGR * model.nip[i][k];
+                    model.qitotp[i][k] -= model.dt * CGR * model.qitotp[i][k];
+                    model.qirimp[i][k] -= model.dt * CGR * model.qirimp[i][k];
+                    model.birimp[i][k] -= model.dt * CGR * model.birimp[i][k];
+                #endif
+            #endif
         }
     }
     return;

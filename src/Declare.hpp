@@ -830,6 +830,7 @@ public:
         static void Nudge_theta(vvm &model);
         static void Nudge_zeta(vvm &model);
         static void Nudge_qv(vvm &model);
+        static void GravityWaveDamping(vvm &model);
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
 

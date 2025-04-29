@@ -1,4 +1,4 @@
-VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/6Q1Q2_nodiff_nonudge_10days_large/
+VVM_OUTPUTPATH=/home/Aaron/NextACC/2DVVM/DATA/6Q1Q2_RKMH_gravitydamping_10days_100km/
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
 VVM_DT=3                                            # dt [s]

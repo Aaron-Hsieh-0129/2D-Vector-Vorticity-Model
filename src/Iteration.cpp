@@ -422,6 +422,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         // vvm::NumericalProcess::Nudge_theta(model);
         // if (model.CASE != 2) vvm::NumericalProcess::Nudge_zeta(model);
         // vvm::NumericalProcess::Nudge_qv(model);
+        vvm::NumericalProcess::GravityWaveDamping(model);
         vvm::BoundaryProcess2D_all(model);
         model.t_diffusion[(model.step-1)%model.TIMEROUTPUTSIZE] = timer.elapsed();
 
