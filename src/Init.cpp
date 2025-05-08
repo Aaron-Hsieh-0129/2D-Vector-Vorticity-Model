@@ -20,6 +20,7 @@ void generateAddlfxArray(double *array, int size, double variation = 0.1) {
     }
     return;
 }
+
 void vvm::Init::Init1d(vvm &model) {
     #if defined(LOADFILE)
         LoadFile(model);
@@ -142,6 +143,16 @@ void vvm::Init::Init1d(vvm &model) {
     model.BoundaryProcess1D_center(model.lambda2, model.nz);
     model.BoundaryProcess1D_center(model.lambda2_zeta, model.nz);
 
+    double tau_min = 60., tau_max = 1800.;
+    int n_damp = 15000./model.dz + 1;
+    for (int k = 0; k <= model.nz-1; k++) {
+        if (k >= n_damp) {
+            model.nudge_tau[k] = tau_min * std::pow(tau_max/tau_min, ((model.z[model.nz-1]-model.z[k])/(model.z[model.nz-1]-model.z[model.nz-1-n_damp])));
+            model.nudge_tau[k] = 1. / model.nudge_tau[k];
+        }
+        else model.nudge_tau[k] = 0.;
+    }
+    model.BoundaryProcess1D_center(model.nudge_tau, model.nz);
 
     for (int i = 0; i <= model.nx-1; i++) {
         model.th_ground[i] = 303.;
@@ -225,9 +236,14 @@ void vvm::Init::Init2d(vvm &model) {
 
         for (int k = 0; k <= model.nz-1; k++) {
             for (int i = 0; i <= model.nx-1; i++) {
-                model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                #if defined(LOADFILE)
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
+                    model.qvb0[k] = model.qvb[k];
+                #else
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
+                    model.qvb0[k] = model.qvb[k] * 0.95;
+                #endif
             }
-            model.qvb0[k] = model.qvb[k];
         }
 
 		// init u
@@ -303,7 +319,7 @@ double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
 
 double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
-    double delta = 3.;
+    double delta = 15.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
     else return 0.;
 }
@@ -342,7 +358,9 @@ void vvm::Init::LoadFile(vvm &model) {
         #endif
 
         model.thvb[i] = model.thb[i] * (1. + 0.61 * model.qvb[i]);
-        model.qvsb[i] = (380. / model.pb[i]) * exp((17.27 * (model.thb[i] * model.pib[i] - 273.)) / (model.thb[i] * model.pib[i] - 36.));
+        double Tc = model.th_ground[i] * model.pib[i];
+        double es = 611.2 * std::exp(17.67 * (Tc-273.15) / (Tc-273.15+243.5));
+        model.qvsb[i] = 0.622 * es/ (model.pb[i] - 0.378 * es);
         i++;
     }
 
@@ -382,8 +400,9 @@ void vvm::Init::LoadFile(vvm &model) {
         model.pb_lev[k] = 0.5*(model.pb[k]+model.pb[k-1]);
     }
     // model.pb_lev[model.nz-1] = model.pb_lev[model.nz-2]; // Give a small value for model top
-    model.pb_lev[1] = 100000;
+    model.pb_lev[1] = model.pb_lev[2] - (model.pb_lev[3]-model.pb_lev[2]);
     model.pb_lev[model.nz-1] = model.pb_lev[model.nz-2] - (model.pb_lev[model.nz-3]-model.pb_lev[model.nz-2]); // extrapolation
+    model.PSURF = model.pb_lev[1];
     model.BoundaryProcess1D_center(model.pb_lev, model.nz+1);
     return;
 }

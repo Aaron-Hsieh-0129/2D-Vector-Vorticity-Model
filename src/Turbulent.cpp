@@ -1,6 +1,5 @@
 #include "Declare.hpp"
 #include <algorithm>
-#include <iostream>
 
 void vvm::Turbulence::RKM_RKH(vvm &model) {
     double Rzeta = 0.;
@@ -33,8 +32,8 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
             }
 
             // Diffusion should be larger than 1
-            model.RKM[i][k] = std::max(model.RKM[i][k], 1.);
-            model.RKH[i][k] = std::max(model.RKH[i][k], 1.);
+            model.RKM[i][k] = std::max(model.RKM[i][k], 10.);
+            model.RKH[i][k] = std::max(model.RKH[i][k], 10.);
             
             // Diffusion should be smaller than 0.8 * dx^2 / dt
             model.RKM[i][k] = std::min(model.RKM[i][k], 0.8 * model.dx * model.dz / model.dt);
@@ -44,6 +43,7 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
     model.BoundaryProcess2D_center(model.RKM, model.nx, model.nz);
     model.BoundaryProcess2D_center(model.RKH, model.nx, model.nz);
 
+    vvm::Turbulence::ubarTop(model);
     vvm::Turbulence::Mparam(model, model.zeta, model.zetap);
     vvm::Turbulence::Hparam(model, model.th, model.thp);
     #if defined(WATER)
@@ -71,19 +71,12 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
     #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
-            // var_future[i][k] += 1. / std::pow(model.rhow[k], 2) * model.rdx2 * model.dt * 
-            //                     (model.rhow[k] * 0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (model.rhow[k]*var_now[i+1][k] - model.rhow[k]*var_now[i][k]) - 
-            //                      model.rhow[k] * 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k]*var_now[i-1][k]))
-            //                   + 1. / std::pow(model.rhow[k], 2) * model.rdz2 * model.dt * 
-            //                     (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (model.rhow[k+1]*var_now[i][k+1] - model.rhow[k]*var_now[i][k]) - 
-            //                      model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (model.rhow[k]*var_now[i][k] - model.rhow[k-1]*var_now[i][k-1]));
-            
             var_future[i][k] += model.rdx2 * model.dt * 
-                                (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_future[i+1][k] - var_future[i][k]) - 
-                                 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i-1][k]))
+                                (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_now[i+1][k] - var_now[i][k]) - 
+                                 0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i-1][k]))
                               + model.rdz2 * model.dt / model.rhow[k] * 
-                                (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_future[i][k+1] - var_future[i][k]) - 
-                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_future[i][k] - var_future[i][k-1]));
+                                (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_now[i][k+1] - var_now[i][k]) - 
+                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i][k-1]));
         }
     }
     return;
@@ -95,21 +88,26 @@ void vvm::Turbulence::Hparam(vvm &model, double **var_now, double **var_future) 
     #endif
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
-            // var_future[i][k] += 1. / std::pow(model.rhou[k], 2) * model.rdx2 * model.dt * 
-            //                     (model.rhou[k] * 0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (model.rhou[k]*var_now[i+1][k] - model.rhou[k]*var_now[i][k]) - 
-            //                      model.rhou[k] * 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (model.rhou[k]*var_now[i][k] - model.rhou[k]*var_now[i-1][k]))
-            //                   + 1. / std::pow(model.rhou[k], 2) * model.rdz2 * model.dt * 
-            //                     (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (model.rhou[k+1]*var_now[i][k+1] - model.rhou[k]*var_now[i][k]) - 
-            //                      model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (model.rhou[k]*var_now[i][k] - model.rhou[k-1]*var_now[i][k-1]));
-
             var_future[i][k] += model.rdx2 * model.dt * 
-                                (0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (var_future[i+1][k] - var_future[i][k]) - 
-                                 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (var_future[i][k] - var_future[i-1][k]))
+                                (0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (var_now[i+1][k] - var_now[i][k]) - 
+                                 0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (var_now[i][k] - var_now[i-1][k]))
                               + model.rdz2 * model.dt / model.rhou[k] * 
-                                (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_future[i][k+1] - var_future[i][k]) - 
-                                 model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_future[i][k] - var_future[i][k-1]));
+                                (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_now[i][k+1] - var_now[i][k]) - 
+                                 model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_now[i][k] - var_now[i][k-1]));
         }
     }
     return;
 }
 
+void vvm::Turbulence::ubarTop(vvm &model) {
+    double Rzeta_down = 0.;
+    double rhoKM_Rzeta_down_bar = 0.;
+    for (int i = 1; i <= model.nx-2; i++) {
+        Rzeta_down = (model.w[i][model.nz-2] - model.w[i-1][model.nz-2]) * model.rdx + 
+                     (model.u[i][model.nz-2] - model.u[i][model.nz-3]) * model.rdz;
+        rhoKM_Rzeta_down_bar += model.rhow[model.nz-2] * (0.25*(model.RKM[i][model.nz-2]+model.RKM[i][model.nz-3]+model.RKM[i-1][model.nz-2]+model.RKM[i-1][model.nz-3]) * Rzeta_down);
+    }
+    rhoKM_Rzeta_down_bar /= ((double) (model.nx - 2.));
+    model.ubarTopp += model.dt * model.rdz * (0. - rhoKM_Rzeta_down_bar) / model.rhou[model.nz-2];
+    return;
+}

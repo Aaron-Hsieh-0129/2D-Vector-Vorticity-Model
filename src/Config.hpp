@@ -14,12 +14,12 @@
 #define WATER
 // #define KESSLER_MICROPHY
 #define P3_MICROPHY
-#define RTERRTMGP
-#define TROPICALFORCING
+// #define RTERRTMGP
+// #define TROPICALFORCING
 // #define RADIATIONCOOLING
 #define LOADFILE
 #if defined(LOADFILE)
-    #define LOADINITPATH "/home/Aaron/NextACC/2DVVM/input/init.txt"
+    #define LOADINITPATH "/work/aaron900129/NextACC/2DVVM/input/bubble_init.txt"
 #endif
 #define GPU_POISSON
 

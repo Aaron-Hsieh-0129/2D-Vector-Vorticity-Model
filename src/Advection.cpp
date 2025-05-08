@@ -12,8 +12,6 @@
 #include "Declare.hpp"
 #include <cmath>
 
-// TODO: Arakawa Jacobian for streamfunction
-// TODO: Fix the blow up in AB2.
 double PLUS(double var) {
     return 0.5 * (var + std::fabs(var));
 }

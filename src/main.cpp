@@ -126,6 +126,14 @@ int main(int argc, char **argv) {
 
     // Execute the command
     system(command.c_str());
+
+    // Copy source files to output directory
+    vvm::Output::copy_files("../src", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../input", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../external", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../vvm_config.txt", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../CMakeLists.txt", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../run.sh", model.outputpath+"run_files/.");
     
 
     #if defined(POISSONTEST)

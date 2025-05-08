@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <netcdf>
+#include <filesystem>
 
 using namespace std;
 void vvm::Output::printInit(vvm &model) {
@@ -335,11 +336,25 @@ void vvm::Output::create_directory(string directory_name) {
     return;
 }
 
+
+void vvm::Output::copy_files(const std::string &source_path, const std::string &destination_path) {
+    string str = "cp -r " + source_path + " " + destination_path;
+    const char *command = str.c_str();
+    const int dir_err = system(command);
+    if (-1 == dir_err) {
+        std::cout << "Error on creating directory!\n" << std::endl;
+        return;
+    }
+    return;
+}
+
+
 void vvm::Output::create_all_directory(vvm &model) {
     // data directory
     #ifdef OUTPUTNC
         create_directory(model.outputpath + (string) "nc");
         create_directory(model.outputpath + (string) "timer");
+        create_directory(model.outputpath + (string) "run_files");
     #endif
 
     #if defined(OUTPUTTXT)
@@ -358,7 +373,7 @@ void vvm::Output::create_all_directory(vvm &model) {
     #endif
 
     // plot directory
-    create_directory(model.outputpath + (string) "graphs");
+    // create_directory(model.outputpath + (string) "graphs");
 }
 
 

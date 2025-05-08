@@ -205,19 +205,19 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     // Create the general dimensions and arrays.
     Status::print_message("Preparing NetCDF output file.");
 
-     std::string output_nc_name = model.outputpath + "nc/Radiation_" + std::to_string(model.step) + ".nc";
-     Netcdf_file output_nc(output_nc_name, Netcdf_mode::Create);
-     output_nc.add_dimension("x", n_col);
-     output_nc.add_dimension("y", n_col_y);
-     output_nc.add_dimension("lay", n_lay);
-     output_nc.add_dimension("lev", n_lev);
-     output_nc.add_dimension("pair", 2);
+    std::string output_nc_name = model.outputpath + "nc/Radiation_" + std::to_string(model.step) + ".nc";
+    Netcdf_file output_nc(output_nc_name, Netcdf_mode::Create);
+    output_nc.add_dimension("x", n_col);
+    output_nc.add_dimension("y", n_col_y);
+    output_nc.add_dimension("lay", n_lay);
+    output_nc.add_dimension("lev", n_lev);
+    output_nc.add_dimension("pair", 2);
 
-     auto nc_lay = output_nc.add_variable<Float>("p_lay", {"lay", "y", "x"});
-     auto nc_lev = output_nc.add_variable<Float>("p_lev", {"lev", "y", "x"});
+    auto nc_lay = output_nc.add_variable<Float>("p_lay", {"lay", "y", "x"});
+    auto nc_lev = output_nc.add_variable<Float>("p_lev", {"lev", "y", "x"});
 
-     nc_lay.insert(p_lay.v(), {0, 0, 0});
-     nc_lev.insert(p_lev.v(), {0, 0, 0});
+    nc_lay.insert(p_lay.v(), {0, 0, 0});
+    nc_lev.insert(p_lev.v(), {0, 0, 0});
 
 
     // Nan check

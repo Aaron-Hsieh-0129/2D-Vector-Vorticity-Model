@@ -127,6 +127,7 @@ public:
         delete[] addflux;
         delete[] heatflux;
         delete[] waterflux;
+        delete[] nudge_tau;
 
         deallocate2DContinuousArray(zetap, zetapcont);
         deallocate2DContinuousArray(zeta, zetacont);
@@ -292,6 +293,7 @@ public:
         addflux = new double[nx]();
         heatflux = new double[nx]();
         waterflux = new double[nx]();
+        nudge_tau = new double[nz]();
 
         // 2D arrays
         zetap = allocate2DContinuousArray(nx, nz, zetapcont);
@@ -480,7 +482,6 @@ public:
     double PSURF = 0;                            ///< From Config_VVM given by users.
     double addforcingtime = 0;                   ///< From Config_VVM given by users.
     int CASE = 0;                                ///< From Config_VVM given by users.
-    double CRAD = 1. / 3600.;                   ///< From Config_VVM given by users.
     int year = 2025;
     int month = 3;
     int day = 20;
@@ -525,6 +526,7 @@ public:
     double *addflux = nullptr;
     double *heatflux = nullptr;
     double *waterflux = nullptr;
+    double *nudge_tau = nullptr;
 
     #if defined(GPU_POISSON)
         int *row_ptr_w = nullptr;
@@ -827,10 +829,8 @@ public:
             static void TimeFilter(double **previous, double **now, double **future, vvm &model);
             static void timeFilterAll(vvm &model);
         #endif
-        static void Nudge_theta(vvm &model);
-        static void Nudge_zeta(vvm &model);
         static void Nudge_qv(vvm &model);
-        static void GravityWaveDamping(vvm &model);
+        static void GravityWaveDampingExponential(vvm &model);
         static void NegativeValueProcess(double **var, int nx, int nz);
     };
 
@@ -915,6 +915,7 @@ public:
             static void output_nc(int step, vvm &model);
             static void output_time_nc(int step, vvm &model);
         #endif
+        static void copy_files(const std::string &source_path, const std::string &destination_path);
 
         #if defined(OUTPUTTXT)
             static void output_zeta(int step, vvm &model);
@@ -958,6 +959,7 @@ public:
         static void RKM_RKH(vvm &model);
         static void Mparam(vvm &model, double **var_now, double **var_future);
         static void Hparam(vvm &model, double **var_now, double **var_future);
+        static void ubarTop(vvm &model);
     };
 
     #if defined(RTERRTMGP)
