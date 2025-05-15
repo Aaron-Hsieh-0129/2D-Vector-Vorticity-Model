@@ -38,7 +38,7 @@ void vvm::PoissonSolver::InitAMGX(vvm &model) {
     }
 
     // Proceed with AMGX setup
-    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-12, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
+    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-14, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_w, config_w.c_str());
     AMGX_resources_create_simple(&model.rsc_w, model.cfg_w);
 
@@ -54,7 +54,7 @@ void vvm::PoissonSolver::InitAMGX(vvm &model) {
     AMGX_vector_create(&model.x_vec_w, model.rsc_w, AMGX_mode_dDDI);
     AMGX_solver_create(&model.solver_w, model.rsc_w, AMGX_mode_dDDI, model.cfg_w);
 
-    std::string config_u = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"jacobi\", \"solver\": \"JACOBI_L1\"}, \"scope\": \"main\", \"solver\": \"CG\", \"tolerance\": 1e-12, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
+    std::string config_u = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"jacobi\", \"solver\": \"JACOBI_L1\"}, \"scope\": \"main\", \"solver\": \"CG\", \"tolerance\": 1e-14, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_u, config_u.c_str());
     AMGX_resources_create_simple(&model.rsc_u, model.cfg_u);
 

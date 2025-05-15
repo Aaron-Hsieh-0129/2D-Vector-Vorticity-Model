@@ -257,8 +257,10 @@ void vvm::Output::output_nc(int n, vvm &model) {
     #endif
 
     if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
-    if ((retval = nc_put_vara_double(ncid, heatflux_id, start_precip, count_precip, model.heatflux))) checkErr(retval, __LINE__);
-    if ((retval = nc_put_vara_double(ncid, waterflux_id, start_precip, count_precip, model.waterflux))) checkErr(retval, __LINE__);
+    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
+        if ((retval = nc_put_vara_double(ncid, heatflux_id, start_precip, count_precip, model.heatflux))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, waterflux_id, start_precip, count_precip, model.waterflux))) checkErr(retval, __LINE__);
+    #endif
 
     #if defined(WATER)
         if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);

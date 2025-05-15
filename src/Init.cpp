@@ -1,4 +1,5 @@
 #include "Declare.hpp"
+#include <iostream>
 #include <random>
 #if defined(LOADFILE)
     #include <fstream>
@@ -45,7 +46,7 @@ void vvm::Init::Init1d(vvm &model) {
             #else
                 model.qvb[k] = 0.;
             #endif
-            model.thvb[k] = model.thb[k] * (1. + 0.61 * model.qvb[k]);
+            model.thvb[k] = model.thb[k] * (1. + 0.608 * model.qvb[k]);
         }
         model.BoundaryProcess1D_center(model.qvb, model.nz);
         model.BoundaryProcess1D_center(model.qvb0, model.nz);
@@ -94,8 +95,9 @@ void vvm::Init::Init1d(vvm &model) {
         // init pb, qvsb
         for (int k = 1; k <= model.nz-2; k++) {
             model.pb[k] = model.P0 * pow(model.pib[k], model.Cp / model.Rd);
-            double Tbar = model.thb[k] * model.pib[k];
-            model.qvsb[k] = (380. / model.pb[k]) * exp((17.27 * (Tbar - 273.)) / (Tbar - 36.));
+            double Tc = model.thb[k] * model.pib[k];
+            double es = 611.2 * std::exp(17.67 * (Tc-273.15) / (Tc-273.15+243.5));
+            model.qvsb[k] = 0.622 * es/ (model.pb[k] - 0.378 * es);
         }
         model.BoundaryProcess1D_center(model.pb, model.nz);
         model.BoundaryProcess1D_center(model.qvsb, model.nz);
@@ -126,7 +128,7 @@ void vvm::Init::Init1d(vvm &model) {
         model.thbm[k] = model.thb[k];
         model.qvb0[k] = model.qvb[k];
         #if defined(WATER)
-            model.thvb[k] = model.thvbm[k] = model.thb[k] + 0.61 * model.qvb[k];
+            model.thvb[k] = model.thvbm[k] = model.thb[k] * (1 + 0.608 * model.qvb[k]);
         #else
             model.thvb[k] = model.thvbm[k] = model.thb[k];
         #endif
@@ -144,10 +146,10 @@ void vvm::Init::Init1d(vvm &model) {
     model.BoundaryProcess1D_center(model.lambda2_zeta, model.nz);
 
     double tau_min = 60., tau_max = 1800.;
-    int n_damp = 15000./model.dz + 1;
+    int k_diff_start = 17000. / model.dz + 1;
     for (int k = 0; k <= model.nz-1; k++) {
-        if (k >= n_damp) {
-            model.nudge_tau[k] = tau_min * std::pow(tau_max/tau_min, ((model.z[model.nz-1]-model.z[k])/(model.z[model.nz-1]-model.z[model.nz-1-n_damp])));
+        if (k >= k_diff_start) {
+            model.nudge_tau[k] = tau_min * std::pow(tau_max/tau_min, ((model.z[model.nz-1]-model.z[k])/(model.z[model.nz-1]-model.z[model.nz-1-k_diff_start])));
             model.nudge_tau[k] = 1. / model.nudge_tau[k];
         }
         else model.nudge_tau[k] = 0.;
@@ -289,13 +291,14 @@ void vvm::Init::Init2d(vvm &model) {
         }
     }
 
-    
+
+    #if defined(P3_MICROPHY)
     for (int i = 0; i < model.nx; i++) {
         for (int k = 0; k <= model.nz; k++) {
             model.pb_lev_all[i][k] = model.pb_lev[k];
         }
     }
-
+    #endif
 
 	return;
 }
@@ -319,7 +322,7 @@ double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
 
 double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
-    double delta = 15.;
+    double delta = 6.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
     else return 0.;
 }
@@ -341,10 +344,10 @@ void vvm::Init::LoadFile(vvm &model) {
     std::string line;
     std::getline(inputFile, line);
     std::getline(inputFile, line); // Skip the zero level
-    double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ;
+    double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ, RH;
 
     int i = 1;
-    while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ) {
+    while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ >> RH) {
         model.thb[i] = THBAR;
         model.thb_init[i] = model.thb[i];
         model.qvb[i] = QVBAR;
@@ -356,27 +359,50 @@ void vvm::Init::LoadFile(vvm &model) {
             model.Q1LS[i] = Q1LS * 6.;
             model.Q2LS[i] = Q2LS * 6.;
         #endif
-
-        model.thvb[i] = model.thb[i] * (1. + 0.61 * model.qvb[i]);
-        double Tc = model.th_ground[i] * model.pib[i];
-        double es = 611.2 * std::exp(17.67 * (Tc-273.15) / (Tc-273.15+243.5));
-        model.qvsb[i] = 0.622 * es/ (model.pb[i] - 0.378 * es);
+        model.RH[i] = RH;
+        model.z[i] = ZT;
+        model.z_zeta[i] = ZZ;
         i++;
     }
-
     model.BoundaryProcess1D_center(model.thb, model.nz);
     model.BoundaryProcess1D_center(model.thb_init, model.nz);
     model.BoundaryProcess1D_center(model.qvb, model.nz);
-    model.BoundaryProcess1D_center(model.pib, model.nz);
     model.BoundaryProcess1D_center(model.pb, model.nz);
     model.BoundaryProcess1D_center(model.rhou, model.nz);
     model.BoundaryProcess1D_center(model.rhow, model.nz);
-    model.BoundaryProcess1D_center(model.thvb, model.nz);
-    model.BoundaryProcess1D_center(model.qvsb, model.nz);
+    model.BoundaryProcess1D_center(model.RH, model.nz);
+    model.BoundaryProcess1D_center(model.z, model.nz);
+    model.BoundaryProcess1D_center(model.z_zeta, model.nz);
     model.rhow[model.nz-1] = model.rhou[model.nz-2];
 
-    // Give pibar by pbar rather than given input
-    for (int k = 0; k < model.nz-1; k++) model.pib[k] = std::pow(model.pb[k]/100000., model.Rd/model.Cp);
+    // self defined RH
+    double z1 = 6000.;
+    for (int k = 1; k <= model.nz-2; k++) {
+        if (model.dz * (k-0.5) <= z1) model.RH[k] = 0.9;
+        else if (z1 <= model.dz*(k-0.5) && model.dz*(k-0.5) <= model.z[model.nz-2]) {
+            model.RH[k] = 0.9 - (0.9 / (model.z[model.nz-2] - z1)) * (model.dz*(k-0.5) - z1);
+        }
+        else model.RH[k] = 0.;
+    }
+
+    for (int k = 1; k < model.nz-1; k++) {
+        // Give pibar by pbar rather than given input
+        model.pib[k] = std::pow(model.pb[k]/100000., model.Rd/model.Cp);
+
+        double Tc = model.thb[k] * model.pib[k];
+        double es = 611.2 * std::exp(17.67 * (Tc-273.15) / (Tc-273.15+243.5));
+        model.qvsb[k] = 0.622 * es/ (model.pb[k] - 0.378 * es);
+
+        #if !defined(TROPICALFORCING)
+            // Give qvb by RH rather than given input
+            model.qvb[k] = model.RH[k] * model.qvsb[k];
+        #endif
+        model.thvb[k] = model.thb[k] * (1. + 0.608 * model.qvb[k]);
+    }
+    model.BoundaryProcess1D_center(model.pib, model.nz);
+    model.BoundaryProcess1D_center(model.thvb, model.nz);
+    model.BoundaryProcess1D_center(model.qvsb, model.nz);
+    model.BoundaryProcess1D_center(model.qvb, model.nz);
 
     for (int k = 1; k <= model.nz-2; k++) {
         model.thb_zeta[k] = 0.5 * (model.thb[k] + model.thb[k-1]);
@@ -502,7 +528,7 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
         model.thb[k] = tb / (double) (model.nx - 2.);
         #if defined(WATER)
             model.qvb[k] = qvb / (double) (model.nx - 2.);
-            model.thvb[k] = model.thb[k] * (1 + 0.61 * model.qvb[k]);
+            model.thvb[k] = model.thb[k] * (1 + 0.608 * model.qvb[k]);
         #else
             model.thvb[k] = model.thb[k];
         #endif

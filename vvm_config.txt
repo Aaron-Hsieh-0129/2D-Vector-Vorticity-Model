@@ -1,11 +1,11 @@
-VVM_OUTPUTPATH=/work/aaron900129/NextACC/2DVVM/DATA/0508/Bubble_test/
+VVM_OUTPUTPATH=/work/aaron900129/NextACC/2DVVM/DATA/0516/Bubble_origin/
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
-VVM_DT=3                                            # dt [s]
+VVM_DT=2                                            # dt [s]
 VVM_DX=200                                          # dx [m]
 VVM_DZ=200                                          # dz [m], it should be the same value as dx
-VVM_TIMEEND=864000                                   # Integration Time [s]
-VVM_OUTPUTSTEP=50                                    # Output frequency
+VVM_TIMEEND=86400                                   # Integration Time [s]
+VVM_OUTPUTSTEP=1                                    # Output frequency
 VVM_CASE=1                                          # Case0: Nothing, Case1: Bubble, Case2: Bubble+wind shear
 VVM_MOISTURE_NUDGE_TIME=0                           # VVM moisture nudging time scale, if it is 0, the nudge will be closed.
 VVM_YEAR=2025                                       # Simulation start year

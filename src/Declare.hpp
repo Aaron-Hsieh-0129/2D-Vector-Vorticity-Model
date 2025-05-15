@@ -128,6 +128,7 @@ public:
         delete[] heatflux;
         delete[] waterflux;
         delete[] nudge_tau;
+        delete[] RH;
 
         deallocate2DContinuousArray(zetap, zetapcont);
         deallocate2DContinuousArray(zeta, zetacont);
@@ -294,6 +295,7 @@ public:
         heatflux = new double[nx]();
         waterflux = new double[nx]();
         nudge_tau = new double[nz]();
+        RH = new double[nz]();
 
         // 2D arrays
         zetap = allocate2DContinuousArray(nx, nz, zetapcont);
@@ -490,6 +492,7 @@ public:
     double second = 0.;
     double lon = 0.;
     double lat = 0.;
+    int k_diff_start = 0;
 
     // 0D variables
     int step = 0;                            ///< The current time step.
@@ -527,6 +530,7 @@ public:
     double *heatflux = nullptr;
     double *waterflux = nullptr;
     double *nudge_tau = nullptr;
+    double *RH = nullptr;
 
     #if defined(GPU_POISSON)
         int *row_ptr_w = nullptr;

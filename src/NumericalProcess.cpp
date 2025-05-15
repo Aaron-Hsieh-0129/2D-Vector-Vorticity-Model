@@ -59,9 +59,7 @@ void vvm::NumericalProcess::DiffusionAll(vvm &model) {
 
 
 void vvm::NumericalProcess::GravityWaveDampingExponential(vvm &model) {
-    int n_damp = 17000./model.dz + 1;
-
-    for (int k = n_damp; k < model.nz-1; k++) {
+    for (int k = model.k_diff_start; k < model.nz-1; k++) {
         for (int i = 1; i < model.nx-1; i++) {
             model.thp[i][k] -= model.dt * model.nudge_tau[k] * (model.thp[i][k] - model.thb_init[k]);
             model.zetap[i][k] -= model.dt * model.nudge_tau[k] * (model.zetap[i][k]);

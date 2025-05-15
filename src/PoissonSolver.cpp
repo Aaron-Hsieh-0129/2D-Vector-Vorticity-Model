@@ -654,22 +654,14 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
 
 void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
     double rhouwDown = 0.;
-    double rhoKMRzetaUp = 0., rhoKMRzetaDown = 0.;
-    double prhouwb_pz_rhob = 0., prhoKMRzeta_pz_rhob = 0;
+    double prhouwb_pz_rhob = 0.;
     for (int i = 1; i < model.nx-1; i++) {
         rhouwDown += 0.25 * (model.rhou[model.nz-2]*model.u[i][model.nz-2] + model.rhou[model.nz-3]*model.u[i][model.nz-3]) * (model.w[i][model.nz-2] + model.w[i-1][model.nz-2]);
-        rhoKMRzetaUp += model.rhow[model.nz-1] * 0.25*(model.RKM[i][model.nz-1]+model.RKM[i][model.nz-2]+model.RKM[i-1][model.nz-1]+model.RKM[i-1][model.nz-2]) 
-                                                     *(model.rdz*(model.u[i][model.nz-1]-model.u[i][model.nz-2]));
-        rhoKMRzetaDown += model.rhow[model.nz-2] * 0.25 * (model.RKM[i][model.nz-2]+model.RKM[i][model.nz-3]+model.RKM[i-1][model.nz-2]+model.RKM[i-1][model.nz-3]) 
-                                                        * (model.rdx*(model.w[i][model.nz-2]-model.w[i-1][model.nz-2])+model.rdz*(model.u[i][model.nz-2]-model.u[i][model.nz-3]));
     }
     rhouwDown /= ((double) (model.nx - 2.));
-    rhoKMRzetaUp /= ((double) (model.nx - 2.));
-    rhoKMRzetaDown /= ((double) (model.nx - 2.));
 
     prhouwb_pz_rhob = (- rhouwDown) * model.rdz / model.rhou[model.nz-2];
-    prhoKMRzeta_pz_rhob = (rhoKMRzetaUp - rhoKMRzetaDown) * model.rdz / model.rhou[model.nz-2];
-    model.dubarTop_advect[(model.step+1)%2] = -prhouwb_pz_rhob + prhoKMRzeta_pz_rhob;
+    model.dubarTop_advect[(model.step+1)%2] = -prhouwb_pz_rhob;
     if (model.step == 0) model.dubarTop_advect[0] = model.dubarTop_advect[1];
     model.ubarTopp = model.ubarTop + 1.5*model.dt*model.dubarTop_advect[(model.step+1)%2] - 0.5*model.dt*model.dubarTop_advect[model.step%2];
     return;
