@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --account=MST113255
-#SBATCH --partition=ct56
 #SBATCH --job-name=2DVVM
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -8,7 +7,7 @@
 #SBATCH --time=48:00:00
 #SBATCH --output=log/0514/job-%j.out
 #SBATCH --error=log/0514/job-%j.err
-#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-type=START,END,FAIL
 #SBATCH --mail-user=zz85721@gmail.com
 
 rm -rf build

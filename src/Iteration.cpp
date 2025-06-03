@@ -90,7 +90,7 @@ void vvm::Iteration::updateMean(vvm &model) {
 void vvm::Iteration::pqv_pt(vvm &model) {
     model.Advection_thermo(model.qvm, model.qv, model.qvp, model.dqv_advect, model);
     #if defined(KESSLER_MICROPHY)
-    vvm::MicroPhysics::NegativeValueProcess(model.qvp, model.nx, model.nz);
+    vvm::NumericalProcess::NegativeValueProcess(model.qvp, model.nx, model.nz);
     #endif
     model.BoundaryProcess2D_center(model.qvp, model.nx, model.nz);
 
@@ -100,7 +100,7 @@ void vvm::Iteration::pqv_pt(vvm &model) {
 void vvm::Iteration::pqc_pt(vvm &model) {
     model.Advection_thermo(model.qcm, model.qc, model.qcp, model.dqc_advect, model);
     #if defined(KESSLER_MICROPHY)
-    vvm::MicroPhysics::NegativeValueProcess(model.qcp, model.nx, model.nz);
+    vvm::NumericalProcess::NegativeValueProcess(model.qcp, model.nx, model.nz);
     #endif
     model.BoundaryProcess2D_center(model.qcp, model.nx, model.nz);
     return;
@@ -110,7 +110,7 @@ void vvm::Iteration::pqr_pt(vvm &model) {
     model.Advection_thermo(model.qrm, model.qr, model.qrp, model.dqr_advect, model);
     model.Advection_qrVT(model);
     #if defined(KESSLER_MICROPHY)
-    vvm::MicroPhysics::NegativeValueProcess(model.qrp, model.nx, model.nz);
+    vvm::NumericalProcess::NegativeValueProcess(model.qrp, model.nx, model.nz);
     for (int i = 1; i <= model.nx-2; i++) {
         double VT = 1E-2 * (3634 * std::pow(1E-3*model.rhou[1] * model.qr[i][1], 0.1346) * std::pow(model.rhou[1]/model.rhow[1], -0.5));
         double rain = -model.rhou[1] * (0.5*(model.w[i][2]+0.) - VT) * model.qr[i][1];
@@ -412,9 +412,11 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         #else
             vvm::Turbulence::RKM_RKH(model);
         #endif
+        vvm::BoundaryProcess2D_all(model);
+
         // Nudging process to damp the gravity wave
         vvm::NumericalProcess::GravityWaveDampingExponential(model);
-        vvm::NumericalProcess::Nudge_qv(model);
+        // vvm::NumericalProcess::Nudge_qv(model);
         vvm::BoundaryProcess2D_all(model);
 
         #if defined(TIMEFILTER)

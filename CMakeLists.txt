@@ -13,14 +13,14 @@ endif()
 # Allow user to specify GCC installation path
 set(GCC_HOME "" CACHE STRING "Path to GCC installation")
 if(GCC_HOME STREQUAL "")
-    set(GCC_HOME "/work/aaron900129/gcc9" CACHE STRING "Path to GCC installation" FORCE)
+    set(GCC_HOME "/home/Aaron/gcc13" CACHE STRING "Path to GCC installation" FORCE)
 endif()
 set(GCC_LIB_DIR "${GCC_HOME}/lib64")
 set(GCC_LIB32_DIR "${GCC_HOME}/lib")
 
 
-set(CMAKE_C_COMPILER "/work/aaron900129/nvhpc/Linux_x86_64/21.3/comm_libs/mpi/bin/mpicc" CACHE STRING "Set C compiler")
-set(CMAKE_CXX_COMPILER "/work/aaron900129/nvhpc/Linux_x86_64/21.3/comm_libs/mpi/bin/mpicxx" CACHE STRING "Set C++ compiler")
+set(CMAKE_C_COMPILER "/home/Aaron/openmpi/bin/mpicc" CACHE PATH "C compiler" FORCE)
+set(CMAKE_CXX_COMPILER "/home/Aaron/openmpi/bin/mpicxx" CACHE PATH "C++ compiler" FORCE)
 set(CMAKE_Fortran_COMPILER "${GCC_HOME}/bin/gfortran" CACHE STRING "Set Fortran compiler")
 
 # Define project
@@ -41,7 +41,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set where dependencies will be downloaded and installed
 # set(DEP_INSTALL_DIR "${CMAKE_SOURCE_DIR}/_deps/install")
-set(DEP_INSTALL_DIR "/work/aaron900129/local")
+set(DEP_INSTALL_DIR "/home/Aaron/local")
 file(MAKE_DIRECTORY ${DEP_INSTALL_DIR})
 
 # Include ExternalProject for dependency management

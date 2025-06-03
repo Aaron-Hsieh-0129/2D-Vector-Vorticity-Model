@@ -1,4 +1,4 @@
-VVM_OUTPUTPATH=/work/aaron900129/NextACC/2DVVM/DATA/0516/Bubble_origin/
+VVM_OUTPUTPATH=/home/Aaron/NextACC_twnia3/2DVVM/DATA/0516/test/
 VVM_XRANGE=100000                                   # Domain for x [m]
 VVM_ZRANGE=20000                                    # Domain for z [m]
 VVM_DT=2                                            # dt [s]

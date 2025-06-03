@@ -242,8 +242,8 @@ void vvm::Init::Init2d(vvm &model) {
                     model.qv[i][k] = model.qvm[i][k] = model.qvb[k];
                     model.qvb0[k] = model.qvb[k];
                 #else
-                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.95;
-                    model.qvb0[k] = model.qvb[k] * 0.95;
+                    model.qv[i][k] = model.qvm[i][k] = model.qvb[k] * 0.9;
+                    model.qvb0[k] = model.qvb[k] * 0.9;
                 #endif
             }
         }

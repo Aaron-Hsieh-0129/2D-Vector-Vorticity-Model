@@ -17,9 +17,9 @@
 // #define RTERRTMGP
 // #define TROPICALFORCING
 // #define RADIATIONCOOLING
-// #define LOADFILE
+#define LOADFILE
 #if defined(LOADFILE)
-    #define LOADINITPATH "/work/aaron900129/NextACC/2DVVM/input/bubble_init.txt"
+    #define LOADINITPATH "/home/Aaron/NextACC_twnia3/2DVVM/input/bubble_init.txt"
 #endif
 // #define GPU_POISSON
 
