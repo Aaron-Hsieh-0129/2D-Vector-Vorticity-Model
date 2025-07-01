@@ -19,9 +19,9 @@
 // #define RADIATIONCOOLING
 #define LOADFILE
 #if defined(LOADFILE)
-    #define LOADINITPATH "/home/Aaron/NextACC_twnia3/2DVVM/input/bubble_init.txt"
+    #define LOADINITPATH "/work/aaron900129/NextACC/2DVVM/input/bubble_init.txt"
 #endif
-// #define GPU_POISSON
+#define GPU_POISSON
 
 // #define LOADFROMPREVIOUSFILE
 #if defined(LOADFROMPREVIOUSFILE)
