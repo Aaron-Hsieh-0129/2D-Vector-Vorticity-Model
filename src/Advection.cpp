@@ -23,8 +23,9 @@ double MINU(double var) {
 void vvm::Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model) {
     double prhouvar_px_rho = 0., prhowvar_pz_rho = 0.;
     double *flux_ucont, *flux_wcont;
-    double **flux_u = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_ucont);
-    double **flux_w = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_wcont);
+    double **flux_u, **flux_w;
+    model.create_variable(flux_u, flux_ucont, model.nx, model.nz);
+    model.create_variable(flux_w, flux_wcont, model.nx, model.nz);
 
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)
@@ -73,8 +74,8 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
         }
     }
 
-    vvm::deallocate2DContinuousArray(flux_u, flux_ucont);
-    vvm::deallocate2DContinuousArray(flux_w, flux_wcont);
+    model.destroy_variable(flux_u, flux_ucont);
+    model.destroy_variable(flux_w, flux_wcont);
     return;
 }
 
@@ -94,8 +95,9 @@ void vvm::Advection_zeta(vvm &model) {
     for (int i = 0; i < model.nx; i++) model.W_u[i][0] = model.W_u[i][model.nz-1] = 0.;
 
     double *flux_ucont, *flux_wcont;
-    double **flux_u = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_ucont);
-    double **flux_w = vvm::allocate2DContinuousArray(model.nx, model.nz, flux_wcont);
+    double **flux_u, **flux_w;
+    model.create_variable(flux_u, flux_ucont, model.nx, model.nz);
+    model.create_variable(flux_w, flux_wcont, model.nx, model.nz);
 
     #ifdef _OPENMP
     #pragma omp parallel for collapse(2)
@@ -141,8 +143,8 @@ void vvm::Advection_zeta(vvm &model) {
         }
     }
 
-    vvm::deallocate2DContinuousArray(flux_u, flux_ucont);
-    vvm::deallocate2DContinuousArray(flux_w, flux_wcont);
+    model.destroy_variable(flux_u, flux_ucont);
+    model.destroy_variable(flux_w, flux_wcont);
     return;
 }
 

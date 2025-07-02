@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
                     vvm_lon, vvm_lat);
     
     vvm model(config);
-    
+
     #if defined(LOADFROMPREVIOUSFILE)
         vvm::Init::LoadFromPreviousFile(model);
     #elif defined(LOAD2DINIT)
@@ -92,16 +92,6 @@ int main(int argc, char **argv) {
         vvm::P3::lookup_file_dir, &vvm::P3::nCat, &vvm::P3::trplMomI, &vvm::P3::liqfrac,
         vvm::P3::model_name, &vvm::P3::stat, &vvm::P3::abort_on_err, &vvm::P3::dowr, strlen(vvm::P3::lookup_file_dir), strlen(vvm::P3::model_name)
     );
-
-    for (int k = 0; k < model.nz; k++) {
-        for (int i = 0; i < model.nx; i++) { 
-            model.dz_all[i][k] = model.dz;
-            model.w_all[i][k] = 0.;
-            model.pb_all[i][k] = model.pb[k];
-            model.zi_all[i][k] = 0.;
-            model.ssat_all[i][k] = 0.;
-        }
-    }
     #endif
 
     // // This initialization is for NGAC3F coupling comparison
@@ -114,29 +104,15 @@ int main(int argc, char **argv) {
     // }
 
     // Copy grads ctl file to the output directory
-    std::string source = "../scripts/vvm.ctl";
-    std::string destination = model.outputpath + "nc/vvm.ctl";
-
-    // Construct the command
-    std::string command = "cp " + source + " " + destination;
-
-    // Execute the command
-    system(command.c_str());
-
     // Copy source files to output directory
-    vvm::Output::copy_files("../src", model.outputpath+"run_files/.");
-    vvm::Output::copy_files("../input", model.outputpath+"run_files/.");
-    vvm::Output::copy_files("../external", model.outputpath+"run_files/.");
-    vvm::Output::copy_files("../vvm_config.txt", model.outputpath+"run_files/.");
-    vvm::Output::copy_files("../CMakeLists.txt", model.outputpath+"run_files/.");
-    vvm::Output::copy_files("../run.sh", model.outputpath+"run_files/.");
+    vvm::Output::copy_source_project(model);
     
 
     #if defined(POISSONTEST)
         vvm::PoissonSolver::cal_w(model);
         vvm::PoissonSolver::cal_u(model);
     #else
-        vvm::Iteration::TimeMarching(model);
+        // vvm::Iteration::TimeMarching(model);
     #endif
 
     #if defined(PETSC)

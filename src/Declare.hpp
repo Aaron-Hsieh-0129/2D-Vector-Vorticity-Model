@@ -101,627 +101,386 @@ public:
 
     void deallocateMemory() {
         // Free the allocated memory
-        delete[] thb;
-        delete[] thbm;
-        delete[] thb_zeta;
-        delete[] thb_init;
-        delete[] rhou;
-        delete[] rhow;
-        delete[] pib;
-        delete[] pib_lev;
-        delete[] qvb;
-        delete[] qvb0;
-        delete[] qvsb;
-        delete[] pb;
-        delete[] pb_lev;
-        delete[] xi;
-        delete[] uxi;
-        delete[] thvb;
-        delete[] thvbm;
-        delete[] z;
-        delete[] z_zeta;
-        delete[] lambda2;
-        delete[] lambda2_zeta;
-        delete[] th_ground;
-        delete[] qvs_ground;
-        delete[] addflux;
-        delete[] heatflux;
-        delete[] waterflux;
-        delete[] nudge_tau;
-        delete[] RH;
+        destroy_variable(t_advection);
+        destroy_variable(t_poisson);
+        destroy_variable(t_diffusion);
+        destroy_variable(t_microphysics);
+        destroy_variable(t_all);
 
-        deallocate2DContinuousArray(zetap, zetapcont);
-        deallocate2DContinuousArray(zeta, zetacont);
-        deallocate2DContinuousArray(zetam, zetamcont);
-        deallocate2DContinuousArray(thp, thpcont);
-        deallocate2DContinuousArray(th, thcont);
-        deallocate2DContinuousArray(thm, thmcont);
-        deallocate2DContinuousArray(u, ucont);
-        deallocate2DContinuousArray(w, wcont);
-        deallocate2DContinuousArray(init_th_forcing, init_th_forcingcont);
-        deallocate2DContinuousArray(RKM, RKMcont);
-        deallocate2DContinuousArray(RKH, RKHcont);
-        deallocate2DContinuousArray(U_w, U_wcont);
-        deallocate2DContinuousArray(W_u, W_ucont);
+        destroy_variable(thb);
+        destroy_variable(thbm);
+        destroy_variable(thb_zeta);
+        destroy_variable(thb_init);
+        destroy_variable(rhou);
+        destroy_variable(rhow);
+        destroy_variable(pib);
+        destroy_variable(pib_lev);
+        destroy_variable(qvb);
+        destroy_variable(qvb0);
+        destroy_variable(qvsb);
+        destroy_variable(pb);
+        destroy_variable(pb_lev);
+        destroy_variable(xi);
+        destroy_variable(uxi);
+        destroy_variable(thvb);
+        destroy_variable(thvbm);
+        destroy_variable(z);
+        destroy_variable(z_zeta);
+        destroy_variable(lambda2);
+        destroy_variable(lambda2_zeta);
+        destroy_variable(th_ground);
+        destroy_variable(qvs_ground);
+        destroy_variable(addflux);
+        destroy_variable(heatflux);
+        destroy_variable(waterflux);
+        destroy_variable(nudge_tau);
+        destroy_variable(RH);
+        destroy_variable(dz_th);
+        destroy_variable(dz_zeta);
+
+        destroy_variable(zetap, zetapcont);
+        destroy_variable(zeta, zetacont);
+        destroy_variable(zetam, zetamcont);
+        destroy_variable(thp, thpcont);
+        destroy_variable(th, thcont);
+        destroy_variable(thm, thmcont);
+        destroy_variable(u, ucont);
+        destroy_variable(w, wcont);
+        destroy_variable(init_th_forcing, init_th_forcingcont);
+        destroy_variable(RKM, RKMcont);
+        destroy_variable(RKH, RKHcont);
+        destroy_variable(U_w, U_wcont);
+        destroy_variable(W_u, W_ucont);
+
         #if defined(RTERRTMGP)
-            deallocate2DContinuousArray(T, Tcont);
-            deallocate2DContinuousArray(radiation_heating_rate, radiation_heating_ratecont);
+            destroy_variable(T, Tcont);
+            destroy_variable(radiation_heating_rate, radiation_heating_ratecont);
         #endif
 
         #if defined(STREAMFUNCTION)
-            deallocate2DContinuousArray(psi, psicont);
+            destroy_variable(psi, psicont);
         #endif
 
         #if defined(WATER)
-            deallocate2DContinuousArray(qvp, qvpcont);
-            deallocate2DContinuousArray(qv, qvcont);
-            deallocate2DContinuousArray(qvm, qvmcont);
-            deallocate2DContinuousArray(qcp, qcpcont);
-            deallocate2DContinuousArray(qc, qccont);
-            deallocate2DContinuousArray(qcm, qcmcont);
-            deallocate2DContinuousArray(qrp, qrpcont);
-            deallocate2DContinuousArray(qr, qrcont);
-            deallocate2DContinuousArray(qrm, qrmcont);
+            destroy_variable(qvp, qvpcont);
+            destroy_variable(qv, qvcont);
+            destroy_variable(qvm, qvmcont);
+            destroy_variable(qcp, qcpcont);
+            destroy_variable(qc, qccont);
+            destroy_variable(qcm, qcmcont);
+            destroy_variable(qrp, qrpcont);
+            destroy_variable(qr, qrcont);
+            destroy_variable(qrm, qrmcont);
             #if defined(KESSLER_MICROPHY)
                 delete[] precip;
 
-                deallocate2DContinuousArray(evaporation, evaporationcont);
-                deallocate2DContinuousArray(accretion, accretioncont);
-                deallocate2DContinuousArray(autoconversion, autoconversioncont);
-                deallocate2DContinuousArray(condensation, condensationcont);
+                destroy_variable(evaporation, evaporationcont);
+                destroy_variable(accretion, accretioncont);
+                destroy_variable(autoconversion, autoconversioncont);
+                destroy_variable(condensation, condensationcont);
             #endif
 
             #if defined(P3_MICROPHY)
                 
-                deallocate2DContinuousArray(ncp, ncpcont);
-                deallocate2DContinuousArray(nc, nccont);
-                deallocate2DContinuousArray(ncm, ncmcont);
-                deallocate2DContinuousArray(nrp, nrpcont);
-                deallocate2DContinuousArray(nr, nrcont);
-                deallocate2DContinuousArray(nrm, nrmcont);
-                deallocate2DContinuousArray(qitotp, qitotpcont);
-                deallocate2DContinuousArray(qitot, qitotcont);
-                deallocate2DContinuousArray(qitotm, qitotmcont);
-                deallocate2DContinuousArray(qirimp, qirimpcont);
-                deallocate2DContinuousArray(qirim, qirimcont);
-                deallocate2DContinuousArray(qirimm, qirimmcont);
-                deallocate2DContinuousArray(qiliqp, qiliqpcont);
-                deallocate2DContinuousArray(qiliq, qiliqcont);
-                deallocate2DContinuousArray(qiliqm, qiliqmcont);
-                deallocate2DContinuousArray(nip, nipcont);
-                deallocate2DContinuousArray(ni, nicont);
-                deallocate2DContinuousArray(nim, nimcont);
-                deallocate2DContinuousArray(birimp, birimpcont);
-                deallocate2DContinuousArray(birim, birimcont);
-                deallocate2DContinuousArray(birimm, birimmcont);
-                deallocate2DContinuousArray(diag_ze, diag_zecont);
-                deallocate2DContinuousArray(diag_effc, diag_effccont);
-                deallocate2DContinuousArray(diag_effi, diag_efficont);
-                deallocate2DContinuousArray(diag_vmi, diag_vmicont);
-                deallocate2DContinuousArray(diag_di, diag_dicont);
-                deallocate2DContinuousArray(diag_rhoi, diag_rhoicont);
-                deallocate2DContinuousArray(cldfrac, cldfraccont);
-                deallocate2DContinuousArray(diag_2d, diag_2dcont);
-                deallocate2DContinuousArray(dz_all, dz_allcont);
-                deallocate2DContinuousArray(w_all, w_allcont);
-                deallocate2DContinuousArray(pb_all, pb_allcont);
-                deallocate2DContinuousArray(pb_lev_all, pb_lev_allcont);
-                deallocate2DContinuousArray(zi_all, zi_allcont);
-                deallocate2DContinuousArray(ssat_all, ssat_allcont);
+                destroy_variable(ncp, ncpcont);
+                destroy_variable(nc, nccont);
+                destroy_variable(ncm, ncmcont);
+                destroy_variable(nrp, nrpcont);
+                destroy_variable(nr, nrcont);
+                destroy_variable(nrm, nrmcont);
+                destroy_variable(qitotp, qitotpcont);
+                destroy_variable(qitot, qitotcont);
+                destroy_variable(qitotm, qitotmcont);
+                destroy_variable(qirimp, qirimpcont);
+                destroy_variable(qirim, qirimcont);
+                destroy_variable(qirimm, qirimmcont);
+                destroy_variable(qiliqp, qiliqpcont);
+                destroy_variable(qiliq, qiliqcont);
+                destroy_variable(qiliqm, qiliqmcont);
+                destroy_variable(nip, nipcont);
+                destroy_variable(ni, nicont);
+                destroy_variable(nim, nimcont);
+                destroy_variable(birimp, birimpcont);
+                destroy_variable(birim, birimcont);
+                destroy_variable(birimm, birimmcont);
+                destroy_variable(diag_ze, diag_zecont);
+                destroy_variable(diag_effc, diag_effccont);
+                destroy_variable(diag_effi, diag_efficont);
+                destroy_variable(diag_vmi, diag_vmicont);
+                destroy_variable(diag_di, diag_dicont);
+                destroy_variable(diag_rhoi, diag_rhoicont);
+                destroy_variable(cldfrac, cldfraccont);
+                destroy_variable(diag_2d, diag_2dcont);
+                destroy_variable(dz_all, dz_allcont);
+                destroy_variable(w_all, w_allcont);
+                destroy_variable(pb_all, pb_allcont);
+                destroy_variable(pb_lev_all, pb_lev_allcont);
+                destroy_variable(zi_all, zi_allcont);
+                destroy_variable(ssat_all, ssat_allcont);
 
-                delete[] precip_liq;
-                delete[] precip_sol;
-                delete[] precip;
+                destroy_variable(precip_liq);
+                destroy_variable(precip_sol);
+                destroy_variable(precip);
             #endif
         #endif
 
         #if defined(AB2)
-            deallocate3DContinuousArray(dth_advect, dth_advectcont);
-            deallocate3DContinuousArray(dth_buoyancy, dth_buoyancycont);
-            deallocate3DContinuousArray(dzeta_advect, dzeta_advectcont);
+            destroy_variable(dth_advect, dth_advectcont, nx);
+            destroy_variable(dth_buoyancy, dth_buoyancycont, nx);
+            destroy_variable(dzeta_advect, dzeta_advectcont, nx);
             
             #if defined(WATER)
-                deallocate3DContinuousArray(dqv_advect, dqv_advectcont);
-                deallocate3DContinuousArray(dqc_advect, dqc_advectcont);
-                deallocate3DContinuousArray(dqr_advect, dqr_advectcont);
+                destroy_variable(dqv_advect, dqv_advectcont, nx);
+                destroy_variable(dqc_advect, dqc_advectcont, nx);
+                destroy_variable(dqr_advect, dqr_advectcont, nx);
                 #if defined(KESSLER_MICROPHY)
-                    deallocate3DContinuousArray(dqr_VT, dqr_VTcont);
+                    destroy_variable(dqr_VT, dqr_VTcont);
                 #endif
                 #if defined(P3_MICROPHY)
                     
-                    deallocate3DContinuousArray(dnc_advect, dnc_advectcont);
-                    deallocate3DContinuousArray(dnr_advect, dnr_advectcont);
-                    deallocate3DContinuousArray(dni_advect, dni_advectcont);
-                    deallocate3DContinuousArray(dqitot_advect, dqitot_advectcont);
-                    deallocate3DContinuousArray(dqirim_advect, dqirim_advectcont);
-                    deallocate3DContinuousArray(dqiliq_advect, dqiliq_advectcont);
-                    deallocate3DContinuousArray(dbirim_advect, dbirim_advectcont);
+                    destroy_variable(dnc_advect, dnc_advectcont, nx);
+                    destroy_variable(dnr_advect, dnr_advectcont, nx);
+                    destroy_variable(dni_advect, dni_advectcont, nx);
+                    destroy_variable(dqitot_advect, dqitot_advectcont, nx);
+                    destroy_variable(dqirim_advect, dqirim_advectcont, nx);
+                    destroy_variable(dqiliq_advect, dqiliq_advectcont, nx);
+                    destroy_variable(dbirim_advect, dbirim_advectcont, nx);
                 #endif
             #endif
 
         #endif
         #if defined(P3_MICROPHY)
-            deallocate3DContinuousArray(diag_3d, diag_3dcont);
+            destroy_variable(diag_3d, diag_3dcont, nx);
         #endif
 
-        delete[] t_advection;
-        delete[] t_poisson;
-        delete[] t_diffusion;
-        delete[] t_microphysics;
-        delete[] t_all;
-
         #if defined(TROPICALFORCING)
-            delete[] Q1LS;
-            delete[] Q2LS;
+            destroy_variable(Q1LS);
+            destroy_variable(Q2LS);
         #endif
     }
 
     void allocateMemory() {
-        t_advection = new double[TIMEROUTPUTSIZE]();
-        t_poisson = new double[TIMEROUTPUTSIZE]();
-        t_diffusion = new double[TIMEROUTPUTSIZE]();
-        t_microphysics = new double[TIMEROUTPUTSIZE]();
-        t_all = new double[TIMEROUTPUTSIZE]();
+        // 1D arrays for timing
+        create_variable(t_advection, TIMEROUTPUTSIZE);
+        create_variable(t_poisson, TIMEROUTPUTSIZE);
+        create_variable(t_diffusion, TIMEROUTPUTSIZE);
+        create_variable(t_microphysics, TIMEROUTPUTSIZE);
+        create_variable(t_all, TIMEROUTPUTSIZE);
 
         // 1D arrays
-        thb = new double[nz]();
-        thbm = new double[nz]();
-        thb_zeta = new double[nz]();
-        thb_init = new double[nz]();
-        rhou = new double[nz]();
-        rhow = new double[nz]();
-        pib = new double[nz]();
-        pib_lev = new double[nz+1]();
-        qvb = new double[nz]();
-        qvb0 = new double[nz]();
-        qvsb = new double[nz]();
-        pb = new double[nz]();
-        pb_lev = new double[nz+1]();
-        xi = new double[nx]();
-        uxi = new double[nx]();
-        thvb = new double[nz]();
-        thvbm = new double[nz]();
-        z = new double[nz]();
-        z_zeta = new double[nz]();
-        lambda2 = new double[nz]();
-        lambda2_zeta = new double[nz]();
+        create_variable(thb, nz);
+        create_variable(thbm, nz);
+        create_variable(thb_zeta, nz);
+        create_variable(thb_init, nz);
+        create_variable(rhou, nz);
+        create_variable(rhow, nz);
+        create_variable(pib, nz);
+        create_variable(pib_lev, nz+1);
+        create_variable(qvb, nz);
+        create_variable(qvb0, nz);
+        create_variable(qvsb, nz);
+        create_variable(pb, nz);
+        create_variable(pb_lev, nz+1);
+        create_variable(xi, nx);
+        create_variable(uxi, nx);
+        create_variable(thvb, nz);
+        create_variable(thvbm, nz);
+        create_variable(z, nz);
+        create_variable(z_zeta, nz);
+        create_variable(lambda2, nz);
+        create_variable(lambda2_zeta, nz);
         #if defined(TROPICALFORCING)
-            Q1LS = new double[nz]();
-            Q2LS = new double[nz]();
+            create_variable(Q1LS, nz);
+            create_variable(Q2LS, nz);
         #endif
-        th_ground = new double[nx]();
-        qvs_ground = new double[nx]();
-        addflux = new double[nx]();
-        heatflux = new double[nx]();
-        waterflux = new double[nx]();
-        nudge_tau = new double[nz]();
-        RH = new double[nz]();
+        create_variable(th_ground, nx);
+        create_variable(qvs_ground, nx);
+        create_variable(addflux, nx);
+        create_variable(heatflux, nx);
+        create_variable(waterflux, nx);
+        create_variable(nudge_tau, nz);
+        create_variable(RH, nz);
+        create_variable(dz_th, nz);
+        create_variable(dz_zeta, nz);
 
         // 2D arrays
-        zetap = allocate2DContinuousArray(nx, nz, zetapcont);
-        zeta = allocate2DContinuousArray(nx, nz, zetacont);
-        zetam = allocate2DContinuousArray(nx, nz, zetamcont);
-        thp = allocate2DContinuousArray(nx, nz, thpcont);
-        th = allocate2DContinuousArray(nx, nz, thcont);
-        thm = allocate2DContinuousArray(nx, nz, thmcont);
-        u = allocate2DContinuousArray(nx, nz, ucont);
-        w = allocate2DContinuousArray(nx, nz, wcont);
-        init_th_forcing = allocate2DContinuousArray(nx, nz, init_th_forcingcont);
-        RKM = allocate2DContinuousArray(nx, nz, RKMcont);
-        RKH = allocate2DContinuousArray(nx, nz, RKHcont);
-        U_w = allocate2DContinuousArray(nx, nz, U_wcont);
-        W_u = allocate2DContinuousArray(nx, nz, W_ucont);
+        create_variable(zetap, zetapcont, nx, nz);
+        create_variable(zeta, zetacont, nx, nz);
+        create_variable(zetam, zetamcont, nx, nz);
+        create_variable(thp, thpcont, nx, nz);
+        create_variable(th, thcont, nx, nz);
+        create_variable(thm, thmcont, nx, nz);
+        create_variable(u, ucont, nx, nz);
+        create_variable(w, wcont, nx, nz);
+        create_variable(init_th_forcing, init_th_forcingcont, nx, nz);
+        create_variable(RKM, RKMcont, nx, nz);
+        create_variable(RKH, RKHcont, nx, nz);
+        create_variable(U_w, U_wcont, nx, nz);
+        create_variable(W_u, W_ucont, nx, nz);
+
         #if defined(RTERRTMGP)
-            T = allocate2DContinuousArray(nx, nz, Tcont);
-            T_lev = allocate2DContinuousArray(nx, nz+1, T_levcont);
-            radiation_heating_rate = allocate2DContinuousArray(nx, nz, radiation_heating_ratecont);
-        #endif        
+            create_variable(T, Tcont, nx, nz);
+            create_variable(T_lev, T_levcont, nx, nz+1);
+            create_variable(radiation_heating_rate, radiation_heating_ratecont, nx, nz);
+        #endif
 
         #if defined(STREAMFUNCTION)
-            psi = allocate2DContinuousArray(nx, nz, psicont);
+            create_variable(psi, psicont, nx, nz);
         #endif
 
         #if defined(WATER)
             #if defined(KESSLER_MICROPHY)
-                precip = new double[nx]();
-
-                evaporation = allocate2DContinuousArray(nx, nz, evaporationcont);
-                accretion = allocate2DContinuousArray(nx, nz, accretioncont);
-                autoconversion = allocate2DContinuousArray(nx, nz, autoconversioncont);
-                condensation = allocate2DContinuousArray(nx, nz, condensationcont);
+                create_variable(precip, nx);
+                create_variable(evaporation, evaporationcont, nx, nz);
+                create_variable(accretion, accretioncont, nx, nz);
+                create_variable(autoconversion, autoconversioncont, nx, nz);
+                create_variable(condensation, condensationcont, nx, nz);
             #endif
 
-            qvp = allocate2DContinuousArray(nx, nz, qvpcont);
-            qv = allocate2DContinuousArray(nx, nz, qvcont);
-            qvm = allocate2DContinuousArray(nx, nz, qvmcont);
-            qcp = allocate2DContinuousArray(nx, nz, qcpcont);
-            qc = allocate2DContinuousArray(nx, nz, qccont);
-            qcm = allocate2DContinuousArray(nx, nz, qcmcont);
-            qrp = allocate2DContinuousArray(nx, nz, qrpcont);
-            qr = allocate2DContinuousArray(nx, nz, qrcont);
-            qrm = allocate2DContinuousArray(nx, nz, qrmcont);
+            create_variable(qvp, qvpcont, nx, nz);
+            create_variable(qv, qvcont, nx, nz);
+            create_variable(qvm, qvmcont, nx, nz);
+            create_variable(qcp, qcpcont, nx, nz);
+            create_variable(qc, qccont, nx, nz);
+            create_variable(qcm, qcmcont, nx, nz);
+            create_variable(qrp, qrpcont, nx, nz);
+            create_variable(qr, qrcont, nx, nz);
+            create_variable(qrm, qrmcont, nx, nz);
 
             #if defined(P3_MICROPHY)
-                ncp = allocate2DContinuousArray(nx, nz, ncpcont);
-                nc = allocate2DContinuousArray(nx, nz, nccont);
-                ncm = allocate2DContinuousArray(nx, nz, ncmcont);
-                nrp = allocate2DContinuousArray(nx, nz, nrpcont);
-                nr = allocate2DContinuousArray(nx, nz, nrcont);
-                nrm = allocate2DContinuousArray(nx, nz, nrmcont);
-                qitotp = allocate2DContinuousArray(nx, nz, qitotpcont);
-                qitot = allocate2DContinuousArray(nx, nz, qitotcont);
-                qitotm = allocate2DContinuousArray(nx, nz, qitotmcont);
-                qirimp = allocate2DContinuousArray(nx, nz, qirimpcont);
-                qirim = allocate2DContinuousArray(nx, nz, qirimcont);
-                qirimm = allocate2DContinuousArray(nx, nz, qirimmcont);
-                qiliqp = allocate2DContinuousArray(nx, nz, qiliqpcont);
-                qiliq = allocate2DContinuousArray(nx, nz, qiliqcont);
-                qiliqm = allocate2DContinuousArray(nx, nz, qiliqmcont);
-                nip = allocate2DContinuousArray(nx, nz, nipcont);
-                ni = allocate2DContinuousArray(nx, nz, nicont);
-                nim = allocate2DContinuousArray(nx, nz, nimcont);
-                birimp = allocate2DContinuousArray(nx, nz, birimpcont);
-                birim = allocate2DContinuousArray(nx, nz, birimcont);
-                birimm = allocate2DContinuousArray(nx, nz, birimmcont);
-                diag_ze = allocate2DContinuousArray(nx, nz, diag_zecont);
-                diag_effc = allocate2DContinuousArray(nx, nz, diag_effccont);
-                diag_effi = allocate2DContinuousArray(nx, nz, diag_efficont);
-                diag_vmi = allocate2DContinuousArray(nx, nz, diag_vmicont);
-                diag_di = allocate2DContinuousArray(nx, nz, diag_dicont);
-                diag_rhoi = allocate2DContinuousArray(nx, nz, diag_rhoicont);
-                cldfrac = allocate2DContinuousArray(nx, nz, cldfraccont);
-                diag_2d = allocate2DContinuousArray(nx, vvm::P3::n_diag_2d, diag_2dcont);
-                dz_all = allocate2DContinuousArray(nx, nz, dz_allcont);
-                w_all = allocate2DContinuousArray(nx, nz, w_allcont);
-                pb_all = allocate2DContinuousArray(nx, nz, pb_allcont);
-                pb_lev_all = allocate2DContinuousArray(nx, nz+1, pb_lev_allcont);
-                zi_all = allocate2DContinuousArray(nx, nz, zi_allcont);
-                ssat_all = allocate2DContinuousArray(nx, nz, ssat_allcont);
+                create_variable(ncp, ncpcont, nx, nz);
+                create_variable(nc, nccont, nx, nz);
+                create_variable(ncm, ncmcont, nx, nz);
+                create_variable(nrp, nrpcont, nx, nz);
+                create_variable(nr, nrcont, nx, nz);
+                create_variable(nrm, nrmcont, nx, nz);
+                create_variable(qitotp, qitotpcont, nx, nz);
+                create_variable(qitot, qitotcont, nx, nz);
+                create_variable(qitotm, qitotmcont, nx, nz);
+                create_variable(qirimp, qirimpcont, nx, nz);
+                create_variable(qirim, qirimcont, nx, nz);
+                create_variable(qirimm, qirimmcont, nx, nz);
+                create_variable(qiliqp, qiliqpcont, nx, nz);
+                create_variable(qiliq, qiliqcont, nx, nz);
+                create_variable(qiliqm, qiliqmcont, nx, nz);
+                create_variable(nip, nipcont, nx, nz);
+                create_variable(ni, nicont, nx, nz);
+                create_variable(nim, nimcont, nx, nz);
+                create_variable(birimp, birimpcont, nx, nz);
+                create_variable(birim, birimcont, nx, nz);
+                create_variable(birimm, birimmcont, nx, nz);
+                create_variable(diag_ze, diag_zecont, nx, nz);
+                create_variable(diag_effc, diag_effccont, nx, nz);
+                create_variable(diag_effi, diag_efficont, nx, nz);
+                create_variable(diag_vmi, diag_vmicont, nx, nz);
+                create_variable(diag_di, diag_dicont, nx, nz);
+                create_variable(diag_rhoi, diag_rhoicont, nx, nz);
+                create_variable(cldfrac, cldfraccont, nx, nz);
+                create_variable(diag_2d, diag_2dcont, nx, vvm::P3::n_diag_2d);
+                create_variable(dz_all, dz_allcont, nx, nz);
+                create_variable(w_all, w_allcont, nx, nz);
+                create_variable(pb_all, pb_allcont, nx, nz);
+                create_variable(pb_lev_all, pb_lev_allcont, nx, nz+1);
+                create_variable(zi_all, zi_allcont, nx, nz);
+                create_variable(ssat_all, ssat_allcont, nx, nz);
 
-                precip_liq = new double[nx]();
-                precip_sol = new double[nx]();
-                precip = new double[nx]();
+                create_variable(precip_liq, nx);
+                create_variable(precip_sol, nx);
+                create_variable(precip, nx);
             #endif
         #endif
 
         #if defined(AB2)
-            dth_advect = allocate3DContinuousArray(nx, nz, 2, dth_advectcont);
-            dth_buoyancy = allocate3DContinuousArray(nx, nz, 2, dth_buoyancycont);
-            dzeta_advect = allocate3DContinuousArray(nx, nz, 2, dzeta_advectcont);
+            create_variable(dth_advect, dth_advectcont, nx, nz, 2);
+            create_variable(dth_buoyancy, dth_buoyancycont, nx, nz, 2);
+            create_variable(dzeta_advect, dzeta_advectcont, nx, nz, 2);
             #if defined(WATER)
-                dqv_advect = allocate3DContinuousArray(nx, nz, 2, dqv_advectcont);
-                dqc_advect = allocate3DContinuousArray(nx, nz, 2, dqc_advectcont);
-                dqr_advect = allocate3DContinuousArray(nx, nz, 2, dqr_advectcont);
+                create_variable(dqv_advect, dqv_advectcont, nx, nz, 2);
+                create_variable(dqc_advect, dqc_advectcont, nx, nz, 2);
+                create_variable(dqr_advect, dqr_advectcont, nx, nz, 2);
                 #if defined(KESSLER_MICROPHY)
-                    dqr_VT = allocate3DContinuousArray(nx, nz, 2, dqr_VTcont);
+                    create_variable(dqr_VT, dqr_VTcont, nx, nz, 2);
                 #endif
 
                 #if defined(P3_MICROPHY)
-                    dnc_advect = allocate3DContinuousArray(nx, nz, 2, dnc_advectcont);
-                    dnr_advect = allocate3DContinuousArray(nx, nz, 2, dnr_advectcont);
-                    dni_advect = allocate3DContinuousArray(nx, nz, 2, dni_advectcont);
-                    dqitot_advect = allocate3DContinuousArray(nx, nz, 2, dqitot_advectcont);
-                    dqirim_advect = allocate3DContinuousArray(nx, nz, 2, dqirim_advectcont);
-                    dqiliq_advect = allocate3DContinuousArray(nx, nz, 2, dqiliq_advectcont);
-                    dbirim_advect = allocate3DContinuousArray(nx, nz, 2, dbirim_advectcont);
+                    create_variable(dnc_advect, dnc_advectcont, nx, nz, 2);
+                    create_variable(dnr_advect, dnr_advectcont, nx, nz, 2);
+                    create_variable(dni_advect, dni_advectcont, nx, nz, 2);
+                    create_variable(dqitot_advect, dqitot_advectcont, nx, nz, 2);
+                    create_variable(dqirim_advect, dqirim_advectcont, nx, nz, 2);
+                    create_variable(dqiliq_advect, dqiliq_advectcont, nx, nz, 2);
+                    create_variable(dbirim_advect, dbirim_advectcont, nx, nz, 2);
                 #endif
             #endif
 
             #if defined(P3_MICROPHY)
-                diag_3d = allocate3DContinuousArray(nx, nz, vvm::P3::n_diag_3d, diag_3dcont);
+                create_variable(diag_3d, diag_3dcont, nx, nz, vvm::P3::n_diag_3d);
             #endif
         #endif
     }
 
-    static double** allocate2DContinuousArray(int rows, int cols, double*& contMemory) {
-        double** array = new double*[rows]();
-        contMemory = new double[rows * cols](); // Allocate continuous memory block
-        for (int i = 0; i < rows; ++i) {
-            array[i] = &contMemory[i * cols]; // Point to segments within continuous block
-        }
-        return array;
+    // ========= HELPER METHODS =========
+    // 1D Allocation
+    template<typename T>
+    void create_variable(T*& array, size_t size) {
+        array = new T[size]();
     }
 
-    static void deallocate2DContinuousArray(double** array, double* contMemory) {
-        if (array != nullptr) {
-            delete[] contMemory; // Deallocate the continuous block of memory
-            delete[] array;      // Deallocate the array of pointers
+    // 2D Allocation
+    template<typename T>
+    void create_variable(T**& array, T*& cont_memory, size_t dim1, size_t dim2) {
+        cont_memory = new T[dim1 * dim2]();
+        array = new T*[dim1]();
+        for (size_t i = 0; i < dim1; ++i) {
+            array[i] = &cont_memory[i * dim2];
         }
     }
 
-    #if defined(AB2)
-    double*** allocate3DContinuousArray(int dim1, int dim2, int dim3, double*& contMemory) {
-        double*** array = new double**[dim1]();
-        contMemory = new double[dim1 * dim2 * dim3](); // Allocate continuous memory block
-        for (int i = 0; i < dim1; ++i) {
-            array[i] = new double*[dim2]();
-            for (int j = 0; j < dim2; ++j) {
-                array[i][j] = &contMemory[i * dim2 * dim3 + j * dim3]; // Point to segments within continuous block
+    // 3D Allocation
+    template<typename T>
+    void create_variable(T***& array, T*& cont_memory, size_t dim1, size_t dim2, size_t dim3) {
+        cont_memory = new T[dim1 * dim2 * dim3]();
+        array = new T**[dim1]();
+        for (size_t i = 0; i < dim1; ++i) {
+            array[i] = new T*[dim2]();
+            for (size_t j = 0; j < dim2; ++j) {
+                array[i][j] = &cont_memory[i * (dim2 * dim3) + j * dim3];
             }
         }
-        return array;
     }
 
-    void deallocate3DContinuousArray(double*** array, double* contMemory) {
+    // 1D Deallocation
+    template<typename T>
+    void destroy_variable(T*& array) {
+        delete[] array;
+        array = nullptr; // Good practice to prevent dangling pointers
+    }
+
+    // 2D Deallocation
+    template<typename T>
+    void destroy_variable(T**& array, T*& cont_memory) {
         if (array != nullptr) {
-            delete[] contMemory; // Deallocate the continuous block of memory
-            for (int i = 0; i < nx; ++i) {
-                delete[] array[i]; // Deallocate the array of pointers
-            }
-            delete[] array;      // Deallocate the array of pointers
+            delete[] cont_memory;
+            delete[] array;
+            array = nullptr;
+            cont_memory = nullptr;
         }
     }
-    #endif
 
-    double rdx = 0;                              ///< 1/dx, calculated from Config_VVM given by users.
-    double r2dx = 0;                             ///< 1 / (2dx), calculated from Config_VVM given by users.
-    double rdz = 0;                              ///< 1 / dz, calculated from Config_VVM given by users.
-    double r2dz = 0;                             ///< 1 / (2dz), calculated from Config_VVM given by users.
-    double rdx2 = 0;                             ///< 1 / (dx^2), calculated from Config_VVM given by users.
-    double rdz2 = 0;                             ///< 1 / (dz^2), calculated from Config_VVM given by users.
-    int nx = 0;                                  ///< Number of grid points in x direction, calculated from Config_VVM given by users.
-    int nz = 0;                                  ///< Number of grid points in z direction, calculated from Config_VVM given by users.
-    double dt = 0;                               ///< From Config_VVM given by users.
-    double d2t = 0;                              ///< From Config_VVM given by users.
-    double dx = 0;                               ///< From Config_VVM given by users.
-    double dz = 0;                               ///< From Config_VVM given by users.
-    int XRANGE = 0;                              ///< From Config_VVM given by users.
-    int ZRANGE = 0;                              ///< From Config_VVM given by users.
-    double TIMEEND = 0;                          ///< From Config_VVM given by users.
-    int TIMEROUTPUTSIZE = 0;                     ///< From Config_VVM given by users.
-    std::string outputpath = "";                  ///< From Config_VVM given by users.
-    int OUTPUTSTEP = 0;                          ///< From Config_VVM given by users.
-    double Kx = 0;                               ///< From Config_VVM given by users.
-    double Kz = 0;                               ///< From Config_VVM given by users.
-    double TIMETS = 0;                           ///< From Config_VVM given by users.
-    double tolerance = 0;                        ///< From Config_VVM given by users.
-    double GRAVITY = 0;                          ///< From Config_VVM given by users.
-    double Cp = 0;                               ///< From Config_VVM given by users.
-    double Cv = 0;                               ///< From Config_VVM given by users.
-    double Rd = 0;                               ///< From Config_VVM given by users.
-    double Lv = 0;                               ///< From Config_VVM given by users.
-    double P0 = 0;                               ///< From Config_VVM given by users.
-    double PSURF = 0;                            ///< From Config_VVM given by users.
-    double addforcingtime = 0;                   ///< From Config_VVM given by users.
-    int CASE = 0;                                ///< From Config_VVM given by users.
-    int year = 2025;
-    int month = 3;
-    int day = 20;
-    double hour = 12.;
-    double minute = 0.;
-    double second = 0.;
-    double lon = 0.;
-    double lat = 0.;
-    int k_diff_start = 0;
-
-    // 0D variables
-    int step = 0;                            ///< The current time step.
-    double ubarTopp = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
-    double ubarTop = 0;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
-    double ubarTopm = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
-    double moisture_nudge_time = 0.;         ///< The time for nudging the moisture field.
-    double dubarTop_advect[2] = {0,0};
-
-    // 1D variables
-    double *thb = nullptr;                              ///< Horizontal mean potential temperature profile.
-    double *thb_init = nullptr;                         ///< Initial horizontal mean potential temperature profile.
-    double *thbm = nullptr;                             ///< Horizontal mean potential temperature profile for previous step.
-    double *thb_zeta = nullptr;                         ///< Horizontal mean potential temperature profile at grid upper edge.
-    double *rhou = nullptr;                             ///< Horizontal mean density profile at grid center.
-    double *rhow = nullptr;                             ///< Horizontal mean density profile at grid upper edge.
-    double *pib = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid center.
-    double *pib_lev = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid boundary.
-    double *qvb = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
-    double *qvb0 = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
-    double *qvsb = nullptr;                             ///< Horizontal mean saturated water vapor profile at grid center.
-    double *pb = nullptr;                               ///< Horizontal mean pressure profile at grid center.
-    double *pb_lev = nullptr;                               ///< Horizontal mean pressure profile at grid boundary.
-    double *xi = nullptr;                               ///< The velocity potential in x-direction at top boundary grid center.
-    double *uxi = nullptr;
-    double *thvb = nullptr;
-    double *thvbm = nullptr;
-    double *z = nullptr;
-    double *z_zeta = nullptr;
-    double *lambda2 = nullptr;
-    double *lambda2_zeta = nullptr;
-    double *th_ground = nullptr;
-    double *qvs_ground = nullptr;
-    double *addflux = nullptr;
-    double *heatflux = nullptr;
-    double *waterflux = nullptr;
-    double *nudge_tau = nullptr;
-    double *RH = nullptr;
-
-    #if defined(GPU_POISSON)
-        int *row_ptr_w = nullptr;
-        int *col_idx_w = nullptr;
-        double *values_w = nullptr;
-        int *row_ptr_u = nullptr;
-        int *col_idx_u = nullptr;
-        double *values_u = nullptr;
-        int nnz_w = 0;
-        int nnz_u = 0;
-        // AMGX members for w (A matrix)
-        AMGX_config_handle cfg_w;
-        AMGX_resources_handle rsc_w;
-        AMGX_matrix_handle A;
-        AMGX_vector_handle b_vec_w, x_vec_w;
-        AMGX_solver_handle solver_w;
-
-        // AMGX members for u (G matrix)
-        AMGX_config_handle cfg_u;
-        AMGX_resources_handle rsc_u;
-        AMGX_matrix_handle G;
-        AMGX_vector_handle h_vec_u, y_vec_u;
-        AMGX_solver_handle solver_u;
-
-        bool initialized = false;
-
-        int *d_row_ptr_w, *d_col_idx_w;
-        double *d_values_w;
-        int *d_row_ptr_u, *d_col_idx_u;
-        double *d_values_u;
-
-        double *d_b_w, *d_x_w; // For cal_w
-        double *d_b_u, *d_x_u; // For cal_u
-    #endif
-
-    // 2D variables
-    double **zetap = nullptr;
-    double **zeta = nullptr;
-    double **zetam = nullptr;
-    double **thp = nullptr;
-    double **th = nullptr;
-    double **thm = nullptr;
-    double **u = nullptr;
-    double **w = nullptr;
-    double **RKM = nullptr;
-    double **RKH = nullptr;
-    double **U_w = nullptr;
-    double **W_u = nullptr;
-    #if defined(RTERRTMGP)
-        double **T = nullptr;
-        double **T_lev = nullptr;
-        double **radiation_heating_rate = nullptr; // K/s
-    #endif
-
-    double *zetapcont = nullptr;
-    double *zetacont = nullptr;
-    double *zetamcont = nullptr;
-    double *thpcont = nullptr;
-    double *thcont = nullptr;
-    double *thmcont = nullptr;
-    double *ucont = nullptr;
-    double *wcont = nullptr;
-    double *init_th_forcingcont = nullptr;
-    double *RKMcont = nullptr;
-    double *RKHcont = nullptr;
-    double *U_wcont = nullptr;
-    double *W_ucont = nullptr;
-    #if defined(RTERRTMGP)
-        double *Tcont = nullptr;
-        double *T_levcont = nullptr;
-        double *radiation_heating_ratecont = nullptr;
-    #endif
+    // 3D Deallocation
+    template<typename T>
+    void destroy_variable(T***& array, T*& cont_memory, size_t dim1) {
+        if (array != nullptr) {
+            delete[] cont_memory;
+            for (size_t i = 0; i < dim1; ++i) {
+                delete[] array[i];
+            }
+            delete[] array;
+            array = nullptr;
+            cont_memory = nullptr;
+        }
+    }
     
-    
-    #if defined(STREAMFUNCTION)
-        double** psi;
-    #endif
-
-    #if defined(WATER)
-        double **qvp = nullptr, **qv = nullptr, **qvm = nullptr;
-        double **qcp = nullptr, **qc = nullptr, **qcm = nullptr;
-        double **qrp = nullptr, **qr = nullptr, **qrm = nullptr;
-        #if defined(KESSLER_MICROPHY)
-            double **evaporation = nullptr;
-            double **accretion = nullptr;
-            double **autoconversion = nullptr;
-            double **condensation = nullptr;
-            double *precip = nullptr;
-        #endif
-        #if defined(P3_MICROPHY)
-            double **ncp = nullptr, **nc = nullptr, **ncm = nullptr;
-            double **nrp = nullptr, **nr = nullptr, **nrm = nullptr;
-            double **qitotp = nullptr, **qitot = nullptr, **qitotm = nullptr;
-            double **qirimp = nullptr, **qirim = nullptr, **qirimm = nullptr;
-            double **qiliqp = nullptr, **qiliq = nullptr, **qiliqm = nullptr;
-            double **nip = nullptr, **ni = nullptr, **nim = nullptr;
-            double **birimp = nullptr, **birim = nullptr, **birimm = nullptr;
-            double *precip_liq = nullptr, *precip_sol = nullptr, *precip = nullptr;
-            double **diag_ze = nullptr, **diag_effc = nullptr, **diag_effi = nullptr;
-            double **diag_vmi = nullptr, **diag_di = nullptr, **diag_rhoi = nullptr, **cldfrac = nullptr;
-            double **diag_2d = nullptr, ***diag_3d = nullptr;
-            double **dz_all = nullptr;
-            double **w_all = nullptr;
-            double **pb_all = nullptr;
-            double **pb_lev_all = nullptr;
-            double **zi_all = nullptr;
-            double **ssat_all = nullptr;
-        #endif
-
-
-        double *qvpcont, *qvcont, *qvmcont;
-        double *qcpcont, *qccont, *qcmcont;
-        double *qrpcont, *qrcont, *qrmcont;
-        #if defined(KESSLER_MICROPHY)
-            double *evaporationcont = nullptr;
-            double *accretioncont = nullptr;
-            double *autoconversioncont = nullptr;
-            double *condensationcont = nullptr;
-        #endif
-
-        #if defined(P3_MICROPHY)
-            double *ncpcont = nullptr, *nccont = nullptr, *ncmcont = nullptr;
-            double *nrpcont = nullptr, *nrcont = nullptr, *nrmcont = nullptr;
-            double *qitotpcont = nullptr, *qitotcont = nullptr, *qitotmcont = nullptr;
-            double *qirimpcont = nullptr, *qirimcont = nullptr, *qirimmcont = nullptr;
-            double *qiliqpcont = nullptr, *qiliqcont = nullptr, *qiliqmcont = nullptr;
-            double *nipcont = nullptr, *nicont = nullptr, *nimcont = nullptr;
-            double *birimpcont = nullptr, *birimcont = nullptr, *birimmcont = nullptr;
-            double *diag_zecont = nullptr, *diag_effccont = nullptr, *diag_efficont = nullptr;
-            double *diag_vmicont = nullptr, *diag_dicont = nullptr, *diag_rhoicont = nullptr, *cldfraccont = nullptr;
-            double *diag_2dcont = nullptr, *diag_3dcont = nullptr;
-            double *dz_allcont = nullptr;
-            double *w_allcont = nullptr;
-            double *pb_allcont = nullptr;
-            double *pb_lev_allcont = nullptr;
-            double *zi_allcont = nullptr;
-            double *ssat_allcont = nullptr;
-        #endif
-    #endif
-
-    // #####################################################################################
-    // Used for AB2. These variables are declared but not initialized if it's not AB2
-    double ***dth_advect = nullptr;
-    double ***dth_buoyancy = nullptr;
-    double ***dzeta_advect = nullptr;
-    
-    double *dth_advectcont = nullptr;
-    double *dth_buoyancycont = nullptr;
-    double *dzeta_advectcont = nullptr;
-
-    #if defined(WATER)
-        double ***dqv_advect = nullptr;
-        double ***dqc_advect = nullptr;
-        double ***dqr_advect = nullptr;
-
-        double *dqv_advectcont = nullptr;
-        double *dqc_advectcont = nullptr;
-        double *dqr_advectcont = nullptr;
-
-        #if defined(KESSLER_MICROPHY)
-            double ***dqr_VT = nullptr;
-            double *dqr_VTcont = nullptr;
-        #endif
-
-        #if defined(P3_MICROPHY)
-            double ***dnc_advect = nullptr;
-            double ***dnr_advect = nullptr;
-            double ***dni_advect = nullptr;
-            double ***dqitot_advect = nullptr;
-            double ***dqirim_advect = nullptr;
-            double ***dqiliq_advect = nullptr;
-            double ***dbirim_advect = nullptr;
-
-            double *dnc_advectcont = nullptr;
-            double *dnr_advectcont = nullptr;
-            double *dni_advectcont = nullptr;
-            double *dqitot_advectcont = nullptr;
-            double *dqirim_advectcont = nullptr;
-            double *dqiliq_advectcont = nullptr;
-            double *dbirim_advectcont = nullptr;
-        #endif
-    #endif
-    // #####################################################################################
-
-
-    double *t_advection = nullptr;
-    double *t_poisson = nullptr;
-    double *t_diffusion = nullptr;
-    double *t_microphysics = nullptr;
-    double *t_all = nullptr;
-
     // Boundary Process => BoundaryProcess.cpp
     // **********************************************************************
     /**
@@ -920,6 +679,7 @@ public:
             static void output_time_nc(int step, vvm &model);
         #endif
         static void copy_files(const std::string &source_path, const std::string &destination_path);
+        static void copy_source_project(vvm &model);
 
         #if defined(OUTPUTTXT)
             static void output_zeta(int step, vvm &model);
@@ -978,6 +738,282 @@ public:
 
     };
     #endif
+
+private:
+    double rdx = 0;                              ///< 1/dx, calculated from Config_VVM given by users.
+    double r2dx = 0;                             ///< 1 / (2dx), calculated from Config_VVM given by users.
+    double rdz = 0;                              ///< 1 / dz, calculated from Config_VVM given by users.
+    double r2dz = 0;                             ///< 1 / (2dz), calculated from Config_VVM given by users.
+    double rdx2 = 0;                             ///< 1 / (dx^2), calculated from Config_VVM given by users.
+    double rdz2 = 0;                             ///< 1 / (dz^2), calculated from Config_VVM given by users.
+    int nx = 0;                                  ///< Number of grid points in x direction, calculated from Config_VVM given by users.
+    int nz = 0;                                  ///< Number of grid points in z direction, calculated from Config_VVM given by users.
+    double dt = 0;                               ///< From Config_VVM given by users.
+    double d2t = 0;                              ///< From Config_VVM given by users.
+    double dx = 0;                               ///< From Config_VVM given by users.
+    double dz = 0;                               ///< From Config_VVM given by users.
+    int XRANGE = 0;                              ///< From Config_VVM given by users.
+    int ZRANGE = 0;                              ///< From Config_VVM given by users.
+    double TIMEEND = 0;                          ///< From Config_VVM given by users.
+    int TIMEROUTPUTSIZE = 0;                     ///< From Config_VVM given by users.
+    std::string outputpath = "";                  ///< From Config_VVM given by users.
+    int OUTPUTSTEP = 0;                          ///< From Config_VVM given by users.
+    double Kx = 0;                               ///< From Config_VVM given by users.
+    double Kz = 0;                               ///< From Config_VVM given by users.
+    double TIMETS = 0;                           ///< From Config_VVM given by users.
+    double tolerance = 0;                        ///< From Config_VVM given by users.
+    double GRAVITY = 0;                          ///< From Config_VVM given by users.
+    double Cp = 0;                               ///< From Config_VVM given by users.
+    double Cv = 0;                               ///< From Config_VVM given by users.
+    double Rd = 0;                               ///< From Config_VVM given by users.
+    double Lv = 0;                               ///< From Config_VVM given by users.
+    double P0 = 0;                               ///< From Config_VVM given by users.
+    double PSURF = 0;                            ///< From Config_VVM given by users.
+    double addforcingtime = 0;                   ///< From Config_VVM given by users.
+    int CASE = 0;                                ///< From Config_VVM given by users.
+    int year = 2025;
+    int month = 3;
+    int day = 20;
+    double hour = 12.;
+    double minute = 0.;
+    double second = 0.;
+    double lon = 0.;
+    double lat = 0.;
+    int k_diff_start = 0;
+    double CZ1 = 0.;
+    double CZ2 = 0.;
+
+    // 0D variables
+    int step = 0;                            ///< The current time step.
+    double ubarTopp = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTop = 0;                          ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double ubarTopm = 0;                         ///< The top boundary of the zonal wind for future time step. In the model design part, this is used to predict the mean top boundary of the zonal wind in the 9th governing equation.
+    double moisture_nudge_time = 0.;         ///< The time for nudging the moisture field.
+    double dubarTop_advect[2] = {0,0};
+
+    // 1D variables
+    double *thb = nullptr;                              ///< Horizontal mean potential temperature profile.
+    double *thb_init = nullptr;                         ///< Initial horizontal mean potential temperature profile.
+    double *thbm = nullptr;                             ///< Horizontal mean potential temperature profile for previous step.
+    double *thb_zeta = nullptr;                         ///< Horizontal mean potential temperature profile at grid upper edge.
+    double *rhou = nullptr;                             ///< Horizontal mean density profile at grid center.
+    double *rhow = nullptr;                             ///< Horizontal mean density profile at grid upper edge.
+    double *pib = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid center.
+    double *pib_lev = nullptr;                              ///< Horizontal mean non-dimensional height profile at grid boundary.
+    double *qvb = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvb0 = nullptr;                              ///< Horizontal mean water vapor profile at grid center.
+    double *qvsb = nullptr;                             ///< Horizontal mean saturated water vapor profile at grid center.
+    double *pb = nullptr;                               ///< Horizontal mean pressure profile at grid center.
+    double *pb_lev = nullptr;                               ///< Horizontal mean pressure profile at grid boundary.
+    double *xi = nullptr;                               ///< The velocity potential in x-direction at top boundary grid center.
+    double *uxi = nullptr;
+    double *thvb = nullptr;
+    double *thvbm = nullptr;
+    double *z = nullptr;
+    double *z_zeta = nullptr;
+    double *lambda2 = nullptr;
+    double *lambda2_zeta = nullptr;
+    double *th_ground = nullptr;
+    double *qvs_ground = nullptr;
+    double *addflux = nullptr;
+    double *heatflux = nullptr;
+    double *waterflux = nullptr;
+    double *nudge_tau = nullptr;
+    double *RH = nullptr;
+    double *dz_th = nullptr;
+    double *dz_zeta = nullptr;
+
+    #if defined(GPU_POISSON)
+        int *row_ptr_w = nullptr;
+        int *col_idx_w = nullptr;
+        double *values_w = nullptr;
+        int *row_ptr_u = nullptr;
+        int *col_idx_u = nullptr;
+        double *values_u = nullptr;
+        int nnz_w = 0;
+        int nnz_u = 0;
+        // AMGX members for w (A matrix)
+        AMGX_config_handle cfg_w;
+        AMGX_resources_handle rsc_w;
+        AMGX_matrix_handle A;
+        AMGX_vector_handle b_vec_w, x_vec_w;
+        AMGX_solver_handle solver_w;
+
+        // AMGX members for u (G matrix)
+        AMGX_config_handle cfg_u;
+        AMGX_resources_handle rsc_u;
+        AMGX_matrix_handle G;
+        AMGX_vector_handle h_vec_u, y_vec_u;
+        AMGX_solver_handle solver_u;
+
+        bool initialized = false;
+
+        int *d_row_ptr_w, *d_col_idx_w;
+        double *d_values_w;
+        int *d_row_ptr_u, *d_col_idx_u;
+        double *d_values_u;
+
+        double *d_b_w, *d_x_w; // For cal_w
+        double *d_b_u, *d_x_u; // For cal_u
+    #endif
+
+    // 2D variables
+    double **zetap = nullptr;
+    double **zeta = nullptr;
+    double **zetam = nullptr;
+    double **thp = nullptr;
+    double **th = nullptr;
+    double **thm = nullptr;
+    double **u = nullptr;
+    double **w = nullptr;
+    double **RKM = nullptr;
+    double **RKH = nullptr;
+    double **U_w = nullptr;
+    double **W_u = nullptr;
+    #if defined(RTERRTMGP)
+        double **T = nullptr;
+        double **T_lev = nullptr;
+        double **radiation_heating_rate = nullptr; // K/s
+    #endif
+
+    double *zetapcont = nullptr;
+    double *zetacont = nullptr;
+    double *zetamcont = nullptr;
+    double *thpcont = nullptr;
+    double *thcont = nullptr;
+    double *thmcont = nullptr;
+    double *ucont = nullptr;
+    double *wcont = nullptr;
+    double *init_th_forcingcont = nullptr;
+    double *RKMcont = nullptr;
+    double *RKHcont = nullptr;
+    double *U_wcont = nullptr;
+    double *W_ucont = nullptr;
+    #if defined(RTERRTMGP)
+        double *Tcont = nullptr;
+        double *T_levcont = nullptr;
+        double *radiation_heating_ratecont = nullptr;
+    #endif
+    
+    
+    #if defined(STREAMFUNCTION)
+        double** psi;
+    #endif
+
+    #if defined(WATER)
+        double **qvp = nullptr, **qv = nullptr, **qvm = nullptr;
+        double **qcp = nullptr, **qc = nullptr, **qcm = nullptr;
+        double **qrp = nullptr, **qr = nullptr, **qrm = nullptr;
+        #if defined(KESSLER_MICROPHY)
+            double **evaporation = nullptr;
+            double **accretion = nullptr;
+            double **autoconversion = nullptr;
+            double **condensation = nullptr;
+            double *precip = nullptr;
+        #endif
+        #if defined(P3_MICROPHY)
+            double **ncp = nullptr, **nc = nullptr, **ncm = nullptr;
+            double **nrp = nullptr, **nr = nullptr, **nrm = nullptr;
+            double **qitotp = nullptr, **qitot = nullptr, **qitotm = nullptr;
+            double **qirimp = nullptr, **qirim = nullptr, **qirimm = nullptr;
+            double **qiliqp = nullptr, **qiliq = nullptr, **qiliqm = nullptr;
+            double **nip = nullptr, **ni = nullptr, **nim = nullptr;
+            double **birimp = nullptr, **birim = nullptr, **birimm = nullptr;
+            double *precip_liq = nullptr, *precip_sol = nullptr, *precip = nullptr;
+            double **diag_ze = nullptr, **diag_effc = nullptr, **diag_effi = nullptr;
+            double **diag_vmi = nullptr, **diag_di = nullptr, **diag_rhoi = nullptr, **cldfrac = nullptr;
+            double **diag_2d = nullptr, ***diag_3d = nullptr;
+            double **dz_all = nullptr;
+            double **w_all = nullptr;
+            double **pb_all = nullptr;
+            double **pb_lev_all = nullptr;
+            double **zi_all = nullptr;
+            double **ssat_all = nullptr;
+        #endif
+
+
+        double *qvpcont, *qvcont, *qvmcont;
+        double *qcpcont, *qccont, *qcmcont;
+        double *qrpcont, *qrcont, *qrmcont;
+        #if defined(KESSLER_MICROPHY)
+            double *evaporationcont = nullptr;
+            double *accretioncont = nullptr;
+            double *autoconversioncont = nullptr;
+            double *condensationcont = nullptr;
+        #endif
+
+        #if defined(P3_MICROPHY)
+            double *ncpcont = nullptr, *nccont = nullptr, *ncmcont = nullptr;
+            double *nrpcont = nullptr, *nrcont = nullptr, *nrmcont = nullptr;
+            double *qitotpcont = nullptr, *qitotcont = nullptr, *qitotmcont = nullptr;
+            double *qirimpcont = nullptr, *qirimcont = nullptr, *qirimmcont = nullptr;
+            double *qiliqpcont = nullptr, *qiliqcont = nullptr, *qiliqmcont = nullptr;
+            double *nipcont = nullptr, *nicont = nullptr, *nimcont = nullptr;
+            double *birimpcont = nullptr, *birimcont = nullptr, *birimmcont = nullptr;
+            double *diag_zecont = nullptr, *diag_effccont = nullptr, *diag_efficont = nullptr;
+            double *diag_vmicont = nullptr, *diag_dicont = nullptr, *diag_rhoicont = nullptr, *cldfraccont = nullptr;
+            double *diag_2dcont = nullptr, *diag_3dcont = nullptr;
+            double *dz_allcont = nullptr;
+            double *w_allcont = nullptr;
+            double *pb_allcont = nullptr;
+            double *pb_lev_allcont = nullptr;
+            double *zi_allcont = nullptr;
+            double *ssat_allcont = nullptr;
+        #endif
+    #endif
+
+    // #####################################################################################
+    // Used for AB2. These variables are declared but not initialized if it's not AB2
+    double ***dth_advect = nullptr;
+    double ***dth_buoyancy = nullptr;
+    double ***dzeta_advect = nullptr;
+    
+    double *dth_advectcont = nullptr;
+    double *dth_buoyancycont = nullptr;
+    double *dzeta_advectcont = nullptr;
+
+    #if defined(WATER)
+        double ***dqv_advect = nullptr;
+        double ***dqc_advect = nullptr;
+        double ***dqr_advect = nullptr;
+
+        double *dqv_advectcont = nullptr;
+        double *dqc_advectcont = nullptr;
+        double *dqr_advectcont = nullptr;
+
+        #if defined(KESSLER_MICROPHY)
+            double ***dqr_VT = nullptr;
+            double *dqr_VTcont = nullptr;
+        #endif
+
+        #if defined(P3_MICROPHY)
+            double ***dnc_advect = nullptr;
+            double ***dnr_advect = nullptr;
+            double ***dni_advect = nullptr;
+            double ***dqitot_advect = nullptr;
+            double ***dqirim_advect = nullptr;
+            double ***dqiliq_advect = nullptr;
+            double ***dbirim_advect = nullptr;
+
+            double *dnc_advectcont = nullptr;
+            double *dnr_advectcont = nullptr;
+            double *dni_advectcont = nullptr;
+            double *dqitot_advectcont = nullptr;
+            double *dqirim_advectcont = nullptr;
+            double *dqiliq_advectcont = nullptr;
+            double *dbirim_advectcont = nullptr;
+        #endif
+    #endif
+    // #####################################################################################
+
+
+    double *t_advection = nullptr;
+    double *t_poisson = nullptr;
+    double *t_diffusion = nullptr;
+    double *t_microphysics = nullptr;
+    double *t_all = nullptr;
+
+    static double getTHV(int i, int k, vvm &model);
 
 };
 

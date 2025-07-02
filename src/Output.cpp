@@ -8,10 +8,9 @@
 using namespace std;
 void vvm::Output::printInit(vvm &model) {
     double z;
-    std::cout << "z             Pbar          thb        thb_zeta     rhou       rhow       qvb   	 RH      pib" << std::endl;
+    std::cout << "z          z_zeta        dz_th      dz_zeta          Pbar          thb        thb_zeta     rhou       rhow       qvb   	 RH      pib" << std::endl;
     for (int k = 0; k <= model.nz-1;k++){
-        z = (double) (k - 0.5) * model.dz ;
-        std::cout << std::fixed << std::setprecision(4) << z << "    " << model.pb[k] << "     " << model.thb[k] << "    " << model.thb_zeta[k] << "    " << model.rhou[k] << "     " 
+        std::cout << std::fixed << std::setprecision(4) << model.z[k] << "      " << model.z_zeta[k] << "    " << model.dz_th[k] << "    " << model.dz_zeta[k] << "    " << model.pb[k] << "     " << model.thb[k] << "    " << model.thb_zeta[k] << "    " << model.rhou[k] << "     " 
         << model.rhow[k] << "    " << model.qvb[k] * 1000 << "    " << model.qvb[k] / model.qvsb[k] << "    "
         << model.pib[k] << std::endl;
     }
@@ -19,8 +18,7 @@ void vvm::Output::printInit(vvm &model) {
     string initName = model.outputpath + (string) "init.txt";
     initout.open(initName, std::ios::out);
     for (int k = 1; k <= model.nz-2; k++) {
-        z = (double) (k - 0.5) * model.dz ;
-        initout << z << "    " << model.thb[k] << "    " << model.rhou[k] << "     " 
+        initout << model.z[k] << "    " << model.z_zeta[k] << "    " << model.dz_th[k] << "    " << model.dz_zeta[k] << "    " << model.thb[k] << "    " << model.rhou[k] << "     " 
         << model.rhow[k] << "   	 " << model.qvb[k] << "    " << model.qvsb[k] << "    " << model.qvb[k] / model.qvsb[k] << "    "
         << model.pib[k] << "    " << model.pb[k] << std::endl;
     }
@@ -495,3 +493,23 @@ void vvm::Output::outputalltxt(int n, vvm &model) {
     #endif
 }
 #endif
+
+void vvm::Output::copy_source_project(vvm &model) {
+    // Copy grads ctl file to the output directory
+    std::string source = "../scripts/vvm.ctl";
+    std::string destination = model.outputpath + "nc/vvm.ctl";
+
+    // Construct the command
+    std::string command = "cp " + source + " " + destination;
+
+    // Execute the command
+    system(command.c_str());
+
+    // Copy source files to output directory
+    vvm::Output::copy_files("../src", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../input", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../external", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../vvm_config.txt", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../CMakeLists.txt", model.outputpath+"run_files/.");
+    vvm::Output::copy_files("../run.sh", model.outputpath+"run_files/.");
+}

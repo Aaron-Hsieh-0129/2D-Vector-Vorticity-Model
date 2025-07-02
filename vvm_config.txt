@@ -1,6 +1,6 @@
 VVM_OUTPUTPATH=/work/aaron900129/NextACC/2DVVM/DATA/0701/test/
 VVM_XRANGE=100000                                   # Domain for x [m]
-VVM_ZRANGE=20000                                    # Domain for z [m]
+VVM_ZRANGE=14000                                    # Domain for z [m]
 VVM_DT=2                                            # dt [s]
 VVM_DX=200                                          # dx [m]
 VVM_DZ=200                                          # dz [m], it should be the same value as dx

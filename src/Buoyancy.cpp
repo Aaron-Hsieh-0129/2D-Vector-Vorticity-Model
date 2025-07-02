@@ -1,6 +1,6 @@
 #include "Declare.hpp"
 
-double getTHV(int i, int k, vvm &model) {
+double vvm::getTHV(int i, int k, vvm &model) {
     #if defined(WATER)
         return model.th[i][k] * (1 + 0.608 * model.qv[i][k]);
     #else

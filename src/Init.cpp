@@ -23,6 +23,41 @@ void generateAddlfxArray(double *array, int size, double variation = 0.1) {
 }
 
 void vvm::Init::Init1d(vvm &model) {
+    for (int k = 0; k < model.nz; k++) {
+        model.z[k] = (k-0.5) * model.dz;
+        model.z_zeta[k] = (k-1) * model.dz;
+    }
+
+    double DZ = 500.;
+    double DZ1 = 100.;
+    double DOMAIN = 10000.;
+    model.CZ2 = (DZ-DZ1) / (DZ * (DOMAIN-DZ));
+    model.CZ1 = 1. - model.CZ2 * DOMAIN;
+
+    for (int k = 0; k < model.nz; k++) {
+        model.z[k] = model.z[k] * (model.CZ1 + model.CZ2 * model.z[k]);
+        model.z_zeta[k] = model.z_zeta[k] * (model.CZ1 + model.CZ2 * model.z_zeta[k]);
+    }
+
+    for (int k = 1; k < model.nz-1; k++) {
+        model.dz_th[k] = model.z_zeta[k+1] - model.z_zeta[k];
+        model.dz_zeta[k] = model.z[k] - model.z[k-1];
+    }
+    model.BoundaryProcess1D_center(model.dz_th,model.nz);
+    model.BoundaryProcess1D_center(model.dz_zeta,model.nz);
+
+    // Initialization for p3 microphysics
+    for (int k = 0; k < model.nz; k++) {
+        for (int i = 0; i < model.nx; i++) { 
+            model.dz_all[i][k] = model.dz_th[k];
+            model.w_all[i][k] = 0.;
+            model.pb_all[i][k] = model.pb[k];
+            model.zi_all[i][k] = 0.;
+            model.ssat_all[i][k] = 0.;
+        }
+    }
+
+
     #if defined(LOADFILE)
         LoadFile(model);
     #else
@@ -135,13 +170,9 @@ void vvm::Init::Init1d(vvm &model) {
     }
 
     for (int k = 1; k < model.nz-1; k++) {
-        model.z[k] = (k-0.5) * model.dz;
-        model.z_zeta[k] = (k-1) * model.dz;
         model.lambda2[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z[k], 2));
         model.lambda2_zeta[k] = 1. / (1. / pow(0.23 * std::sqrt(model.dx*model.dz), 2) + 1. / pow(0.4* 0.4 * model.z_zeta[k], 2));
     }
-    model.BoundaryProcess1D_center(model.z, model.nz);
-    model.BoundaryProcess1D_center(model.z_zeta, model.nz);
     model.BoundaryProcess1D_center(model.lambda2, model.nz);
     model.BoundaryProcess1D_center(model.lambda2_zeta, model.nz);
 
