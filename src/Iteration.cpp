@@ -218,7 +218,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         std::cout << "timenow: " << model.step << std::endl;
     #endif
 
-
     // Radiation scheme call for step 0
     #if defined(RTERRTMGP)
         vvm::Radiation::solve_radiation(model);
@@ -396,7 +395,6 @@ void vvm::Iteration::TimeMarching(vvm &model) {
                     nullptr, nullptr, nullptr, nullptr, nullptr,
                     nullptr, nullptr, nullptr, nullptr, nullptr,
                     nullptr, nullptr, nullptr, nullptr, nullptr, strlen(vvm::P3::model_name)
-
                 );
             }
             #endif

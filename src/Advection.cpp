@@ -62,7 +62,7 @@ void vvm::Advection_thermo(double **past, double **now, double **future, double 
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhouvar_px_rho = (flux_u[i+1][k] - flux_u[i][k]) * model.r2dx / model.rhou[k];
-            prhowvar_pz_rho = (flux_w[i][k+1] - flux_w[i][k]) * model.r2dz / model.rhou[k];
+            prhowvar_pz_rho = (flux_w[i][k+1] - flux_w[i][k]) * model.r2dz / model.rhou[k] * model.flex_height_coef_th[k];
 
             #if defined(AB2)
                 dvar[i][k][(model.step+1)%2] = -prhouvar_px_rho - prhowvar_pz_rho;
@@ -85,9 +85,14 @@ void vvm::Advection_zeta(vvm &model) {
     #pragma omp parallel for collapse(2)
     #endif
     for (int k = 1; k <= model.nz-2; k++) {
+        double fact1 = model.flex_height_coef_zeta[k] /  model.flex_height_coef_th[k];
+        double fact2 = model.flex_height_coef_zeta[k] /  model.flex_height_coef_th[k-1];
+
+        double fact3 = model.flex_height_coef_th[k] / model.flex_height_coef_zeta[k+1];
+        double fact4 = model.flex_height_coef_th[k] / model.flex_height_coef_zeta[k];
         for (int i = 1; i <= model.nx-2; i++) {
-            model.U_w[i][k] = 0.25 * (model.rhou[k] * (model.u[i+1][k]+model.u[i][k]) + model.rhou[k-1] * (model.u[i+1][k-1]+model.u[i][k-1]));
-            model.W_u[i][k] = 0.25 * (model.rhow[k+1] * (model.w[i][k+1]+model.w[i-1][k+1]) + model.rhow[k] * (model.w[i][k]+model.w[i-1][k]));
+            model.U_w[i][k] = 0.25 * (fact1 * model.rhou[k] * (model.u[i+1][k]+model.u[i][k]) + fact2 * model.rhou[k-1] * (model.u[i+1][k-1]+model.u[i][k-1]));
+            model.W_u[i][k] = 0.25 * (fact3 * model.rhow[k+1] * (model.w[i][k+1]+model.w[i-1][k+1]) + fact4 * model.rhow[k] * (model.w[i][k]+model.w[i-1][k]));
         }
     }
     model.BoundaryProcess2D_center(model.U_w, model.nx, model.nz);
@@ -131,7 +136,7 @@ void vvm::Advection_zeta(vvm &model) {
     for (int k = 2; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             prhouzeta_px_rho = (flux_u[i][k] - flux_u[i-1][k]) * model.r2dx / model.rhow[k];
-            prhowzeta_pz_rho = (flux_w[i][k] - flux_w[i][k-1]) * model.r2dz / model.rhow[k];
+            prhowzeta_pz_rho = (flux_w[i][k] - flux_w[i][k-1]) * model.r2dz / model.rhow[k] * model.flex_height_coef_zeta[k];
 
             #if defined(AB2)
                 model.dzeta_advect[i][k][(model.step+1)%2] = -prhouzeta_px_rho - prhowzeta_pz_rho;

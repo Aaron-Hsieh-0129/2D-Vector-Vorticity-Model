@@ -1,9 +1,10 @@
 VVM_OUTPUTPATH=/work/aaron900129/NextACC/2DVVM/DATA/0701/test/
 VVM_XRANGE=100000                                   # Domain for x [m]
-VVM_ZRANGE=14000                                    # Domain for z [m]
+VVM_ZRANGE=6000                                    # Domain for z [m]
 VVM_DT=2                                            # dt [s]
 VVM_DX=200                                          # dx [m]
-VVM_DZ=200                                          # dz [m], it should be the same value as dx
+VVM_DZ=500                                          # dz [m], stretch coefficient
+VVM_NZ=30                                           # z layer number
 VVM_TIMEEND=86400                                   # Integration Time [s]
 VVM_OUTPUTSTEP=50                                    # Output frequency
 VVM_CASE=1                                          # Case0: Nothing, Case1: Bubble, Case2: Bubble+wind shear

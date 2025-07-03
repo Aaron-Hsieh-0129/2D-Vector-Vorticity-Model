@@ -26,11 +26,11 @@
 
 class Config_VVM {
 public:
-    Config_VVM(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
+    Config_VVM(double dt, double dx, double dz, int nz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
            std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance,
            double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time, 
            int year, int month, int day, double hour, double minute, double second, double lon, double lat)
-        : dt(dt), dx(dx), dz(dz), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
+        : dt(dt), dx(dx), dz(dz), nz(nz+2), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
           outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS),
           tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE), mositure_nudge_time(mositure_nudge_time), 
           year(year), month(month), day(day), hour(hour), minute(minute), second(second), lon(lon), lat(lat) {}
@@ -38,7 +38,8 @@ public:
 
     double dt;              ///< Time step for vvm [s].
     double dx;              ///< Grid size in x-direction [m].
-    double dz;              ///< Grid size in z-direction [m]. It should be the same as dx.
+    double dz;              ///< z stretch coefficient
+    int nz;                 ///< z layer number
     int XRANGE;             ///< Domain size of the model in x-direction [m].
     int ZRANGE;             ///< Domain size of the model in z-direction [m].
     double TIMEEND;         ///< End time of the simulation [s].
@@ -79,9 +80,9 @@ public:
     vvm(const Config_VVM& config)
         : rdx(1.0 / config.dx), r2dx(rdx / 2.0), rdz(1.0 / config.dz), 
           r2dz(rdz / 2.0), rdx2(rdx * rdx),
-          rdz2(rdz * rdz), nx(config.XRANGE/config.dx),
-          nz(config.ZRANGE/config.dz), dt(config.dt), 
-          d2t(2.0 * config.dt), dx(config.dx), dz(config.dz),
+          rdz2(rdz * rdz), nx(config.XRANGE/config.dx), 
+          dt(config.dt), d2t(2.0 * config.dt), 
+          dx(config.dx), dz(config.dz), nz(config.nz),
           XRANGE(config.XRANGE), ZRANGE(config.ZRANGE), TIMEEND(config.TIMEEND),
           TIMEROUTPUTSIZE(config.TIMEROUTPUTSIZE), outputpath(config.outputpath), OUTPUTSTEP(config.OUTPUTSTEP), Kx(config.Kx), Kz(config.Kz),
           TIMETS(config.TIMETS), tolerance(config.tolerance),
@@ -99,325 +100,9 @@ public:
         deallocateMemory();
     }
 
-    void deallocateMemory() {
-        // Free the allocated memory
-        destroy_variable(t_advection);
-        destroy_variable(t_poisson);
-        destroy_variable(t_diffusion);
-        destroy_variable(t_microphysics);
-        destroy_variable(t_all);
+    // public members
+    std::string outputpath = "";                  ///< From Config_VVM given by users.
 
-        destroy_variable(thb);
-        destroy_variable(thbm);
-        destroy_variable(thb_zeta);
-        destroy_variable(thb_init);
-        destroy_variable(rhou);
-        destroy_variable(rhow);
-        destroy_variable(pib);
-        destroy_variable(pib_lev);
-        destroy_variable(qvb);
-        destroy_variable(qvb0);
-        destroy_variable(qvsb);
-        destroy_variable(pb);
-        destroy_variable(pb_lev);
-        destroy_variable(xi);
-        destroy_variable(uxi);
-        destroy_variable(thvb);
-        destroy_variable(thvbm);
-        destroy_variable(z);
-        destroy_variable(z_zeta);
-        destroy_variable(lambda2);
-        destroy_variable(lambda2_zeta);
-        destroy_variable(th_ground);
-        destroy_variable(qvs_ground);
-        destroy_variable(addflux);
-        destroy_variable(heatflux);
-        destroy_variable(waterflux);
-        destroy_variable(nudge_tau);
-        destroy_variable(RH);
-        destroy_variable(dz_th);
-        destroy_variable(dz_zeta);
-
-        destroy_variable(zetap, zetapcont);
-        destroy_variable(zeta, zetacont);
-        destroy_variable(zetam, zetamcont);
-        destroy_variable(thp, thpcont);
-        destroy_variable(th, thcont);
-        destroy_variable(thm, thmcont);
-        destroy_variable(u, ucont);
-        destroy_variable(w, wcont);
-        destroy_variable(init_th_forcing, init_th_forcingcont);
-        destroy_variable(RKM, RKMcont);
-        destroy_variable(RKH, RKHcont);
-        destroy_variable(U_w, U_wcont);
-        destroy_variable(W_u, W_ucont);
-
-        #if defined(RTERRTMGP)
-            destroy_variable(T, Tcont);
-            destroy_variable(radiation_heating_rate, radiation_heating_ratecont);
-        #endif
-
-        #if defined(STREAMFUNCTION)
-            destroy_variable(psi, psicont);
-        #endif
-
-        #if defined(WATER)
-            destroy_variable(qvp, qvpcont);
-            destroy_variable(qv, qvcont);
-            destroy_variable(qvm, qvmcont);
-            destroy_variable(qcp, qcpcont);
-            destroy_variable(qc, qccont);
-            destroy_variable(qcm, qcmcont);
-            destroy_variable(qrp, qrpcont);
-            destroy_variable(qr, qrcont);
-            destroy_variable(qrm, qrmcont);
-            #if defined(KESSLER_MICROPHY)
-                delete[] precip;
-
-                destroy_variable(evaporation, evaporationcont);
-                destroy_variable(accretion, accretioncont);
-                destroy_variable(autoconversion, autoconversioncont);
-                destroy_variable(condensation, condensationcont);
-            #endif
-
-            #if defined(P3_MICROPHY)
-                
-                destroy_variable(ncp, ncpcont);
-                destroy_variable(nc, nccont);
-                destroy_variable(ncm, ncmcont);
-                destroy_variable(nrp, nrpcont);
-                destroy_variable(nr, nrcont);
-                destroy_variable(nrm, nrmcont);
-                destroy_variable(qitotp, qitotpcont);
-                destroy_variable(qitot, qitotcont);
-                destroy_variable(qitotm, qitotmcont);
-                destroy_variable(qirimp, qirimpcont);
-                destroy_variable(qirim, qirimcont);
-                destroy_variable(qirimm, qirimmcont);
-                destroy_variable(qiliqp, qiliqpcont);
-                destroy_variable(qiliq, qiliqcont);
-                destroy_variable(qiliqm, qiliqmcont);
-                destroy_variable(nip, nipcont);
-                destroy_variable(ni, nicont);
-                destroy_variable(nim, nimcont);
-                destroy_variable(birimp, birimpcont);
-                destroy_variable(birim, birimcont);
-                destroy_variable(birimm, birimmcont);
-                destroy_variable(diag_ze, diag_zecont);
-                destroy_variable(diag_effc, diag_effccont);
-                destroy_variable(diag_effi, diag_efficont);
-                destroy_variable(diag_vmi, diag_vmicont);
-                destroy_variable(diag_di, diag_dicont);
-                destroy_variable(diag_rhoi, diag_rhoicont);
-                destroy_variable(cldfrac, cldfraccont);
-                destroy_variable(diag_2d, diag_2dcont);
-                destroy_variable(dz_all, dz_allcont);
-                destroy_variable(w_all, w_allcont);
-                destroy_variable(pb_all, pb_allcont);
-                destroy_variable(pb_lev_all, pb_lev_allcont);
-                destroy_variable(zi_all, zi_allcont);
-                destroy_variable(ssat_all, ssat_allcont);
-
-                destroy_variable(precip_liq);
-                destroy_variable(precip_sol);
-                destroy_variable(precip);
-            #endif
-        #endif
-
-        #if defined(AB2)
-            destroy_variable(dth_advect, dth_advectcont, nx);
-            destroy_variable(dth_buoyancy, dth_buoyancycont, nx);
-            destroy_variable(dzeta_advect, dzeta_advectcont, nx);
-            
-            #if defined(WATER)
-                destroy_variable(dqv_advect, dqv_advectcont, nx);
-                destroy_variable(dqc_advect, dqc_advectcont, nx);
-                destroy_variable(dqr_advect, dqr_advectcont, nx);
-                #if defined(KESSLER_MICROPHY)
-                    destroy_variable(dqr_VT, dqr_VTcont);
-                #endif
-                #if defined(P3_MICROPHY)
-                    
-                    destroy_variable(dnc_advect, dnc_advectcont, nx);
-                    destroy_variable(dnr_advect, dnr_advectcont, nx);
-                    destroy_variable(dni_advect, dni_advectcont, nx);
-                    destroy_variable(dqitot_advect, dqitot_advectcont, nx);
-                    destroy_variable(dqirim_advect, dqirim_advectcont, nx);
-                    destroy_variable(dqiliq_advect, dqiliq_advectcont, nx);
-                    destroy_variable(dbirim_advect, dbirim_advectcont, nx);
-                #endif
-            #endif
-
-        #endif
-        #if defined(P3_MICROPHY)
-            destroy_variable(diag_3d, diag_3dcont, nx);
-        #endif
-
-        #if defined(TROPICALFORCING)
-            destroy_variable(Q1LS);
-            destroy_variable(Q2LS);
-        #endif
-    }
-
-    void allocateMemory() {
-        // 1D arrays for timing
-        create_variable(t_advection, TIMEROUTPUTSIZE);
-        create_variable(t_poisson, TIMEROUTPUTSIZE);
-        create_variable(t_diffusion, TIMEROUTPUTSIZE);
-        create_variable(t_microphysics, TIMEROUTPUTSIZE);
-        create_variable(t_all, TIMEROUTPUTSIZE);
-
-        // 1D arrays
-        create_variable(thb, nz);
-        create_variable(thbm, nz);
-        create_variable(thb_zeta, nz);
-        create_variable(thb_init, nz);
-        create_variable(rhou, nz);
-        create_variable(rhow, nz);
-        create_variable(pib, nz);
-        create_variable(pib_lev, nz+1);
-        create_variable(qvb, nz);
-        create_variable(qvb0, nz);
-        create_variable(qvsb, nz);
-        create_variable(pb, nz);
-        create_variable(pb_lev, nz+1);
-        create_variable(xi, nx);
-        create_variable(uxi, nx);
-        create_variable(thvb, nz);
-        create_variable(thvbm, nz);
-        create_variable(z, nz);
-        create_variable(z_zeta, nz);
-        create_variable(lambda2, nz);
-        create_variable(lambda2_zeta, nz);
-        #if defined(TROPICALFORCING)
-            create_variable(Q1LS, nz);
-            create_variable(Q2LS, nz);
-        #endif
-        create_variable(th_ground, nx);
-        create_variable(qvs_ground, nx);
-        create_variable(addflux, nx);
-        create_variable(heatflux, nx);
-        create_variable(waterflux, nx);
-        create_variable(nudge_tau, nz);
-        create_variable(RH, nz);
-        create_variable(dz_th, nz);
-        create_variable(dz_zeta, nz);
-
-        // 2D arrays
-        create_variable(zetap, zetapcont, nx, nz);
-        create_variable(zeta, zetacont, nx, nz);
-        create_variable(zetam, zetamcont, nx, nz);
-        create_variable(thp, thpcont, nx, nz);
-        create_variable(th, thcont, nx, nz);
-        create_variable(thm, thmcont, nx, nz);
-        create_variable(u, ucont, nx, nz);
-        create_variable(w, wcont, nx, nz);
-        create_variable(init_th_forcing, init_th_forcingcont, nx, nz);
-        create_variable(RKM, RKMcont, nx, nz);
-        create_variable(RKH, RKHcont, nx, nz);
-        create_variable(U_w, U_wcont, nx, nz);
-        create_variable(W_u, W_ucont, nx, nz);
-
-        #if defined(RTERRTMGP)
-            create_variable(T, Tcont, nx, nz);
-            create_variable(T_lev, T_levcont, nx, nz+1);
-            create_variable(radiation_heating_rate, radiation_heating_ratecont, nx, nz);
-        #endif
-
-        #if defined(STREAMFUNCTION)
-            create_variable(psi, psicont, nx, nz);
-        #endif
-
-        #if defined(WATER)
-            #if defined(KESSLER_MICROPHY)
-                create_variable(precip, nx);
-                create_variable(evaporation, evaporationcont, nx, nz);
-                create_variable(accretion, accretioncont, nx, nz);
-                create_variable(autoconversion, autoconversioncont, nx, nz);
-                create_variable(condensation, condensationcont, nx, nz);
-            #endif
-
-            create_variable(qvp, qvpcont, nx, nz);
-            create_variable(qv, qvcont, nx, nz);
-            create_variable(qvm, qvmcont, nx, nz);
-            create_variable(qcp, qcpcont, nx, nz);
-            create_variable(qc, qccont, nx, nz);
-            create_variable(qcm, qcmcont, nx, nz);
-            create_variable(qrp, qrpcont, nx, nz);
-            create_variable(qr, qrcont, nx, nz);
-            create_variable(qrm, qrmcont, nx, nz);
-
-            #if defined(P3_MICROPHY)
-                create_variable(ncp, ncpcont, nx, nz);
-                create_variable(nc, nccont, nx, nz);
-                create_variable(ncm, ncmcont, nx, nz);
-                create_variable(nrp, nrpcont, nx, nz);
-                create_variable(nr, nrcont, nx, nz);
-                create_variable(nrm, nrmcont, nx, nz);
-                create_variable(qitotp, qitotpcont, nx, nz);
-                create_variable(qitot, qitotcont, nx, nz);
-                create_variable(qitotm, qitotmcont, nx, nz);
-                create_variable(qirimp, qirimpcont, nx, nz);
-                create_variable(qirim, qirimcont, nx, nz);
-                create_variable(qirimm, qirimmcont, nx, nz);
-                create_variable(qiliqp, qiliqpcont, nx, nz);
-                create_variable(qiliq, qiliqcont, nx, nz);
-                create_variable(qiliqm, qiliqmcont, nx, nz);
-                create_variable(nip, nipcont, nx, nz);
-                create_variable(ni, nicont, nx, nz);
-                create_variable(nim, nimcont, nx, nz);
-                create_variable(birimp, birimpcont, nx, nz);
-                create_variable(birim, birimcont, nx, nz);
-                create_variable(birimm, birimmcont, nx, nz);
-                create_variable(diag_ze, diag_zecont, nx, nz);
-                create_variable(diag_effc, diag_effccont, nx, nz);
-                create_variable(diag_effi, diag_efficont, nx, nz);
-                create_variable(diag_vmi, diag_vmicont, nx, nz);
-                create_variable(diag_di, diag_dicont, nx, nz);
-                create_variable(diag_rhoi, diag_rhoicont, nx, nz);
-                create_variable(cldfrac, cldfraccont, nx, nz);
-                create_variable(diag_2d, diag_2dcont, nx, vvm::P3::n_diag_2d);
-                create_variable(dz_all, dz_allcont, nx, nz);
-                create_variable(w_all, w_allcont, nx, nz);
-                create_variable(pb_all, pb_allcont, nx, nz);
-                create_variable(pb_lev_all, pb_lev_allcont, nx, nz+1);
-                create_variable(zi_all, zi_allcont, nx, nz);
-                create_variable(ssat_all, ssat_allcont, nx, nz);
-
-                create_variable(precip_liq, nx);
-                create_variable(precip_sol, nx);
-                create_variable(precip, nx);
-            #endif
-        #endif
-
-        #if defined(AB2)
-            create_variable(dth_advect, dth_advectcont, nx, nz, 2);
-            create_variable(dth_buoyancy, dth_buoyancycont, nx, nz, 2);
-            create_variable(dzeta_advect, dzeta_advectcont, nx, nz, 2);
-            #if defined(WATER)
-                create_variable(dqv_advect, dqv_advectcont, nx, nz, 2);
-                create_variable(dqc_advect, dqc_advectcont, nx, nz, 2);
-                create_variable(dqr_advect, dqr_advectcont, nx, nz, 2);
-                #if defined(KESSLER_MICROPHY)
-                    create_variable(dqr_VT, dqr_VTcont, nx, nz, 2);
-                #endif
-
-                #if defined(P3_MICROPHY)
-                    create_variable(dnc_advect, dnc_advectcont, nx, nz, 2);
-                    create_variable(dnr_advect, dnr_advectcont, nx, nz, 2);
-                    create_variable(dni_advect, dni_advectcont, nx, nz, 2);
-                    create_variable(dqitot_advect, dqitot_advectcont, nx, nz, 2);
-                    create_variable(dqirim_advect, dqirim_advectcont, nx, nz, 2);
-                    create_variable(dqiliq_advect, dqiliq_advectcont, nx, nz, 2);
-                    create_variable(dbirim_advect, dbirim_advectcont, nx, nz, 2);
-                #endif
-            #endif
-
-            #if defined(P3_MICROPHY)
-                create_variable(diag_3d, diag_3dcont, nx, nz, vvm::P3::n_diag_3d);
-            #endif
-        #endif
-    }
 
     // ========= HELPER METHODS =========
     // 1D Allocation
@@ -530,6 +215,25 @@ public:
 
     static void Bouyancy(vvm &model);
     static void SurfaceFlux(vvm &model);
+
+    double getScalar(std::string name) {
+        if (name == "rdx") return rdx;
+        else if (name == "rdz") return rdz;
+        else if (name == "r2dx") return r2dx;
+        else if (name == "r2dz") return r2dz;
+        else if (name == "rdx2") return rdx2;
+        else if (name == "rdz2") return rdz2;
+        else if (name == "dt") return dt;
+        else if (name == "d2t") return d2t;
+        else if (name == "dx") return dx;
+        else if (name == "dz") return dz;
+        else if (name == "nx") return nx;
+        else if (name == "nz") return nz;
+        else {
+            std::cerr << "Unknown scalar name: " << name << std::endl;
+            exit(1);
+        }
+    }
 
 
     // Poisson Solver => PoissonSolver.cpp
@@ -665,7 +369,7 @@ public:
         static double GetTHRAD(int i, int k, vvm &model);
         static double GetTH(int i, int k, vvm &model);
         #if defined(WATER)
-            static double GetQVB(int k, int dz);
+            static double GetQVB(int k, vvm &model);
         #endif
     };
 
@@ -756,7 +460,6 @@ private:
     int ZRANGE = 0;                              ///< From Config_VVM given by users.
     double TIMEEND = 0;                          ///< From Config_VVM given by users.
     int TIMEROUTPUTSIZE = 0;                     ///< From Config_VVM given by users.
-    std::string outputpath = "";                  ///< From Config_VVM given by users.
     int OUTPUTSTEP = 0;                          ///< From Config_VVM given by users.
     double Kx = 0;                               ///< From Config_VVM given by users.
     double Kz = 0;                               ///< From Config_VVM given by users.
@@ -822,6 +525,10 @@ private:
     double *RH = nullptr;
     double *dz_th = nullptr;
     double *dz_zeta = nullptr;
+    double *flex_height_coef_th = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
+    double *flex_height_coef_zeta = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
+    double *flex_height_coef_th_mean = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
+    double *flex_height_coef_zeta_mean = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
 
     #if defined(GPU_POISSON)
         int *row_ptr_w = nullptr;
@@ -1015,5 +722,330 @@ private:
 
     static double getTHV(int i, int k, vvm &model);
 
+    void deallocateMemory() {
+        // Free the allocated memory
+        destroy_variable(t_advection);
+        destroy_variable(t_poisson);
+        destroy_variable(t_diffusion);
+        destroy_variable(t_microphysics);
+        destroy_variable(t_all);
+
+        destroy_variable(thb);
+        destroy_variable(thbm);
+        destroy_variable(thb_zeta);
+        destroy_variable(thb_init);
+        destroy_variable(rhou);
+        destroy_variable(rhow);
+        destroy_variable(pib);
+        destroy_variable(pib_lev);
+        destroy_variable(qvb);
+        destroy_variable(qvb0);
+        destroy_variable(qvsb);
+        destroy_variable(pb);
+        destroy_variable(pb_lev);
+        destroy_variable(xi);
+        destroy_variable(uxi);
+        destroy_variable(thvb);
+        destroy_variable(thvbm);
+        destroy_variable(z);
+        destroy_variable(z_zeta);
+        destroy_variable(lambda2);
+        destroy_variable(lambda2_zeta);
+        destroy_variable(th_ground);
+        destroy_variable(qvs_ground);
+        destroy_variable(addflux);
+        destroy_variable(heatflux);
+        destroy_variable(waterflux);
+        destroy_variable(nudge_tau);
+        destroy_variable(RH);
+        destroy_variable(dz_th);
+        destroy_variable(dz_zeta);
+        destroy_variable(flex_height_coef_th);
+        destroy_variable(flex_height_coef_zeta);
+
+        destroy_variable(zetap, zetapcont);
+        destroy_variable(zeta, zetacont);
+        destroy_variable(zetam, zetamcont);
+        destroy_variable(thp, thpcont);
+        destroy_variable(th, thcont);
+        destroy_variable(thm, thmcont);
+        destroy_variable(u, ucont);
+        destroy_variable(w, wcont);
+        destroy_variable(init_th_forcing, init_th_forcingcont);
+        destroy_variable(RKM, RKMcont);
+        destroy_variable(RKH, RKHcont);
+        destroy_variable(U_w, U_wcont);
+        destroy_variable(W_u, W_ucont);
+
+        #if defined(RTERRTMGP)
+            destroy_variable(T, Tcont);
+            destroy_variable(radiation_heating_rate, radiation_heating_ratecont);
+        #endif
+
+        #if defined(STREAMFUNCTION)
+            destroy_variable(psi, psicont);
+        #endif
+
+        #if defined(WATER)
+            destroy_variable(qvp, qvpcont);
+            destroy_variable(qv, qvcont);
+            destroy_variable(qvm, qvmcont);
+            destroy_variable(qcp, qcpcont);
+            destroy_variable(qc, qccont);
+            destroy_variable(qcm, qcmcont);
+            destroy_variable(qrp, qrpcont);
+            destroy_variable(qr, qrcont);
+            destroy_variable(qrm, qrmcont);
+            #if defined(KESSLER_MICROPHY)
+                delete[] precip;
+
+                destroy_variable(evaporation, evaporationcont);
+                destroy_variable(accretion, accretioncont);
+                destroy_variable(autoconversion, autoconversioncont);
+                destroy_variable(condensation, condensationcont);
+            #endif
+
+            #if defined(P3_MICROPHY)
+                
+                destroy_variable(ncp, ncpcont);
+                destroy_variable(nc, nccont);
+                destroy_variable(ncm, ncmcont);
+                destroy_variable(nrp, nrpcont);
+                destroy_variable(nr, nrcont);
+                destroy_variable(nrm, nrmcont);
+                destroy_variable(qitotp, qitotpcont);
+                destroy_variable(qitot, qitotcont);
+                destroy_variable(qitotm, qitotmcont);
+                destroy_variable(qirimp, qirimpcont);
+                destroy_variable(qirim, qirimcont);
+                destroy_variable(qirimm, qirimmcont);
+                destroy_variable(qiliqp, qiliqpcont);
+                destroy_variable(qiliq, qiliqcont);
+                destroy_variable(qiliqm, qiliqmcont);
+                destroy_variable(nip, nipcont);
+                destroy_variable(ni, nicont);
+                destroy_variable(nim, nimcont);
+                destroy_variable(birimp, birimpcont);
+                destroy_variable(birim, birimcont);
+                destroy_variable(birimm, birimmcont);
+                destroy_variable(diag_ze, diag_zecont);
+                destroy_variable(diag_effc, diag_effccont);
+                destroy_variable(diag_effi, diag_efficont);
+                destroy_variable(diag_vmi, diag_vmicont);
+                destroy_variable(diag_di, diag_dicont);
+                destroy_variable(diag_rhoi, diag_rhoicont);
+                destroy_variable(cldfrac, cldfraccont);
+                destroy_variable(diag_2d, diag_2dcont);
+                destroy_variable(dz_all, dz_allcont);
+                destroy_variable(w_all, w_allcont);
+                destroy_variable(pb_all, pb_allcont);
+                destroy_variable(pb_lev_all, pb_lev_allcont);
+                destroy_variable(zi_all, zi_allcont);
+                destroy_variable(ssat_all, ssat_allcont);
+
+                destroy_variable(precip_liq);
+                destroy_variable(precip_sol);
+                destroy_variable(precip);
+            #endif
+        #endif
+
+        #if defined(AB2)
+            destroy_variable(dth_advect, dth_advectcont, nx);
+            destroy_variable(dth_buoyancy, dth_buoyancycont, nx);
+            destroy_variable(dzeta_advect, dzeta_advectcont, nx);
+            
+            #if defined(WATER)
+                destroy_variable(dqv_advect, dqv_advectcont, nx);
+                destroy_variable(dqc_advect, dqc_advectcont, nx);
+                destroy_variable(dqr_advect, dqr_advectcont, nx);
+                #if defined(KESSLER_MICROPHY)
+                    destroy_variable(dqr_VT, dqr_VTcont);
+                #endif
+                #if defined(P3_MICROPHY)
+                    
+                    destroy_variable(dnc_advect, dnc_advectcont, nx);
+                    destroy_variable(dnr_advect, dnr_advectcont, nx);
+                    destroy_variable(dni_advect, dni_advectcont, nx);
+                    destroy_variable(dqitot_advect, dqitot_advectcont, nx);
+                    destroy_variable(dqirim_advect, dqirim_advectcont, nx);
+                    destroy_variable(dqiliq_advect, dqiliq_advectcont, nx);
+                    destroy_variable(dbirim_advect, dbirim_advectcont, nx);
+                #endif
+            #endif
+
+        #endif
+        #if defined(P3_MICROPHY)
+            destroy_variable(diag_3d, diag_3dcont, nx);
+        #endif
+
+        #if defined(TROPICALFORCING)
+            destroy_variable(Q1LS);
+            destroy_variable(Q2LS);
+        #endif
+    }
+
+    void allocateMemory() {
+        // 1D arrays for timing
+        create_variable(t_advection, TIMEROUTPUTSIZE);
+        create_variable(t_poisson, TIMEROUTPUTSIZE);
+        create_variable(t_diffusion, TIMEROUTPUTSIZE);
+        create_variable(t_microphysics, TIMEROUTPUTSIZE);
+        create_variable(t_all, TIMEROUTPUTSIZE);
+
+        // 1D arrays
+        create_variable(thb, nz);
+        create_variable(thbm, nz);
+        create_variable(thb_zeta, nz);
+        create_variable(thb_init, nz);
+        create_variable(rhou, nz);
+        create_variable(rhow, nz);
+        create_variable(pib, nz);
+        create_variable(pib_lev, nz+1);
+        create_variable(qvb, nz);
+        create_variable(qvb0, nz);
+        create_variable(qvsb, nz);
+        create_variable(pb, nz);
+        create_variable(pb_lev, nz+1);
+        create_variable(xi, nx);
+        create_variable(uxi, nx);
+        create_variable(thvb, nz);
+        create_variable(thvbm, nz);
+        create_variable(z, nz);
+        create_variable(z_zeta, nz);
+        create_variable(lambda2, nz);
+        create_variable(lambda2_zeta, nz);
+        #if defined(TROPICALFORCING)
+            create_variable(Q1LS, nz);
+            create_variable(Q2LS, nz);
+        #endif
+        create_variable(th_ground, nx);
+        create_variable(qvs_ground, nx);
+        create_variable(addflux, nx);
+        create_variable(heatflux, nx);
+        create_variable(waterflux, nx);
+        create_variable(nudge_tau, nz);
+        create_variable(RH, nz);
+        create_variable(dz_th, nz);
+        create_variable(dz_zeta, nz);
+        create_variable(flex_height_coef_th, nz);
+        create_variable(flex_height_coef_zeta, nz);
+        create_variable(flex_height_coef_th_mean, nz);
+        create_variable(flex_height_coef_zeta_mean, nz);
+
+        // 2D arrays
+        create_variable(zetap, zetapcont, nx, nz);
+        create_variable(zeta, zetacont, nx, nz);
+        create_variable(zetam, zetamcont, nx, nz);
+        create_variable(thp, thpcont, nx, nz);
+        create_variable(th, thcont, nx, nz);
+        create_variable(thm, thmcont, nx, nz);
+        create_variable(u, ucont, nx, nz);
+        create_variable(w, wcont, nx, nz);
+        create_variable(init_th_forcing, init_th_forcingcont, nx, nz);
+        create_variable(RKM, RKMcont, nx, nz);
+        create_variable(RKH, RKHcont, nx, nz);
+        create_variable(U_w, U_wcont, nx, nz);
+        create_variable(W_u, W_ucont, nx, nz);
+
+        #if defined(RTERRTMGP)
+            create_variable(T, Tcont, nx, nz);
+            create_variable(T_lev, T_levcont, nx, nz+1);
+            create_variable(radiation_heating_rate, radiation_heating_ratecont, nx, nz);
+        #endif
+
+        #if defined(STREAMFUNCTION)
+            create_variable(psi, psicont, nx, nz);
+        #endif
+
+        #if defined(WATER)
+            #if defined(KESSLER_MICROPHY)
+                create_variable(precip, nx);
+                create_variable(evaporation, evaporationcont, nx, nz);
+                create_variable(accretion, accretioncont, nx, nz);
+                create_variable(autoconversion, autoconversioncont, nx, nz);
+                create_variable(condensation, condensationcont, nx, nz);
+            #endif
+
+            create_variable(qvp, qvpcont, nx, nz);
+            create_variable(qv, qvcont, nx, nz);
+            create_variable(qvm, qvmcont, nx, nz);
+            create_variable(qcp, qcpcont, nx, nz);
+            create_variable(qc, qccont, nx, nz);
+            create_variable(qcm, qcmcont, nx, nz);
+            create_variable(qrp, qrpcont, nx, nz);
+            create_variable(qr, qrcont, nx, nz);
+            create_variable(qrm, qrmcont, nx, nz);
+
+            #if defined(P3_MICROPHY)
+                create_variable(ncp, ncpcont, nx, nz);
+                create_variable(nc, nccont, nx, nz);
+                create_variable(ncm, ncmcont, nx, nz);
+                create_variable(nrp, nrpcont, nx, nz);
+                create_variable(nr, nrcont, nx, nz);
+                create_variable(nrm, nrmcont, nx, nz);
+                create_variable(qitotp, qitotpcont, nx, nz);
+                create_variable(qitot, qitotcont, nx, nz);
+                create_variable(qitotm, qitotmcont, nx, nz);
+                create_variable(qirimp, qirimpcont, nx, nz);
+                create_variable(qirim, qirimcont, nx, nz);
+                create_variable(qirimm, qirimmcont, nx, nz);
+                create_variable(qiliqp, qiliqpcont, nx, nz);
+                create_variable(qiliq, qiliqcont, nx, nz);
+                create_variable(qiliqm, qiliqmcont, nx, nz);
+                create_variable(nip, nipcont, nx, nz);
+                create_variable(ni, nicont, nx, nz);
+                create_variable(nim, nimcont, nx, nz);
+                create_variable(birimp, birimpcont, nx, nz);
+                create_variable(birim, birimcont, nx, nz);
+                create_variable(birimm, birimmcont, nx, nz);
+                create_variable(diag_ze, diag_zecont, nx, nz);
+                create_variable(diag_effc, diag_effccont, nx, nz);
+                create_variable(diag_effi, diag_efficont, nx, nz);
+                create_variable(diag_vmi, diag_vmicont, nx, nz);
+                create_variable(diag_di, diag_dicont, nx, nz);
+                create_variable(diag_rhoi, diag_rhoicont, nx, nz);
+                create_variable(cldfrac, cldfraccont, nx, nz);
+                create_variable(diag_2d, diag_2dcont, nx, vvm::P3::n_diag_2d);
+                create_variable(dz_all, dz_allcont, nx, nz);
+                create_variable(w_all, w_allcont, nx, nz);
+                create_variable(pb_all, pb_allcont, nx, nz);
+                create_variable(pb_lev_all, pb_lev_allcont, nx, nz+1);
+                create_variable(zi_all, zi_allcont, nx, nz);
+                create_variable(ssat_all, ssat_allcont, nx, nz);
+
+                create_variable(precip_liq, nx);
+                create_variable(precip_sol, nx);
+                create_variable(precip, nx);
+            #endif
+        #endif
+
+        #if defined(AB2)
+            create_variable(dth_advect, dth_advectcont, nx, nz, 2);
+            create_variable(dth_buoyancy, dth_buoyancycont, nx, nz, 2);
+            create_variable(dzeta_advect, dzeta_advectcont, nx, nz, 2);
+            #if defined(WATER)
+                create_variable(dqv_advect, dqv_advectcont, nx, nz, 2);
+                create_variable(dqc_advect, dqc_advectcont, nx, nz, 2);
+                create_variable(dqr_advect, dqr_advectcont, nx, nz, 2);
+                #if defined(KESSLER_MICROPHY)
+                    create_variable(dqr_VT, dqr_VTcont, nx, nz, 2);
+                #endif
+
+                #if defined(P3_MICROPHY)
+                    create_variable(dnc_advect, dnc_advectcont, nx, nz, 2);
+                    create_variable(dnr_advect, dnr_advectcont, nx, nz, 2);
+                    create_variable(dni_advect, dni_advectcont, nx, nz, 2);
+                    create_variable(dqitot_advect, dqitot_advectcont, nx, nz, 2);
+                    create_variable(dqirim_advect, dqirim_advectcont, nx, nz, 2);
+                    create_variable(dqiliq_advect, dqiliq_advectcont, nx, nz, 2);
+                    create_variable(dbirim_advect, dbirim_advectcont, nx, nz, 2);
+                #endif
+            #endif
+
+            #if defined(P3_MICROPHY)
+                create_variable(diag_3d, diag_3dcont, nx, nz, vvm::P3::n_diag_3d);
+            #endif
+        #endif
+    }
 };
 

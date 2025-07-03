@@ -7,7 +7,6 @@
 
 using namespace std;
 void vvm::Output::printInit(vvm &model) {
-    double z;
     std::cout << "z          z_zeta        dz_th      dz_zeta          Pbar          thb        thb_zeta     rhou       rhow       qvb   	 RH      pib" << std::endl;
     for (int k = 0; k <= model.nz-1;k++){
         std::cout << std::fixed << std::setprecision(4) << model.z[k] << "      " << model.z_zeta[k] << "    " << model.dz_th[k] << "    " << model.dz_zeta[k] << "    " << model.pb[k] << "     " << model.thb[k] << "    " << model.thb_zeta[k] << "    " << model.rhou[k] << "     " 
@@ -28,8 +27,7 @@ void vvm::Output::printInit(vvm &model) {
     string init2Name = model.outputpath + (string) "init2.txt";
     initout2.open(init2Name, std::ios::out);
     for (int k = 1; k <= model.nz-1; k++) {
-        z = (double) (k-1) * model.dz;
-        initout2 << z << "      " << model.pb_lev[k] << "     " << model.pib_lev[k] << std::endl;
+        initout2 << model.z[k] << "      " << model.pb_lev[k] << "     " << model.pib_lev[k] << std::endl;
     }
     initout2.close();
 

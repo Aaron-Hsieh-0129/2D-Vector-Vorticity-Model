@@ -12,11 +12,15 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
     for (int k = 1; k <= model.nz-2; k++) {
         for (int i = 1; i <= model.nx-2; i++) {
             Rzeta = 0.5*((model.w[i+1][k+1] + model.w[i+1][k]) - (model.w[i-1][k+1] + model.w[i-1][k])) * model.r2dx + 
-                    0.5*((model.u[i+1][k+1] + model.u[i][k+1]) - (model.u[i+1][k-1] + model.u[i][k-1])) * model.r2dz;
+                    0.5*((model.u[i+1][k+1] + model.u[i][k+1]) - (model.u[i+1][k-1] + model.u[i][k-1])) * model.flex_height_coef_zeta[k] * model.r2dz;
 
-            Rotat = std::pow((model.u[i+1][k] - model.u[i][k]) * model.rdx, 2) + std::pow((model.w[i][k+1] - model.w[i][k]) * model.rdz, 2);
+            Rotat = std::pow((model.u[i+1][k] - model.u[i][k]) * model.rdx, 2) + std::pow((model.w[i][k+1] - model.w[i][k]) * model.flex_height_coef_th[k] * model.rdz, 2);
 
-            Ri = (model.GRAVITY / model.thp[i][k] * (model.thp[i][k+1] - model.thp[i][k-1]) * model.r2dz) / (std::pow(Rzeta, 2) + 2. * Rotat);
+            // FIXME: Weird thp mean (brutal method without weighted average)
+            Ri = model.GRAVITY * model.flex_height_coef_zeta[k+1] * model.rdz * (model.thp[i][k+1] - model.thp[i][k]) / (model.thp[i][k+1]+model.thp[i][k]) + 
+                 model.GRAVITY * model.flex_height_coef_zeta[k]   * model.rdz * (model.thp[i][k] - model.thp[i][k-1]) / (model.thp[i][k]+model.thp[i][k-1]);
+
+            Ri /= std::pow(Rzeta, 2) + 2. * Rotat;
 
             if (Ri < 0) {
                 model.RKM[i][k] = model.lambda2[k] * std::sqrt(std::pow(Rzeta, 2) + 2. * Rotat) * std::sqrt(1. - 16. * Ri);
@@ -74,9 +78,9 @@ void vvm::Turbulence::Mparam(vvm &model, double **var_now, double **var_future) 
             var_future[i][k] += model.rdx2 * model.dt * 
                                 (0.5 * (model.RKM[i][k] + model.RKM[i][k-1]) * (var_now[i+1][k] - var_now[i][k]) - 
                                  0.5 * (model.RKM[i-1][k] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i-1][k]))
-                              + model.rdz2 * model.dt / model.rhow[k] * 
-                                (model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_now[i][k+1] - var_now[i][k]) - 
-                                 model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i][k-1]));
+                              + model.flex_height_coef_zeta[k] * model.rdz2 * model.dt / model.rhow[k] * 
+                                (model.flex_height_coef_th[k] * model.rhou[k] * 0.5 * (model.RKM[i][k] + model.RKM[i-1][k]) * (var_now[i][k+1] - var_now[i][k]) - 
+                                 model.flex_height_coef_th[k-1] * model.rhou[k-1] * 0.5 * (model.RKM[i][k-1] + model.RKM[i-1][k-1]) * (var_now[i][k] - var_now[i][k-1]));
         }
     }
     return;
@@ -91,9 +95,9 @@ void vvm::Turbulence::Hparam(vvm &model, double **var_now, double **var_future) 
             var_future[i][k] += model.rdx2 * model.dt * 
                                 (0.5 * (model.RKH[i+1][k] + model.RKH[i][k]) * (var_now[i+1][k] - var_now[i][k]) - 
                                  0.5 * (model.RKH[i][k] + model.RKH[i-1][k]) * (var_now[i][k] - var_now[i-1][k]))
-                              + model.rdz2 * model.dt / model.rhou[k] * 
-                                (model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_now[i][k+1] - var_now[i][k]) - 
-                                 model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_now[i][k] - var_now[i][k-1]));
+                              + model.flex_height_coef_th[k] * model.rdz2 * model.dt / model.rhou[k] * 
+                                (model.flex_height_coef_zeta[k+1] * model.rhow[k+1] * 0.5 * (model.RKH[i][k+1] + model.RKH[i][k]) * (var_now[i][k+1] - var_now[i][k]) - 
+                                 model.flex_height_coef_zeta[k] * model.rhow[k] * 0.5 * (model.RKH[i][k] + model.RKH[i][k-1]) * (var_now[i][k] - var_now[i][k-1]));
         }
     }
     return;
@@ -104,10 +108,10 @@ void vvm::Turbulence::ubarTop(vvm &model) {
     double rhoKM_Rzeta_down_bar = 0.;
     for (int i = 1; i <= model.nx-2; i++) {
         Rzeta_down = (model.w[i][model.nz-2] - model.w[i-1][model.nz-2]) * model.rdx + 
-                     (model.u[i][model.nz-2] - model.u[i][model.nz-3]) * model.rdz;
+                     (model.u[i][model.nz-2] - model.u[i][model.nz-3]) * model.flex_height_coef_zeta[model.nz-2] * model.rdz;
         rhoKM_Rzeta_down_bar += model.rhow[model.nz-2] * (0.25*(model.RKM[i][model.nz-2]+model.RKM[i][model.nz-3]+model.RKM[i-1][model.nz-2]+model.RKM[i-1][model.nz-3]) * Rzeta_down);
     }
     rhoKM_Rzeta_down_bar /= ((double) (model.nx - 2.));
-    model.ubarTopp += model.dt * model.rdz * (0. - rhoKM_Rzeta_down_bar) / model.rhou[model.nz-2];
+    model.ubarTopp += model.dt * model.flex_height_coef_th[model.nz-2] * model.rdz * (0. - rhoKM_Rzeta_down_bar) / model.rhou[model.nz-2];
     return;
 }

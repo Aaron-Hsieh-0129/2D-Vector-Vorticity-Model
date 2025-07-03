@@ -23,18 +23,21 @@ void generateAddlfxArray(double *array, int size, double variation = 0.1) {
 }
 
 void vvm::Init::Init1d(vvm &model) {
+    double DZ1 = 100.;
+    double DOMAIN = 10000.;
+    model.CZ2 = (model.dz-DZ1) / (model.dz * (DOMAIN-model.dz));
+    model.CZ1 = 1. - model.CZ2 * DOMAIN;
+
     for (int k = 0; k < model.nz; k++) {
         model.z[k] = (k-0.5) * model.dz;
         model.z_zeta[k] = (k-1) * model.dz;
     }
 
-    double DZ = 500.;
-    double DZ1 = 100.;
-    double DOMAIN = 10000.;
-    model.CZ2 = (DZ-DZ1) / (DZ * (DOMAIN-DZ));
-    model.CZ1 = 1. - model.CZ2 * DOMAIN;
-
     for (int k = 0; k < model.nz; k++) {
+        // Make the coefficient array of flexible height before the height is modified to new height
+        model.flex_height_coef_th[k] = 1. / (model.CZ1 + 2 * model.CZ2 * model.z[k]);
+        model.flex_height_coef_zeta[k] = 1. / (model.CZ1 + 2 * model.CZ2 * model.z_zeta[k]);
+
         model.z[k] = model.z[k] * (model.CZ1 + model.CZ2 * model.z[k]);
         model.z_zeta[k] = model.z_zeta[k] * (model.CZ1 + model.CZ2 * model.z_zeta[k]);
     }
@@ -47,15 +50,17 @@ void vvm::Init::Init1d(vvm &model) {
     model.BoundaryProcess1D_center(model.dz_zeta,model.nz);
 
     // Initialization for p3 microphysics
-    for (int k = 0; k < model.nz; k++) {
-        for (int i = 0; i < model.nx; i++) { 
-            model.dz_all[i][k] = model.dz_th[k];
-            model.w_all[i][k] = 0.;
-            model.pb_all[i][k] = model.pb[k];
-            model.zi_all[i][k] = 0.;
-            model.ssat_all[i][k] = 0.;
+    #if defined(P3_MICROPHY) && defined(WATER)
+        for (int k = 0; k < model.nz; k++) {
+            for (int i = 0; i < model.nx; i++) { 
+                model.dz_all[i][k] = model.dz_th[k];
+                model.w_all[i][k] = 0.;
+                model.pb_all[i][k] = model.pb[k];
+                model.zi_all[i][k] = 0.;
+                model.ssat_all[i][k] = 0.;
+            }
         }
-    }
+    #endif
 
 
     #if defined(LOADFILE)
@@ -77,7 +82,7 @@ void vvm::Init::Init1d(vvm &model) {
         // init qvb, tvb
         for (int k = 1; k <= model.nz-2; k++) {
             #if defined(WATER)
-                model.qvb[k] = GetQVB(k, model.dz);
+                model.qvb[k] = GetQVB(k, model);
             #else
                 model.qvb[k] = 0.;
             #endif
@@ -90,10 +95,10 @@ void vvm::Init::Init1d(vvm &model) {
         // init pib
         double pisfc = pow((model.PSURF / model.P0), model.Rd / model.Cp);
         for (int k = 1; k <= model.nz-2; k++) {
-            if (k == 1) model.pib[k] = pisfc - model.GRAVITY * 0.5 * model.dz / (model.Cp * model.thvb[k]);
+            if (k == 1) model.pib[k] = pisfc - model.GRAVITY * 0.5 * model.dz_th[k] / (model.Cp * model.thvb[k]);
             else {
                 double tvbavg = 0.5*(model.thvb[k] + model.thvb[k-1]);
-                model.pib[k] = model.pib[k-1] - model.GRAVITY * model.dz / (model.Cp * tvbavg);
+                model.pib[k] = model.pib[k-1] - model.GRAVITY * model.dz_th[k] / (model.Cp * tvbavg);
             }
         }
         model.BoundaryProcess1D_center(model.pib, model.nz);
@@ -147,7 +152,7 @@ void vvm::Init::Init1d(vvm &model) {
 
         #if defined(WATER)
             for (int k = 1; k <= model.nz-2; k++) {
-                model.qvb[k] = GetQVB(k, model.dz);
+                model.qvb[k] = GetQVB(k, model);
             }
             model.BoundaryProcess1D_center(model.qvb, model.nz);
         #endif
@@ -177,7 +182,13 @@ void vvm::Init::Init1d(vvm &model) {
     model.BoundaryProcess1D_center(model.lambda2_zeta, model.nz);
 
     double tau_min = 60., tau_max = 1800.;
-    int k_diff_start = 17000. / model.dz + 1;
+    int k_diff_start = 0.;
+    for (int k = 1; k < model.nz-1; k++) {
+        if (model.z[k] >= 15000) {
+            k_diff_start = k;
+            break;
+        }
+    }
     for (int k = 0; k <= model.nz-1; k++) {
         if (k >= k_diff_start) {
             model.nudge_tau[k] = tau_min * std::pow(tau_max/tau_min, ((model.z[model.nz-1]-model.z[k])/(model.z[model.nz-1]-model.z[model.nz-1-k_diff_start])));
@@ -194,6 +205,16 @@ void vvm::Init::Init1d(vvm &model) {
         model.qvs_ground[i] = 0.622 * es/ (model.P0 - 0.378 * es);
     }
     generateAddlfxArray(model.addflux, model.nx);
+
+    // Initialization for p3 microphysics
+    #if defined(P3_MICROPHY) && defined(WATER)
+        for (int k = 0; k < model.nz; k++) {
+            for (int i = 0; i < model.nx; i++) { 
+                model.pb_all[i][k] = model.pb[k];
+            }
+        }
+    #endif
+
     return;
 }
 
@@ -284,8 +305,7 @@ void vvm::Init::Init2d(vvm &model) {
             // From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
             double u_tmp = 0.;
             for (int k = 1; k <= model.nz-2; k++) {
-                double z_u = (k-1) * model.dz;
-                if (z_u <= 2000.) u_tmp = -8. + (8. / 2000.0) * z_u;
+                if (model.z[k] <= 2000.) u_tmp = -8. + (8. / 2000.0) * model.z[k];
 
                 for (int i = 1; i <= model.nx-2; i++) {
                     model.u[i][k] = u_tmp;
@@ -338,16 +358,15 @@ void vvm::Init::Init2d(vvm &model) {
 
 double vvm::Init::GetTB(int k, vvm &model) {
     double z_top = 12000., T_top = 213., tb_top = 343.;
-    double z_t = model.dz * (k - 0.5);
-    if (z_t <= z_top) return 300. + 43. * pow(z_t / z_top, 1.25);
-    else return tb_top * exp(model.GRAVITY * (z_t - z_top) / (model.Cp * T_top));
+    if (model.z[k] <= z_top) return 300. + 43. * pow(model.z[k] / z_top, 1.25);
+    else return tb_top * exp(model.GRAVITY * (model.z[k] - z_top) / (model.Cp * T_top));
 }
 
 double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
     double XC = model.XRANGE / 2., XR = 4000.;
     double ZC = 2500., ZR = 2000.;
-    double x = (i-0.5) * model.dx, z = (k-0.5) * model.dz;
-    double rad = sqrt(pow((x - XC) / XR, 2) + pow((z- ZC) / ZR, 2));
+    double x = (i-0.5) * model.dx;
+    double rad = sqrt(pow((x - XC) / XR, 2) + pow((model.z[k]- ZC) / ZR, 2));
     return rad;
 }
 
@@ -359,10 +378,9 @@ double vvm::Init::GetTH(int i, int k, vvm &model) {
 }
 
 #if defined(WATER)
-double vvm::Init::GetQVB(int k, int dz) {
-    double z_t = (k - 0.5) * dz;
-    if (z_t <= 4000) return 0.0161 - 0.000003375 * z_t;
-    else if (4000 < z_t && z_t <= 8000) return 0.0026 - 0.00000065 * (z_t - 4000);
+double vvm::Init::GetQVB(int k, vvm &model) {
+    if (model.z[k] <= 4000) return 0.0161 - 0.000003375 * model.z[k];
+    else if (4000 < model.z[k] && model.z[k] <= 8000) return 0.0026 - 0.00000065 * (model.z[k] - 4000);
     else return 0.;
 }
 #endif
@@ -409,9 +427,9 @@ void vvm::Init::LoadFile(vvm &model) {
     // self defined RH
     double z1 = 6000.;
     for (int k = 1; k <= model.nz-2; k++) {
-        if (model.dz * (k-0.5) <= z1) model.RH[k] = 0.9;
-        else if (z1 <= model.dz*(k-0.5) && model.dz*(k-0.5) <= model.z[model.nz-2]) {
-            model.RH[k] = 0.9 - (0.9 / (model.z[model.nz-2] - z1)) * (model.dz*(k-0.5) - z1);
+        if (model.z[k] <= z1) model.RH[k] = 0.9;
+        else if (z1 <=model.z[k] && model.z[k] <= model.z[model.nz-2]) {
+            model.RH[k] = 0.9 - (0.9 / (model.z[model.nz-2] - z1)) * (model.z[k] - z1);
         }
         else model.RH[k] = 0.;
     }
@@ -588,12 +606,9 @@ void vvm::Init::RandomPerturbation(vvm &model, int t, double min_range, double m
     // Parameters for the 2D Gaussian noise array
     double mean = 0.; // Mean of the Gaussian distribution
 
-    double z = 0;
-
     for (int k = 1; k < model.nz-1; k++) {
-        z = (k - 0.5) * model.dz;
         for (int i = 1; i < model.nx-1; i++) {
-            if (z < 200) {
+            if (model.z[k] < 200) {
                 double random_noise = 0.;
                 do {
                     random_noise = mean + standard_deviation * distribution(gen);

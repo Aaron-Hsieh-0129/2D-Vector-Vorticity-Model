@@ -38,7 +38,7 @@ void vvm::PoissonSolver::InitAMGX(vvm &model) {
     }
 
     // Proceed with AMGX setup
-    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-14, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
+    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-18, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_w, config_w.c_str());
     AMGX_resources_create_simple(&model.rsc_w, model.cfg_w);
 
@@ -173,41 +173,44 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
         // Down term (idx - (nx-2))
         if (idx >= (model.nx - 2)) {
             model.col_idx_w[nnz_w] = idx - (model.nx - 2);
-            model.values_w[nnz_w] = model.rhow[k] / model.rhou[k - 1];
+            model.values_w[nnz_w] = model.rhow[k] / model.rhou[k-1] * model.flex_height_coef_zeta[k] * model.rdz2 * model.flex_height_coef_th[k-1];
             nnz_w++;
         }
         // Left
         if (idx % (model.nx - 2) != 0) {
             model.col_idx_w[nnz_w] = idx - 1;
-            model.values_w[nnz_w] = 1.0;
+            model.values_w[nnz_w] = 1.0 * model.rdx2;
             nnz_w++;
         }
         // Boundary down (idx - (nx-3))
         if (idx >= (model.nx - 3) && (idx - (model.nx - 3)) % (model.nx - 2) == 0) {
             model.col_idx_w[nnz_w] = idx - (model.nx - 3);
-            model.values_w[nnz_w] = 1.0;
+            model.values_w[nnz_w] = 1.0 * model.rdx2;
             nnz_w++;
         }
         // Diagonal
         model.col_idx_w[nnz_w] = idx;
-        model.values_w[nnz_w] = -(2. + (model.rhow[k] / model.rhou[k]) + (model.rhow[k] / model.rhou[k - 1]));
+        model.values_w[nnz_w] = -(2.*model.rdx2 + 
+                                  model.flex_height_coef_zeta[k]*model.rdz2 * 
+                                  ((model.rhow[k] / model.rhou[k]) * model.flex_height_coef_th[k] + 
+                                   (model.rhow[k] / model.rhou[k - 1]) * model.flex_height_coef_th[k-1]));
         nnz_w++;
         // Right
         if ((idx + 1) % (model.nx - 2) != 0) {
             model.col_idx_w[nnz_w] = idx + 1;
-            model.values_w[nnz_w] = 1.0;
+            model.values_w[nnz_w] = 1.0 * model.rdx2;
             nnz_w++;
         }
         // Boundary up (idx + (nx-3))
         if (idx % (model.nx - 2) == 0 && idx + (model.nx - 3) < size_w) {
             model.col_idx_w[nnz_w] = idx + (model.nx - 3);
-            model.values_w[nnz_w] = 1.0;
+            model.values_w[nnz_w] = 1.0 * model.rdx2;
             nnz_w++;
         }
         // Up term (idx + (nx-2))
         if (idx < (model.nx - 2) * (model.nz - 4)) {
             model.col_idx_w[nnz_w] = idx + (model.nx - 2);
-            model.values_w[nnz_w] = model.rhow[k] / model.rhou[k];
+            model.values_w[nnz_w] = model.rhow[k] / model.rhou[k] * model.flex_height_coef_zeta[k] * model.rdz2 * model.flex_height_coef_th[k];
             nnz_w++;
         }
     }
@@ -225,26 +228,26 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
     for (int i = 0; i < size_u; i++) {
         model.row_ptr_u[i] = nnz_u;
         model.col_idx_u[nnz_u] = i;
-        model.values_u[nnz_u] = -2.0;
+        model.values_u[nnz_u] = -2.0 * model.rdx2;
         nnz_u++;
         if (i != size_u - 1) {
             model.col_idx_u[nnz_u] = i + 1;
-            model.values_u[nnz_u] = 1.0;
+            model.values_u[nnz_u] = 1.0 * model.rdx2;
             nnz_u++;
         }
         if (i != 0) {
             model.col_idx_u[nnz_u] = i - 1;
-            model.values_u[nnz_u] = 1.0;
+            model.values_u[nnz_u] = 1.0 * model.rdx2;
             nnz_u++;
         }
         if (i == 0 && size_u > 1) {
             model.col_idx_u[nnz_u] = size_u - 1;
-            model.values_u[nnz_u] = 1.0;
+            model.values_u[nnz_u] = 1.0 * model.rdx2;
             nnz_u++;
         }
         else if (i == size_u - 1 && size_u > 1) {
             model.col_idx_u[nnz_u] = 0;
-            model.values_u[nnz_u] = 1.0;
+            model.values_u[nnz_u] = 1.0 * model.rdx2;
             nnz_u++;
         }
     }
@@ -276,7 +279,7 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
     int count = 0;
     for (int k = 2; k <= model.nz - 2; k++) {
         for (int i = 1; i <= model.nx - 2; i++) {
-            b[count] = model.rhow[k] * model.rhow[k] * (model.zetap[i + 1][k] - model.zetap[i][k]) * model.dx;
+            b[count] = model.rhow[k] * model.rhow[k] * (model.zetap[i + 1][k] - model.zetap[i][k]) * model.rdx;
             count++;
         }
     }
@@ -329,7 +332,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
 
     double tmp = 0.0;
     for (int i = 1; i <= model.nx - 2; i++) {
-        h[i - 1] = -(0. - model.rhow[model.nz - 2] * model.w[i][model.nz - 2]) / model.rhou[model.nz - 2] * model.dx;
+        h[i - 1] = -(0. - model.rhow[model.nz-2] * model.w[i][model.nz-2]) / model.rhou[model.nz-2] * model.rdz * model.flex_height_coef_th[model.nz-2];
         tmp += h[i - 1];
     }
     tmp /= (model.nx - 2);
@@ -382,7 +385,7 @@ void vvm::PoissonSolver::cal_u(vvm &model) {
     for (int i = 1; i <= model.nx - 2; i++) {
         double area = 0.0;
         for (int k = model.nz - 3; k >= 1; k--) {
-            area += ((model.w[i][k + 1] - model.w[i - 1][k + 1]) * model.rdx - model.rhow[k + 1] * model.zetap[i][k + 1]) * -model.dz;
+            area += ((model.w[i][k + 1] - model.w[i - 1][k + 1]) * model.rdx - model.rhow[k + 1] * model.zetap[i][k + 1]) * -model.dz / model.flex_height_coef_zeta[k+1];
             model.u[i][k] = area + model.u[i][model.nz - 2];
         }
     }
@@ -401,7 +404,7 @@ void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
     }
     rhouwDown /= ((double) (model.nx - 2.));
 
-    prhouwb_pz_rhob = (- rhouwDown) * model.rdz / model.rhou[model.nz-2];
+    prhouwb_pz_rhob = (- rhouwDown) * model.rdz * model.flex_height_coef_th[model.nz-2] / model.rhou[model.nz-2];
     model.dubarTop_advect[(model.step+1)%2] = -prhouwb_pz_rhob;
     if (model.step == 0) model.dubarTop_advect[0] = model.dubarTop_advect[1];
     model.ubarTopp = model.ubarTop + 1.5*model.dt*model.dubarTop_advect[(model.step+1)%2] - 0.5*model.dt*model.dubarTop_advect[model.step%2];

@@ -46,6 +46,7 @@ int main(int argc, char **argv) {
     double vvm_dt = std::stod(configs["VVM_DT"]);
     double vvm_dx = std::stod(configs["VVM_DX"]);
     double vvm_dz = std::stod(configs["VVM_DZ"]);
+    int vvm_nz = std::stoi(configs["VVM_NZ"]);
     int vvm_xrange = std::stoi(configs["VVM_XRANGE"]);
     int vvm_zrange = std::stoi(configs["VVM_ZRANGE"]);
     double vvm_timeend = std::stod(configs["VVM_TIMEEND"]);
@@ -61,7 +62,7 @@ int main(int argc, char **argv) {
     double vvm_lon = std::stod(configs["VVM_LON"]);
     double vvm_lat = std::stod(configs["VVM_LAT"]);
 
-    Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
+    Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_nz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
                     50., 50., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
                     1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time, 
                     vvm_year, vvm_month, vvm_day, vvm_hour, vvm_minute, vvm_sec, 
@@ -103,8 +104,7 @@ int main(int argc, char **argv) {
     //     }
     // }
 
-    // Copy grads ctl file to the output directory
-    // Copy source files to output directory
+    // Copy grads ctl file and source codes to the output directory
     vvm::Output::copy_source_project(model);
     
 
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
         vvm::PoissonSolver::cal_w(model);
         vvm::PoissonSolver::cal_u(model);
     #else
-        // vvm::Iteration::TimeMarching(model);
+        vvm::Iteration::TimeMarching(model);
     #endif
 
     #if defined(PETSC)
