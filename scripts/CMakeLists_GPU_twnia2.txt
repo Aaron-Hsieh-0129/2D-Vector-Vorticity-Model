@@ -11,15 +11,20 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-# Allow user to specify NVHPC and GCC installation paths
-set(NVHPC_HOME "/work/aaron900129/nvhpc/Linux_x86_64/21.3" CACHE STRING "Path to NVHPC installation")
-set(GCC_HOME "/work/aaron900129/gcc9" CACHE STRING "Path to GCC installation")
+# Allow user to specify NVHPC, GCC, library installation paths
+set(NVHPC_DIR "/work/aaron900129/nvhpc/Linux_x86_64/21.3" CACHE STRING "Path to NVHPC installation")
+set(GCC_DIR "/work/aaron900129/gcc9" CACHE STRING "Path to GCC installation")
+set(AMGX_DIR "/work/aaron900129/amgx_install" CACHE STRING "Path to AMGX installation")
+set(BOOST_DIR "/work/aaron900129/local" CACHE STRING "Path to Boost installation")
+set(NETCDF_C_DIR "/work/aaron900129/local" CACHE STRING "Path to NetCDF-C installation")
+set(NETCDF_CXX_DIR "/work/aaron900129/local" CACHE STRING "Path to NetCDF-CXX installation")
+set(PETSC_DIR "/work/aaron900129/local" CACHE STRING "Path to PETSc installation")
 
 # Set compilers explicitly before project()
-set(CMAKE_C_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicc" CACHE PATH "C compiler" FORCE)
-set(CMAKE_CXX_COMPILER "${NVHPC_HOME}/comm_libs/mpi/bin/mpicxx" CACHE PATH "C++ compiler" FORCE)
-set(CMAKE_Fortran_COMPILER "${GCC_HOME}/bin/gfortran" CACHE PATH "Fortran compiler" FORCE)
-set(CMAKE_CUDA_COMPILER "${NVHPC_HOME}/compilers/bin/nvcc" CACHE PATH "CUDA compiler" FORCE)
+set(CMAKE_C_COMPILER "${NVHPC_DIR}/comm_libs/mpi/bin/mpicc" CACHE PATH "C compiler" FORCE)
+set(CMAKE_CXX_COMPILER "${NVHPC_DIR}/comm_libs/mpi/bin/mpicxx" CACHE PATH "C++ compiler" FORCE)
+set(CMAKE_Fortran_COMPILER "${GCC_DIR}/bin/gfortran" CACHE PATH "Fortran compiler" FORCE)
+set(CMAKE_CUDA_COMPILER "${NVHPC_DIR}/compilers/bin/nvcc" CACHE PATH "CUDA compiler" FORCE)
 
 # Disable dependency file generation (-MF issue) for NVHPC
 if(CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC")
@@ -36,9 +41,6 @@ project(VVM2D VERSION 0.1.0 LANGUAGES CXX Fortran)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
-
-# Set HOME_DIR
-set(HOME_DIR "/work/aaron900129")
 
 # Find MPI (force NVHPC OpenMPI for C/C++)
 # set(ENV{OMPI_CC} nvc)
@@ -82,19 +84,22 @@ if(USE_PETSC)
 endif()
 
 # AMGX and CUDA settings
-set(AMGX_INCLUDE_DIR "${HOME_DIR}/amgx_install/include")
-set(AMGX_LIB_DIR "${HOME_DIR}/amgx_install/lib")
-set(CUDA_INCLUDE_DIR "${HOME_DIR}/nvhpc/Linux_x86_64/21.3/cuda/include")
-set(CUDA_LIB_DIR "${HOME_DIR}/nvhpc/Linux_x86_64/21.3/cuda/lib64")
-set(GCC9_LIB_DIR "${HOME_DIR}/gcc9/lib64")
-set(GCC9_LIB32_DIR "${HOME_DIR}/gcc9/lib")  # Added for completeness
+set(AMGX_INCLUDE_DIR "${AMGX_DIR}/include")
+set(AMGX_LIB_DIR "${AMGX_DIR}/lib")
+set(CUDA_INCLUDE_DIR "${NVHPC_DIR}/cuda/include")
+set(CUDA_LIB_DIR "${NVHPC_DIR}/cuda/lib64")
+set(GCC9_LIB_DIR "${GCC_DIR}/lib64")
+set(GCC9_LIB32_DIR "${GCC_DIR}/lib")  # Added for completeness
 
 # Include directories
 include_directories(
-    include
-    ${HOME_DIR}/local/include
-    ${MPI_INCLUDE_PATH}
+    ${CMAKE_SOURCE_DIR}/include
+    ${BOOST_DIR}/include
+    ${NETCDF_C_DIR}/include
+    ${NETCDF_CXX_DIR}/include
     ${AMGX_INCLUDE_DIR}
+    ${PETSC_DIR}/include
+    ${MPI_INCLUDE_PATH}
     ${CUDA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include_test
@@ -102,7 +107,7 @@ include_directories(
 
 # Add PETSc include directories if enabled
 if(USE_PETSC)
-    include_directories(${HOME_DIR}/local/petsc/include)
+    include_directories(${PETSC_DIR}/petsc/include)
 endif()
 
 # Create the P3 Fortran shared library
@@ -135,13 +140,13 @@ set_target_properties(rte_rrtmgp PROPERTIES
 
 
 # Find and link other libraries
-find_library(libncPath netcdf "${HOME_DIR}/local/lib")
-find_library(libncxxPath netcdf_c++4 "${HOME_DIR}/local/lib")
-find_library(libpetscPath petsc "${HOME_DIR}/local/petsc/lib")
+find_library(libncPath netcdf "${NETCDF_C_DIR}/lib")
+find_library(libncxxPath netcdf_c++4 "${NETCDF_CXX_DIR}/lib")
+find_library(libpetscPath petsc "${PETSC_DIR}/petsc/lib")
 find_library(AMGXSH_LIBRARY amgxsh ${AMGX_LIB_DIR})
 find_library(CUDART_LIBRARY cudart ${CUDA_LIB_DIR})
-set(BOOST_SYSTEM_LIB /work/aaron900129/local/lib/libboost_system.so)
-set(BOOST_FILESYSTEM_LIB /work/aaron900129/local/lib/libboost_filesystem.so)
+set(BOOST_SYSTEM_LIB ${BOOST_DIR}/lib/libboost_system.so)
+set(BOOST_FILESYSTEM_LIB ${BOOST_DIR}/lib/libboost_filesystem.so)
 
 # Set runtime library paths (-rpath)
 set_target_properties(vvm2d PROPERTIES

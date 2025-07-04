@@ -26,29 +26,28 @@
 
 class Config_VVM {
 public:
-    Config_VVM(double dt, double dx, double dz, int nz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
-           std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double TIMETS, double tolerance,
+    Config_VVM(double dt, double dx, double dz, double dz1, int nz, int XRANGE, double TIMEEND, int TIMEROUTPUTSIZE, 
+           std::string outputpath, int OUTPUTSTEP, double Kx, double Kz, double tolerance,
            double GRAVITY, double Cp, double Cv, double Rd, double Lv, double P0, double PSURF, double addforcingtime, int CASE, double mositure_nudge_time, 
            int year, int month, int day, double hour, double minute, double second, double lon, double lat)
-        : dt(dt), dx(dx), dz(dz), nz(nz+2), XRANGE(XRANGE+2*dx), ZRANGE(ZRANGE+2*dz), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
-          outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz), TIMETS(TIMETS),
+        : dt(dt), dx(dx), dz(dz), dz1(dz1), nz(nz+2), XRANGE(XRANGE+2*dx), TIMEEND(TIMEEND), TIMEROUTPUTSIZE(TIMEROUTPUTSIZE), 
+          outputpath(outputpath), OUTPUTSTEP(OUTPUTSTEP), Kx(Kx), Kz(Kz),
           tolerance(tolerance), GRAVITY(GRAVITY), Cp(Cp), Cv(Cv), Rd(Rd), Lv(Lv), P0(P0), PSURF(PSURF), addforcingtime(addforcingtime), CASE(CASE), mositure_nudge_time(mositure_nudge_time), 
           year(year), month(month), day(day), hour(hour), minute(minute), second(second), lon(lon), lat(lat) {}
     ~Config_VVM() {}
 
     double dt;              ///< Time step for vvm [s].
     double dx;              ///< Grid size in x-direction [m].
-    double dz;              ///< z stretch coefficient
+    double dz;              ///< z stretch coefficient1
+    double dz1;              ///< z stretch coefficient2
     int nz;                 ///< z layer number
     int XRANGE;             ///< Domain size of the model in x-direction [m].
-    int ZRANGE;             ///< Domain size of the model in z-direction [m].
     double TIMEEND;         ///< End time of the simulation [s].
     int TIMEROUTPUTSIZE;    ///< The size of the timer output.
     std::string outputpath; ///< The path for the output file. It should be a directory, such as "/data/vvm/".
     int OUTPUTSTEP;         ///< The output interval for the output file.
     double Kx;              ///< The eddy diffusion coefficient in x-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure.
     double Kz;              ///< The eddy diffusion coefficient in z-direction [m^2/s], this is activated when DIFFUSION flag is turned on. If the flag is not turned on, the coeffcient will be calculated through the turbulent closure.
-    double TIMETS;          ///< The time filter coefficient [s] for Leapfrog. This is activated when TIMEFILTER flag is turned on. Only need to turn on when Leapfrog is used.
     double tolerance;       ///< The tolerance for the Poisson Solver.
     double GRAVITY;         ///< The gravity acceleration [m/s^2]. It's 9.80665 m/s^2 for default.
     double Cp;              ///< The specific heat capacity at constant pressure [J/kg/K]. It's 1003.5 J/kg/K for default.
@@ -82,10 +81,10 @@ public:
           r2dz(rdz / 2.0), rdx2(rdx * rdx),
           rdz2(rdz * rdz), nx(config.XRANGE/config.dx), 
           dt(config.dt), d2t(2.0 * config.dt), 
-          dx(config.dx), dz(config.dz), nz(config.nz),
-          XRANGE(config.XRANGE), ZRANGE(config.ZRANGE), TIMEEND(config.TIMEEND),
+          dx(config.dx), dz(config.dz), dz1(config.dz1), nz(config.nz),
+          XRANGE(config.XRANGE), TIMEEND(config.TIMEEND),
           TIMEROUTPUTSIZE(config.TIMEROUTPUTSIZE), outputpath(config.outputpath), OUTPUTSTEP(config.OUTPUTSTEP), Kx(config.Kx), Kz(config.Kz),
-          TIMETS(config.TIMETS), tolerance(config.tolerance),
+          tolerance(config.tolerance),
           GRAVITY(config.GRAVITY),
           Cp(config.Cp), Cv(config.Cv),
           Rd(config.Rd), Lv(config.Lv),
@@ -227,6 +226,7 @@ public:
         else if (name == "d2t") return d2t;
         else if (name == "dx") return dx;
         else if (name == "dz") return dz;
+        else if (name == "dz1") return dz1;
         else if (name == "nx") return nx;
         else if (name == "nz") return nz;
         else {
@@ -288,6 +288,11 @@ public:
     // *********************************************************************************
     class NumericalProcess {
     public:
+        static void interpolate(const std::vector<double>& known_heights,
+                                const std::vector<std::vector<double>>& known_data_fields,
+                                const std::vector<double>& new_heights,
+                                std::vector<std::vector<double>>& interpolated_data_fields);
+
         #if defined(DIFFUSION_VVM)
             static void Diffusion(double **var_in, double **var_out, vvm &model);
             static void DiffusionAll(vvm &model);
@@ -456,6 +461,7 @@ private:
     double d2t = 0;                              ///< From Config_VVM given by users.
     double dx = 0;                               ///< From Config_VVM given by users.
     double dz = 0;                               ///< From Config_VVM given by users.
+    double dz1 = 0;                               ///< From Config_VVM given by users.
     int XRANGE = 0;                              ///< From Config_VVM given by users.
     int ZRANGE = 0;                              ///< From Config_VVM given by users.
     double TIMEEND = 0;                          ///< From Config_VVM given by users.
@@ -529,6 +535,7 @@ private:
     double *flex_height_coef_zeta = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
     double *flex_height_coef_th_mean = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
     double *flex_height_coef_zeta_mean = nullptr; ///< Coefficient for flexible height adjustment, used in the model design part.
+    double *ubar = nullptr;
 
     #if defined(GPU_POISSON)
         int *row_ptr_w = nullptr;
@@ -762,6 +769,7 @@ private:
         destroy_variable(dz_zeta);
         destroy_variable(flex_height_coef_th);
         destroy_variable(flex_height_coef_zeta);
+        destroy_variable(ubar);
 
         destroy_variable(zetap, zetapcont);
         destroy_variable(zeta, zetacont);
@@ -931,6 +939,7 @@ private:
         create_variable(flex_height_coef_zeta, nz);
         create_variable(flex_height_coef_th_mean, nz);
         create_variable(flex_height_coef_zeta_mean, nz);
+        create_variable(ubar, nz);
 
         // 2D arrays
         create_variable(zetap, zetapcont, nx, nz);

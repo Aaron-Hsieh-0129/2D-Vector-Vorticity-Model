@@ -18,8 +18,7 @@
 // #define TROPICALFORCING
 // #define RADIATIONCOOLING
 
-// TODO: For load file, the input needs to be interpolated to the model grid and height, also delete the while.
-// #define LOADFILE
+#define LOADFILE
 #if defined(LOADFILE)
     #define LOADINITPATH "/work/aaron900129/NextACC/2DVVM/input/bubble_init.txt"
 #endif

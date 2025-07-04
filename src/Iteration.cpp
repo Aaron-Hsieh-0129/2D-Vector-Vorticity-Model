@@ -218,16 +218,11 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         std::cout << "timenow: " << model.step << std::endl;
     #endif
 
-    // Radiation scheme call for step 0
-    #if defined(RTERRTMGP)
-        vvm::Radiation::solve_radiation(model);
-    #endif
-
     while (model.step < nmax) {
         time_all.reset();
         std::cout << model.step << std::endl;
         // output
-        if (model.step % model.OUTPUTSTEP == 0 || model.step == model.TIMEEND-1 || model.step == model.TIMEEND-2 || model.step == 550001) {
+        if (model.step % model.OUTPUTSTEP == 0 || model.step == model.TIMEEND-1 || model.step == model.TIMEEND-2) {
             #if defined(_OPENMP)
             #pragma omp critical
             {
@@ -312,6 +307,7 @@ void vvm::Iteration::TimeMarching(vvm &model) {
             vvm::NumericalProcess::NegativeValueProcess(model.nrp, model.nx, model.nz);
             vvm::NumericalProcess::NegativeValueProcess(model.qitotp, model.nx, model.nz);
             vvm::NumericalProcess::NegativeValueProcess(model.nip, model.nx, model.nz);
+            vvm::BoundaryProcess2D_all(model);
             for (int k = 0; k < model.nz; k++) {
                 for (int i = 0; i < model.nx; i++) {
                     model.qiliqp[i][k] = 0.;

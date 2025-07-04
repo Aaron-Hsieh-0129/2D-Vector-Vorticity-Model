@@ -44,12 +44,16 @@ How to Use
    .. code-block:: bash
 
       mkdir build && cd build
+      ###############################################################
       # Example (CPU): Ensure the `GPU_POISSON` flag is **commented out** in `src/Config.hpp`
-      cmake -DGCC_HOME=/home/Aaron/gcc9 ..
+      cmake -DGCC_DIR=/home/Aaron/gcc9 ..
       # Example (GPU):
-      cmake -DNVHPC_HOME=/home/Aaron/nvhpc/Linux_x86_64/21.3 -DGCC_HOME=/home/Aaron/gcc9 ..
+      cmake -DNVHPC_DIR=/home/Aaron/nvhpc/Linux_x86_64/21.3 -DGCC_DIR=/home/Aaron/gcc9 ..
+      # Example (Specifying AMGX path, you can specify AMGX, NETCDF-C, and NETCDF-CXX paths if they are not in the default locations):
+      cmake -DAMGX_DIR=/home/Aaron/amgx_install -DNETCDF_C_DIR=/home/Aaron/netcdf-c-4.3.3.1 -DNETCDF_CXX_DIR=/home/Aaron/netcdf-cxx4-4.2.1 ..
+      #################################################################
       make
-      
+
       # Running the model:
       # CPU Execution:
       ./vvm2d

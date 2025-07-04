@@ -16,7 +16,6 @@ void vvm::Turbulence::RKM_RKH(vvm &model) {
 
             Rotat = std::pow((model.u[i+1][k] - model.u[i][k]) * model.rdx, 2) + std::pow((model.w[i][k+1] - model.w[i][k]) * model.flex_height_coef_th[k] * model.rdz, 2);
 
-            // FIXME: Weird thp mean (brutal method without weighted average)
             Ri = model.GRAVITY * model.flex_height_coef_zeta[k+1] * model.rdz * (model.thp[i][k+1] - model.thp[i][k]) / (model.thp[i][k+1]+model.thp[i][k]) + 
                  model.GRAVITY * model.flex_height_coef_zeta[k]   * model.rdz * (model.thp[i][k] - model.thp[i][k-1]) / (model.thp[i][k]+model.thp[i][k-1]);
 

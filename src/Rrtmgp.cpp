@@ -171,8 +171,8 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     Array<Float,2> rei({n_col, n_lay});
     for (int i = 1; i <= n_col; i++) {
         for (int k = 1; k <= n_lay; k++) {
-            lwp({i,k}) = std::max(model.qc[i][k] * 1e3, 0.) * model.rhou[k] * model.dz; // (g/kg) * (kg/m^3) * (m)
-            iwp({i,k}) = std::max(model.qitot[i][k] * 1e3, 0.) * model.rhou[k] * model.dz; // (g/kg) * (kg/m^3) * (m)
+            lwp({i,k}) = std::max(model.qc[i][k] * 1e3, 0.) * model.rhou[k] * model.dz / model.flex_height_coef_th[k]; // (g/kg) * (kg/m^3) * (m)
+            iwp({i,k}) = std::max(model.qitot[i][k] * 1e3, 0.) * model.rhou[k] * model.dz / model.flex_height_coef_th[k]; // (g/kg) * (kg/m^3) * (m)
             rel({i,k}) = std::min(std::max(model.diag_effc[i][k], effcmin), effcmax); // (m)
             rei({i,k}) = std::min(std::max(model.diag_effi[i][k], effimin), effimax); // (m)
         }

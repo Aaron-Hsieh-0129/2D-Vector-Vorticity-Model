@@ -115,3 +115,82 @@ void vvm::NumericalProcess::NegativeValueProcess(double **var, int nx, int nz) {
     }
     return;
 }
+
+
+// Function to perform interpolation/extrapolation
+void vvm::NumericalProcess::interpolate(const std::vector<double>& known_heights,
+                 const std::vector<std::vector<double>>& known_data_fields,
+                 const std::vector<double>& new_heights,
+                 std::vector<std::vector<double>>& interpolated_data_fields) {
+    // Ensure input arrays have consistent sizes
+    assert(!known_heights.empty());
+    assert(known_heights.size() >= 2); // Need at least 2 points for interpolation/extrapolation
+    for (const auto& field : known_data_fields) {
+        assert(field.size() == known_heights.size());
+    }
+
+    // Resize output vectors to match new_heights size and number of data fields
+    interpolated_data_fields.resize(known_data_fields.size());
+    for (auto& field : interpolated_data_fields) {
+        field.resize(new_heights.size());
+    }
+
+    for (size_t k = 0; k < new_heights.size(); ++k) {
+        double h = new_heights[k];
+
+        // Handle extrapolation for heights below the minimum known height
+        if (h < known_heights[0]) {
+            // Use the first two points to compute the slope for extrapolation
+            double h0 = known_heights[0];
+            double h1 = known_heights[1];
+
+            for (size_t j = 0; j < known_data_fields.size(); ++j) {
+                double v0 = known_data_fields[j][0];
+                double v1 = known_data_fields[j][1];
+                double slope = (v1 - v0) / (h1 - h0);
+                interpolated_data_fields[j][k] = v0 + slope * (h - h0);
+            }
+            continue;
+        }
+
+        // Handle extrapolation for heights above the maximum known height
+        if (h > known_heights.back()) {
+            // Use the last two points to compute the slope for extrapolation
+            size_t n = known_heights.size() - 1;
+            double h0 = known_heights[n - 1];
+            double h1 = known_heights[n];
+
+            for (size_t j = 0; j < known_data_fields.size(); ++j) {
+                double v0 = known_data_fields[j][n - 1];
+                double v1 = known_data_fields[j][n];
+                double slope = (v1 - v0) / (h1 - h0);
+                interpolated_data_fields[j][k] = v1 + slope * (h - h1);
+            }
+            continue;
+        }
+
+        // Interpolation for heights within the range
+        // Find the first height greater than h using binary search
+        auto it = std::upper_bound(known_heights.begin(), known_heights.end(), h);
+
+        // If h equals the last known height
+        if (it == known_heights.end()) {
+            for (size_t j = 0; j < known_data_fields.size(); ++j) {
+                interpolated_data_fields[j][k] = known_data_fields[j].back();
+            }
+            continue;
+        }
+
+        // Find the bracketing indices
+        size_t i = it - known_heights.begin() - 1;
+        double h0 = known_heights[i];
+        double h1 = known_heights[i + 1];
+        double factor = (h - h0) / (h1 - h0);
+
+        // Linear interpolation for each data field
+        for (size_t j = 0; j < known_data_fields.size(); ++j) {
+            interpolated_data_fields[j][k] = known_data_fields[j][i] + 
+                factor * (known_data_fields[j][i + 1] - known_data_fields[j][i]);
+        }
+    }
+}

@@ -11,8 +11,8 @@
 #include "Timer.hpp"
 #include <mpi.h>
 
-// Config(double dt, double dx, double dz, int XRANGE, int ZRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
-//        double Kx, double Kz, double TIMETS, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
+// Config(double dt, double dx, double dz, int XRANGE, double TIMEEND, int TIMEROUTPUTSIZE, std::string outputpath, int OUTPUTSTEP
+//        double Kx, double Kz, double POISSONPARAMU, double POISSONPARAMW, double GRAVITY, double Cp, double Cv, double Rd, double Lv
 //        double P0, double PSURF, double ADDFORCINGTIME)
 
 #if defined(P3_MICROPHY)
@@ -46,9 +46,9 @@ int main(int argc, char **argv) {
     double vvm_dt = std::stod(configs["VVM_DT"]);
     double vvm_dx = std::stod(configs["VVM_DX"]);
     double vvm_dz = std::stod(configs["VVM_DZ"]);
+    double vvm_dz1 = std::stod(configs["VVM_DZ1"]);
     int vvm_nz = std::stoi(configs["VVM_NZ"]);
     int vvm_xrange = std::stoi(configs["VVM_XRANGE"]);
-    int vvm_zrange = std::stoi(configs["VVM_ZRANGE"]);
     double vvm_timeend = std::stod(configs["VVM_TIMEEND"]);
     int vvm_outputstep = std::stoi(configs["VVM_OUTPUTSTEP"]);
     int vvm_case = std::stoi(configs["VVM_CASE"]);
@@ -62,8 +62,8 @@ int main(int argc, char **argv) {
     double vvm_lon = std::stod(configs["VVM_LON"]);
     double vvm_lat = std::stod(configs["VVM_LAT"]);
 
-    Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_nz, vvm_xrange, vvm_zrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
-                    50., 50., 0.01, 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+    Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_dz1, vvm_nz, vvm_xrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
+                    50., 50., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
                     1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time, 
                     vvm_year, vvm_month, vvm_day, vvm_hour, vvm_minute, vvm_sec, 
                     vvm_lon, vvm_lat);

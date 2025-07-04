@@ -11,6 +11,7 @@
     #include <netcdf>
     using namespace netCDF;
 #endif
+#include <iomanip>
 
 void generateAddlfxArray(double *array, int size, double variation = 0.1) {
     std::mt19937 rng(static_cast<unsigned>(time(nullptr))); // Random number generator
@@ -23,9 +24,9 @@ void generateAddlfxArray(double *array, int size, double variation = 0.1) {
 }
 
 void vvm::Init::Init1d(vvm &model) {
-    double DZ1 = 100.;
+    // Height stretch setting 
     double DOMAIN = 10000.;
-    model.CZ2 = (model.dz-DZ1) / (model.dz * (DOMAIN-model.dz));
+    model.CZ2 = (model.dz-model.dz1) / (model.dz * (DOMAIN-model.dz));
     model.CZ1 = 1. - model.CZ2 * DOMAIN;
 
     for (int k = 0; k < model.nz; k++) {
@@ -267,12 +268,13 @@ void vvm::Init::Init2d(vvm &model) {
         model.BoundaryProcess2D_center(model.thm, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.qv, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.qvm, model.nx, model.nz);
+        model.BoundaryProcess2D_center(model.u, model.nx, model.nz);
     #else
         // init th
         for (int i = 1; i <= model.nx-2; i++) {
             for (int k = 1; k <= model.nz-2; k++) {
                 if (model.CASE == 0) model.th[i][k] = model.thb[k];
-                else if (model.CASE == 1 || model.CASE == 2) model.th[i][k] = model.thb[k] + GetTH(i, k, model);
+                else if (model.CASE == 1) model.th[i][k] = model.thb[k] + GetTH(i, k, model);
 
                 if (model.addforcingtime > 0) {
                     RandomPerturbation(model, 0);
@@ -281,12 +283,14 @@ void vvm::Init::Init2d(vvm &model) {
                 
                 model.thm[i][k] = model.th[i][k];
 
-                model.u[i][k] = 0.;
+                model.u[i][k] = model.ubar[k];
                 model.w[i][k] = 0.;
             }
         }
         model.BoundaryProcess2D_center(model.th, model.nx, model.nz);
         model.BoundaryProcess2D_center(model.thm, model.nx, model.nz);
+        model.BoundaryProcess2D_center(model.u, model.nx, model.nz);
+        model.BoundaryProcess2D_center(model.w, model.nx, model.nz);
 
         for (int k = 0; k <= model.nz-1; k++) {
             for (int i = 0; i <= model.nx-1; i++) {
@@ -298,20 +302,6 @@ void vvm::Init::Init2d(vvm &model) {
                     model.qvb0[k] = model.qvb[k] * 0.9;
                 #endif
             }
-        }
-
-		// init u
-		if (model.CASE == 2) {
-            // From level to bubble center (umin -> 0), from bubble center to top (0 -> umax)
-            double u_tmp = 0.;
-            for (int k = 1; k <= model.nz-2; k++) {
-                if (model.z[k] <= 2000.) u_tmp = -8. + (8. / 2000.0) * model.z[k];
-
-                for (int i = 1; i <= model.nx-2; i++) {
-                    model.u[i][k] = u_tmp;
-                }
-            }
-            model.BoundaryProcess2D_center(model.u, model.nx, model.nz);
         }
 	#endif
 
@@ -354,8 +344,6 @@ void vvm::Init::Init2d(vvm &model) {
 	return;
 }
 
-
-
 double vvm::Init::GetTB(int k, vvm &model) {
     double z_top = 12000., T_top = 213., tb_top = 343.;
     if (model.z[k] <= z_top) return 300. + 43. * pow(model.z[k] / z_top, 1.25);
@@ -372,7 +360,7 @@ double vvm::Init::GetTHRAD(int i, int k, vvm &model) {
 
 double vvm::Init::GetTH(int i, int k, vvm &model) {
     double rad = GetTHRAD(i, k, model);
-    double delta = 6.;
+    double delta = 3.;
     if (rad <= 1) return 0.5 * delta * (cos(M_PI * rad) + 1);
     else return 0.;
 }
@@ -386,42 +374,147 @@ double vvm::Init::GetQVB(int k, vvm &model) {
 #endif
 
 #if defined(LOADFILE)
-void vvm::Init::LoadFile(vvm &model) {
-    std::ifstream inputFile;
-
-    inputFile.open(LOADINITPATH);
-    std::string line;
-    std::getline(inputFile, line);
-    std::getline(inputFile, line); // Skip the zero level
-    double ZZ, ZT, RHO, THBAR, PBAR, PIBAR, QVBAR, Q1LS, Q2LS, RHOZ, RH;
-
-    int i = 1;
-    while (inputFile >> ZZ >> ZT >> RHO >> THBAR >> PBAR >> PIBAR >> QVBAR >> Q1LS >> Q2LS >> RHOZ >> RH) {
-        model.thb[i] = THBAR;
-        model.thb_init[i] = model.thb[i];
-        model.qvb[i] = QVBAR;
-        model.pib[i] = PIBAR;
-        model.pb[i] = PBAR;
-        model.rhou[i] = RHOZ;
-        model.rhow[i] = RHO;
-        #if defined(TROPICALFORCING)
-            model.Q1LS[i] = Q1LS * 6.;
-            model.Q2LS[i] = Q2LS * 6.;
-        #endif
-        model.RH[i] = RH;
-        model.z[i] = ZT;
-        model.z_zeta[i] = ZZ;
-        i++;
+void print_data(const std::vector<double>& heights,
+                const std::vector<std::vector<double>>& data_fields) {
+    // Check if data is empty
+    if (heights.empty() || data_fields.empty()) {
+        std::cout << "No data to print." << std::endl;
+        return;
     }
+
+    // Print header
+    std::cout << std::setw(12) << "Height";
+    for (size_t j = 0; j < data_fields.size(); ++j) {
+        std::cout << std::setw(12) << "Field " + std::to_string(j + 1);
+    }
+    std::cout << std::endl;
+
+    // Print data
+    for (size_t i = 0; i < heights.size(); ++i) {
+        std::cout << std::setw(12) << std::fixed << std::setprecision(2) << heights[i];
+        for (size_t j = 0; j < data_fields.size(); ++j) {
+            std::cout << std::setw(12) << std::fixed << std::setprecision(2) << data_fields[j][i];
+        }
+        std::cout << std::endl;
+    }
+}
+
+void vvm::Init::LoadFile(vvm &model) {
+    std::string filename = "../input/bubble_init.txt";
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Unable to open file: " + filename);
+    }
+
+    std::vector<std::vector<double>> temp_data;
+    std::string line;
+    size_t num_columns = 0;
+
+    // Read each line
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::vector<double> row;
+        double value;
+
+        // Read all values in the line
+        while (ss >> value) {
+            row.push_back(value);
+        }
+
+        // Skip empty lines
+        if (row.empty()) {
+            continue;
+        }
+
+        // Verify consistent number of columns
+        if (num_columns == 0) {
+            num_columns = row.size();
+            if (num_columns < 2) {
+                throw std::runtime_error("File must have at least two columns (height and one data field): " + filename);
+            }
+        } else if (row.size() != num_columns) {
+            throw std::runtime_error("Inconsistent number of columns in file: " + filename);
+        }
+
+        temp_data.push_back(row);
+    }
+
+    file.close();
+
+    if (temp_data.empty()) {
+        throw std::runtime_error("File is empty: " + filename);
+    }
+
+    // Ensure at least two points for interpolation/extrapolation
+    if (temp_data.size() < 2) {
+        throw std::runtime_error("File must contain at least two data points: " + filename);
+    }
+
+    std::vector<double> heights;
+    std::vector<std::vector<double>> data_fields;
+
+    // Split into heights and data fields
+    heights.resize(temp_data.size());
+    data_fields.resize(num_columns - 1); // One column for height, rest for data fields
+    for (auto& field : data_fields) {
+        field.resize(temp_data.size());
+    }
+
+    for (size_t i = 0; i < temp_data.size(); ++i) {
+        heights[i] = temp_data[i][0]; // First column is height
+        for (size_t j = 1; j < num_columns; ++j) {
+            data_fields[j - 1][i] = temp_data[i][j]; // Other columns are data fields
+        }
+    }
+
+    // Verify that heights is sorted in ascending order
+    if (!std::is_sorted(heights.begin(), heights.end())) {
+        throw std::runtime_error("Height data (first column) must be sorted in ascending order: " + filename);
+    }
+
+    // print_data(heights, data_fields);
+
+    // Interpolate loaded input to the stretched coordinate
+    std::vector<double> new_heights(model.z+1, model.z + model.nz-1);
+    std::vector<std::vector<double>> interpolated_data_fields;
+    vvm::NumericalProcess::interpolate(heights, data_fields, new_heights, interpolated_data_fields);
+
+    // print_data(new_heights, interpolated_data_fields);
+
+    // Assign interpolated data to model variables
+    for (int k = 1; k < model.nz-1; k++) {
+        model.rhou[k] = interpolated_data_fields[0][k-1];
+        model.thb[k] = interpolated_data_fields[1][k-1];
+        model.thb_init[k] = model.thb[k];
+        model.pb[k] = interpolated_data_fields[2][k-1];
+        model.pib[k] = interpolated_data_fields[3][k-1];
+        model.qvb[k] = interpolated_data_fields[4][k-1];
+        model.qvb0[k] = model.qvb[k];
+        model.thvb[k] = model.thb[k] * (1. + 0.608 * model.qvb[k]);
+        model.thvbm[k] = model.thvb[k];
+        #if defined(TROPICALFORCING)
+            model.Q1LS[k] = interpolated_data_fields[5][k-1] * 6.;
+            model.Q2LS[k] = interpolated_data_fields[6][k-1] * 6.;
+        #endif
+        model.rhow[k] = interpolated_data_fields[7][k-1];
+        model.RH[k] = interpolated_data_fields[8][k-1];
+        model.ubar[k] = interpolated_data_fields[9][k-1];
+    }
+    model.BoundaryProcess1D_center(model.rhou, model.nz);
     model.BoundaryProcess1D_center(model.thb, model.nz);
     model.BoundaryProcess1D_center(model.thb_init, model.nz);
-    model.BoundaryProcess1D_center(model.qvb, model.nz);
     model.BoundaryProcess1D_center(model.pb, model.nz);
-    model.BoundaryProcess1D_center(model.rhou, model.nz);
+    model.BoundaryProcess1D_center(model.pib, model.nz);
+    model.BoundaryProcess1D_center(model.qvb, model.nz);
+    model.BoundaryProcess1D_center(model.qvb0, model.nz);
+    model.BoundaryProcess1D_center(model.thvb, model.nz);
+    #if defined(TROPICALFORCING)
+        model.BoundaryProcess1D_center(model.Q1LS, model.nz);
+        model.BoundaryProcess1D_center(model.Q2LS, model.nz);
+    #endif
     model.BoundaryProcess1D_center(model.rhow, model.nz);
     model.BoundaryProcess1D_center(model.RH, model.nz);
-    model.BoundaryProcess1D_center(model.z, model.nz);
-    model.BoundaryProcess1D_center(model.z_zeta, model.nz);
+    model.BoundaryProcess1D_center(model.ubar, model.nz);
     model.rhow[model.nz-1] = model.rhou[model.nz-2];
 
     // self defined RH
@@ -547,7 +640,7 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
     ubarm_in.getVar(tmp);
     model.ubarTopm = tmp[0];
 
-    if (model.CASE == 1 || model.CASE == 2) {
+    if (model.CASE == 1) {
         for (int k = 1; k < model.nz-1; k++) {
             for (int i = 1; i < model.nx-1; i++) {
                 model.thm[i][k] += vvm::Init::GetTH(i, k, model);
@@ -596,6 +689,7 @@ void vvm::Init::LoadFromPreviousFile(vvm &model) {
     model.BoundaryProcess1D_center(model.thb_zeta, model.nz);
     return;
 }
+
 #endif
 
 void vvm::Init::RandomPerturbation(vvm &model, int t, double min_range, double max_range, double standard_deviation) {
