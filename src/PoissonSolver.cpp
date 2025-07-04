@@ -217,11 +217,8 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
             if (i % (model.nx-2) == 0) k++;
 
             // Diagonal
-            v[0] = -(2.*model.rdx2 + 
-                    model.flex_height_coef_zeta[k]*model.rdz2 * 
-                    ((model.rhow[k] / model.rhou[k]) * model.flex_height_coef_th[k] + 
-                     (model.rhow[k] / model.rhou[k-1]) * model.flex_height_coef_th[k-1])) + model.POISSONPARAMW;
-            
+            // v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) * model.rdx2 + model.POISSONPARAMW;
+            v[0] = -(2. + (model.rhow[k]/model.rhou[k]) + (model.rhow[k]/model.rhou[k-1])) + model.POISSONPARAMW;
             j[0] = i;
             MatSetValues(A, 1, &i, 1, j, v, INSERT_VALUES);
 
@@ -229,27 +226,31 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
             // D
             // Fill left right except the point near the boundaries
             if (i % (model.nx-2) != 0 && i % (model.nx-2) != (model.nx-2)-1) {
-                v[0] = 1. * model.rdx2; v[1] = 1. * model.rdx2; 
+                // v[0] = 1.*model.rdx2; v[1] = 1.*model.rdx2; 
+                v[0] = 1.; v[1] = 1.; 
                 j[0] = i-1; j[1] = i+1;
                 MatSetValues(A, 1, &i, 2, j, v, INSERT_VALUES);
             }
             // Fill the leftest point
             if (i % (model.nx-2) == 0) {
-                v[0] = 1. * model.rdx2; v[1] = 1. * model.rdx2;
+                // v[0] = 1.*model.rdx2; v[1] = 1.*model.rdx2;
+                v[0] = 1.; v[1] = 1.;
                 j[0] = i+1, j[1] = i+(model.nx-2)-1;
                 MatSetValues(A, 1, &i, 2, j, v, INSERT_VALUES);
             }
         
             // Fill the rightest point
             if (i % (model.nx-2) == (model.nx-2)-1) {
-                v[0] = 1. * model.rdx2; v[1] = 1. * model.rdx2;
+                // v[0] = 1.*model.rdx2; v[1] = 1.*model.rdx2;
+                v[0] = 1.; v[1] = 1.;
                 j[0] = i-(model.nx-2)+1, j[1] = i-1;
                 MatSetValues(A, 1, &i, 2, j, v, INSERT_VALUES);
             }
             
             // E
             if (i < (model.nx-2)*(model.nz-3-1)) {
-                v[0] = model.rhow[k]/model.rhou[k] * model.flex_height_coef_zeta[k] * model.rdz2 * model.flex_height_coef_th[k];
+                // v[0] = model.rhow[k]/model.rhou[k] * model.rdx2;
+                v[0] = model.rhow[k]/model.rhou[k];
                 j[0] = i+(model.nx-2);
                 MatSetValues(A, 1, &i, 1, j, v, INSERT_VALUES);
             }
@@ -257,7 +258,7 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
             // F
             if (i >= model.nx-2) {
                 // v[0] = model.rhow[k]/model.rhou[k-1] * model.rdx2;
-                v[0] = model.rhow[k]/model.rhou[k-1] * model.flex_height_coef_zeta[k] * model.rdz2 * model.flex_height_coef_th[k-1];
+                v[0] = model.rhow[k]/model.rhou[k-1];
                 j[0] = i-(model.nx-2);
                 MatSetValues(A, 1, &i, 1, j, v, INSERT_VALUES);
             }
@@ -267,7 +268,8 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
                 VecSetValues(x_ans, 1, &i, &x_ansval, INSERT_VALUES);
             #else
                 idx_i = (i % (model.nx-2)) + 1;
-                double bval = model.rhow[k] * model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.rdx;
+                // double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.rdx;
+                double bval = model.rhow[k]*model.rhow[k] * (model.zetap[idx_i+1][k] - model.zetap[idx_i][k]) * model.dx;
                 VecSetValues(b, 1, &i, &bval, INSERT_VALUES);
             #endif
         }
@@ -442,7 +444,7 @@ void vvm::PoissonSolver::cal_w(vvm &model, int p, int i, int j) {
         int count = 0;
         for (int k = 2; k <= model.nz-2; k++) {
             for (int i = 1; i <= model.nx-2; i++) {
-                b(count) = model.rhow[k] * model.rhow[k] * (model.zetap[i+1][k] - model.zetap[i][k]) * model.rdx;
+                b(count) = model.rhow[k] * model.rhow[k] * (model.zetap[i + 1][k] - model.zetap[i][k]) * model.rdx;;
                 count++;
             }
         }
@@ -658,7 +660,7 @@ void vvm::PoissonSolver::pubarTop_pt(vvm &model) {
     }
     rhouwDown /= ((double) (model.nx - 2.));
 
-    prhouwb_pz_rhob = (- rhouwDown) * model.rdz / model.rhou[model.nz-2];
+    prhouwb_pz_rhob = (- rhouwDown) * model.rdz * model.flex_height_coef_th[model.nz-2] / model.rhou[model.nz-2];
     model.dubarTop_advect[(model.step+1)%2] = -prhouwb_pz_rhob;
     if (model.step == 0) model.dubarTop_advect[0] = model.dubarTop_advect[1];
     model.ubarTopp = model.ubarTop + 1.5*model.dt*model.dubarTop_advect[(model.step+1)%2] - 0.5*model.dt*model.dubarTop_advect[model.step%2];
@@ -796,7 +798,7 @@ void vvm::PoissonSolver::InitPoissonMatrix(vvm &model) {
 
     for (int i = 0; i <= model.nx-3; i++) {
         // D
-        coeff_xi.push_back(T(i, i, -2.));
+        coeff_xi.push_back(T(i, i, -2.*model.rdx2));
         if (i != model.nx-3) coeff_xi.push_back(T(i, i+1, 1.*model.rdx2));
         if (i != 0) coeff_xi.push_back(T(i, i-1, 1.*model.rdx2));
     }

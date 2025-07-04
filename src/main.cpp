@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     double vvm_lat = std::stod(configs["VVM_LAT"]);
 
     Config_VVM config(vvm_dt, vvm_dx, vvm_dz, vvm_dz1, vvm_nz, vvm_xrange, vvm_timeend, 10000, vvmoutputpath, vvm_outputstep, 
-                    50., 50., 1E-22, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
+                    50., 50., 1E-25, 9.80665, 1003.5, 716.5, 287., 2.5E6, 
                     1E5, 96500., 10, vvm_case, vvm_moisture_nudge_time, 
                     vvm_year, vvm_month, vvm_day, vvm_hour, vvm_minute, vvm_sec, 
                     vvm_lon, vvm_lat);
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 
     // Copy grads ctl file and source codes to the output directory
     vvm::Output::copy_source_project(model);
-    
+
 
     #if defined(POISSONTEST)
         vvm::PoissonSolver::cal_w(model);

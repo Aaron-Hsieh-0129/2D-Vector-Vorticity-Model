@@ -1,5 +1,6 @@
 #include "Config.hpp"
 #include <string>
+#include <iostream>
 #ifndef PETSC
     // #include "../include/Eigen/Sparse"
     #include <Eigen/Sparse>
@@ -238,10 +239,6 @@ public:
 
     // Poisson Solver => PoissonSolver.cpp
     // *********************************************************************************
-    #if !defined(PETSC) && !defined(GPU_POISSON) 
-        Eigen::SparseMatrix<double> A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
-        Eigen::SparseMatrix<double> G = Eigen::SparseMatrix<double>(nx-2, nx-2);
-    #endif
 
     class PoissonSolver {
     public:
@@ -726,6 +723,11 @@ private:
     double *t_diffusion = nullptr;
     double *t_microphysics = nullptr;
     double *t_all = nullptr;
+
+    #if !defined(PETSC) && !defined(GPU_POISSON) 
+        Eigen::SparseMatrix<double> A = Eigen::SparseMatrix<double>((nx-2)*(nz-3), (nx-2)*(nz-3));
+        Eigen::SparseMatrix<double> G = Eigen::SparseMatrix<double>(nx-2, nx-2);
+    #endif
 
     static double getTHV(int i, int k, vvm &model);
 
