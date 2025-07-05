@@ -386,6 +386,7 @@ public:
         #endif
         static void copy_files(const std::string &source_path, const std::string &destination_path);
         static void copy_source_project(vvm &model);
+        static void grads_ctl_file(vvm &model);
 
         #if defined(OUTPUTTXT)
             static void output_zeta(int step, vvm &model);
@@ -515,6 +516,7 @@ private:
     double *uxi = nullptr;
     double *thvb = nullptr;
     double *thvbm = nullptr;
+    double *x = nullptr;
     double *z = nullptr;
     double *z_zeta = nullptr;
     double *lambda2 = nullptr;
@@ -756,6 +758,7 @@ private:
         destroy_variable(uxi);
         destroy_variable(thvb);
         destroy_variable(thvbm);
+        destroy_variable(x);
         destroy_variable(z);
         destroy_variable(z_zeta);
         destroy_variable(lambda2);
@@ -920,6 +923,7 @@ private:
         create_variable(uxi, nx);
         create_variable(thvb, nz);
         create_variable(thvbm, nz);
+        create_variable(x, nx);
         create_variable(z, nz);
         create_variable(z_zeta, nz);
         create_variable(lambda2, nz);

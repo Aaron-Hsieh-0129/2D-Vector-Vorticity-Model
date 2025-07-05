@@ -104,8 +104,10 @@ int main(int argc, char **argv) {
     //     }
     // }
 
-    // Copy grads ctl file and source codes to the output directory
+    // Copy source codes to the output directory
     vvm::Output::copy_source_project(model);
+    // Make ctl file to output folder
+    vvm::Output::grads_ctl_file(model);
 
 
     #if defined(POISSONTEST)

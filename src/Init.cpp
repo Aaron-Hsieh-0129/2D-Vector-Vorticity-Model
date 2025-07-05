@@ -24,11 +24,13 @@ void generateAddlfxArray(double *array, int size, double variation = 0.1) {
 }
 
 void vvm::Init::Init1d(vvm &model) {
+    for (int i = 0; i < model.nx; i++) model.x[i] = (i-0.5) * model.dx;
+
     // Height stretch setting 
-    double DOMAIN = 10000.;
+    double DOMAIN = 15000.;
     model.CZ2 = (model.dz-model.dz1) / (model.dz * (DOMAIN-model.dz));
     model.CZ1 = 1. - model.CZ2 * DOMAIN;
-
+    
     for (int k = 0; k < model.nz; k++) {
         model.z[k] = (k-0.5) * model.dz;
         model.z_zeta[k] = (k-1) * model.dz;

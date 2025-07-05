@@ -38,8 +38,7 @@ void vvm::PoissonSolver::InitAMGX(vvm &model) {
     }
 
     // Proceed with AMGX setup
-    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-18, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
-    // std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-14, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
+    std::string config_w = "{\"config_version\": 2, \"solver\": {\"preconditioner\": {\"scope\": \"ilu\", \"solver\": \"ILU0\"}, \"scope\": \"main\", \"solver\": \"BICGSTAB\", \"tolerance\": 1e-16, \"max_iters\": 10000, \"monitor_residual\": 1, \"print_solve_stats\": 0}}";
     AMGX_config_create(&model.cfg_w, config_w.c_str());
     AMGX_resources_create_simple(&model.rsc_w, model.cfg_w);
 
