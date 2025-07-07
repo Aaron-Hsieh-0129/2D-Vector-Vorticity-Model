@@ -15,8 +15,10 @@
 // #define KESSLER_MICROPHY
 #define P3_MICROPHY
 // #define RTERRTMGP
-// #define TROPICALFORCING
-// #define RADIATIONCOOLING
+// #define SFCFLX
+
+// #define TROPICALFORCING // Q1, Q2 Forcing test case
+
 
 #define LOADFILE
 #if defined(LOADFILE)

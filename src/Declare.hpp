@@ -203,7 +203,7 @@ public:
      * @param previous an two dimensional array that the timestep is the previous one such as zetam, thm.
      * @param now an two dimensional array that the timestep is now such as zeta, th.
      * @param future an two dimensional array that the timestep is the future one such as zetap, thp.
-     * @param model the vvm object which is the model that will be used to do the diffusion (mainly the wind and the grid info).
+     * @param model the vvm object.
      */
     // static void Advection_thermo(double **previous, double **now, double **future, vvm &model);
     static void Advection_thermo(double **past, double **now, double **future, double ***dvar, vvm &model);
@@ -213,8 +213,26 @@ public:
     #endif
     // *********************************************************************************
 
-    static void Bouyancy(vvm &model);
-    static void SurfaceFlux(vvm &model);
+    // Buoyancy term (including heating by microphysics and radiation) => Buoyancy.cpp
+    // **********************************************************************
+    /**
+     * A member function that do buoyancy process to the vorticity (zeta) field and heating by microphysics and radiation.
+     * @param model the vvm object.
+     */
+    static void Buoyancy(vvm &model);
+    // **********************************************************************
+
+
+    // Surface flux heating and moistening term => SurfaceFlux.cpp
+    // **********************************************************************
+    /**
+     * A member function that do surface flux process to the vorticity (zeta) field and heating by microphysics and radiation.
+     * @param model the vvm object.
+     */
+    #if defined(SFCFLX)
+        static void SurfaceFlux(vvm &model);
+    #endif
+    // **********************************************************************
 
     double getScalar(std::string name) {
         if (name == "rdx") return rdx;
@@ -875,7 +893,6 @@ private:
                     destroy_variable(dqr_VT, dqr_VTcont);
                 #endif
                 #if defined(P3_MICROPHY)
-                    
                     destroy_variable(dnc_advect, dnc_advectcont, nx);
                     destroy_variable(dnr_advect, dnr_advectcont, nx);
                     destroy_variable(dni_advect, dni_advectcont, nx);

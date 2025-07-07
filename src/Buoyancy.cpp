@@ -8,7 +8,7 @@ double vvm::getTHV(int i, int k, vvm &model) {
     #endif
 }
 
-void vvm::Bouyancy(vvm &model) {
+void vvm::Buoyancy(vvm &model) {
     double g_rhothvbpthv_px = 0.;
     #if defined(WATER)
         double g_rhopqc_px = 0., g_rhopqr_px = 0.;

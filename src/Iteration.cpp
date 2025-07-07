@@ -28,7 +28,7 @@ extern "C" {
 
 void vvm::Iteration::pzeta_pt(vvm &model) {
     model.Advection_zeta(model);
-    model.Bouyancy(model);
+    model.Buoyancy(model);
     model.BoundaryProcess2D_westdown(model.zetap, model.nx, model.nz);
     return;
 }
@@ -397,7 +397,9 @@ void vvm::Iteration::TimeMarching(vvm &model) {
         #endif
         vvm::BoundaryProcess2D_all(model);
 
-        // model.SurfaceFlux(model);
+        #if defined(SFCFLX)
+            model.SurfaceFlux(model);
+        #endif
 
         timer.reset();
         updateMean(model);

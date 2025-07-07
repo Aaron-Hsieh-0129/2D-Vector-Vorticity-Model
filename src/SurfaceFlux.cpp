@@ -1,5 +1,6 @@
 #include "Declare.hpp"
 
+#if defined(SFCFLX)
 void vvm::SurfaceFlux(vvm &model) { 
     double cdh = 7E-3;
     for (int k = 1; k <=2; k++) {
@@ -23,3 +24,4 @@ void vvm::SurfaceFlux(vvm &model) {
     }
     return;
 }
+#endif
