@@ -701,7 +701,7 @@ void vvm::Output::grads_ctl_file(vvm &model) {
     outFile << "XDEF " << model.nx << " LINEAR 0 1\n";
     outFile << "YDEF " << 1 << " LINEAR 0.0 1.0\n";
     outFile << "ZDEF " << model.nz << " LEVELS ";
-    for (int k = 0; k < model.nz; k++) outFile << model.z[k] << " ";
+    for (int k = 0; k < model.nz; k++) outFile << static_cast<int> (model.z[k]) << ", ";
     outFile << "\n";
 
     int outnum = 8;
