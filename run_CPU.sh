@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH --account=MST113255
+#SBATCH --partition=ct56
 #SBATCH --job-name=2DVVM
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=48:00:00
-#SBATCH --output=log/0514/job-%j.out
-#SBATCH --error=log/0514/job-%j.err
+#SBATCH --time=96:00:00
+#SBATCH --output=log/0709/job-%j.out
+#SBATCH --error=log/0709/job-%j.err
 #SBATCH --mail-type=START,END,FAIL
 #SBATCH --mail-user=zz85721@gmail.com
 

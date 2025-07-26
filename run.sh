@@ -7,8 +7,8 @@
 #SBATCH --gpus-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=48:00:00
-#SBATCH --output=log/0704/%j.out
-#SBATCH --error=log/0704/%j.err
+#SBATCH --output=log/0709/%j.out
+#SBATCH --error=log/0709/%j.err
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=zz85721@gmail.com
 

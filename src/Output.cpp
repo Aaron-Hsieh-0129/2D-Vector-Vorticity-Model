@@ -100,207 +100,15 @@ void vvm::Output::output_nc(int n, vvm &model) {
     if ((retval = nc_close(ncid))) checkErr(retval, __LINE__);
 }
 #else
-/*
-void vvm::Output::output_nc(int n, vvm &model) {
-    #define NC_ERR(e) { printf("NetCDF error: %s\n", nc_strerror(e)); exit(2); }
-    double t = n * model.dt;
-
-    int ncid, t_dimid, x_dimid, z_dimid;
-    int th_id, zeta_id, u_id, w_id, ubarTop_id;
-    int waterflux_id, heatflux_id;
-    #if defined(RTERRTMGP)
-        int radiation_hating_rate_id;
-    #endif
-    #if defined(WATER)
-        int qvid, qcid, qrid;
-        int precipid;
-        #if defined(KESSLER_MICROPHY)
-        #if defined(OUTPUTMICROPHYSICS)
-            int accretionid, autoconversionid, evaporationid, condensationid;
-        #endif
-        #endif
-
-        #if defined(P3_MICROPHY)
-            int qitotid;
-            // int qncid, qnrid, qniid, qirimid, birimid;
-        #endif
-    #endif
-
-    int retval;
-    int t_varid = 0.;
-    size_t t_index = 0;
-
-    int file_num =  (n / 1200000);
-    std::string file_name = model.outputpath + "nc/"  + std::to_string(file_num) + (string) ".nc";
-
-    if ((retval = nc_open(file_name.c_str(), NC_WRITE, &ncid)) == NC_NOERR) {
-        // File exists, get the dimensions and variable IDs
-        printf("File %s exists. Opening for appending.\n", file_name.c_str());
-
-        // Get variable IDs
-        if ((retval = nc_inq_varid(ncid, "t", &t_varid))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "th", &th_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "zeta", &zeta_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "u", &u_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "w", &w_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "ubarTop", &ubarTop_id))) NC_ERR(retval);
-        #if defined(RTERRTMGP)
-            if ((retval = nc_inq_varid(ncid, "radiation_heating_rate", &radiation_hating_rate_id))) NC_ERR(retval);
-        #endif
-        if ((retval = nc_inq_varid(ncid, "heatflux_sfc", &heatflux_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "waterflux_sfc", &waterflux_id))) NC_ERR(retval);
-
-        #if defined(WATER)
-            if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
-            if ((retval = nc_inq_varid(ncid, "qc", &qcid))) NC_ERR(retval);
-            if ((retval = nc_inq_varid(ncid, "qr", &qrid))) NC_ERR(retval);
-            if ((retval = nc_inq_varid(ncid, "precip", &precipid))) NC_ERR(retval);
-            #if defined(KESSLER_MICROPHY)
-            #if defined(OUTPUTMICROPHYSICS)
-                if ((retval = nc_inq_varid(ncid, "accretion", &accretionid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "autoconversion", &autoconversionid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "evaporation", &evaporationid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "condensation", &condensationid))) NC_ERR(retval);
-            #endif
-            #endif
-
-            #if defined(P3_MICROPHY)
-                // if ((retval = nc_inq_varid(ncid, "qnc", &qncid))) NC_ERR(retval);
-                // if ((retval = nc_inq_varid(ncid, "qnr", &qnrid))) NC_ERR(retval);
-                // if ((retval = nc_inq_varid(ncid, "qni", &qniid))) NC_ERR(retval);
-                if ((retval = nc_inq_varid(ncid, "qitot", &qitotid))) NC_ERR(retval);
-                // if ((retval = nc_inq_varid(ncid, "qirim", &qirimid))) NC_ERR(retval);
-                // if ((retval = nc_inq_varid(ncid, "birim", &birimid))) NC_ERR(retval);
-            #endif
-        #endif
-
-        // Get the current time index (size of the time dimension)
-        size_t len;
-        if ((retval = nc_inq_dimlen(ncid, t_varid, &len))) NC_ERR(retval);
-        t_index = len;
-    }
-    else {
-        // File doesn't exist, create a new file
-        printf("File %s does not exist. Creating new file.\n", file_name.c_str());
-
-        if ((retval = nc_create(file_name.c_str(), NC_CLOBBER, &ncid))) NC_ERR(retval);
-
-        // Define dimensions
-        if ((retval = nc_def_dim(ncid, "t", NC_UNLIMITED, &t_dimid))) NC_ERR(retval);
-        if ((retval = nc_def_dim(ncid, "x", model.nx, &x_dimid))) NC_ERR(retval);
-        if ((retval = nc_def_dim(ncid, "z", model.nz, &z_dimid))) NC_ERR(retval);
-
-        // Define variables
-        if ((retval = nc_def_var(ncid, "t", NC_DOUBLE, 1, &t_dimid, &t_varid))) NC_ERR(retval);
-        int dimids[3] = {t_dimid, x_dimid, z_dimid};
-        int dimx1d[2] = {t_dimid, x_dimid};
-
-        if ((retval = nc_def_var(ncid, "th", NC_DOUBLE, 3, dimids, &th_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "zeta", NC_DOUBLE, 3, dimids, &zeta_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "u", NC_DOUBLE, 3, dimids, &u_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "w", NC_DOUBLE, 3, dimids, &w_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "ubarTop", NC_DOUBLE, 1, &t_dimid, &ubarTop_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "heatflux_sfc", NC_DOUBLE, 2, dimx1d, &heatflux_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "waterflux_sfc", NC_DOUBLE, 2, dimx1d, &waterflux_id))) NC_ERR(retval);
-        #if defined(RTERRTMGP)
-            if ((retval = nc_def_var(ncid, "radiation_heating_rate", NC_DOUBLE, 3, dimids, &radiation_hating_rate_id))) NC_ERR(retval);
-        #endif
-
-        #if defined(WATER)
-            if ((retval = nc_def_var(ncid, "qv", NC_DOUBLE, 3, dimids, &qvid))) NC_ERR(retval);
-            if ((retval = nc_def_var(ncid, "qc", NC_DOUBLE, 3, dimids, &qcid))) NC_ERR(retval);
-            if ((retval = nc_def_var(ncid, "qr", NC_DOUBLE, 3, dimids, &qrid))) NC_ERR(retval);
-            if ((retval = nc_def_var(ncid, "precip", NC_DOUBLE, 2, dimx1d, &precipid))) NC_ERR(retval);
-            #if defined(KESSLER_MICROPHY)
-            #if defined(OUTPUTMICROPHYSICS)
-                if ((retval = nc_def_var(ncid, "accretion", NC_DOUBLE, 3, dimids, &accretionid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "autoconversion", NC_DOUBLE, 3, dimids, &autoconversionid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "evaporation", NC_DOUBLE, 3, dimids, &evaporationid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "condensation", NC_DOUBLE, 3, dimids, &condensationid))) NC_ERR(retval);
-            #endif
-            #endif
-
-            #if defined(P3_MICROPHY)
-                // if ((retval = nc_def_var(ncid, "qnc", NC_DOUBLE, 3, dimids, &qncid))) NC_ERR(retval);
-                // if ((retval = nc_def_var(ncid, "qnr", NC_DOUBLE, 3, dimids, &qnrid))) NC_ERR(retval);
-                // if ((retval = nc_def_var(ncid, "qni", NC_DOUBLE, 3, dimids, &qniid))) NC_ERR(retval);
-                if ((retval = nc_def_var(ncid, "qitot", NC_DOUBLE, 3, dimids, &qitotid))) NC_ERR(retval);
-                // if ((retval = nc_def_var(ncid, "qirim", NC_DOUBLE, 3, dimids, &qirimid))) NC_ERR(retval);
-                // if ((retval = nc_def_var(ncid, "birim", NC_DOUBLE, 3, dimids, &birimid))) NC_ERR(retval);
-            #endif
-        #endif
-        // End define mode
-        if ((retval = nc_enddef(ncid))) NC_ERR(retval);
-
-        // new file, starts from 0
-        t_index = 0;
-    }
-
-    if ((retval = nc_put_var1_double(ncid, t_varid, &t_index, &t))) NC_ERR(retval);
-
-    // Write the 2D data for this time step
-    size_t start[3] = {t_index, 0, 0}; // Starting point (time_index, x, y)
-    size_t count[3] = {1, (size_t) model.nx, (size_t) model.nz}; // Write one time slice, all x and y values
-    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
-        size_t start_precip[2] = {t_index, 0};
-        size_t count_precip[2] = {1, (size_t) model.nx};
-    #endif
-    if ((retval = nc_put_vara_double(ncid, th_id, start, count, model.thcont))) NC_ERR(retval);
-    if ((retval = nc_put_vara_double(ncid, zeta_id, start, count, model.zetacont))) NC_ERR(retval);
-    if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
-    if ((retval = nc_put_vara_double(ncid, w_id, start, count, model.wcont))) NC_ERR(retval);
-    #if defined(RTERRTMGP)
-        if ((retval = nc_put_vara_double(ncid, radiation_hating_rate_id, start, count, model.radiation_heating_ratecont))) NC_ERR(retval);
-    #endif
-
-    if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
-    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
-        if ((retval = nc_put_vara_double(ncid, heatflux_id, start_precip, count_precip, model.heatflux))) checkErr(retval, __LINE__);
-        if ((retval = nc_put_vara_double(ncid, waterflux_id, start_precip, count_precip, model.waterflux))) checkErr(retval, __LINE__);
-    #endif
-
-    #if defined(WATER)
-        if ((retval = nc_put_vara_double(ncid, qvid, start, count, model.qvcont))) checkErr(retval, __LINE__);
-        if ((retval = nc_put_vara_double(ncid, qcid, start, count, model.qccont))) checkErr(retval, __LINE__);
-        if ((retval = nc_put_vara_double(ncid, qrid, start, count, model.qrcont))) checkErr(retval, __LINE__);
-        #if defined(KESSLER_MICROPHY)
-           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.precip))) checkErr(retval, __LINE__);
-        #elif defined(P3_MICROPHY)
-           if ((retval = nc_put_vara_double(ncid, precipid, start_precip, count_precip, model.diag_2dcont))) checkErr(retval, __LINE__);
-        #endif
-        #if defined(KESSLER_MICROPHY)
-        #if defined(OUTPUTMICROPHYSICS)
-            if ((retval = nc_put_vara_double(ncid, accretionid, start, count, model.accretioncont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, autoconversionid, start, count, model.autoconversioncont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, evaporationid, start, count, model.evaporationcont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, condensationid, start, count, model.condensationcont))) checkErr(retval, __LINE__);
-        #endif
-        #endif
-
-        #if defined(P3_MICROPHY)
-            // if ((retval = nc_put_vara_double(ncid, qncid, start, count, model.nccont))) checkErr(retval, __LINE__);
-            // if ((retval = nc_put_vara_double(ncid, qnrid, start, count, model.nrcont))) checkErr(retval, __LINE__);
-            // if ((retval = nc_put_vara_double(ncid, qniid, start, count, model.nicont))) checkErr(retval, __LINE__);
-            if ((retval = nc_put_vara_double(ncid, qitotid, start, count, model.qitotcont))) checkErr(retval, __LINE__);
-            // if ((retval = nc_put_vara_double(ncid, qirimid, start, count, model.qirimcont))) checkErr(retval, __LINE__);
-            // if ((retval = nc_put_vara_double(ncid, birimid, start, count, model.birimcont))) checkErr(retval, __LINE__);
-        #endif
-    #endif
-
-    // Close the file
-    if ((retval = nc_close(ncid))) NC_ERR(retval);
-}
-*/
-
 void vvm::Output::output_nc(int n, vvm &model) {
     #define NC_ERR(e) { printf("NetCDF error: %s\n", nc_strerror(e)); exit(2); }
     double t = n * model.dt;
 
     int ncid, t_dimid, x_dimid, z_dimid;
     int t_varid, x_varid, z_varid, th_id, zeta_id, u_id, w_id, ubarTop_id;
-    int waterflux_id, heatflux_id;
+    int waterflux_id, heatflux_id, momentumflux_id;
     #if defined(RTERRTMGP)
-        int radiation_heating_rate_id;
+        int rad_net_heat_rate_id, rad_lw_heat_rate_id, rad_sw_heat_rate_id;
     #endif
     #if defined(WATER)
         int qvid, qcid, qrid, precipid;
@@ -332,10 +140,15 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_inq_varid(ncid, "w", &w_id))) NC_ERR(retval);
         if ((retval = nc_inq_varid(ncid, "ubarTop", &ubarTop_id))) NC_ERR(retval);
         #if defined(RTERRTMGP)
-            if ((retval = nc_inq_varid(ncid, "radiation_heating_rate", &radiation_hating_rate_id))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "rad_net_heat_rate", &rad_net_heat_rate_id))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "rad_lw_heat_rate", &rad_lw_heat_rate_id))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "rad_sw_heat_rate", &rad_sw_heat_rate_id))) NC_ERR(retval);
         #endif
-        if ((retval = nc_inq_varid(ncid, "heatflux_sfc", &heatflux_id))) NC_ERR(retval);
-        if ((retval = nc_inq_varid(ncid, "waterflux_sfc", &waterflux_id))) NC_ERR(retval);
+        #if defined(SFCFLX)
+            if ((retval = nc_inq_varid(ncid, "heatflux_sfc", &heatflux_id))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "waterflux_sfc", &waterflux_id))) NC_ERR(retval);
+            if ((retval = nc_inq_varid(ncid, "momentumflux_sfc", &momentumflux_id))) NC_ERR(retval);
+        #endif
 
         #if defined(WATER)
             if ((retval = nc_inq_varid(ncid, "qv", &qvid))) NC_ERR(retval);
@@ -409,10 +222,15 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_def_var_chunking(ncid, w_id, NC_CHUNKED, chunksizes_th))) NC_ERR(retval);
 
         if ((retval = nc_def_var(ncid, "ubarTop", NC_DOUBLE, 1, &t_dimid, &ubarTop_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "heatflux_sfc", NC_DOUBLE, 2, dimx1d, &heatflux_id))) NC_ERR(retval);
-        if ((retval = nc_def_var(ncid, "waterflux_sfc", NC_DOUBLE, 2, dimx1d, &waterflux_id))) NC_ERR(retval);
+        #if defined(SFCFLX)
+            if ((retval = nc_def_var(ncid, "heatflux_sfc", NC_DOUBLE, 2, dimx1d, &heatflux_id))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "waterflux_sfc", NC_DOUBLE, 2, dimx1d, &waterflux_id))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "momentumflux_sfc", NC_DOUBLE, 2, dimx1d, &momentumflux_id))) NC_ERR(retval);
+        #endif
         #if defined(RTERRTMGP)
-            if ((retval = nc_def_var(ncid, "radiation_heating_rate", NC_DOUBLE, 3, dimids, &radiation_heating_rate_id))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "rad_net_heat_rate", NC_DOUBLE, 3, dimids, &rad_net_heat_rate_id))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "rad_lw_heat_rate", NC_DOUBLE, 3, dimids, &rad_lw_heat_rate_id))) NC_ERR(retval);
+            if ((retval = nc_def_var(ncid, "rad_sw_heat_rate", NC_DOUBLE, 3, dimids, &rad_sw_heat_rate_id))) NC_ERR(retval);
         #endif
         #if defined(WATER)
             if ((retval = nc_def_var(ncid, "qv", NC_DOUBLE, 3, dimids, &qvid))) NC_ERR(retval);
@@ -489,24 +307,44 @@ void vvm::Output::output_nc(int n, vvm &model) {
         if ((retval = nc_put_att_double(ncid, ubarTop_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
         if ((retval = nc_put_att_text(ncid, ubarTop_id, "coordinates", strlen("t"), "t"))) NC_ERR(retval);
 
-        if ((retval = nc_put_att_text(ncid, heatflux_id, "standard_name", strlen("surface_upward_sensible_heat_flux"), "surface_upward_sensible_heat_flux"))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, heatflux_id, "long_name", strlen("Surface Sensible Heat Flux"), "Surface Sensible Heat Flux"))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, heatflux_id, "units", strlen("W m-2"), "W m-2"))) NC_ERR(retval);
-        if ((retval = nc_put_att_double(ncid, heatflux_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, heatflux_id, "coordinates", strlen("t x"), "t x"))) NC_ERR(retval);
+        #if defined(SFCFLX)
+            if ((retval = nc_put_att_text(ncid, heatflux_id, "standard_name", strlen("surface_upward_sensible_heat_flux"), "surface_upward_sensible_heat_flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, heatflux_id, "long_name", strlen("Surface Sensible Heat Flux"), "Surface Sensible Heat Flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, heatflux_id, "units", strlen("W m-2"), "W m-2"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, heatflux_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, heatflux_id, "coordinates", strlen("t x"), "t x"))) NC_ERR(retval);
 
-        if ((retval = nc_put_att_text(ncid, waterflux_id, "standard_name", strlen("surface_upward_water_vapor_flux"), "surface_upward_water_vapor_flux"))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, waterflux_id, "long_name", strlen("Surface Water Vapor Flux"), "Surface Water Vapor Flux"))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, waterflux_id, "units", strlen("kg m-2 s-1"), "kg m-2 s-1"))) NC_ERR(retval);
-        if ((retval = nc_put_att_double(ncid, waterflux_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
-        if ((retval = nc_put_att_text(ncid, waterflux_id, "coordinates", strlen("t x"), "t x"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, waterflux_id, "standard_name", strlen("surface_upward_water_vapor_flux"), "surface_upward_water_vapor_flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, waterflux_id, "long_name", strlen("Surface Water Vapor Flux"), "Surface Water Vapor Flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, waterflux_id, "units", strlen("kg m-2 s-1"), "kg m-2 s-1"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, waterflux_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, waterflux_id, "coordinates", strlen("t x"), "t x"))) NC_ERR(retval);
+
+            if ((retval = nc_put_att_text(ncid, momentumflux_id, "standard_name", strlen("surface_upward_momentum_flux"), "surface_upward_momentum_flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, momentumflux_id, "long_name", strlen("Surface Momentum Flux"), "Surface Momentum Flux"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, momentumflux_id, "units", strlen("kg m-2 s-1"), "kg m-2 s-1"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, momentumflux_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, momentumflux_id, "coordinates", strlen("t x"), "t x"))) NC_ERR(retval);
+        #endif
 
         #if defined(RTERRTMGP)
-            if ((retval = nc_put_att_text(ncid, radiation_heating_rate_id, "standard_name", strlen("tendency_of_air_temperature_due_to_radiative_heating"), "tendency_of_air_temperature_due_to_radiative_heating"))) NC_ERR(retval);
-            if ((retval = nc_put_att_text(ncid, radiation_heating_rate_id, "long_name", strlen("Radiative Heating Rate"), "Radiative Heating Rate"))) NC_ERR(retval);
-            if ((retval = nc_put_att_text(ncid, radiation_heating_rate_id, "units", strlen("K s-1"), "K s-1"))) NC_ERR(retval);
-            if ((retval = nc_put_att_double(ncid, radiation_heating_rate_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
-            if ((retval = nc_put_att_text(ncid, radiation_heating_rate_id, "coordinates", strlen("t x z"), "t x z"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_net_heat_rate_id, "standard_name", strlen("tendency_of_air_temperature_due_to_radiative_heating"), "tendency_of_air_temperature_due_to_radiative_heating"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_net_heat_rate_id, "long_name", strlen("Net Radiative Heating Rate"), "Net Radiative Heating Rate"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_net_heat_rate_id, "units", strlen("K s-1"), "K s-1"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, rad_net_heat_rate_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_net_heat_rate_id, "coordinates", strlen("t x z"), "t x z"))) NC_ERR(retval);
+
+            if ((retval = nc_put_att_text(ncid, rad_lw_heat_rate_id, "standard_name", strlen("tendency_of_air_temperature_due_to_radiative_heating"), "tendency_of_air_temperature_due_to_radiative_heating"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_lw_heat_rate_id, "long_name", strlen("Longwave Radiative Heating Rate"), "Longwave Radiative Heating Rate"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_lw_heat_rate_id, "units", strlen("K s-1"), "K s-1"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, rad_lw_heat_rate_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_lw_heat_rate_id, "coordinates", strlen("t x z"), "t x z"))) NC_ERR(retval);
+
+            if ((retval = nc_put_att_text(ncid, rad_sw_heat_rate_id, "standard_name", strlen("tendency_of_air_temperature_due_to_radiative_heating"), "tendency_of_air_temperature_due_to_radiative_heating"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_sw_heat_rate_id, "long_name", strlen("Shortwave Radiative Heating Rate"), "Shortwave Radiative Heating Rate"))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_sw_heat_rate_id, "units", strlen("K s-1"), "K s-1"))) NC_ERR(retval);
+            if ((retval = nc_put_att_double(ncid, rad_sw_heat_rate_id, "_FillValue", NC_DOUBLE, 1, &fill_value))) NC_ERR(retval);
+            if ((retval = nc_put_att_text(ncid, rad_sw_heat_rate_id, "coordinates", strlen("t x z"), "t x z"))) NC_ERR(retval);
         #endif
         #if defined(WATER)
             if ((retval = nc_put_att_text(ncid, qvid, "standard_name", strlen("specific_humidity"), "specific_humidity"))) NC_ERR(retval);
@@ -587,13 +425,16 @@ void vvm::Output::output_nc(int n, vvm &model) {
     if ((retval = nc_put_vara_double(ncid, u_id, start, count, model.ucont))) NC_ERR(retval);
     if ((retval = nc_put_vara_double(ncid, w_id, start, count, model.wcont))) NC_ERR(retval);
     #if defined(RTERRTMGP)
-        if ((retval = nc_put_vara_double(ncid, radiation_hating_rate_id, start, count, model.radiation_heating_ratecont))) NC_ERR(retval);
+        if ((retval = nc_put_vara_double(ncid, rad_net_heat_rate_id, start, count, model.rad_net_heat_ratecont))) NC_ERR(retval);
+        if ((retval = nc_put_vara_double(ncid, rad_lw_heat_rate_id, start, count, model.rad_lw_heat_ratecont))) NC_ERR(retval);
+        if ((retval = nc_put_vara_double(ncid, rad_sw_heat_rate_id, start, count, model.rad_sw_heat_ratecont))) NC_ERR(retval);
     #endif
 
     if ((retval = nc_put_var1_double(ncid, ubarTop_id, &t_index, &model.ubarTopp))) checkErr(retval, __LINE__);
-    #if defined(KESSLER_MICROPHY) || defined(P3_MICROPHY)
+    #if defined(SFCFLX)
         if ((retval = nc_put_vara_double(ncid, heatflux_id, start_precip, count_precip, model.heatflux))) checkErr(retval, __LINE__);
         if ((retval = nc_put_vara_double(ncid, waterflux_id, start_precip, count_precip, model.waterflux))) checkErr(retval, __LINE__);
+        if ((retval = nc_put_vara_double(ncid, momentumflux_id, start_precip, count_precip, model.momentumflux))) checkErr(retval, __LINE__);
     #endif
 
     #if defined(WATER)
@@ -704,15 +545,19 @@ void vvm::Output::grads_ctl_file(vvm &model) {
     for (int k = 0; k < model.nz; k++) outFile << static_cast<int> (model.z[k]) << ", ";
     outFile << "\n";
 
-    int outnum = 8;
+    int outnum = 6;
     #if defined(WATER)
         outnum += 4;
     #endif
     #if defined(RTERRTMGP)
-        outnum += 1;
+        outnum += 3;
+    #endif
+    #if defined(SFCFLX)
+        outnum += 3;
     #endif
 
     outFile << "TDEF " << (int) model.TIMEEND / (model.dt*model.OUTPUTSTEP) << " LINEAR 00:00Z01JAN2000 " << "1hr\n";
+    outFile << "\n";
     outFile << "VARS " << outnum << "\n";
     outFile << "th=>th " << model.nz << " t,x,z theta\n";
     outFile << "u=>u " << model.nz << " t,x,z u\n";
@@ -725,12 +570,17 @@ void vvm::Output::grads_ctl_file(vvm &model) {
         outFile << "qitot=>qitot " << model.nz << " t,x,z qitot\n";
         outFile << "precip=>precip 1 t,x precip\n";
     #endif
-    outFile << "ubarTop=>ubarTop 1 t ubarTop\n";
     #if defined(RTERRTMGP)
-        outFile << "radiation_heating_rate=>rhr 32 t,x,z rhr\n";
+        outFile << "rad_net_heat_rate=>rad_net " << model.nz << " t,x,z rhr\n";
+        outFile << "rad_lw_heat_rate=>rad_lw " << model.nz << " t,x,z rhr\n";
+        outFile << "rad_lw_heat_rate=>rad_sw " << model.nz << " t,x,z rhr\n";
     #endif
-    outFile << "heatflux_sfc=>htflx 1 t,x precip\n";
-    outFile << "waterflux_sfc=>wtflx 1 t,x precip\n";
+    #if defined(SFCFLX)
+        outFile << "heatflux_sfc=>htflx 1 t,x heat flux\n";
+        outFile << "waterflux_sfc=>wtflx 1 t,x water flux\n";
+        outFile << "momentumflux_sfc=>mtflx 1 t,x momentum flux\n";
+    #endif
+    outFile << "ubarTop=>ubarTop 1 t ubarTop\n";
     outFile << "ENDVARS\n";
 
     // Close the file

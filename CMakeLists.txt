@@ -88,6 +88,8 @@ set(AMGX_INCLUDE_DIR "${AMGX_DIR}/include")
 set(AMGX_LIB_DIR "${AMGX_DIR}/lib")
 set(CUDA_INCLUDE_DIR "${NVHPC_DIR}/cuda/include")
 set(CUDA_LIB_DIR "${NVHPC_DIR}/cuda/lib64")
+set(CUDA_MATH_INCLUDE_DIR "${NVHPC_DIR}/math_libs/include")
+set(CUDA_MATH_LIB_DIR "${NVHPC_DIR}/math_libs/lib64")
 set(GCC9_LIB_DIR "${GCC_DIR}/lib64")
 set(GCC9_LIB32_DIR "${GCC_DIR}/lib")  # Added for completeness
 
@@ -101,6 +103,7 @@ include_directories(
     ${PETSC_DIR}/include
     ${MPI_INCLUDE_PATH}
     ${CUDA_INCLUDE_DIR}
+    ${CUDA_MATH_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include
     ${CMAKE_SOURCE_DIR}/external/rte-rrtmgp-cpp/include_test
 )
@@ -145,6 +148,8 @@ find_library(libncxxPath netcdf_c++4 "${NETCDF_CXX_DIR}/lib")
 find_library(libpetscPath petsc "${PETSC_DIR}/petsc/lib")
 find_library(AMGXSH_LIBRARY amgxsh ${AMGX_LIB_DIR})
 find_library(CUDART_LIBRARY cudart ${CUDA_LIB_DIR})
+find_library(CUSPARSE_LIBRARY cusparse ${CUDA_MATH_LIB_DIR})
+find_library(CUBLAS_LIBRARY cublas ${CUDA_MATH_LIB_DIR})
 set(BOOST_SYSTEM_LIB ${BOOST_DIR}/lib/libboost_system.so)
 set(BOOST_FILESYSTEM_LIB ${BOOST_DIR}/lib/libboost_filesystem.so)
 
@@ -160,6 +165,8 @@ target_link_libraries(vvm2d PRIVATE
     ${libncxxPath}
     ${AMGXSH_LIBRARY}
     ${CUDART_LIBRARY}
+    ${CUSPARSE_LIBRARY}
+    ${CUBLAS_LIBRARY}
     stdc++
     ${BOOST_SYSTEM_LIB}
     ${BOOST_FILESYSTEM_LIB}

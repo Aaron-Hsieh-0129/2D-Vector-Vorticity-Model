@@ -145,7 +145,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
     gas_concs.set_vmr("h2o", h2o_lay); // Minimum water vapor as placeholder
     gas_concs.set_vmr("co2", 348e-6);        // ppm
-    gas_concs.set_vmr("o3", o3_lay);   // Calculated ozone profile
+    gas_concs.set_vmr("o3", 0.48e-7);   // Calculated ozone profile
     gas_concs.set_vmr("n2o", 306e-9);        // ppm
     gas_concs.set_vmr("ch4", 1650e-9);       // ppm
     gas_concs.set_vmr("o2", 0.2095);         // Volume mixing ratio
@@ -201,11 +201,22 @@ void vvm::Radiation::solve_radiation(vvm &model) {
     // }
 
 
+    #if defined(OUTPUTRADIATIONDETAILS)
     ////// CREATE THE OUTPUT FILE //////
     // Create the general dimensions and arrays.
     Status::print_message("Preparing NetCDF output file.");
 
-    std::string output_nc_name = model.outputpath + "nc/Radiation_" + std::to_string(model.step) + ".nc";
+    std::string s_t = std::to_string((int) model.step / 40);
+    if (s_t.length() < 6) {
+        std::stringstream ss;
+        ss << std::setw(6) << std::setfill('0') << s_t;
+        s_t = ss.str();
+    }
+
+    std::cout << s_t << std::endl;
+
+
+    std::string output_nc_name = model.outputpath + "nc/Radiation_" + s_t + ".nc";
     Netcdf_file output_nc(output_nc_name, Netcdf_mode::Create);
     output_nc.add_dimension("x", n_col);
     output_nc.add_dimension("y", n_col_y);
@@ -218,6 +229,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
     nc_lay.insert(p_lay.v(), {0, 0, 0});
     nc_lev.insert(p_lev.v(), {0, 0, 0});
+    #endif
 
 
     // Nan check
@@ -239,6 +251,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
     ////// RUN THE LONGWAVE SOLVER //////
     Array<Float,2> net_heat_rate({n_col, n_lay});
+    Array<Float,2> lw_heat_rate({n_col, n_lay});
     if (switch_longwave)
     {
         // Initialize the solver.
@@ -326,6 +339,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
 
         // Store the output.
+    #if defined(OUTPUTRADIATIONDETAILS)
         Status::print_message("Storing the longwave output.");
 
         output_nc.add_dimension("gpt_lw", n_gpt_lw);
@@ -333,7 +347,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
         auto nc_lw_band_lims_wvn = output_nc.add_variable<Float>("lw_band_lims_wvn", {"band_lw", "pair"});
         nc_lw_band_lims_wvn.insert(rad_lw.get_band_lims_wavenumber().v(), {0, 0});
-
+        
         if (switch_output_optical)
         {
             auto nc_lw_band_lims_gpt = output_nc.add_variable<int>("lw_band_lims_gpt", {"band_lw", "pair"});
@@ -354,9 +368,10 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
             nc_sfc_source.insert(sfc_source.v(), {0, 0, 0});
         }
-
+    #endif
         if (switch_fluxes)
         {
+        #if defined(OUTPUTRADIATIONDETAILS)
             auto nc_lw_flux_up  = output_nc.add_variable<Float>("lw_flux_up" , {"lev", "y", "x"});
             auto nc_lw_flux_dn  = output_nc.add_variable<Float>("lw_flux_dn" , {"lev", "y", "x"});
             auto nc_lw_flux_net = output_nc.add_variable<Float>("lw_flux_net", {"lev", "y", "x"});
@@ -375,8 +390,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
                 nc_lw_bnd_flux_dn .insert(lw_bnd_flux_dn .v(), {0, 0, 0, 0});
                 nc_lw_bnd_flux_net.insert(lw_bnd_flux_net.v(), {0, 0, 0, 0});
             }
-            auto nc_lw_heat     = output_nc.add_variable<Float>("lw_heat_rate"    , {"lay", "y", "x"});
-            Array<Float,2> lw_heat_rate({n_col, n_lay});
+        #endif
             for (int i = 1; i <= n_col; i++) {
                 for (int k = 1; k <= n_lay; k++) {
                     lw_heat_rate({i,k}) = heat_factor * (lw_flux_net({i,k+1})-lw_flux_net({i,k})) / (p_lev({i,k})-p_lev({i,k+1}) );
@@ -388,6 +402,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
 
     ////// RUN THE SHORTWAVE SOLVER //////
+    Array<Float,2> sw_heat_rate({n_col, n_lay});
     if (switch_shortwave)
     {
         // Initialize the solver.
@@ -425,6 +440,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         Array<Float,3> g;
         Array<Float,2> toa_source;
 
+        #if defined(OUTPUTRADIATIONDETAILS)
         if (switch_output_optical)
         {
             sw_tau    .set_dims({n_col, n_lay, n_gpt_sw});
@@ -432,6 +448,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             g         .set_dims({n_col, n_lay, n_gpt_sw});
             toa_source.set_dims({n_col, n_gpt_sw});
         }
+        #endif
         Array<Float,2> sw_flux_up;
         Array<Float,2> sw_flux_dn;
         Array<Float,2> sw_flux_dn_dir;
@@ -450,6 +467,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
         Array<Float,3> sw_bnd_flux_dn_dir;
         Array<Float,3> sw_bnd_flux_net;
 
+        #if defined(OUTPUTRADIATIONDETAILS)
         if (switch_output_bnd_fluxes)
         {
             sw_bnd_flux_up    .set_dims({n_col, n_lev, n_bnd_sw});
@@ -457,6 +475,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             sw_bnd_flux_dn_dir.set_dims({n_col, n_lev, n_bnd_sw});
             sw_bnd_flux_net   .set_dims({n_col, n_lev, n_bnd_sw});
         }
+        #endif
 
         // Solve the radiation.
         Status::print_message("Solving the shortwave radiation.");
@@ -487,7 +506,7 @@ void vvm::Radiation::solve_radiation(vvm &model) {
                 sw_bnd_flux_dn_dir, sw_bnd_flux_net
         );
 
-
+    #if defined(OUTPUTRADIATIONDETAILS)
         // Store the output.
         Status::print_message("Storing the shortwave output.");
 
@@ -513,9 +532,11 @@ void vvm::Radiation::solve_radiation(vvm &model) {
             auto nc_toa_source = output_nc.add_variable<Float>("toa_source", {"gpt_sw", "y", "x"});
             nc_toa_source.insert(toa_source.v(), {0, 0, 0});
         }
+    #endif
 
         if (switch_fluxes)
         {
+    #if defined(OUTPUTRADIATIONDETAILS)
             auto nc_sw_flux_up     = output_nc.add_variable<Float>("sw_flux_up"    , {"lev", "y", "x"});
             auto nc_sw_flux_dn     = output_nc.add_variable<Float>("sw_flux_dn"    , {"lev", "y", "x"});
             auto nc_sw_flux_dn_dir = output_nc.add_variable<Float>("sw_flux_dn_dir", {"lev", "y", "x"});
@@ -538,10 +559,9 @@ void vvm::Radiation::solve_radiation(vvm &model) {
                 nc_sw_bnd_flux_dn_dir.insert(sw_bnd_flux_dn_dir.v(), {0, 0, 0, 0});
                 nc_sw_bnd_flux_net   .insert(sw_bnd_flux_net   .v(), {0, 0, 0, 0});
             }
+    #endif
 
 
-            auto nc_sw_heat     = output_nc.add_variable<Float>("sw_heat_rate"    , {"lay", "y", "x"});
-            Array<Float,2> sw_heat_rate({n_col, n_lay});
             for (int i = 1; i <= n_col; i++) {
                 for (int k = 1; k <= n_lay; k++) {
                     sw_heat_rate({i,k}) = heat_factor * (sw_flux_net({i,k+1})-sw_flux_net({i,k})) / (p_lev({i,k})-p_lev({i,k+1}) );
@@ -553,14 +573,26 @@ void vvm::Radiation::solve_radiation(vvm &model) {
 
     for (int i = 1; i <= n_col; ++i) {
         for (int k = 1; k < n_lay; ++k) {
-            model.radiation_heating_rate[i][k] = net_heat_rate({i,k});
+            model.rad_net_heat_rate[i][k] = net_heat_rate({i,k});
+            model.rad_lw_heat_rate[i][k] = lw_heat_rate({i,k});
+            model.rad_sw_heat_rate[i][k] = sw_heat_rate({i,k});
         }
-        model.radiation_heating_rate[i][n_lay] = net_heat_rate({i,n_lay}) = 0.;
+        model.rad_net_heat_rate[i][n_lay] = net_heat_rate({i,n_lay}) = 0.;
+        model.rad_lw_heat_rate[i][n_lay] = lw_heat_rate({i,n_lay}) = 0.;
+        model.rad_sw_heat_rate[i][n_lay] = sw_heat_rate({i,n_lay}) = 0.;
     }
-    model.BoundaryProcess2D_center(model.radiation_heating_rate, model.nx, model.nz);
+    model.BoundaryProcess2D_center(model.rad_net_heat_rate, model.nx, model.nz);
 
-    auto nc_net_heat     = output_nc.add_variable<Float>("net_heat_rate"    , {"lay", "y", "x"});
-    nc_net_heat.insert(net_heat_rate.v(), {0, 0, 0});
+    #if defined(OUTPUTRADIATIONDETAILS)
+        auto nc_net_heat     = output_nc.add_variable<Float>("net_heat_rate"    , {"lay", "y", "x"});
+        nc_net_heat.insert(net_heat_rate.v(), {0, 0, 0});
+
+        auto nc_sw_heat     = output_nc.add_variable<Float>("sw_heat_rate"    , {"lay", "y", "x"});
+        nc_sw_heat.insert(sw_heat_rate.v(), {0, 0, 0});
+
+        auto nc_lw_heat     = output_nc.add_variable<Float>("lw_heat_rate"    , {"lay", "y", "x"});
+        nc_lw_heat.insert(lw_heat_rate.v(), {0, 0, 0});
+    #endif
 
     auto time_end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration<Float, std::milli>(time_end-time_start).count();

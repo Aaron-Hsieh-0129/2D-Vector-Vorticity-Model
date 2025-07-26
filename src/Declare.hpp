@@ -231,6 +231,7 @@ public:
      */
     #if defined(SFCFLX)
         static void SurfaceFlux(vvm &model);
+        static void FluxCoefficient(double thvm, double thvsm, double speed1, double zr, double zrough, double &ustar, double &ventfc, double &vent2, double &molen);
     #endif
     // **********************************************************************
 
@@ -544,6 +545,7 @@ private:
     double *addflux = nullptr;
     double *heatflux = nullptr;
     double *waterflux = nullptr;
+    double *momentumflux = nullptr;
     double *nudge_tau = nullptr;
     double *RH = nullptr;
     double *dz_th = nullptr;
@@ -604,7 +606,9 @@ private:
     #if defined(RTERRTMGP)
         double **T = nullptr;
         double **T_lev = nullptr;
-        double **radiation_heating_rate = nullptr; // K/s
+        double **rad_net_heat_rate = nullptr; // K/s
+        double **rad_lw_heat_rate = nullptr; // K/s
+        double **rad_sw_heat_rate = nullptr; // K/s
     #endif
 
     double *zetapcont = nullptr;
@@ -623,7 +627,9 @@ private:
     #if defined(RTERRTMGP)
         double *Tcont = nullptr;
         double *T_levcont = nullptr;
-        double *radiation_heating_ratecont = nullptr;
+        double *rad_net_heat_ratecont = nullptr;
+        double *rad_lw_heat_ratecont = nullptr;
+        double *rad_sw_heat_ratecont = nullptr;
     #endif
     
     
@@ -786,6 +792,7 @@ private:
         destroy_variable(addflux);
         destroy_variable(heatflux);
         destroy_variable(waterflux);
+        destroy_variable(momentumflux);
         destroy_variable(nudge_tau);
         destroy_variable(RH);
         destroy_variable(dz_th);
@@ -810,7 +817,9 @@ private:
 
         #if defined(RTERRTMGP)
             destroy_variable(T, Tcont);
-            destroy_variable(radiation_heating_rate, radiation_heating_ratecont);
+            destroy_variable(rad_net_heat_rate, rad_net_heat_ratecont);
+            destroy_variable(rad_lw_heat_rate, rad_lw_heat_ratecont);
+            destroy_variable(rad_sw_heat_rate, rad_sw_heat_ratecont);
         #endif
 
         #if defined(STREAMFUNCTION)
@@ -954,6 +963,7 @@ private:
         create_variable(addflux, nx);
         create_variable(heatflux, nx);
         create_variable(waterflux, nx);
+        create_variable(momentumflux, nx);
         create_variable(nudge_tau, nz);
         create_variable(RH, nz);
         create_variable(dz_th, nz);
@@ -982,7 +992,9 @@ private:
         #if defined(RTERRTMGP)
             create_variable(T, Tcont, nx, nz);
             create_variable(T_lev, T_levcont, nx, nz+1);
-            create_variable(radiation_heating_rate, radiation_heating_ratecont, nx, nz);
+            create_variable(rad_net_heat_rate, rad_net_heat_ratecont, nx, nz);
+            create_variable(rad_lw_heat_rate, rad_lw_heat_ratecont, nx, nz);
+            create_variable(rad_sw_heat_rate, rad_sw_heat_ratecont, nx, nz);
         #endif
 
         #if defined(STREAMFUNCTION)

@@ -18,7 +18,7 @@ void vvm::AddForcing(vvm &model) {
             #endif
 
             #if defined(RTERRTMGP)
-                model.thp[i][k] += dt * model.radiation_heating_rate[i][k] / 86400.; 
+                model.thp[i][k] += dt * model.rad_net_heat_rate[i][k] / 86400.; 
             #endif
 
             if (model.status_for_adding_forcing == true) model.thp[i][k] += dt * model.init_th_forcing[i][k];

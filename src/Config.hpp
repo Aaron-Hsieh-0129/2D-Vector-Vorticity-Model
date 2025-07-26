@@ -2,6 +2,7 @@
 #define OUTPUTNCSAMEFILE
 // #define OUTPUTMICROPHYSICS
 // #define OUTPUTTXT
+// #define OUTPUTRADIATIONDETAILS
 
 #define AB2
 // #define PETSC
@@ -14,8 +15,8 @@
 #define WATER
 // #define KESSLER_MICROPHY
 #define P3_MICROPHY
-// #define RTERRTMGP
-// #define SFCFLX
+#define RTERRTMGP
+#define SFCFLX
 
 // #define TROPICALFORCING // Q1, Q2 Forcing test case
 
